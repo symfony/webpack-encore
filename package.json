@@ -1,0 +1,25 @@
+{
+  "name": "@weaverryan/webpack-remix",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --reporter spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/weaverryan/webpack-remix.git"
+  },
+  "author": "Ryan Weaver <ryan@knpuniversity.com> (https://knpuniversity.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/weaverryan/webpack-remix/issues"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "homepage": "https://github.com/weaverryan/webpack-remix",
+  "dependencies": {
+    "webpack": "^2.2.0"
+  }
+}
