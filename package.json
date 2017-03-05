@@ -20,7 +20,10 @@
   },
   "homepage": "https://github.com/weaverryan/webpack-remix",
   "dependencies": {
-    "webpack": "^2.2.0"
+    "extract-text-webpack-plugin": "^2.1.0",
+    "pkg-up": "^1.0.0",
+    "webpack": "^2.2.0",
+    "webpack-manifest-plugin": "^1.1.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

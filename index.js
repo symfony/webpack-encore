@@ -1,5 +1,3 @@
-'use strict';
+var Remix = require('./lib/Remix');
 
-module.exports = function () {
-    return 'Well hello everyone!';
-};
+module.exports = new Remix();
