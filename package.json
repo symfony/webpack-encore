@@ -21,5 +21,9 @@
   "homepage": "https://github.com/weaverryan/webpack-remix",
   "dependencies": {
     "webpack": "^2.2.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
   }
 }
