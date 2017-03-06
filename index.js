@@ -1,74 +1,74 @@
-const Remix = require('./lib/Remix');
+const WebpackConfig = require('./lib/WebpackConfig');
 const config_generator = require('./lib/config_generator');
 
-remix = new Remix();
+webpackConfig = new WebpackConfig();
 
 module.exports = {
     setOutputPath(outputPath) {
-        remix.setOutputPath(outputPath);
+        webpackConfig.setOutputPath(outputPath);
 
         return this;
     },
 
     setPublicPath(publicPath) {
-        remix.setPublicPath(publicPath);
+        webpackConfig.setPublicPath(publicPath);
 
         return this;
     },
 
     setPublicCDNPath(publicCDNPath) {
-        remix.setPublicCDNPath(publicCDNPath);
+        webpackConfig.setPublicCDNPath(publicCDNPath);
 
         return this;
     },
 
     addEntry(name, src) {
-        remix.addEntry(name, src);
+        webpackConfig.addEntry(name, src);
 
         return this;
     },
 
     addStylesEntry(name, src) {
-        remix.addStylesEntry(name, src);
+        webpackConfig.addStylesEntry(name, src);
 
         return this;
     },
 
     enableVersioning(enabled = true) {
-        remix.enableVersioning(enabled);
+        webpackConfig.enableVersioning(enabled);
 
         return this;
     },
 
     enableSourceMaps(enabled = true) {
-        remix.enableSourceMaps(enabled);
+        webpackConfig.enableSourceMaps(enabled);
 
         return this;
     },
 
     extractVendorEntry(name, files) {
-        remix.extractVendorEntry(name, files);
+        webpackConfig.extractVendorEntry(name, files);
 
         return this;
     },
 
     autoProvideVariables(variables) {
-        remix.autoProvideVariables(variables);
+        webpackConfig.autoProvideVariables(variables);
 
         return this;
     },
 
     autoProvidejQuery() {
-        remix.autoProvidejQuery();
+        webpackConfig.autoProvidejQuery();
 
         return this;
     },
 
     isProduction() {
-        return remix.isProduction();
+        return webpackConfig.isProduction();
     },
 
     getWebpackConfig() {
-        return config_generator(remix);
+        return config_generator(webpackConfig);
     }
 };
