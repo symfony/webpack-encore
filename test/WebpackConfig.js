@@ -54,4 +54,66 @@ describe('WebpackConfig object', () => {
             }).to.throw('create this directory');
         });
     });
+
+    describe('setPublicPath', () => {
+        it('foo => /foo/', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('foo');
+
+            expect(config.publicPath).to.equal('/foo/');
+        });
+
+        it('/foo => /foo/', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('/foo');
+
+            expect(config.publicPath).to.equal('/foo/');
+        });
+
+        it('foo/ => /foo/', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('foo/');
+
+            expect(config.publicPath).to.equal('/foo/');
+        });
+
+        it('/foo/ => /foo/', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('/foo/');
+
+            expect(config.publicPath).to.equal('/foo/');
+        });
+
+        it('passing a URL throws an error', () => {
+            var config = new WebpackConfig();
+
+            expect(() => {
+                config.setPublicPath('://example.com/foo');
+            }).to.throw('must pass a path');
+        });
+    });
+
+    describe('setPublicCDNPath', () => {
+        it('https://example.com => https://example.com/', () => {
+            var config = new WebpackConfig();
+            config.setPublicCDNPath('https://example.com');
+
+            expect(config.publicCDNPath).to.equal('https://example.com/');
+        });
+
+        it('https://example.com/ => https://example.com/', () => {
+            var config = new WebpackConfig();
+            config.setPublicCDNPath('https://example.com/');
+
+            expect(config.publicCDNPath).to.equal('https://example.com/');
+        });
+
+        it('passing a path throws an error', () => {
+            var config = new WebpackConfig();
+
+            expect(() => {
+                config.setPublicCDNPath('/foo');
+            }).to.throw('must pass a full URL');
+        });
+    });
 });
