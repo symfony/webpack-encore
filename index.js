@@ -28,7 +28,7 @@ module.exports = {
         return this;
     },
 
-    addStylesEntry(name, src) {
+    addStyleEntry(name, src) {
         webpackConfig.addStyleEntry(name, src);
 
         return this;
@@ -46,7 +46,7 @@ module.exports = {
         return this;
     },
 
-    extractVendorEntry(name, files) {
+    createSharedEntry(name, files) {
         webpackConfig.createSharedEntry(name, files);
 
         return this;
