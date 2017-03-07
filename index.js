@@ -29,7 +29,7 @@ module.exports = {
     },
 
     addStylesEntry(name, src) {
-        webpackConfig.addStylesEntry(name, src);
+        webpackConfig.addStyleEntry(name, src);
 
         return this;
     },
@@ -47,7 +47,7 @@ module.exports = {
     },
 
     extractVendorEntry(name, files) {
-        webpackConfig.extractVendorEntry(name, files);
+        webpackConfig.createSharedEntry(name, files);
 
         return this;
     },

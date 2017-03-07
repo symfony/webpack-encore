@@ -116,4 +116,95 @@ describe('WebpackConfig object', () => {
             }).to.throw('must pass a full URL');
         });
     });
+
+    describe('addEntry', () => {
+        it('Calling with a duplicate name throws an error', () => {
+            var config = new WebpackConfig();
+            config.addEntry('entry_foo', './foo.js');
+
+            expect(() => {
+                config.addEntry('entry_foo', './bar.js');
+            }).to.throw('Duplicate name');
+        });
+
+        it('Calling with a duplicate of addStyleEntry', () => {
+            var config = new WebpackConfig();
+            config.addStyleEntry('main', './main.scss');
+
+            expect(() => {
+                config.addEntry('main', './main.js');
+            }).to.throw('conflicts with a name passed to addStyleEntry');
+        });
+    });
+
+    describe('addStyleEntry', () => {
+        it('Calling with a duplicate name throws an error', () => {
+            var config = new WebpackConfig();
+            config.addStyleEntry('entry_foo', './foo.css');
+
+            expect(() => {
+                config.addStyleEntry('entry_foo', './bar.css');
+            }).to.throw('Duplicate name');
+        });
+
+        it('Calling with a duplicate of addEntry', () => {
+            var config = new WebpackConfig();
+            config.addEntry('main', './main.scss');
+
+            expect(() => {
+                config.addStyleEntry('main', './main.js');
+            }).to.throw('conflicts with a name passed to addEntry');
+        });
+    });
+
+    describe('createSharedEntry', () => {
+        it('Calling twice throws an error', () => {
+            var config = new WebpackConfig();
+            config.createSharedEntry('vendor', 'jquery');
+
+            expect(() => {
+                config.createSharedEntry('vendor2', './main');
+            }).to.throw('cannot be called multiple');
+        });
+    });
+
+    describe('autoProvideVariables', () => {
+        it('Calling multiple times merges', () => {
+            var config = new WebpackConfig();
+            config.autoProvideVariables({
+                $: 'jquery',
+                jQuery: 'jquery'
+            });
+            config.autoProvideVariables({
+                foo: './foo'
+            });
+
+            console.log(config.providedVariables);
+            expect(JSON.stringify(config.providedVariables))
+                .to.equal(JSON.stringify({
+                    foo: './foo',
+                    $: 'jquery',
+                    jQuery: 'jquery',
+                }))
+            ;
+        });
+
+        it('Calling with string throws an error', () => {
+            var config = new WebpackConfig();
+
+            console.log('foo' instanceof String);
+
+            expect(() => {
+                config.autoProvideVariables('jquery');
+            }).to.throw('must pass an object');
+        });
+
+        it('Calling with an Array throws an error', () => {
+            var config = new WebpackConfig();
+
+            expect(() => {
+                config.autoProvideVariables(['jquery']);
+            }).to.throw('must pass an object');
+        });
+    });
 });
