@@ -179,7 +179,6 @@ describe('WebpackConfig object', () => {
                 foo: './foo'
             });
 
-            console.log(config.providedVariables);
             expect(JSON.stringify(config.providedVariables))
                 .to.equal(JSON.stringify({
                     foo: './foo',
