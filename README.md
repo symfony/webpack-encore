@@ -16,7 +16,7 @@ RatingPlugin('.user-rating').create({
 ```
 
 When using XXX you can no longer use this technique because Twig and JavaScript
-are completely separated. The best alternative solution is to use HTML `data`
+are completely separated. The alternative solution is to use HTML `data`
 attributes to store some information that is retrieved later by JavaScript:
 
 ```twig
@@ -25,11 +25,12 @@ attributes to store some information that is retrieved later by JavaScript:
 </div>
 ```
 
-If the content to store is too large, you can also create a JavaScript variable
-via Twig and retrieve it later with JavaScript:
+There is no size limit in the value of the `data-` attributes, so you can store
+any content, no matter its length. The only caveat is that you must encode the
+value using Twig's `html` escaping strategy to avoid messing with HTML attributes:
 
 ```twig
-<script>
-    var userProfile = "{{ user.profileAsJson|raw }}";
-</script>
+<div data-user-profile="{{ app.user ? app.user.profileAsJson|e('html') : '' }}">
+    <!-- ... -->
+</div>
 ```
