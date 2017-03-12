@@ -15,7 +15,7 @@ Browser.extend(function (browser) {
     });
 });
 
-const testOutputPath = path.join(__dirname, 'public');
+const testProjectPath = path.join(__dirname, 'project');
 
 /**
  * @param contextDirName
