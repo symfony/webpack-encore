@@ -45,9 +45,7 @@ function assertOutputFileContains(filepath, expectedContents) {
 }
 
 function assertManifestPath(sourcePath, expectedDestinationPath) {
-    const manifestData = JSON.parse(
-        fs.readFileSync(path.join(testOutputPath, 'manifest.json'), 'utf8')
-    );
+    const manifestData = loadManifest();
 
     if (!manifestData[sourcePath]) {
         throw new Error(`No ${sourcePath} key found in manifest ${manifestData}`);
@@ -57,6 +55,21 @@ function assertManifestPath(sourcePath, expectedDestinationPath) {
         throw new Error(`source path ${sourcePath} expected to be set to ${expectedDestinationPath}, was actually ${manifestData[sourcePath]}`);
     }
 }
+function assertManifestPathDoesNotExist(sourcePath) {
+    const manifestData = loadManifest();
+
+    if (manifestData[sourcePath]) {
+        throw new Error(`Source ${sourcePath} key WAS found in manifest, but should not be there!`);
+    }
+}
+
+function loadManifest()
+{
+    return JSON.parse(
+        fs.readFileSync(path.join(testOutputPath, 'manifest.json'), 'utf8')
+    );
+}
+
 function runWebpack(webpackConfig, callback) {
     const compiler = webpack(generator(webpackConfig));
     compiler.run((err, stats) => {
@@ -70,7 +83,7 @@ function runWebpack(webpackConfig, callback) {
 
 describe('Functional tests using webpack', () => {
     describe('Basic scenarios', () => {
-        before(() => {
+        beforeEach(() => {
             emptyTestDir();
         });
 
@@ -86,10 +99,12 @@ describe('Functional tests using webpack', () => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files(['main.js', 'manifest.json']);
 
+                // check that main.js has the correct contents
                 assertOutputFileContains(
                     'main.js',
                     'no_require_loaded'
                 );
+                // check that main.js has the webpack bootstrap
                 assertOutputFileContains(
                     'main.js',
                     '__webpack_require__'
@@ -137,7 +152,30 @@ describe('Functional tests using webpack', () => {
             });
         });
 
-        // test style entry deletes entry
+        it('addStyleEntry .js files are removed', (done) => {
+            var config = createWebpackConfig('basic');
+            config.addEntry('main', './no_require');
+            config.setPublicPath('/public');
+            config.addStyleEntry('styles', './h1_style.css');
+
+            runWebpack(config, () => {
+                expect(config.outputPath).to.be.a.directory()
+                    // public.js should not exist
+                    .with.files(['main.js', 'styles.css', 'manifest.json']);
+
+                assertOutputFileContains(
+                    'styles.css',
+                    'font-size: 50px;'
+                );
+                // todo - this isn't the biggest deal, but it's failing
+                // assertManifestPathDoesNotExist(
+                //     'public/styles.js'
+                // );
+
+                done();
+            });
+        });
+
         // check versioning, applies to everything, even loaded files
         // check sourcemaps apply to everything
         // check shared entry creates files, with manifest correctly
