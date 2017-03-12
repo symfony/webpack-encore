@@ -40,11 +40,28 @@ function emptyTestDir() {
     fs.emptyDirSync(testProjectPath);
 }
 
-function assertOutputFileContains(filepath, expectedContents) {
-    var fullPath = path.join(testProjectPath, filepath);
+function assertOutputFileContains(filePath, expectedContents) {
+    var fullPath = path.join(testProjectPath, filePath);
     const actualContents = fs.readFileSync(fullPath, 'utf8');
     if (!actualContents.includes(expectedContents)) {
         throw new Error(`Expected contents "${expectedContents}" not found in file ${fullPath}`);
+    }
+}
+
+function assertOutputFileHasSourcemap(filePath) {
+    var fullPath = path.join(testProjectPath, filePath);
+    const actualContents = fs.readFileSync(fullPath, 'utf8');
+    if (!actualContents.includes('sourceMappingURL')) {
+        throw new Error(`No sourcemap found for ${fullPath}!`);
+    }
+
+    var sourceMappingUrlContents = actualContents.split('sourceMappingURL')[1];
+
+    // if you set config.devtool = '#inline-source-map', but then
+    // incorrectly configure css/sass sourcemaps, you WILL have
+    // a sourcemap, but it will be too small / i.e. basically empty
+    if (sourceMappingUrlContents.length < 200) {
+        throw new Error(`Sourcemap for ${fullPath} appears to be empty!`);
     }
 }
 
@@ -280,7 +297,29 @@ describe('Functional tests using webpack', () => {
             });
         });
 
-        // check sourcemaps apply to everything
+        it('enableSourceMaps() adds to .js, css & scss', (done) => {
+            var config = createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            config.addEntry('main', './no_require');
+            config.addStyleEntry('bg', './background_image.scss');
+            config.addStyleEntry('font', './roboto_font.css');
+            config.enableSourceMaps();
+
+            runWebpack(config, () => {
+                assertOutputFileHasSourcemap(
+                    'www/build/main.js'
+                );
+                assertOutputFileHasSourcemap(
+                    'www/build/bg.css'
+                );
+                assertOutputFileHasSourcemap(
+                    'www/build/font.css'
+                );
+
+                done();
+            });
+        });
+
         // check shared entry creates files, with manifest correctly
         // check HMR / dev server stuff
         // test that SASS is loaded, URLs are resolved
