@@ -1,6 +1,129 @@
 webpack-remix
 =============
 
+Remix is a wrapper to simplify making webpack configuration, while still staying
+in the spirit of webpack!
+
+Basic Usage
+-----------
+
+All the configuration lives in a file called ``webpack.config.js`` stored in the
+root directory of your project:
+
+.. code-block:: javascript
+
+    var Remix = require('webpack-remix');
+
+    Remix
+        // where should all compiled files be stored?
+        .setOutputDir('web/builds/')
+        // what's the public path to this directory (relative to your project's web/ dir)
+        .setPublicPath('/builds')
+
+        // will create a web/builds/app.js
+        .addEntry('app', './app/Resources/assets/js/app.js')
+        // will create a web/builds/checkout.js, which you might
+        // include on an individual page only
+        .addEntry('checkout', './app/Resources/assets/js/checkout-page.js')
+
+        // add a styles-only entry. Feel free to mix CSS and Sass!
+        // will create a style.css
+        .addStylesEntry('styles', [
+            './app/Resources/assets/scss/app.scss',
+            './app/Resources/assets/css/font-lato.css',
+            './app/Resources/assets/css/highlight-solarized-light.css'
+        ])
+
+        // source maps only when NOT in production
+        Remix.enableSourceMaps(!Remix.isProduction())
+    ;
+
+    // export the final configuration
+    module.exports = Remix.getWebpackConfig();
+
+Compiling your Assets
+---------------------
+
+Once your JavaScript and CSS files have been created and your ``webpack.config.js``
+file has been defined, you are ready to compile the assets and use them in your
+application. There are several commands available because depending on the
+execution environment (``dev`` or ``prod``) you may need to compile assets faster
+or compile them as smaller files:
+
+.. code-block:: terminal
+
+    # in 'dev' environment, run this command to compile assets once
+    $ ./node_modules/.bin/webpack --progress
+    # ... you can use '--watch' to recompile automatically if assets change
+    $ ./node_modules/.bin/webpack --progress --watch
+
+    # in production servers, run this command to reduce the size of all files
+    $ NODE_ENV=production ./node_modules/.bin/webpack
+
+Creating Shared Entries
+-----------------------
+
+For performance reasons, it's usual to extract a few common modules into a
+separate JavaScript file that it's included in every page. Besides, this
+improves the performance of your application because this "common file" (usually
+called "vendor file") rarely changes, so the browsers can cache it for a long
+time. Create this vendor file with the ``createSharedEntry()`` method:
+
+.. code-block:: javascript
+
+    Remix
+        // ...
+        .addEntry('...', '...')
+        .addEntry('...', '...')
+        .addEntry('...', '...')
+        // this creates a 'vendor.js' file with the code of the 'jquery' and
+        // 'moment' JavaScript modules
+        .createSharedEntry('vendor', ['jquery', 'moment'])
+
+As soon as you make this change, you need to include two extra JavaScript files
+on your page before any other JavaScript file:
+
+.. code-block:: twig
+
+    <!-- these two files now must be included in every page -->
+    <script src="{{ asset_path('builds/manifest.js') }}"></script>
+    <script src="{{ asset_path('builds/vendor.js') }}"></script>
+    <!-- here you link to the specific JS files needed by the current page -->
+    <script src="{{ asset_path('builds/app.js') }}"></script>
+
+The ``vendor.js`` file contains all the common code that has been extracted from
+the other files, so it's obvious that must be included. The other file (``manifest.js``)
+is less obvious, but it's needed so webpack knows how to load those shared modules.
+
+
+Asset Versioning
+----------------
+
+Use the ``enableVersioning()`` method to add a hash signature to the name of the
+compiled assets (e.g. ``app.123abc.js`` instead of ``app.js``). This allows to
+use aggressive caching strategies that set the expire time very far in time,
+because whenever a file change, its hash will change and the link to the asset
+will also change, invalidating any existing cache:
+
+.. code-block:: javascript
+
+    Remix
+        // ...
+        .addEntry('...', '...')
+        .addEntry('...', '...')
+        .addEntry('...', '...')
+        // add hashing to all asset filenames
+        .enableVersioning()
+
+Since the filename of the assets is unknown and can change constantly, you cannot
+link to those assets in your templates. USe the ``asset_path()`` Twig function
+provided by Symfony to link to them:
+
+.. code-block:: twig
+
+    {# asset_path() looks for the full filename of the given asset #}
+    <script src="{{ asset_path('builds/app.js') }}"></script>
+
 Creating your JavaScript Files
 ------------------------------
 
@@ -90,10 +213,24 @@ file:
 
 .. code-block:: javascript
 
-    var Remix = require('./symfony-remix');
-
     Remix
         .autoProvidejQuery()
+        .addEntry('...', '...')
+        // ...
+    ;
+
+Internally, this ``autoProvidejQuery()`` method uses the ``autoProvideVariables()``
+method from webpack. In practice, it's equivalent to doing:
+
+.. code-bloc:: javascript
+
+    Remix
+        // you can use this method to provide other common global variables,
+        // such as '_' for the 'underscore' library
+        .autoProvideVariables({
+            $: 'jquery',
+            jQuery: 'jquery'
+        })
         .addEntry('...', '...')
         // ...
     ;
