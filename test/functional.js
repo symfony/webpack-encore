@@ -217,6 +217,11 @@ describe('Functional tests using webpack', () => {
                     ]
                 );
 
+                assertOutputFileContains(
+                    'bg.bf0ae369481a1080946f3112ee958040.css',
+                    '/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                );
+
                 done();
             });
         });
