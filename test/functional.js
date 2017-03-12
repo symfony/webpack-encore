@@ -203,7 +203,7 @@ describe('Functional tests using webpack', () => {
 
         it('enableVersioning applies to js, css & manifest', (done) => {
             var config = createWebpackConfig('web/build');
-            config.addEntry('main', './no_require');
+            config.addEntry('main', './code_splitting');
             config.setPublicPath('/build');
             config.addStyleEntry('h1', './h1_style.css');
             config.addStyleEntry('bg', './background_image.scss');
@@ -212,7 +212,8 @@ describe('Functional tests using webpack', () => {
             runWebpack(config, () => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        'main.dba523dfb21e7b8de3e9.js',
+                        '0.1e6aaff80a714c614d5a.js', // chunks are also versioned
+                        'main.905da0a0a7c7a461f2a3.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
                         'bg.4110c672dd434294dc4e28d1475255e0.css',
                         'manifest.json'
@@ -279,8 +280,6 @@ describe('Functional tests using webpack', () => {
             });
         });
 
-        // test that .png, fonts, are copied
-        // check versioning, applies to everything, even loaded files
         // check sourcemaps apply to everything
         // check shared entry creates files, with manifest correctly
         // check HMR / dev server stuff
