@@ -1,4 +1,4 @@
-console.log('HI! I am code_splitting.js');
+window.code_splitting_loaded = true;
 
 // use code splitting to load this file!
 require.ensure(['./no_require'], function(require) {

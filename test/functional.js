@@ -7,6 +7,15 @@ var WebpackConfig = require('../lib/WebpackConfig');
 var generator = require('../lib/config_generator');
 const path = require('path');
 const fs = require('fs-extra');
+const Browser = require('zombie');
+
+Browser.extend(function (browser) {
+    browser.on('error', function (error) {
+        throw new Error(error);
+    });
+});
+
+const testOutputPath = path.join(__dirname, 'public');
 
 /**
  * @param contextDirName
@@ -15,30 +24,29 @@ const fs = require('fs-extra');
 function createWebpackConfig(contextDirName) {
     var config = new WebpackConfig(path.join(__dirname, 'fixtures', contextDirName));
 
-    const tmpDir = '/tmp/webpack_testing_'+Math.random();
-    fs.mkdirSync(tmpDir);
-    config.setOutputPath(tmpDir);
+    if (!fs.existsSync(testOutputPath)) {
+        fs.mkdirSync(testOutputPath);
+    }
+    config.setOutputPath(testOutputPath);
 
     return config;
 }
-/**
- * @param {WebpackConfig} webpackConfig
- */
-function deleteTmpDir(webpackConfig) {
-    fs.removeSync(webpackConfig.outputPath);
+
+function emptyTestDir() {
+    fs.emptyDirSync(testOutputPath);
 }
 
-function assertOutputFileContains(webpackConfig, filepath, expectedContents) {
-    var fullPath = path.join(webpackConfig.outputPath, filepath);
+function assertOutputFileContains(filepath, expectedContents) {
+    var fullPath = path.join(testOutputPath, filepath);
     const actualContents = fs.readFileSync(fullPath, 'utf8');
     if (!actualContents.includes(expectedContents)) {
         throw new Error(`Expected contents "${expectedContents}" not found in file ${fullPath}`);
     }
 }
 
-function assertManifestPath(webpackConfig, sourcePath, expectedDestinationPath) {
+function assertManifestPath(sourcePath, expectedDestinationPath) {
     const manifestData = JSON.parse(
-        fs.readFileSync(path.join(webpackConfig.outputPath, 'manifest.json'), 'utf8')
+        fs.readFileSync(path.join(testOutputPath, 'manifest.json'), 'utf8')
     );
 
     if (!manifestData[sourcePath]) {
@@ -50,7 +58,6 @@ function assertManifestPath(webpackConfig, sourcePath, expectedDestinationPath) 
     }
 }
 function runWebpack(webpackConfig, callback) {
-    console.log('RUNNING', webpackConfig.outputPath);
     const compiler = webpack(generator(webpackConfig));
     compiler.run((err, stats) => {
         if (err) {
@@ -63,6 +70,10 @@ function runWebpack(webpackConfig, callback) {
 
 describe('Functional tests using webpack', () => {
     describe('Basic scenarios', () => {
+        before(() => {
+            emptyTestDir();
+        });
+
         it('Builds a simple .js file + manifest.json', (done) => {
             var config = createWebpackConfig('basic');
             config.addEntry('main', './no_require');
@@ -76,21 +87,18 @@ describe('Functional tests using webpack', () => {
                     .with.files(['main.js', 'manifest.json']);
 
                 assertOutputFileContains(
-                    config,
-                    'main.js', 'I am no_require.js'
+                    'main.js',
+                    'no_require_loaded'
                 );
                 assertOutputFileContains(
-                    config,
                     'main.js',
                     '__webpack_require__'
                 );
                 assertManifestPath(
-                    config,
                     'public/main.js',
                     'public/main.js'
                 );
 
-                deleteTmpDir(config);
                 done();
             });
         });
@@ -99,7 +107,7 @@ describe('Functional tests using webpack', () => {
             var config = createWebpackConfig('basic');
             config.addEntry('main', './code_splitting');
             config.setPublicPath('/public');
-            config.setPublicCDNPath('http://cdn.example.org:8090/ABC');
+            config.setPublicCDNPath('http://localhost:8090');
 
             runWebpack(config, () => {
                 expect(config.outputPath).to.be.a.directory()
@@ -107,13 +115,25 @@ describe('Functional tests using webpack', () => {
 
                 // check that the publicPath is set correctly
                 assertOutputFileContains(
-                    config,
                     'main.js',
-                    '__webpack_require__.p = "http://cdn.example.org:8090/ABC/";'
+                    '__webpack_require__.p = "http://localhost:8090/";'
                 );
 
-                //deleteTmpDir(config);
-                done();
+                /*
+                 * An experimental thing... where we actually use a browser to try things...
+                 *
+                 * To get this to pass, you must start 2 servers in the test/public directory
+                 *      http-server
+                 *      http-server -p 8090
+                 */
+                fs.copySync(path.join(__dirname, 'testing.html'), path.join(testOutputPath, 'testing.html'));
+                var browser = new Browser();
+                browser.visit('http://127.0.0.1:8080/testing.html', () => {
+                    // check that both JS files were loaded!
+                    browser.assert.evaluate('window.window.code_splitting_loaded');
+                    browser.assert.evaluate('window.no_require_loaded');
+                    done();
+                });
             });
         });
 

@@ -1,1 +1,1 @@
-console.log('HI! I am no_require.js')
+window.no_require_loaded = true;
