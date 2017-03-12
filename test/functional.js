@@ -193,12 +193,40 @@ describe('Functional tests using webpack', () => {
             });
         });
 
+        it('enableVersioning applies to js, css & manifest', (done) => {
+            var config = createWebpackConfig('basic');
+            config.addEntry('main', './no_require');
+            config.setPublicPath('/public');
+            config.addStyleEntry('h1', './h1_style.css');
+            config.addStyleEntry('bg', './background_image.scss');
+            config.enableVersioning(true);
+
+            runWebpack(config, () => {
+                expect(config.outputPath).to.be.a.directory()
+                    .with.files([
+                        'main.43bfd7b29d2e414807da.js',
+                        'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
+                        'bg.bf0ae369481a1080946f3112ee958040.css',
+                        'manifest.json'
+                    ]
+                );
+
+                expect(path.join(config.outputPath, 'images')).to.be.a.directory()
+                    .with.files([
+                        'symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                    ]
+                );
+
+                done();
+            });
+        });
+
+        // test that .png, fonts, are copied
         // check versioning, applies to everything, even loaded files
         // check sourcemaps apply to everything
         // check shared entry creates files, with manifest correctly
         // check HMR / dev server stuff
         // test that SASS is loaded, URLs are resolved
-        // test that .png, fonts, are copied
         // isProduction -> uglified
     });
 });
