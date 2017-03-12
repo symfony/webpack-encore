@@ -74,7 +74,24 @@ function runWebpack(webpackConfig, callback) {
     const compiler = webpack(generator(webpackConfig));
     compiler.run((err, stats) => {
         if (err) {
-            throw new Error(`Error running webpack! ${err}`);
+            console.error(err.stack || err);
+            if (err.details) {
+              console.error(err.details);
+            }
+
+            throw new Error(`Error running webpack!`);
+        }
+
+        const info = stats.toJson();
+
+        if (stats.hasErrors()) {
+            console.error(info.errors);
+
+            throw new Error(`Compilation error running webpack!`);
+        }
+
+        if (stats.hasWarnings()) {
+            console.warn(info.warnings)
         }
 
         callback();
