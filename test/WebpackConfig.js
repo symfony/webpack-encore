@@ -84,36 +84,18 @@ describe('WebpackConfig object', () => {
             expect(config.publicPath).to.equal('/foo/');
         });
 
-        it('passing a URL throws an error', () => {
-            var config = new WebpackConfig();
-
-            expect(() => {
-                config.setPublicPath('://example.com/foo');
-            }).to.throw('must pass a path');
-        });
-    });
-
-    describe('setPublicCDNPath', () => {
         it('https://example.com => https://example.com/', () => {
             var config = new WebpackConfig();
-            config.setPublicCDNPath('https://example.com');
+            config.setPublicPath('https://example.com');
 
-            expect(config.publicCDNPath).to.equal('https://example.com/');
+            expect(config.publicPath).to.equal('https://example.com/');
         });
 
         it('https://example.com/ => https://example.com/', () => {
             var config = new WebpackConfig();
-            config.setPublicCDNPath('https://example.com/');
+            config.setPublicPath('https://example.com/');
 
-            expect(config.publicCDNPath).to.equal('https://example.com/');
-        });
-
-        it('passing a path throws an error', () => {
-            var config = new WebpackConfig();
-
-            expect(() => {
-                config.setPublicCDNPath('/foo');
-            }).to.throw('must pass a full URL');
+            expect(config.publicPath).to.equal('https://example.com/');
         });
     });
 

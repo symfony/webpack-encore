@@ -16,12 +16,6 @@ module.exports = {
         return this;
     },
 
-    setPublicCDNPath(publicCDNPath) {
-        webpackConfig.setPublicCDNPath(publicCDNPath);
-
-        return this;
-    },
-
     addEntry(name, src) {
         webpackConfig.addEntry(name, src);
 

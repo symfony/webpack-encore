@@ -109,7 +109,7 @@ will also change, invalidating any existing cache:
 
     Remix
         // ...
-        .addEntry('...', '...')
+        .addEntry('app', '...')
         .addEntry('...', '...')
         .addEntry('...', '...')
         // add hashing to all asset filenames
@@ -121,8 +121,8 @@ provided by Symfony to link to them:
 
 .. code-block:: twig
 
-    {# asset_path() looks for the full filename of the given asset #}
-    <script src="{{ asset_path('builds/app.js') }}"></script>
+    {# asset_path() takes the entry name + .js or .css, and looks up the real path #}
+    <script src="{{ asset_path('app.js') }}"></script>
 
 Creating your JavaScript Files
 ------------------------------
