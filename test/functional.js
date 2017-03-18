@@ -20,86 +20,6 @@ Browser.extend(function (browser) {
 
 const testProjectPath = path.join(__dirname, 'project');
 
-function assertOutputFileHasSourcemap(filePath) {
-    var fullPath = path.join(testProjectPath, filePath);
-    const actualContents = fs.readFileSync(fullPath, 'utf8');
-    if (!actualContents.includes('sourceMappingURL')) {
-        throw new Error(`No sourcemap found for ${fullPath}!`);
-    }
-
-    var sourceMappingUrlContents = actualContents.split('sourceMappingURL')[1];
-
-    // if you set config.devtool = '#inline-source-map', but then
-    // incorrectly configure css/sass sourcemaps, you WILL have
-    // a sourcemap, but it will be too small / i.e. basically empty
-    if (sourceMappingUrlContents.length < 200) {
-        throw new Error(`Sourcemap for ${fullPath} appears to be empty!`);
-    }
-}
-
-function assertManifestPath(outputDir, sourcePath, expectedDestinationPath) {
-    const manifestData = loadManifest(outputDir);
-
-    if (!manifestData[sourcePath]) {
-        throw new Error(`No ${sourcePath} key found in manifest ${JSON.stringify(manifestData)}`);
-    }
-
-    if (manifestData[sourcePath] != expectedDestinationPath) {
-        throw new Error(`source path ${sourcePath} expected to be set to ${expectedDestinationPath}, was actually ${manifestData[sourcePath]}`);
-    }
-}
-function assertManifestPathDoesNotExist(outputDir, sourcePath) {
-    const manifestData = loadManifest(outputDir);
-
-    if (manifestData[sourcePath]) {
-        throw new Error(`Source ${sourcePath} key WAS found in manifest, but should not be there!`);
-    }
-}
-
-/**
- *
- * @param {WebpackConfig} webpackConfig
- * @param {Browser} browser
- * @param expectedResourcePaths Array of expected resources, but just
- *                              their short filenames - e.g. main.css
- *                              (i.e. without the public path)
- */
-function assertResourcesLoadedCorrectly(webpackConfig, browser, expectedResourcePaths) {
-    const actualResources = [];
-    for (let resource of browser.resources) {
-        if (resource.response.status != 200) {
-            throw new Error(`Error: status code ${resource.response.status} when requesting resource ${resource.request.url}`);
-        }
-
-        // skip the .html page as a resource
-        if (resource.request.url.includes('testing.html')) {
-            continue;
-        }
-
-        actualResources.push(resource.request.url);
-    }
-
-    // prefix each expected resource with its public path
-    // needed when the public path is a CDN
-    const expectedResources = expectedResourcePaths.map((path) => {
-        // if we've explicitly passed a full URL in for testing, ignore that
-        if (path.startsWith('http://')) {
-            return path;
-        }
-
-        return webpackConfig.publicPath+path;
-    });
-
-    expect(actualResources).to.have.all.members(expectedResources);
-}
-
-function loadManifest(outputDir)
-{
-    return JSON.parse(
-        fs.readFileSync(path.join(outputDir, 'manifest.json'), 'utf8')
-    );
-}
-
 function runWebpack(webpackConfig, callback) {
     const compiler = webpack(generator(webpackConfig));
     compiler.run((err, stats) => {
@@ -166,8 +86,7 @@ describe('Functional tests using webpack', () => {
                     'main.js',
                     '__webpack_require__'
                 );
-                assertManifestPath(
-                    config.outputPath,
+                webpackAssert.assertManifestPath(
                     'main.js',
                     '/build/main.js'
                 );
@@ -207,7 +126,7 @@ describe('Functional tests using webpack', () => {
                 fs.copySync(path.join(__dirname, 'testing.html'), path.join(testProjectPath, 'public', 'testing.html'));
                 var browser = new Browser();
                 browser.visit('http://127.0.0.1:8080/testing.html', () => {
-                    assertResourcesLoadedCorrectly(config, browser, [
+                    webpackAssert.assertResourcesLoadedCorrectly(browser, [
                         '0.js',
                         // guarantee that we assert that main.js is loaded from the
                         // main server, as it's simply a script tag to main.js on the page
@@ -335,14 +254,14 @@ describe('Functional tests using webpack', () => {
             config.enableSourceMaps();
 
             runWebpack(config, (webpackAssert) => {
-                assertOutputFileHasSourcemap(
-                    'www/build/main.js'
+                webpackAssert.assertOutputFileHasSourcemap(
+                    'main.js'
                 );
-                assertOutputFileHasSourcemap(
-                    'www/build/bg.css'
+                webpackAssert.assertOutputFileHasSourcemap(
+                    'bg.css'
                 );
-                assertOutputFileHasSourcemap(
-                    'www/build/font.css'
+                webpackAssert.assertOutputFileHasSourcemap(
+                    'font.css'
                 );
 
                 done();
