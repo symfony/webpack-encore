@@ -56,23 +56,9 @@ describe('WebpackConfig object', () => {
     });
 
     describe('setPublicPath', () => {
-        it('foo => /foo/', () => {
-            var config = new WebpackConfig();
-            config.setPublicPath('foo');
-
-            expect(config.publicPath).to.equal('/foo/');
-        });
-
         it('/foo => /foo/', () => {
             var config = new WebpackConfig();
             config.setPublicPath('/foo');
-
-            expect(config.publicPath).to.equal('/foo/');
-        });
-
-        it('foo/ => /foo/', () => {
-            var config = new WebpackConfig();
-            config.setPublicPath('foo/');
 
             expect(config.publicPath).to.equal('/foo/');
         });
@@ -96,6 +82,22 @@ describe('WebpackConfig object', () => {
             config.setPublicPath('https://example.com/');
 
             expect(config.publicPath).to.equal('https://example.com/');
+        });
+
+        it('foo => throws an error', () => {
+            var config = new WebpackConfig();
+
+            expect(() => {
+                config.setPublicPath('foo');
+            }).to.throw('must start with "/"');
+        });
+
+        it('foo/ => throws an error', () => {
+            var config = new WebpackConfig();
+
+            expect(() => {
+                config.setPublicPath('foo/');
+            }).to.throw('must start with "/"');
         });
     });
 
