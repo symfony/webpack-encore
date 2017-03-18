@@ -149,8 +149,8 @@ describe('Functional tests using webpack', () => {
                 );
                 assertManifestPath(
                     config.outputPath,
-                    'build/main.js',
-                    'build/main.js'
+                    'main.js',
+                    '/build/main.js'
                 );
 
                 done();
