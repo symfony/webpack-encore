@@ -78,13 +78,13 @@ describe('Functional tests using webpack', () => {
         it('setPublicPath with a CDN loads assets from the CDN', (done) => {
             var config = testSetup.createWebpackConfig('public/assets');
             config.addEntry('main', './code_splitting');
+            config.addStyleEntry('font', './roboto_font.css');
+            config.addStyleEntry('bg', './background_image.scss');
             config.setPublicPath('http://localhost:8090/assets');
-
-            // todo - test paths to images/fonts inside CSS file
 
             runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
-                    .with.files(['0.js', 'main.js', 'manifest.json']);
+                    .with.files(['0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json']);
 
                 // check that the publicPath is set correctly
                 webpackAssert.assertOutputFileContains(
@@ -92,10 +92,18 @@ describe('Functional tests using webpack', () => {
                     '__webpack_require__.p = "http://localhost:8090/assets/";'
                 );
 
+                webpackAssert.assertOutputFileContains(
+                    'bg.css',
+                    'http://localhost:8090/assets/images/symfony_logo.png'
+                );
+                webpackAssert.assertOutputFileContains(
+                    'font.css',
+                    'http://localhost:8090/assets/fonts/Roboto.woff2'
+                );
+
                 testSetup.requestTestPage(
                     'public',
                     ['/assets/main.js'],
-                    [],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
                             '0.js',
