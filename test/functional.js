@@ -1,24 +1,14 @@
-var chai = require('chai');
+const chai = require('chai');
 chai.use(require('chai-fs'));
-var expect = chai.expect;
+const expect = chai.expect;
 
 const webpack = require('webpack');
-var WebpackConfig = require('../lib/WebpackConfig');
-var generator = require('../lib/config_generator');
+const WebpackConfig = require('../lib/WebpackConfig');
+const generator = require('../lib/config_generator');
 const path = require('path');
-const fs = require('fs-extra');
-const Browser = require('zombie');
-const httpServer = require('http-server');
+const fs = require('fs');
 const testSetup = require('../lib/test/setup');
 const assertUtil = require('../lib/test/assert');
-
-Browser.extend(function (browser) {
-    browser.on('error', function (error) {
-        throw new Error(error);
-    });
-});
-
-const testProjectPath = path.join(__dirname, 'project');
 
 function runWebpack(webpackConfig, callback) {
     const compiler = webpack(generator(webpackConfig));
@@ -46,16 +36,6 @@ function runWebpack(webpackConfig, callback) {
 
         callback(assertUtil(webpackConfig));
     });
-}
-
-function startHttpServer(port) {
-    var server = httpServer.createServer({
-        root: path.join(__dirname, 'project', 'public')
-    });
-
-    server.listen(port, '0.0.0.0');
-
-    return server;
 }
 
 describe('Functional tests using webpack', () => {
@@ -112,33 +92,23 @@ describe('Functional tests using webpack', () => {
                     '__webpack_require__.p = "http://localhost:8090/assets/";'
                 );
 
-                /*
-                 * An experimental thing... where we actually use a browser to try things...
-                 *
-                 * To get this to pass, you must start 2 servers in a test/project/public directory
-                 *      http-server
-                 *      http-server -p 8090
-                 */
-                var server1 = startHttpServer(8080);
-                var server2 = startHttpServer(8090);
+                testSetup.requestTestPage(
+                    'public',
+                    ['/assets/main.js'],
+                    [],
+                    (browser) => {
+                        webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                            '0.js',
+                            // guarantee that we assert that main.js is loaded from the
+                            // main server, as it's simply a script tag to main.js on the page
+                            // we did this to check that the internally-loaded assets
+                            // use the CDN, even if the entry point does not
+                            'http://127.0.0.1:8080/assets/main.js'
+                        ]);
 
-                // copy to the public root
-                fs.copySync(path.join(__dirname, 'testing.html'), path.join(testProjectPath, 'public', 'testing.html'));
-                var browser = new Browser();
-                browser.visit('http://127.0.0.1:8080/testing.html', () => {
-                    webpackAssert.assertResourcesLoadedCorrectly(browser, [
-                        '0.js',
-                        // guarantee that we assert that main.js is loaded from the
-                        // main server, as it's simply a script tag to main.js on the page
-                        // we did this to check that the internally-loaded assets
-                        // use the CDN, even if the entry point does not
-                        'http://127.0.0.1:8080/assets/main.js'
-                    ]);
-
-                    server1.close();
-                    server2.close();
-                    done();
-                });
+                        done();
+                    }
+                );
             });
         });
 
