@@ -10,6 +10,7 @@ const fs = require('fs-extra');
 const Browser = require('zombie');
 const httpServer = require('http-server');
 const testSetup = require('../lib/test/setup');
+const assertUtil = require('../lib/test/assert');
 
 Browser.extend(function (browser) {
     browser.on('error', function (error) {
@@ -18,14 +19,6 @@ Browser.extend(function (browser) {
 });
 
 const testProjectPath = path.join(__dirname, 'project');
-
-function assertOutputFileContains(filePath, expectedContents) {
-    var fullPath = path.join(testProjectPath, filePath);
-    const actualContents = fs.readFileSync(fullPath, 'utf8');
-    if (!actualContents.includes(expectedContents)) {
-        throw new Error(`Expected contents "${expectedContents}" not found in file ${fullPath}`);
-    }
-}
 
 function assertOutputFileHasSourcemap(filePath) {
     var fullPath = path.join(testProjectPath, filePath);
@@ -131,7 +124,7 @@ function runWebpack(webpackConfig, callback) {
             console.warn(info.warnings)
         }
 
-        callback();
+        callback(assertUtil(webpackConfig));
     });
 }
 
@@ -156,7 +149,7 @@ describe('Functional tests using webpack', () => {
             config.addEntry('main', './no_require');
             config.setPublicPath('/build');
 
-            runWebpack(config, () => {
+            runWebpack(config, (webpackAssert) => {
                 // should have a main.js file
                 // should have a manifest.json with public/main.js
 
@@ -164,13 +157,13 @@ describe('Functional tests using webpack', () => {
                     .with.files(['main.js', 'manifest.json']);
 
                 // check that main.js has the correct contents
-                assertOutputFileContains(
-                    'web/build/main.js',
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
                     'no_require_loaded'
                 );
                 // check that main.js has the webpack bootstrap
-                assertOutputFileContains(
-                    'web/build/main.js',
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
                     '__webpack_require__'
                 );
                 assertManifestPath(
@@ -190,13 +183,13 @@ describe('Functional tests using webpack', () => {
 
             // todo - test paths to images/fonts inside CSS file
 
-            runWebpack(config, () => {
+            runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files(['0.js', 'main.js', 'manifest.json']);
 
                 // check that the publicPath is set correctly
-                assertOutputFileContains(
-                    'public/assets/main.js',
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
                     '__webpack_require__.p = "http://localhost:8090/assets/";'
                 );
 
@@ -236,13 +229,13 @@ describe('Functional tests using webpack', () => {
             config.setPublicPath('/');
             config.addStyleEntry('styles', './h1_style.css');
 
-            runWebpack(config, () => {
+            runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     // public.js should not exist
                     .with.files(['main.js', 'styles.css', 'manifest.json']);
 
-                assertOutputFileContains(
-                    'web/styles.css',
+                webpackAssert.assertOutputFileContains(
+                    'styles.css',
                     'font-size: 50px;'
                 );
                 // todo - this isn't the biggest deal, but it's failing
@@ -262,7 +255,7 @@ describe('Functional tests using webpack', () => {
             config.addStyleEntry('bg', './background_image.scss');
             config.enableVersioning(true);
 
-            runWebpack(config, () => {
+            runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         '0.1e6aaff80a714c614d5a.js', // chunks are also versioned
@@ -279,8 +272,8 @@ describe('Functional tests using webpack', () => {
                     ]
                 );
 
-                assertOutputFileContains(
-                    'web/build/bg.4110c672dd434294dc4e28d1475255e0.css',
+                webpackAssert.assertOutputFileContains(
+                    'bg.4110c672dd434294dc4e28d1475255e0.css',
                     '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
                 );
 
@@ -294,7 +287,7 @@ describe('Functional tests using webpack', () => {
             config.addStyleEntry('bg', './background_image.scss');
             config.addStyleEntry('font', './roboto_font.css');
 
-            runWebpack(config, () => {
+            runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         'bg.css',
@@ -315,17 +308,17 @@ describe('Functional tests using webpack', () => {
                     ]
                 );
 
-                assertOutputFileContains(
-                    'www/build/bg.css',
+                webpackAssert.assertOutputFileContains(
+                    'bg.css',
                     '/build/images/symfony_logo.png'
                 );
-                assertOutputFileContains(
-                    'www/build/font.css',
+                webpackAssert.assertOutputFileContains(
+                    'font.css',
                     '/build/fonts/Roboto.woff2'
                 );
 
-                assertOutputFileContains(
-                    'www/build/font.css',
+                webpackAssert.assertOutputFileContains(
+                    'font.css',
                     '/build/fonts/Roboto.woff2'
                 );
 
@@ -341,7 +334,7 @@ describe('Functional tests using webpack', () => {
             config.addStyleEntry('font', './roboto_font.css');
             config.enableSourceMaps();
 
-            runWebpack(config, () => {
+            runWebpack(config, (webpackAssert) => {
                 assertOutputFileHasSourcemap(
                     'www/build/main.js'
                 );
