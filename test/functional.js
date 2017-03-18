@@ -8,6 +8,8 @@ var generator = require('../lib/config_generator');
 const path = require('path');
 const fs = require('fs-extra');
 const Browser = require('zombie');
+const httpServer = require('http-server');
+const testSetup = require('../lib/test/setup');
 
 Browser.extend(function (browser) {
     browser.on('error', function (error) {
@@ -16,29 +18,6 @@ Browser.extend(function (browser) {
 });
 
 const testProjectPath = path.join(__dirname, 'project');
-
-/**
- * @param outputDirName Sub-directory to output stuff
- * @returns {WebpackConfig}
- */
-function createWebpackConfig(outputDirName = '') {
-    var config = new WebpackConfig(path.join(__dirname, 'fixtures'));
-
-    if (!fs.existsSync(testProjectPath)) {
-        fs.mkdirSync(testProjectPath);
-    }
-
-    var outputPath = path.join(testProjectPath, outputDirName);
-    // allows us to create a few levels deep without issues
-    fs.mkdirsSync(outputPath);
-    config.setOutputPath(path.join(testProjectPath, outputDirName));
-
-    return config;
-}
-
-function emptyTestDir() {
-    fs.emptyDirSync(testProjectPath);
-}
 
 function assertOutputFileContains(filePath, expectedContents) {
     var fullPath = path.join(testProjectPath, filePath);
@@ -69,7 +48,7 @@ function assertManifestPath(outputDir, sourcePath, expectedDestinationPath) {
     const manifestData = loadManifest(outputDir);
 
     if (!manifestData[sourcePath]) {
-        throw new Error(`No ${sourcePath} key found in manifest ${manifestData}`);
+        throw new Error(`No ${sourcePath} key found in manifest ${JSON.stringify(manifestData)}`);
     }
 
     if (manifestData[sourcePath] != expectedDestinationPath) {
@@ -82,6 +61,43 @@ function assertManifestPathDoesNotExist(outputDir, sourcePath) {
     if (manifestData[sourcePath]) {
         throw new Error(`Source ${sourcePath} key WAS found in manifest, but should not be there!`);
     }
+}
+
+/**
+ *
+ * @param {WebpackConfig} webpackConfig
+ * @param {Browser} browser
+ * @param expectedResourcePaths Array of expected resources, but just
+ *                              their short filenames - e.g. main.css
+ *                              (i.e. without the public path)
+ */
+function assertResourcesLoadedCorrectly(webpackConfig, browser, expectedResourcePaths) {
+    const actualResources = [];
+    for (let resource of browser.resources) {
+        if (resource.response.status != 200) {
+            throw new Error(`Error: status code ${resource.response.status} when requesting resource ${resource.request.url}`);
+        }
+
+        // skip the .html page as a resource
+        if (resource.request.url.includes('testing.html')) {
+            continue;
+        }
+
+        actualResources.push(resource.request.url);
+    }
+
+    // prefix each expected resource with its public path
+    // needed when the public path is a CDN
+    const expectedResources = expectedResourcePaths.map((path) => {
+        // if we've explicitly passed a full URL in for testing, ignore that
+        if (path.startsWith('http://')) {
+            return path;
+        }
+
+        return webpackConfig.publicPath+path;
+    });
+
+    expect(actualResources).to.have.all.members(expectedResources);
 }
 
 function loadManifest(outputDir)
@@ -119,14 +135,24 @@ function runWebpack(webpackConfig, callback) {
     });
 }
 
+function startHttpServer(port) {
+    var server = httpServer.createServer({
+        root: path.join(__dirname, 'project', 'public')
+    });
+
+    server.listen(port, '0.0.0.0');
+
+    return server;
+}
+
 describe('Functional tests using webpack', () => {
     describe('Basic scenarios', () => {
         beforeEach(() => {
-            emptyTestDir();
+            testSetup.emptyTestDir();
         });
 
         it('Builds a simple .js file + manifest.json', (done) => {
-            var config = createWebpackConfig('web/build');
+            var config = testSetup.createWebpackConfig('web/build');
             config.addEntry('main', './no_require');
             config.setPublicPath('/build');
 
@@ -157,11 +183,10 @@ describe('Functional tests using webpack', () => {
             });
         });
 
-        it('setPublicCDNPath causes paths to use CDN', (done) => {
-            var config = createWebpackConfig('public/assets');
+        it('setPublicPath with a CDN loads assets from the CDN', (done) => {
+            var config = testSetup.createWebpackConfig('public/assets');
             config.addEntry('main', './code_splitting');
-            config.setPublicPath('/assets');
-            config.setPublicCDNPath('http://localhost:8090/assets');
+            config.setPublicPath('http://localhost:8090/assets');
 
             // todo - test paths to images/fonts inside CSS file
 
@@ -182,20 +207,31 @@ describe('Functional tests using webpack', () => {
                  *      http-server
                  *      http-server -p 8090
                  */
+                var server1 = startHttpServer(8080);
+                var server2 = startHttpServer(8090);
+
                 // copy to the public root
                 fs.copySync(path.join(__dirname, 'testing.html'), path.join(testProjectPath, 'public', 'testing.html'));
                 var browser = new Browser();
                 browser.visit('http://127.0.0.1:8080/testing.html', () => {
-                    // check that both JS files were loaded!
-                    browser.assert.evaluate('window.window.code_splitting_loaded');
-                    browser.assert.evaluate('window.no_require_loaded');
+                    assertResourcesLoadedCorrectly(config, browser, [
+                        '0.js',
+                        // guarantee that we assert that main.js is loaded from the
+                        // main server, as it's simply a script tag to main.js on the page
+                        // we did this to check that the internally-loaded assets
+                        // use the CDN, even if the entry point does not
+                        'http://127.0.0.1:8080/assets/main.js'
+                    ]);
+
+                    server1.close();
+                    server2.close();
                     done();
                 });
             });
         });
 
         it('addStyleEntry .js files are removed', (done) => {
-            var config = createWebpackConfig('web');
+            var config = testSetup.createWebpackConfig('web');
             config.addEntry('main', './no_require');
             config.setPublicPath('/');
             config.addStyleEntry('styles', './h1_style.css');
@@ -219,7 +255,7 @@ describe('Functional tests using webpack', () => {
         });
 
         it('enableVersioning applies to js, css & manifest', (done) => {
-            var config = createWebpackConfig('web/build');
+            var config = testSetup.createWebpackConfig('web/build');
             config.addEntry('main', './code_splitting');
             config.setPublicPath('/build');
             config.addStyleEntry('h1', './h1_style.css');
@@ -253,7 +289,7 @@ describe('Functional tests using webpack', () => {
         });
 
         it('font and image files are copied correctly', (done) => {
-            var config = createWebpackConfig('www/build');
+            var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addStyleEntry('bg', './background_image.scss');
             config.addStyleEntry('font', './roboto_font.css');
@@ -298,7 +334,7 @@ describe('Functional tests using webpack', () => {
         });
 
         it('enableSourceMaps() adds to .js, css & scss', (done) => {
-            var config = createWebpackConfig('www/build');
+            var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addEntry('main', './no_require');
             config.addStyleEntry('bg', './background_image.scss');
