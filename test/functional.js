@@ -46,7 +46,7 @@ describe('Functional tests using webpack', () => {
 
         it('Builds a simple .js file + manifest.json', (done) => {
             var config = testSetup.createWebpackConfig('web/build');
-            config.addEntry('main', './no_require');
+            config.addEntry('main', './js/no_require');
             config.setPublicPath('/build');
 
             runWebpack(config, (webpackAssert) => {
@@ -77,9 +77,9 @@ describe('Functional tests using webpack', () => {
 
         it('setPublicPath with a CDN loads assets from the CDN', (done) => {
             var config = testSetup.createWebpackConfig('public/assets');
-            config.addEntry('main', './code_splitting');
-            config.addStyleEntry('font', './roboto_font.css');
-            config.addStyleEntry('bg', './background_image.scss');
+            config.addEntry('main', './js/code_splitting');
+            config.addStyleEntry('font', './css/roboto_font.css');
+            config.addStyleEntry('bg', './css/background_image.scss');
             config.setPublicPath('http://localhost:8090/assets');
 
             runWebpack(config, (webpackAssert) => {
@@ -122,9 +122,9 @@ describe('Functional tests using webpack', () => {
 
         it('addStyleEntry .js files are removed', (done) => {
             var config = testSetup.createWebpackConfig('web');
-            config.addEntry('main', './no_require');
+            config.addEntry('main', './js/no_require');
             config.setPublicPath('/');
-            config.addStyleEntry('styles', './h1_style.css');
+            config.addStyleEntry('styles', './css/h1_style.css');
 
             runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -146,19 +146,19 @@ describe('Functional tests using webpack', () => {
 
         it('enableVersioning applies to js, css & manifest', (done) => {
             var config = testSetup.createWebpackConfig('web/build');
-            config.addEntry('main', './code_splitting');
+            config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/build');
-            config.addStyleEntry('h1', './h1_style.css');
-            config.addStyleEntry('bg', './background_image.scss');
+            config.addStyleEntry('h1', './css/h1_style.css');
+            config.addStyleEntry('bg', './css/background_image.scss');
             config.enableVersioning(true);
 
             runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.1e6aaff80a714c614d5a.js', // chunks are also versioned
-                        'main.905da0a0a7c7a461f2a3.js',
+                        '0.0e235f93fb1d52f0f5b0.js', // chunks are also versioned
+                        'main.9c2144af1d163196f861.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
-                        'bg.4110c672dd434294dc4e28d1475255e0.css',
+                        'bg.a2b16f730bd3c26463f24915b4ff898b.css',
                         'manifest.json'
                     ]
                 );
@@ -170,7 +170,7 @@ describe('Functional tests using webpack', () => {
                 );
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.4110c672dd434294dc4e28d1475255e0.css',
+                    'bg.a2b16f730bd3c26463f24915b4ff898b.css',
                     '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
                 );
 
@@ -181,8 +181,8 @@ describe('Functional tests using webpack', () => {
         it('font and image files are copied correctly', (done) => {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
-            config.addStyleEntry('bg', './background_image.scss');
-            config.addStyleEntry('font', './roboto_font.css');
+            config.addStyleEntry('bg', './css/background_image.scss');
+            config.addStyleEntry('font', './css/roboto_font.css');
 
             runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -226,9 +226,9 @@ describe('Functional tests using webpack', () => {
         it('enableSourceMaps() adds to .js, css & scss', (done) => {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
-            config.addEntry('main', './no_require');
-            config.addStyleEntry('bg', './background_image.scss');
-            config.addStyleEntry('font', './roboto_font.css');
+            config.addEntry('main', './js/no_require');
+            config.addStyleEntry('bg', './css/background_image.scss');
+            config.addStyleEntry('font', './css/roboto_font.css');
             config.enableSourceMaps();
 
             runWebpack(config, (webpackAssert) => {
