@@ -59,7 +59,7 @@ describe('Functional tests using webpack', () => {
                 // check that main.js has the correct contents
                 webpackAssert.assertOutputFileContains(
                     'main.js',
-                    'no_require_loaded'
+                    'i am the no_require.js file'
                 );
                 // check that main.js has the webpack bootstrap
                 webpackAssert.assertOutputFileContains(
@@ -155,10 +155,10 @@ describe('Functional tests using webpack', () => {
             runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.0e235f93fb1d52f0f5b0.js', // chunks are also versioned
-                        'main.9c2144af1d163196f861.js',
+                        '0.8f595ffed74b056680e4.js', // chunks are also versioned
+                        'main.db34c9c1183e61f91049.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
-                        'bg.a2b16f730bd3c26463f24915b4ff898b.css',
+                        'bg.b311ca58a053400945a78a6a6a8ba245.css',
                         'manifest.json'
                     ]
                 );
@@ -170,7 +170,7 @@ describe('Functional tests using webpack', () => {
                 );
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.a2b16f730bd3c26463f24915b4ff898b.css',
+                    'bg.b311ca58a053400945a78a6a6a8ba245.css',
                     '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
                 );
 
@@ -268,9 +268,43 @@ describe('Functional tests using webpack', () => {
             });
         });
 
-        // check shared entry creates files, with manifest correctly
-        // check HMR / dev server stuff
-        // test that SASS is loaded, URLs are resolved
-        // isProduction -> uglified
+        it('createdSharedEntry() creates commons files', (done) => {
+            var config = testSetup.createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting']);
+            config.addEntry('other', ['./js/no_require']);
+            config.createSharedEntry('vendor', './js/no_require');
+
+            runWebpack(config, (webpackAssert) => {
+                // check the file is extracted correctly
+                webpackAssert.assertOutputFileContains(
+                    'vendor.js',
+                    'i am the no_require.js file'
+                );
+                // we should also have a manifest file with the webpack bootstrap code
+                webpackAssert.assertOutputFileContains(
+                    'manifest.js',
+                    'function __webpack_require__'
+                );
+
+                done();
+            });
+        });
+
+        it('in production mode, code is uglified', (done) => {
+            var config = testSetup.createWebpackConfig('www/build', 'production');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require']);
+
+            runWebpack(config, (webpackAssert) => {
+                // the comment should not live in the file
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    '// comments in no_require.js'
+                );
+
+                done();
+            });
+        });
     });
 });
