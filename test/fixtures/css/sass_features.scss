@@ -1,0 +1,7 @@
+@import 'background_image';
+
+$primary-color: #333;
+
+h2.with_sass {
+  color: $primary-color;
+}

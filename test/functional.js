@@ -246,6 +246,28 @@ describe('Functional tests using webpack', () => {
             });
         });
 
+        it.only('Code splitting a scss file works', (done) => {
+            var config = testSetup.createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            // loads sass_features.scss via require.ensure
+            config.addEntry('main', './js/code_split_load_scss');
+
+            runWebpack(config, (webpackAssert) => {
+                // make sure sass is parsed
+                webpackAssert.assertOutputFileContains(
+                    '0.js',
+                    'color: #333'
+                );
+                // and imported files are loaded correctly
+                webpackAssert.assertOutputFileContains(
+                    '0.js',
+                    'background: top left'
+                );
+
+                done();
+            });
+        });
+
         // check shared entry creates files, with manifest correctly
         // check HMR / dev server stuff
         // test that SASS is loaded, URLs are resolved
