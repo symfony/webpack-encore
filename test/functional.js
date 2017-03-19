@@ -246,7 +246,7 @@ describe('Functional tests using webpack', () => {
             });
         });
 
-        it.only('Code splitting a scss file works', (done) => {
+        it('Code splitting a scss file works', (done) => {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             // loads sass_features.scss via require.ensure
