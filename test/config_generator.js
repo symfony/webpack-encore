@@ -270,15 +270,15 @@ describe('The config_generator function', () => {
             config.outputPath = '/tmp/output';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.configureBabel({
-                "presets": ["foo", "env"]
+            config.configureBabel(function(babelConfig) {
+                babelConfig.presets.push('foo');
             });
 
             const actualConfig = generator(config);
 
             const jsRule = findRule(/\.js$/, actualConfig.module.rules);
 
-            expect(jsRule.use.options.presets).to.have.all.members(["foo", "env"]);
+            expect(jsRule.use.options.presets).to.include('foo');
         });
     });
 

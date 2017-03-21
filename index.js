@@ -69,10 +69,14 @@ module.exports = {
      *
      * https://babeljs.io/docs/usage/babelrc/
      *
-     * @param {Object} config
+     * Remix.configureBabel(function(babelConfig) {
+     *      // change the babelConfig
+     * });
+     *
+     * @param {function} callback
      */
-    configureBabel(config) {
-        webpackConfig.configureBabel(config);
+    configureBabel(callback) {
+        webpackConfig.configureBabel(callback);
 
         return this;
     },

@@ -262,9 +262,8 @@ Need to configure Babel yourself? No problem - there are two options:
         // ...
 
         // Option 1) configure babel right inside webpack.config.js
-        .configureBabel({
-            "presets": ["env"],
-            "plugins": ["babel-plugin-transform-class-properties"],
+        .configureBabel(function(babelConfig) {
+            babelConfig.presets.push('es2017');
         })
 
         // Option 2) Create a .babelrc file, then tell Remix it exists
