@@ -64,6 +64,31 @@ module.exports = {
         return this;
     },
 
+    /**
+     * Configure babel, without needing a .babelrc file.
+     *
+     * https://babeljs.io/docs/usage/babelrc/
+     *
+     * @param {Object} config
+     */
+    configureBabel(config) {
+        webpackConfig.configureBabel(config);
+
+        return this;
+    },
+
+    /**
+     * Should the babel-loader be allowed to load config from
+     * a .babelrc file?
+     *
+     * @param shouldUse
+     */
+    useBabelRcFile(shouldUse = true) {
+        webpackConfig.useBabelRcFile(shouldUse);
+
+        return this;
+    },
+
     isProduction() {
         return webpackConfig.isProduction();
     },

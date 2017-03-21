@@ -245,6 +245,36 @@ with the following content:
 
     window.$ = window.jQuery = require('jquery');
 
+Configuring Babel
+-----------------
+
+Babel_ is automatically configured for all ``.js`` files via the
+``babel-loader``. By default, the ``env`` preset is used without
+any extra options.
+
+Need to configure Babel yourself? No problem - there are two options:
+
+```javascript
+    // webpack.config.js
+    var Remix = require('webpack-remix');
+
+    Remix
+        // ...
+
+        // Option 1) configure babel right inside webpack.config.js
+        .configureBabel({
+            "presets": ["env"],
+            "plugins": ["babel-plugin-transform-class-properties"],
+        })
+
+        // Option 2) Create a .babelrc file, then tell Remix it exists
+        .useBabelRcFile()
+    ;
+```
+
+If you create a ``.babelrc`` file, don't forget to call ``useBabelRcFile()``.
+Otherwise, the default config will override your file's settings.
+
 Enabling PostCSS (postcss-loader)
 ---------------------------------
 
@@ -274,6 +304,7 @@ Finally, enable PostCSS in Remix:
 
 .. code-block:: javascript
 
+    // webpack.config.js
     var Remix = require('webpack-remix');
 
     Remix
@@ -287,3 +318,4 @@ files.
 .. _`PostCSS`: http://postcss.org/
 .. _`autoprefixing`: https://github.com/postcss/autoprefixer
 .. _`linting`: https://stylelint.io/
+.. _`Babel`: http://babeljs.io/

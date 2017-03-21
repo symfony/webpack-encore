@@ -5,13 +5,28 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 
 function findPlugin(pluginConstructor, plugins) {
-    for (plugin of plugins) {
+    for (let plugin of plugins) {
         if (plugin instanceof pluginConstructor) {
             return plugin;
         }
     }
 
     throw new Error(`No plugin found for ${pluginConstructor.name}`);
+}
+
+/**
+ * @param {RegExp} regex
+ * @param {Array} rules
+ * @returns {*}
+ */
+function findRule(regex, rules) {
+    for (let rule of rules) {
+        if (rule.test.toString() == regex.toString()) {
+            return rule;
+        }
+    }
+
+    throw new Error(`No rule found for regex ${regex}`);
 }
 
 describe('The config_generator function', () => {
@@ -214,6 +229,56 @@ describe('The config_generator function', () => {
             const actualConfig = generator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('postcss-loader')
+        });
+    });
+
+    describe('babel configuration files control babel-loader options', () => {
+        it('Use default config', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+
+            const actualConfig = generator(config);
+
+            const jsRule = findRule(/\.js$/, actualConfig.module.rules);
+
+            // check for the default env preset only
+            expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({presets: ['env']}));
+        });
+
+        it('useBabelRcFile() passes *no* config', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.useBabelRcFile();
+
+            const actualConfig = generator(config);
+
+            const jsRule = findRule(/\.js$/, actualConfig.module.rules);
+
+            // the options should be completely omitted
+            expect(jsRule.use.options).to.be.undefined;
+        });
+
+        it('configureBabel() passes babel options', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureBabel({
+                "presets": ["foo", "env"]
+            });
+
+            const actualConfig = generator(config);
+
+            const jsRule = findRule(/\.js$/, actualConfig.module.rules);
+
+            expect(jsRule.use.options.presets).to.have.all.members(["foo", "env"]);
         });
     });
 

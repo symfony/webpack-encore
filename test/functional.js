@@ -38,7 +38,10 @@ function runWebpack(webpackConfig, callback) {
     });
 }
 
-describe('Functional tests using webpack', () => {
+describe('Functional tests using webpack', function() {
+    // being functional tests, these can take quite long
+    this.timeout(5000);
+
     describe('Basic scenarios', () => {
         beforeEach(() => {
             testSetup.emptyTestDir();
@@ -158,8 +161,8 @@ describe('Functional tests using webpack', () => {
             runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.8f595ffed74b056680e4.js', // chunks are also versioned
-                        'main.db34c9c1183e61f91049.js',
+                        '0.f3512deed2874664c103.js', // chunks are also versioned
+                        'main.38cc37978b71f8658a56.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
                         'bg.b311ca58a053400945a78a6a6a8ba245.css',
                         'manifest.json'
@@ -311,7 +314,7 @@ describe('Functional tests using webpack', () => {
         });
 
         it('PostCSS works when enabled', (done) => {
-            var config = testSetup.createWebpackConfig('www/build', 'production');
+            var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', ['./css/autoprefixer_test.css']);
             config.enablePostCss();
@@ -332,6 +335,55 @@ module.exports = {
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
                     '-webkit-full-screen'
+                );
+
+                done();
+            });
+        });
+
+        it('Babel is executed on .js files', (done) => {
+            var config = testSetup.createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/arrow_function');
+
+            runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the arrow function
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    '=>'
+                );
+
+                done();
+            });
+        });
+
+        it('Babel can be configured via .babelrc', (done) => {
+            var config = testSetup.createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/class-syntax');
+            config.useBabelRcFile();
+
+            testSetup.saveTemporaryFileToFixturesDirectory(
+                '.babelrc',
+                `
+{
+  "presets": [
+    ["env", {
+      "targets": {
+        "chrome": 52
+      }
+    }]
+  ]
+}
+`
+            );
+
+            runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the arrow function
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    // chrome 45 supports class, so it's not transpiled
+                    'class A {}'
                 );
 
                 done();
