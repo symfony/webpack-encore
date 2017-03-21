@@ -244,3 +244,46 @@ with the following content:
 .. code-block:: javascript
 
     window.$ = window.jQuery = require('jquery');
+
+Enabling PostCSS (postcss-loader)
+---------------------------------
+
+`PostCSS`_ is a CSS post-processing tool that can transform your
+CSS in a lot of cool ways, like `autoprefixing`_, `linting`_ and
+a lot more!
+
+First, download ``postcss-loader`` and ``postcss-load-config``:
+
+.. code-block:: terminal
+
+    npm install postcss-loader postcss-load-config --save-dev
+
+Next, create a ``postcss.config.js`` file at the root of your project:
+
+.. code-block:: javascript
+
+    module.exports = {
+        plugins: [
+            // include whatever plugins you want
+            // but make sure you install these via npm/yarn!
+            require('autoprefixer')
+        ]
+    }
+
+Finally, enable PostCSS in Remix:
+
+.. code-block:: javascript
+
+    var Remix = require('webpack-remix');
+
+    Remix
+        // ...
+        .enablePostCss()
+    ;
+
+That's it! The ``postcss-loader`` will now be used for all CSS, SASS, etc
+files.
+
+.. _`PostCSS`: http://postcss.org/
+.. _`autoprefixing`: https://github.com/postcss/autoprefixer
+.. _`linting`: https://stylelint.io/

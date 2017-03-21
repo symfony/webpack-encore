@@ -43,6 +43,9 @@ describe('Functional tests using webpack', () => {
         beforeEach(() => {
             testSetup.emptyTestDir();
         });
+        afterEach(() => {
+            testSetup.deleteTemporaryFiles();
+        });
 
         it('Builds a simple .js file + manifest.json', (done) => {
             var config = testSetup.createWebpackConfig('web/build');
@@ -301,6 +304,34 @@ describe('Functional tests using webpack', () => {
                 webpackAssert.assertOutputFileDoesNotContain(
                     'main.js',
                     '// comments in no_require.js'
+                );
+
+                done();
+            });
+        });
+
+        it('PostCSS works when enabled', (done) => {
+            var config = testSetup.createWebpackConfig('www/build', 'production');
+            config.setPublicPath('/build');
+            config.addStyleEntry('styles', ['./css/autoprefixer_test.css']);
+            config.enablePostCss();
+
+            testSetup.saveTemporaryFileToFixturesDirectory(
+                'postcss.config.js',
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}
+`
+            );
+
+            runWebpack(config, (webpackAssert) => {
+                // check that the autoprefixer did its work!
+                webpackAssert.assertOutputFileContains(
+                    'styles.css',
+                    '-webkit-full-screen'
                 );
 
                 done();

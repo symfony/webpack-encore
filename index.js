@@ -58,6 +58,12 @@ module.exports = {
         return this;
     },
 
+    enablePostCss(enabled = true) {
+        webpackConfig.enablePostCss(enabled);
+
+        return this;
+    },
+
     isProduction() {
         return webpackConfig.isProduction();
     },

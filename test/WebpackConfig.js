@@ -175,8 +175,6 @@ describe('WebpackConfig object', () => {
         it('Calling with string throws an error', () => {
             var config = new WebpackConfig();
 
-            console.log('foo' instanceof String);
-
             expect(() => {
                 config.autoProvideVariables('jquery');
             }).to.throw('must pass an object');

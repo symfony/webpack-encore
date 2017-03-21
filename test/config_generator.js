@@ -1,6 +1,6 @@
-var expect    = require('chai').expect;
-var WebpackConfig = require('../lib/WebpackConfig');
-var generator = require('../lib/config_generator');
+const expect = require('chai').expect;
+const WebpackConfig = require('../lib/WebpackConfig');
+const generator = require('../lib/config_generator');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 
@@ -186,6 +186,34 @@ describe('The config_generator function', () => {
 
             const uglifyPlugin = findPlugin(webpack.optimize.UglifyJsPlugin, actualConfig.plugins);
             expect(uglifyPlugin).to.not.be.undefined;
+        });
+    });
+
+    describe('enabledPostCSS() adds the postcss-loader', () => {
+        it('enabledPostCSS(false)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enablePostCss(false);
+
+            const actualConfig = generator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader')
+        });
+
+        it('enabledPostCSS(true)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enablePostCss();
+
+            const actualConfig = generator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('postcss-loader')
         });
     });
 
