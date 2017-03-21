@@ -161,8 +161,8 @@ describe('Functional tests using webpack', function() {
             runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.f3512deed2874664c103.js', // chunks are also versioned
-                        'main.38cc37978b71f8658a56.js',
+                        '0.6cd7675bf4ace2f4b3d9.js', // chunks are also versioned
+                        'main.9120362c59153904e27c.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
                         'bg.b311ca58a053400945a78a6a6a8ba245.css',
                         'manifest.json'

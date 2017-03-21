@@ -245,7 +245,7 @@ describe('The config_generator function', () => {
             const jsRule = findRule(/\.js$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({presets: ['env']}));
+            expect(JSON.stringify(jsRule.use.options.presets)).to.equal(JSON.stringify([['env', {"modules": false}]]));
         });
 
         it('useBabelRcFile() passes *no* config', () => {
@@ -260,8 +260,8 @@ describe('The config_generator function', () => {
 
             const jsRule = findRule(/\.js$/, actualConfig.module.rules);
 
-            // the options should be completely omitted
-            expect(jsRule.use.options).to.be.undefined;
+            // the options should only contain the cacheDirectory option
+            expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({'cacheDirectory': true}));
         });
 
         it('configureBabel() passes babel options', () => {
