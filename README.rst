@@ -1,8 +1,32 @@
 webpack-remix
 =============
 
-Remix is a wrapper to simplify making webpack configuration, while still staying
-in the spirit of webpack!
+Webpack Remix is a JavaScript package provided by Symfony to simplify the
+integration of `Webpack`_ into Symfony applications. It's not a replacement for
+Webpack, it doesn't hide or change any of its features and it brings no magic.
+
+Using Webpack Remix is optional, but recommended to improve our productivity.
+If your Symfony application doesn't use modern JavaScript features, such as
+modules, there is no need to use this package. If your application uses JavaScript
+toolkits different than Webpack, such as Grunt or Gulp, you can't use this package.
+
+Installation
+------------
+
+Webpack Remix is a JavaScript package, so it's not installed using Composer but
+using any of the JavaScript package managers:
+
+.. code-block:: terminal
+
+    # if you prefer npm (https://www.npmjs.com/)
+    $ npm install --save-dev symfony/webpack-remix
+
+    # if you prefer yarn (https://yarnpkg.com/)
+    $ yarn add symfony/webpack-remix
+
+These commands create or modify the ``package.json`` file and the ``node_modules/``
+directory at the root of your Symfony project. When using Yarn, a file called
+``yarn.lock`` is also created or modified.
 
 Basic Usage
 -----------
@@ -314,6 +338,7 @@ Finally, enable PostCSS in Remix:
 That's it! The ``postcss-loader`` will now be used for all CSS, SASS, etc
 files.
 
+.. _`Webpack`: https://webpack.js.org/
 .. _`PostCSS`: http://postcss.org/
 .. _`autoprefixing`: https://github.com/postcss/autoprefixer
 .. _`linting`: https://stylelint.io/
