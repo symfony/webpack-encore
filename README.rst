@@ -1,27 +1,30 @@
 webpack-remix
 =============
 
-Webpack Remix is a JavaScript package provided by Symfony to simplify the
+`Webpack Remix`_ is a JavaScript package provided by Symfony to simplify the
 integration of `Webpack`_ into Symfony applications. It's not a replacement for
-Webpack, it doesn't hide or change any of its features and it brings no magic.
+Webpack, but a thin API on top of it, so it stays in the same spirit of Webpack
+and it doesn't hide or change any of its features. Using Webpack Remix is
+optional, but recommended to improve your productivity.
 
-Using Webpack Remix is optional, but recommended to improve our productivity.
-If your Symfony application doesn't use modern JavaScript features, such as
-modules, there is no need to use this package. If your application uses JavaScript
-toolkits different than Webpack, such as Grunt or Gulp, you can't use this package.
+Webpack Remix replaces `Assetic`_ as the recommended way to manage web assets in
+Symfony applications. You can use it even if your application doesn't fully use
+modern JavaScript features. However, if your application uses JavaScript
+toolkits different than Webpack, such as Grunt or Gulp, you can't use this
+package.
 
 Installation
 ------------
 
 Webpack Remix is a JavaScript package, so it's not installed using Composer but
-using any of the JavaScript package managers:
+using any of the JavaScript package managers (for example, `npm`_ and `yarn`_):
 
 .. code-block:: terminal
 
-    # if you prefer npm (https://www.npmjs.com/)
+    # if you prefer npm
     $ npm install --save-dev symfony/webpack-remix
 
-    # if you prefer yarn (https://yarnpkg.com/)
+    # if you prefer yarn
     $ yarn add symfony/webpack-remix
 
 These commands create or modify the ``package.json`` file and the ``node_modules/``
@@ -338,7 +341,11 @@ Finally, enable PostCSS in Remix:
 That's it! The ``postcss-loader`` will now be used for all CSS, SASS, etc
 files.
 
+.. _`Webpack Remix`: https://www.npmjs.com/package/@weaverryan/webpack-remix
 .. _`Webpack`: https://webpack.js.org/
+.. _`Assetic`: http://symfony.com/doc/current/assetic/asset_management.html
+.. _`npm`: https://www.npmjs.com/
+.. _`yarn`: https://yarnpkg.com/
 .. _`PostCSS`: http://postcss.org/
 .. _`autoprefixing`: https://github.com/postcss/autoprefixer
 .. _`linting`: https://stylelint.io/
