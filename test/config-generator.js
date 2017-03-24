@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 const WebpackConfig = require('../lib/WebpackConfig');
-const generator = require('../lib/config_generator');
+const configGenerator = require('../lib/config-generator');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const webpack = require('webpack');
 
@@ -29,7 +29,7 @@ function findRule(regex, rules) {
     throw new Error(`No rule found for regex ${regex}`);
 }
 
-describe('The config_generator function', () => {
+describe('The config-generator function', () => {
 
     describe('Test basic output properties', () => {
         it('Returns an object with the correct properties', () => {
@@ -40,7 +40,7 @@ describe('The config_generator function', () => {
             config.publicPath = '/';
             config.outputPath = '/tmp';
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             expect(actualConfig.context).to.equal('/foo/dir');
             expect(actualConfig.entry).to.be.an('object');
@@ -55,7 +55,7 @@ describe('The config_generator function', () => {
             config.outputPath = '/tmp';
 
             expect(() => {
-                generator(config);
+                configGenerator(config);
             }).to.throw('No entries found!');
         });
 
@@ -65,7 +65,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
 
             expect(() => {
-                generator(config);
+                configGenerator(config);
             }).to.throw('Missing output path');
         });
 
@@ -75,7 +75,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
 
             expect(() => {
-                generator(config);
+                configGenerator(config);
             }).to.throw('Missing public path');
         });
 
@@ -87,7 +87,7 @@ describe('The config_generator function', () => {
             config.addStyleEntry('style', ['./bootstrap.css', './main.css']);
             config.addEntry('main2', './main2');
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
                 main: './main',
@@ -103,7 +103,7 @@ describe('The config_generator function', () => {
             config.publicPath = '/public-path/';
             config.addEntry('main', './main');
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.output)).to.equal(JSON.stringify({
                 path: '/tmp',
@@ -121,7 +121,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.useSourceMaps = false;
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
             expect(actualConfig.devtool).to.be.undefined;
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('?sourceMap')
@@ -134,7 +134,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.useSourceMaps = true;
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
             expect(actualConfig.devtool).to.equal('#inline-source-map');
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('?sourceMap')
@@ -149,7 +149,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.useVersioning = true;
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].[chunkhash].js');
 
             const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
@@ -167,7 +167,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.nodeEnvironment = 'dev';
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             const loaderOptionsPlugin = findPlugin(webpack.LoaderOptionsPlugin, actualConfig.plugins);
             expect(loaderOptionsPlugin.options.minimize).to.equal(false);
@@ -187,7 +187,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.nodeEnvironment = 'production';
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             const loaderOptionsPlugin = findPlugin(webpack.LoaderOptionsPlugin, actualConfig.plugins);
             expect(loaderOptionsPlugin.options.minimize).to.equal(true);
@@ -213,7 +213,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.enablePostCss(false);
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader')
         });
@@ -226,7 +226,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.enablePostCss();
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('postcss-loader')
         });
@@ -240,7 +240,7 @@ describe('The config_generator function', () => {
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
@@ -256,7 +256,7 @@ describe('The config_generator function', () => {
             config.addEntry('main', './main');
             config.useBabelRcFile();
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
@@ -274,7 +274,7 @@ describe('The config_generator function', () => {
                 babelConfig.presets.push('foo');
             });
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
@@ -292,7 +292,7 @@ describe('The config_generator function', () => {
                 babelConfig.presets.push('foo');
             });
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 

@@ -4,7 +4,7 @@ const expect = chai.expect;
 
 const webpack = require('webpack');
 const WebpackConfig = require('../lib/WebpackConfig');
-const generator = require('../lib/config_generator');
+const generator = require('../lib/config-generator');
 const path = require('path');
 const fs = require('fs');
 const testSetup = require('../lib/test/setup');

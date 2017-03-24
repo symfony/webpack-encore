@@ -1,5 +1,5 @@
 const WebpackConfig = require('./lib/WebpackConfig');
-const config_generator = require('./lib/config_generator');
+const configGenerator = require('./lib/config-generator');
 
 webpackConfig = new WebpackConfig();
 
@@ -104,6 +104,6 @@ module.exports = {
     },
 
     getWebpackConfig() {
-        return config_generator(webpackConfig);
+        return configGenerator(webpackConfig);
     }
 };
