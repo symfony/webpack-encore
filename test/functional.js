@@ -307,6 +307,24 @@ module.exports = {
             });
         });
 
+        it('less processes when enabled', (done) => {
+            var config = testSetup.createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            config.addStyleEntry('styles', ['./css/h2_styles.less']);
+            config.enableLess();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that less did its work!
+                webpackAssert.assertOutputFileContains(
+                    'styles.css',
+                    // less logic inside will resolve to tis
+                    'color: #fe33ac;'
+                );
+
+                done();
+            });
+        });
+
         it('Babel is executed on .js files', (done) => {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');

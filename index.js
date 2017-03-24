@@ -58,8 +58,21 @@ module.exports = {
         return this;
     },
 
+    /**
+     * Enables the postcss-loader
+     *
+     * Once enabled, you must have a postcss.config.js config file.
+     *
+     * https://github.com/postcss/postcss-loader
+     */
     enablePostCss(enabled = true) {
         webpackConfig.enablePostCss(enabled);
+
+        return this;
+    },
+
+    enableLess(enabled = true) {
+        webpackConfig.enableLess(enabled);
 
         return this;
     },

@@ -41,6 +41,8 @@
     "chai-fs": "^1.0.0",
     "fs-extra": "^2.0.0",
     "http-server": "^0.9.0",
+    "less": "^2.7.2",
+    "less-loader": "^4.0.2",
     "mocha": "^3.2.0",
     "postcss-loader": "^1.3.3",
     "zombie": "^5.0.5"

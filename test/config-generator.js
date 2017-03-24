@@ -232,6 +232,34 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('enabledLess() adds the less-loader', () => {
+        it('enabledLess(false)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableLess(false);
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader')
+        });
+
+        it('enabledLess(true)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableLess();
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('less-loader')
+        });
+    });
+
     describe('.js rule receives different configuration', () => {
         it('Use default config', () => {
             var config = new WebpackConfig();

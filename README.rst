@@ -264,6 +264,36 @@ the handling of file paths is a bit different:
 
     // ...
 
+Using SASS
+----------
+
+Remix automatically processes any files that end in ``.sass``
+or ``.scss``. No setup required!
+
+Using LESS
+----------
+
+To use the LESS pre-processor, first install ``less`` and
+the ``less-loader``:
+
+.. code-block:: terminal
+
+    npm install less-loader less --save-dev
+
+Now, just enable it in ``webpack.config.js``:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    var Remix = require('webpack-remix');
+
+    Remix
+        // ...
+        .enableLess()
+    ;
+
+That's it! All files ending in ``.less`` will be pre-processed!
+
 Passing Information from Twig to JavaScript
 -------------------------------------------
 
