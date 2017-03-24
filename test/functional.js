@@ -390,7 +390,7 @@ module.exports = {
             });
         });
 
-        it.only('When enabled, react JSX is transformed!', (done) => {
+        it('When enabled, react JSX is transformed!', (done) => {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
