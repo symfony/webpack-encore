@@ -1,42 +1,8 @@
 const chai = require('chai');
 chai.use(require('chai-fs'));
 const expect = chai.expect;
-
-const webpack = require('webpack');
-const WebpackConfig = require('../lib/WebpackConfig');
-const generator = require('../lib/config-generator');
 const path = require('path');
-const fs = require('fs');
 const testSetup = require('../lib/test/setup');
-const assertUtil = require('../lib/test/assert');
-
-function runWebpack(webpackConfig, callback) {
-    const compiler = webpack(generator(webpackConfig));
-    compiler.run((err, stats) => {
-        if (err) {
-            console.error(err.stack || err);
-            if (err.details) {
-              console.error(err.details);
-            }
-
-            throw new Error(`Error running webpack!`);
-        }
-
-        const info = stats.toJson();
-
-        if (stats.hasErrors()) {
-            console.error(info.errors);
-
-            throw new Error(`Compilation error running webpack!`);
-        }
-
-        if (stats.hasWarnings()) {
-            console.warn(info.warnings)
-        }
-
-        callback(assertUtil(webpackConfig));
-    });
-}
 
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
@@ -55,7 +21,7 @@ describe('Functional tests using webpack', function() {
             config.addEntry('main', './js/no_require');
             config.setPublicPath('/build');
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // should have a main.js file
                 // should have a manifest.json with public/main.js
 
@@ -88,7 +54,7 @@ describe('Functional tests using webpack', function() {
             config.addStyleEntry('bg', './css/background_image.scss');
             config.setPublicPath('http://localhost:8090/assets');
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files(['0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json']);
 
@@ -132,7 +98,7 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/');
             config.addStyleEntry('styles', './css/h1_style.css');
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     // public.js should not exist
                     .with.files(['main.js', 'styles.css', 'manifest.json']);
@@ -158,7 +124,7 @@ describe('Functional tests using webpack', function() {
             config.addStyleEntry('bg', './css/background_image.scss');
             config.enableVersioning(true);
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         '0.6cd7675bf4ace2f4b3d9.js', // chunks are also versioned
@@ -190,7 +156,7 @@ describe('Functional tests using webpack', function() {
             config.addStyleEntry('bg', './css/background_image.scss');
             config.addStyleEntry('font', './css/roboto_font.css');
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         'bg.css',
@@ -237,7 +203,7 @@ describe('Functional tests using webpack', function() {
             config.addStyleEntry('font', './css/roboto_font.css');
             config.enableSourceMaps();
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 webpackAssert.assertOutputFileHasSourcemap(
                     'main.js'
                 );
@@ -258,7 +224,7 @@ describe('Functional tests using webpack', function() {
             // loads sass_features.scss via require.ensure
             config.addEntry('main', './js/code_split_load_scss');
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // make sure sass is parsed
                 webpackAssert.assertOutputFileContains(
                     '0.js',
@@ -281,7 +247,7 @@ describe('Functional tests using webpack', function() {
             config.addEntry('other', ['./js/no_require']);
             config.createSharedEntry('vendor', './js/no_require');
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // check the file is extracted correctly
                 webpackAssert.assertOutputFileContains(
                     'vendor.js',
@@ -302,7 +268,7 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require']);
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // the comment should not live in the file
                 webpackAssert.assertOutputFileDoesNotContain(
                     'main.js',
@@ -330,7 +296,7 @@ module.exports = {
 `
             );
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // check that the autoprefixer did its work!
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
@@ -346,7 +312,7 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', './js/arrow_function');
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the arrow function
                 webpackAssert.assertOutputFileDoesNotContain(
                     'main.js',
@@ -378,7 +344,7 @@ module.exports = {
 `
             );
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the arrow function
                 webpackAssert.assertOutputFileContains(
                     'main.js',
@@ -396,7 +362,7 @@ module.exports = {
             config.addEntry('main', './js/CoolReactComponent.jsx');
             config.enableReact();
 
-            runWebpack(config, (webpackAssert) => {
+            testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the JSX
                 webpackAssert.assertOutputFileContains(
                     'main.js',
