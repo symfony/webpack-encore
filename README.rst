@@ -34,39 +34,101 @@ directory at the root of your Symfony project. When using Yarn, a file called
 Basic Usage
 -----------
 
-All the configuration lives in a file called ``webpack.config.js`` stored in the
-root directory of your project:
+First, create a file called ``webpack.config.js`` at the root of your Symfony
+project. This file contains all the configuration related to front-end assets
+and it's fully compatible with Webpack. This is the typical structure of the file:
 
 .. code-block:: javascript
 
     var Remix = require('webpack-remix');
 
     Remix
-        // where should all compiled files be stored?
+        // where should all compiled files (CSS, JS, fonts) be stored?
         .setOutputDir('web/builds/')
         // what's the public path to this directory (relative to your project's web/ dir)
         .setPublicPath('/builds')
 
-        // will create a web/builds/app.js
-        .addEntry('app', './app/Resources/assets/js/app.js')
-        // will create a web/builds/checkout.js, which you might
-        // include on an individual page only
-        .addEntry('checkout', './app/Resources/assets/js/checkout-page.js')
-
-        // add a styles-only entry. Feel free to mix CSS and Sass!
-        // will create a style.css
-        .addStylesEntry('styles', [
-            './app/Resources/assets/scss/app.scss',
-            './app/Resources/assets/css/font-lato.css',
-            './app/Resources/assets/css/highlight-solarized-light.css'
-        ])
-
-        // source maps only when NOT in production
-        Remix.enableSourceMaps(!Remix.isProduction())
+        // this adds JavaScript files/modules to the application
+        .addEntry(...)
+        .addEntry(...)
+        .addEntry(...)
+        // this adds CSS/Sass files to the application
+        .addStylesEntry(...)
+        .addStylesEntry(...)
+        .addStylesEntry(...)
     ;
 
     // export the final configuration
     module.exports = Remix.getWebpackConfig();
+
+The First Example
+-----------------
+
+Let's consider that you are adding Webpack Remix to a simple tradicionatl/legacy
+Symfony application that uses Bootstrap Saas and defines just these two files:
+``app.scss`` and ``app.js`` in ``app/Resources/assets/``.
+
+First, install Bootstrap Sass and jQuery as dependencies of your application
+front-end:
+
+.. code-block:: terminal
+
+    $ yarn add jquery bootstrap-sass
+
+Then, require those JavaScript/Sass modules from your own files:
+
+.. code-block:: css
+
+    // app/Resources/assets/scss/app.scss
+    @import '~bootstrap-saas'
+
+    // ...add here your own application styles
+
+.. code-block:: js
+
+    // app/Resources/assets/ks/app.js
+    @require('jquery');
+    @require('bootstrap-saas');
+
+    // ...add here your own application JavaScript code
+
+Finally, define the Webpack Remix configuration needed to compile these assets
+and generate the final ``app.css`` and ``app.js`` files served by the application:
+
+.. code-block:: javascript
+
+    var Remix = require('webpack-remix');
+
+    Remix
+        .setOutputDir('web/builds/')
+        .setPublicPath('/builds')
+        .autoProvidejQuery() // this option is explained later
+
+        // will create a web/builds/js/app.js
+        .addEntry('js/app', './app/Resources/assets/js/app.js')
+        // will create a web/builds/css/app.css
+        .addStylesEntry('css/app', './app/Resources/assets/scss/app.scss')
+    ;
+
+    module.exports = Remix.getWebpackConfig();
+
+The final missing step is to actually compile the assets using the
+``webpack.config.js`` configuration, as explained in the next section. Then you
+can link to the compiled assets from the templates of your Symfony application:
+
+.. code-block:: twig
+
+    <!DOCTYPE html>
+    <html>
+        <head>
+            <!-- ... -->
+            <link rel="stylesheet" href="{{ asset('/builds/css/app.css') }}">
+        </head>
+        <body>
+            <!-- ... -->
+            <script src="{{ asset('/builds/js/app.js') }}"></script>
+        </body>
+    </html>
 
 Compiling your Assets
 ---------------------
@@ -87,6 +149,31 @@ or compile them as smaller files:
     # in production servers, run this command to reduce the size of all files
     $ NODE_ENV=production ./node_modules/.bin/webpack
 
+Enabling Source Maps
+--------------------
+
+`Source maps`_ allow browsers to access to the original code related to some
+asset (e.g. the Sass code that was compiled to CSS or the TypeScript code that
+was compiled to JavaScript). Source maps are useful for debugging purposes but
+unnecessary when executing the application in production.
+
+Webpack Remix inlines source maps in the compiled assets only in the development
+environment, but you can control this behavior with the ``enableSourceMaps()``
+method:
+
+.. code-block:: javascript
+
+    var Remix = require('webpack-remix');
+
+    Remix
+        // ...
+
+        // this is the default behavior...
+        .enableSourceMaps(!Remix.isProduction())
+        // ... but you can override it by passing a boolean value
+        .enableSourceMaps(true)
+    ;
+
 Creating Shared Entries
 -----------------------
 
@@ -103,9 +190,9 @@ time. Create this vendor file with the ``createSharedEntry()`` method:
         .addEntry('...', '...')
         .addEntry('...', '...')
         .addEntry('...', '...')
-        // this creates a 'vendor.js' file with the code of the 'jquery' and
-        // 'moment' JavaScript modules
-        .createSharedEntry('vendor', ['jquery', 'moment'])
+        // this creates a 'vendor.js' file with the code of the jQuery' and
+        // Bootstrap JavaScript modules
+        .createSharedEntry('vendor', ['jquery', 'bootstrap-sass'])
 
 As soon as you make this change, you need to include two extra JavaScript files
 on your page before any other JavaScript file:
@@ -121,7 +208,6 @@ on your page before any other JavaScript file:
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
 is less obvious, but it's needed so webpack knows how to load those shared modules.
-
 
 Asset Versioning
 ----------------
@@ -272,6 +358,13 @@ with the following content:
 
     window.$ = window.jQuery = require('jquery');
 
+Full Configuration Example
+--------------------------
+
+.. TODO:
+.. Show here a full and complex example of using Webpack Remix in a real
+.. Symfony application such as symfony.com
+
 Configuring Babel
 -----------------
 
@@ -346,6 +439,7 @@ files.
 .. _`Assetic`: http://symfony.com/doc/current/assetic/asset_management.html
 .. _`npm`: https://www.npmjs.com/
 .. _`yarn`: https://yarnpkg.com/
+.. _`Source maps`: https://developer.mozilla.org/en-US/docs/Tools/Debugger/How_to/Use_a_source_map
 .. _`PostCSS`: http://postcss.org/
 .. _`autoprefixing`: https://github.com/postcss/autoprefixer
 .. _`linting`: https://stylelint.io/
