@@ -232,7 +232,7 @@ describe('The config_generator function', () => {
         });
     });
 
-    describe('babel configuration files control babel-loader options', () => {
+    describe('.js rule receives different configuration', () => {
         it('Use default config', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
@@ -242,7 +242,7 @@ describe('The config_generator function', () => {
 
             const actualConfig = generator(config);
 
-            const jsRule = findRule(/\.js$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // check for the default env preset only
             expect(JSON.stringify(jsRule.use.options.presets)).to.equal(JSON.stringify([['env', {"modules": false}]]));
@@ -258,7 +258,7 @@ describe('The config_generator function', () => {
 
             const actualConfig = generator(config);
 
-            const jsRule = findRule(/\.js$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // the options should only contain the cacheDirectory option
             expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({'cacheDirectory': true}));
@@ -276,8 +276,28 @@ describe('The config_generator function', () => {
 
             const actualConfig = generator(config);
 
-            const jsRule = findRule(/\.js$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
+            expect(jsRule.use.options.presets).to.include('foo');
+        });
+
+        it('enableReact() passes react preset to babel', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableReact();
+            config.configureBabel(function(babelConfig) {
+                babelConfig.presets.push('foo');
+            });
+
+            const actualConfig = generator(config);
+
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+
+            expect(jsRule.use.options.presets).to.include('react');
+            // foo is also still there, not overridden
             expect(jsRule.use.options.presets).to.include('foo');
         });
     });

@@ -389,5 +389,22 @@ module.exports = {
                 done();
             });
         });
+
+        it.only('When enabled, react JSX is transformed!', (done) => {
+            var config = testSetup.createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/CoolReactComponent.jsx');
+            config.enableReact();
+
+            runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the JSX
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'React.createElement'
+                );
+
+                done();
+            });
+        });
     });
 });

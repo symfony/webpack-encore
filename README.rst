@@ -374,7 +374,8 @@ any extra options.
 
 Need to configure Babel yourself? No problem - there are two options:
 
-```javascript
+.. code-block:: javascript
+
     // webpack.config.js
     var Remix = require('webpack-remix');
 
@@ -389,10 +390,35 @@ Need to configure Babel yourself? No problem - there are two options:
         // Option 2) Create a .babelrc file, then tell Remix it exists
         .useBabelRcFile()
     ;
-```
 
 If you create a ``.babelrc`` file, don't forget to call ``useBabelRcFile()``.
 Otherwise, the default config will override your file's settings.
+
+Using React
+-----------
+
+Using React? No problem! Make sure you have React installed,
+along with the `babel-preset-react`_:
+
+.. code-block:: terminal
+
+    npm react react-dom --save-dev
+    npm install babel-preset-react --save-dev
+
+Next, enable react in your ``webpack.config.js``:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    var Remix = require('webpack-remix');
+
+    Remix
+        // ...
+        .enableReact()
+    ;
+
+That's it! Your ``.js`` and ``.jsx`` files will now be transformed
+using the ``babel-react-loader``!
 
 Enabling PostCSS (postcss-loader)
 ---------------------------------
@@ -444,3 +470,4 @@ files.
 .. _`autoprefixing`: https://github.com/postcss/autoprefixer
 .. _`linting`: https://stylelint.io/
 .. _`Babel`: http://babeljs.io/
+.. _`babel-react-preset`: https://babeljs.io/docs/plugins/preset-react/

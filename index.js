@@ -93,6 +93,10 @@ module.exports = {
         return this;
     },
 
+    enableReact(enabled = true) {
+        webpackConfig.enableReact(enabled);
+    },
+
     isProduction() {
         return webpackConfig.isProduction();
     },
