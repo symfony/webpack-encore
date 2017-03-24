@@ -95,6 +95,8 @@ module.exports = {
 
     enableReact(enabled = true) {
         webpackConfig.enableReact(enabled);
+
+        return this;
     },
 
     isProduction() {
