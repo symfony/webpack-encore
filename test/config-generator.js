@@ -298,7 +298,7 @@ describe('The config-generator function', () => {
             config.outputPath = '/tmp/output';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.configureBabel(function(babelConfig) {
+            config.configureBabel(function (babelConfig) {
                 babelConfig.presets.push('foo');
             });
 
@@ -316,7 +316,7 @@ describe('The config-generator function', () => {
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
             config.enableReact();
-            config.configureBabel(function(babelConfig) {
+            config.configureBabel(function (babelConfig) {
                 babelConfig.presets.push('foo');
             });
 
