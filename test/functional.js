@@ -38,9 +38,9 @@ describe('Functional tests using webpack', function() {
                     'main.js',
                     '__webpack_require__'
                 );
-                webpackAssert.assertManifestPath(
-                    'main.js',
-                    '/build/main.js'
+                assertManifestPath(
+                    'build/main.js',
+                    'build/main.js'
                 );
 
                 done();
