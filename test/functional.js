@@ -395,6 +395,7 @@ module.exports = {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addEntry('main', './js/no_require');
+            config.cleanupOutputBeforeBuild();
             testSetup.touchFileInOutputDir('file.txt', config);
 
             testSetup.runWebpack(config, (webpackAssert) => {

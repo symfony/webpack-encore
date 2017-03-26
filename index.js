@@ -112,6 +112,10 @@ module.exports = {
         return this;
     },
 
+    cleanupOutputBeforeBuild() {
+        webpack.cleanupOutputBeforeBuild()
+    },
+
     isProduction() {
         return webpackConfig.isProduction();
     },

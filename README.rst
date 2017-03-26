@@ -490,6 +490,26 @@ Finally, enable PostCSS in Remix:
 That's it! The ``postcss-loader`` will now be used for all CSS, SASS, etc
 files.
 
+Cleaning up old Files
+---------------------
+
+If you use versioning, then eventually your output directory
+will have a *lot* of old files. No problem! Just tell Webpack
+to clean up the directory before each build:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    var Remix = require('webpack-remix');
+
+    Remix
+        .setOutputPath('web/build/')
+        // ...
+
+        // will empty the web/build directory before each build
+        .cleanupOutputBeforeBuild()
+    ;
+
 .. _`Webpack Remix`: https://www.npmjs.com/package/@weaverryan/webpack-remix
 .. _`Webpack`: https://webpack.js.org/
 .. _`Assetic`: http://symfony.com/doc/current/assetic/asset_management.html

@@ -330,5 +330,33 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('cleanupOutputBeforeBuild() adds CleanWebpackPlugin', () => {
+        it('without cleanupOutputBeforeBuild()', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.plugins)).to.not.contain('allowExternal: true')
+        });
+
+        it('with cleanupOutputBeforeBuild()', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.cleanupOutputBeforeBuild();
+
+            const actualConfig = configGenerator(config);
+
+            // allowExternal: true is a poor way to test, this is an option we pass to the plugin
+            expect(JSON.stringify(actualConfig.plugins)).to.contain('"allowExternal":true')
+        });
+    });
+
     // todo devServer
 });
