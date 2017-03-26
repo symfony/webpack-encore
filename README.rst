@@ -64,7 +64,7 @@ and it's fully compatible with Webpack. This is the typical structure of the fil
 The First Example
 -----------------
 
-Let's consider that you are adding Webpack Remix to a simple tradicionatl/legacy
+Let's consider that you are adding Webpack Remix to a simple traditional/legacy
 Symfony application that uses Bootstrap Saas and defines just these two files:
 ``app.scss`` and ``app.js`` in ``app/Resources/assets/``.
 
@@ -323,7 +323,7 @@ JavaScript:
 
 There is no size limit in the value of the ``data-`` attributes, so you can
 store any content, no matter its length. The only caveat is that you must encode
-the value using Twig's `html` escaping strategy to avoid messing with HTML
+the value using Twig's ``html`` escaping strategy to avoid messing with HTML
 attributes:
 
 .. code-block:: twig
@@ -365,7 +365,7 @@ file:
 Internally, this ``autoProvidejQuery()`` method uses the ``autoProvideVariables()``
 method from webpack. In practice, it's equivalent to doing:
 
-.. code-bloc:: javascript
+.. code-block:: javascript
 
     Remix
         // you can use this method to provide other common global variables,
