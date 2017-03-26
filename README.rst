@@ -44,9 +44,9 @@ and it's fully compatible with Webpack. This is the typical structure of the fil
 
     Remix
         // where should all compiled files (CSS, JS, fonts) be stored?
-        .setOutputDir('web/builds/')
+        .setOutputDir('web/build/')
         // what's the public path to this directory (relative to your project's web/ dir)
-        .setPublicPath('/builds')
+        .setPublicPath('/build')
 
         // this adds JavaScript files/modules to the application
         .addEntry(...)
@@ -100,13 +100,13 @@ and generate the final ``app.css`` and ``app.js`` files served by the applicatio
     var Remix = require('webpack-remix');
 
     Remix
-        .setOutputDir('web/builds/')
-        .setPublicPath('/builds')
+        .setOutputDir('web/build/')
+        .setPublicPath('/build')
         .autoProvidejQuery() // this option is explained later
 
-        // will create a web/builds/js/app.js
+        // will create a web/build/js/app.js
         .addEntry('js/app', './app/Resources/assets/js/app.js')
-        // will create a web/builds/css/app.css
+        // will create a web/build/css/app.css
         .addStylesEntry('css/app', './app/Resources/assets/scss/app.scss')
     ;
 
@@ -122,11 +122,11 @@ can link to the compiled assets from the templates of your Symfony application:
     <html>
         <head>
             <!-- ... -->
-            <link rel="stylesheet" href="{{ asset('/builds/css/app.css') }}">
+            <link rel="stylesheet" href="{{ asset('/build/css/app.css') }}">
         </head>
         <body>
             <!-- ... -->
-            <script src="{{ asset('/builds/js/app.js') }}"></script>
+            <script src="{{ asset('/build/js/app.js') }}"></script>
         </body>
     </html>
 
@@ -200,10 +200,10 @@ on your page before any other JavaScript file:
 .. code-block:: twig
 
     <!-- these two files now must be included in every page -->
-    <script src="{{ asset_path('builds/manifest.js') }}"></script>
-    <script src="{{ asset_path('builds/vendor.js') }}"></script>
+    <script src="{{ asset_path('build/manifest.js') }}"></script>
+    <script src="{{ asset_path('build/vendor.js') }}"></script>
     <!-- here you link to the specific JS files needed by the current page -->
-    <script src="{{ asset_path('builds/app.js') }}"></script>
+    <script src="{{ asset_path('build/app.js') }}"></script>
 
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
