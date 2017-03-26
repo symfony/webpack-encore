@@ -187,7 +187,7 @@ time. Create this vendor file with the ``createSharedEntry()`` method:
 
     Remix
         // ...
-        .addEntry('app', '...')
+        .addEntry('...', '...')
         .addEntry('...', '...')
         .addEntry('...', '...')
         // this creates a 'vendor.js' file with the code of the jQuery' and
@@ -222,7 +222,7 @@ will also change, invalidating any existing cache:
 
     Remix
         // ...
-        .addEntry('...', '...')
+        .addEntry('app', '...')
         .addEntry('...', '...')
         .addEntry('...', '...')
         // add hashing to all asset filenames
