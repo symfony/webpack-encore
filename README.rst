@@ -44,7 +44,7 @@ and it's fully compatible with Webpack. This is the typical structure of the fil
 
     Remix
         // where should all compiled files (CSS, JS, fonts) be stored?
-        .setOutputDir('web/build/')
+        .setOutputPath('web/build/')
         // what's the public path to this directory (relative to your project's web/ dir)
         .setPublicPath('/build')
 
@@ -100,7 +100,7 @@ and generate the final ``app.css`` and ``app.js`` files served by the applicatio
     var Remix = require('webpack-remix');
 
     Remix
-        .setOutputDir('web/build/')
+        .setOutputPath('web/build/')
         .setPublicPath('/build')
         .autoProvidejQuery() // this option is explained later
 
