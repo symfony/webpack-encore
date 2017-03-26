@@ -390,5 +390,21 @@ module.exports = {
                 done();
             });
         });
+
+        it('The output directory is cleaned between builds', (done) => {
+            var config = testSetup.createWebpackConfig('www/build');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/no_require');
+            testSetup.touchFileInOutputDir('file.txt', config);
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // make sure the file was cleaned up!
+                webpackAssert.assertOutputFileDoesNotExist(
+                    'file.txt'
+                );
+
+                done();
+            });
+        });
     });
 });
