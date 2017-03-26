@@ -187,7 +187,7 @@ time. Create this vendor file with the ``createSharedEntry()`` method:
 
     Remix
         // ...
-        .addEntry('...', '...')
+        .addEntry('app', '...')
         .addEntry('...', '...')
         .addEntry('...', '...')
         // this creates a 'vendor.js' file with the code of the jQuery' and
