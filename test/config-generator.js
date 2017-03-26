@@ -2,6 +2,7 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../lib/WebpackConfig');
 const configGenerator = require('../lib/config-generator');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 function findPlugin(pluginConstructor, plugins) {
@@ -10,8 +11,6 @@ function findPlugin(pluginConstructor, plugins) {
             return plugin;
         }
     }
-
-    throw new Error(`No plugin found for ${pluginConstructor.name}`);
 }
 
 /**
@@ -340,7 +339,8 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.plugins)).to.not.contain('allowExternal: true')
+            const cleanPlugin = findPlugin(CleanWebpackPlugin, actualConfig.plugins);
+            expect(cleanPlugin).to.be.undefined;
         });
 
         it('with cleanupOutputBeforeBuild()', () => {
@@ -353,8 +353,8 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            // allowExternal: true is a poor way to test, this is an option we pass to the plugin
-            expect(JSON.stringify(actualConfig.plugins)).to.contain('"allowExternal":true')
+            const cleanPlugin = findPlugin(CleanWebpackPlugin, actualConfig.plugins);
+            expect(cleanPlugin).to.not.be.undefined;
         });
     });
 
