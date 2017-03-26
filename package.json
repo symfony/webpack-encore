@@ -33,6 +33,7 @@
     "sass-loader": "^6.0.3",
     "style-loader": "^0.13.2",
     "webpack": "^2.2.0",
+    "webpack-chunk-hash": "^0.4.0",
     "webpack-manifest-plugin": "^1.1.0"
   },
   "devDependencies": {
