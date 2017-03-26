@@ -140,6 +140,20 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('Test publicCDNPath changes', () => {
+        it('with publicCDNPath', () => {
+            var config = new WebpackConfig();
+            config.outputPath = '/tmp';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.publicCDNPath = 'https://cdn.example.com';
+
+            const actualConfig = generator(config);
+
+            expect(actualConfig.output.publicPath).to.equal('https://cdn.example.com');
+        });
+    });
+
     describe('Test versioning changes', () => {
         it('with versioning', () => {
             var config = new WebpackConfig();

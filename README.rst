@@ -222,7 +222,7 @@ will also change, invalidating any existing cache:
 
     Remix
         // ...
-        .addEntry('app', '...')
+        .addEntry('...', '...')
         .addEntry('...', '...')
         .addEntry('...', '...')
         // add hashing to all asset filenames
