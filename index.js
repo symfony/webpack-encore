@@ -16,6 +16,28 @@ module.exports = {
         return this;
     },
 
+    /**
+     * Advanced: manually set the webpack "context".
+     *
+     * This should only be necessary if you plan on running
+     * webpack from a directory outside of your project.
+     *
+     * The context specifies the "root" path - all other
+     * paths (e.g. used in addEntry()) are relative to
+     * the context.
+     *
+     *      // webpack.config.js
+     *      // guarantee the context is your root directory
+     *      Remix.setContext(__dirname);
+     *
+     * @param context
+     */
+    setContext(context) {
+        webpackConfig.setContext(context);
+
+        return this;
+    },
+
     addEntry(name, src) {
         webpackConfig.addEntry(name, src);
 
