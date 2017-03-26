@@ -200,10 +200,10 @@ on your page before any other JavaScript file:
 .. code-block:: twig
 
     <!-- these two files now must be included in every page -->
-    <script src="{{ asset_path('build/manifest.js') }}"></script>
-    <script src="{{ asset_path('build/vendor.js') }}"></script>
+    <script src="{{ asset('build/manifest.js') }}"></script>
+    <script src="{{ asset('build/vendor.js') }}"></script>
     <!-- here you link to the specific JS files needed by the current page -->
-    <script src="{{ asset_path('build/app.js') }}"></script>
+    <script src="{{ asset('build/app.js') }}"></script>
 
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
@@ -229,13 +229,14 @@ will also change, invalidating any existing cache:
         .enableVersioning()
 
 Since the filename of the assets is unknown and can change constantly, you cannot
-link to those assets in your templates. USe the ``asset_path()`` Twig function
+link to those assets in your templates. Use the ``asset()`` Twig function
 provided by Symfony to link to them:
+
+TODO - mention the ``json_manifest_file`` strategy.
 
 .. code-block:: twig
 
-    {# asset_path() takes the entry name + .js or .css, and looks up the real path #}
-    <script src="{{ asset_path('app.js') }}"></script>
+    <script src="{{ asset('build/app.js') }}"></script>
 
 Creating your JavaScript Files
 ------------------------------
