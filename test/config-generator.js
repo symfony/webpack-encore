@@ -165,6 +165,7 @@ describe('The config-generator function', () => {
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
             config.nodeEnvironment = 'dev';
+            config.enableVersioning(true);
 
             const actualConfig = configGenerator(config);
 
@@ -185,6 +186,7 @@ describe('The config-generator function', () => {
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
             config.nodeEnvironment = 'production';
+            config.enableVersioning(true);
 
             const actualConfig = configGenerator(config);
 
