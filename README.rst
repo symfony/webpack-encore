@@ -160,9 +160,10 @@ the webpack-dev-server in your config:
 
     // webpack.config.js
 
-    if (!Remix.isProduction()) {
-        Remix.useWebpackDevServer();
-    }
+    Remix
+        // ...
+        .useWebpackDevServer(!Remix.isProduction)
+    ;
 
 Next, make sure that ``webpack-dev-server`` is installed:
 

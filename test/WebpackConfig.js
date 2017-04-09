@@ -128,6 +128,23 @@ describe('WebpackConfig object', () => {
             expect(config.getRealPublicPath()).to.equal('http://localhost:8080/build/');
         });
 
+        it('Set to false', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('/build');
+            config.useWebpackDevServer(false);
+
+            expect(config.getRealPublicPath()).to.equal('/build/');
+            expect(config.webpackDevServerUrl).to.be.null;
+        });
+
+        it('Set to true', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('/build');
+            config.useWebpackDevServer(true);
+
+            expect(config.getRealPublicPath()).to.equal('http://localhost:8080/build/');
+        });
+
         it('Set and control URL', () => {
             var config = new WebpackConfig();
             config.setPublicPath('/build');

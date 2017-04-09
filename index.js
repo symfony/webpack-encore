@@ -68,7 +68,9 @@ module.exports = {
      *
      *     ./node_modules/.bin/webpack-dev-server --hot --inline
      *
-     * @param {string} webpackDevServerUrl
+     * False can be passed as an argument to disable the dev server.
+     *
+     * @param {string|bool} webpackDevServerUrl
      * @returns {exports}
      */
     useWebpackDevServer(webpackDevServerUrl = null) {
