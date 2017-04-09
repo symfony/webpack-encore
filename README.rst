@@ -22,10 +22,10 @@ using any of the JavaScript package managers (for example, `npm`_ and `yarn`_):
 .. code-block:: terminal
 
     # if you prefer npm
-    $ npm install --save-dev symfony/webpack-remix
+    $ npm install --save-dev @weaverryan/webpack-remix
 
     # if you prefer yarn
-    $ yarn add symfony/webpack-remix
+    $ yarn add @weaverryan/webpack-remix
 
 These commands create or modify the ``package.json`` file and the ``node_modules/``
 directory at the root of your Symfony project. When using Yarn, a file called
@@ -40,7 +40,7 @@ and it's fully compatible with Webpack. This is the typical structure of the fil
 
 .. code-block:: javascript
 
-    var Remix = require('webpack-remix');
+    var Remix = require('@weaverryan/webpack-remix');
 
     Remix
         // where should all compiled files (CSS, JS, fonts) be stored?
@@ -97,7 +97,7 @@ and generate the final ``app.css`` and ``app.js`` files served by the applicatio
 
 .. code-block:: javascript
 
-    var Remix = require('webpack-remix');
+    var Remix = require('@weaverryan/webpack-remix');
 
     Remix
         .setOutputPath('web/build/')
@@ -199,7 +199,8 @@ method:
 
 .. code-block:: javascript
 
-    var Remix = require('webpack-remix');
+    // webpack.config.js
+    // ...
 
     Remix
         // ...
@@ -355,7 +356,7 @@ Now, just enable it in ``webpack.config.js``:
 .. code-block:: javascript
 
     // webpack.config.js
-    var Remix = require('webpack-remix');
+    // ...
 
     Remix
         // ...
@@ -477,7 +478,7 @@ Need to configure Babel yourself? No problem - there are two options:
 .. code-block:: javascript
 
     // webpack.config.js
-    var Remix = require('webpack-remix');
+    // ...
 
     Remix
         // ...
@@ -510,7 +511,7 @@ Next, enable react in your ``webpack.config.js``:
 .. code-block:: javascript
 
     // webpack.config.js
-    var Remix = require('webpack-remix');
+    // ...
 
     Remix
         // ...
@@ -550,7 +551,7 @@ Finally, enable PostCSS in Remix:
 .. code-block:: javascript
 
     // webpack.config.js
-    var Remix = require('webpack-remix');
+    // ...
 
     Remix
         // ...
@@ -570,7 +571,7 @@ to clean up the directory before each build:
 .. code-block:: javascript
 
     // webpack.config.js
-    var Remix = require('webpack-remix');
+    // ...
 
     Remix
         .setOutputPath('web/build/')
