@@ -410,5 +410,18 @@ describe('The config-generator function', () => {
                 configGenerator(config);
             }).to.throw('Unable to determine contentBase');
         });
+
+        it('cannot use versioning with webpack-dev-server', () => {
+            var config = new WebpackConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build');
+            config.addEntry('main', './main');
+            config.enableVersioning();
+            config.useWebpackDevServer();
+
+            expect(() => {
+                configGenerator(config);
+            }).to.throw('Don\'t enable versioning with useWebpackDevServer()');
+        });
     });
 });
