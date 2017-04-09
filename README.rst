@@ -511,6 +511,40 @@ to clean up the directory before each build:
         .cleanupOutputBeforeBuild()
     ;
 
+Using a CDN
+-----------
+
+Are you deploying to a CDN? That's awesome :) - and configuring
+Remix for that is easy. Once you've made sure that your built files
+are uploaded to the CDN, configure it in Remix:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    // ...
+
+    Remix
+        // keep this setting the same as before!
+        .setPublicPath('/build')
+        // ...
+    ;
+
+    if (Remix.isProduction()) {
+        Remix.setPublicCDNPath('http://my-cool-app.com.global.prod.fastly.net');
+    }
+
+That's it! Internally, Webpack will now know to load assets from your
+CDN - e.g. ``http://my-cool-app.com.global.prod.fastly.net/build/dashboard.js``.
+You just need to make sure that the ``script`` and ``link`` tags you include on
+your pages also uses the CDN. Fortunately, the ``manifest.json`` is automatically
+updated to point to the CDN. In Symfony, as long as you've configured `Asset Versioning`_,
+the ``assert()`` function will take care of things for you, with no changes.
+
+.. code-block:: js
+
+    {# Same code you had before and setting up the CDN #}
+    <script src="{{ asset('/build/dashboard.js') }}"></script>
+
 .. _`Webpack Remix`: https://www.npmjs.com/package/@weaverryan/webpack-remix
 .. _`Webpack`: https://webpack.js.org/
 .. _`Assetic`: http://symfony.com/doc/current/assetic/asset_management.html
