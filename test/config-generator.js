@@ -148,7 +148,7 @@ describe('The config-generator function', () => {
             config.addEntry('main', './main');
             config.publicCDNPath = 'https://cdn.example.com';
 
-            const actualConfig = generator(config);
+            const actualConfig = configGenerator(config);
 
             expect(actualConfig.output.publicPath).to.equal('https://cdn.example.com');
         });

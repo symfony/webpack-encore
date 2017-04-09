@@ -38,21 +38,22 @@ describe('Functional tests using webpack', function() {
                     'main.js',
                     '__webpack_require__'
                 );
-                assertManifestPath(
-                    'build/main.js',
-                    'build/main.js'
+                webpackAssert.assertManifestPath(
+                    '/build/main.js',
+                    '/build/main.js'
                 );
 
                 done();
             });
         });
 
-        it('setPublicPath with a CDN loads assets from the CDN', (done) => {
+        it('setPublicCDNPath loads assets from the CDN', (done) => {
             var config = testSetup.createWebpackConfig('public/assets');
             config.addEntry('main', './js/code_splitting');
             config.addStyleEntry('font', './css/roboto_font.css');
             config.addStyleEntry('bg', './css/background_image.scss');
-            config.setPublicPath('http://localhost:8090/assets');
+            config.setPublicPath('/assets');
+            config.setPublicCDNPath('http://localhost:8090/assets');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -71,6 +72,11 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertOutputFileContains(
                     'font.css',
                     'http://localhost:8090/assets/fonts/Roboto.woff2'
+                );
+                // manifest file has CDN in value
+                webpackAssert.assertManifestPath(
+                    '/assets/main.js',
+                    'http://localhost:8090/assets/main.js'
                 );
 
                 testSetup.requestTestPage(
