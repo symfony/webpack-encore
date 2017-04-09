@@ -374,5 +374,41 @@ describe('The config-generator function', () => {
         });
     });
 
-    // todo devServer
+    describe('test for devServer config', () => {
+        it('no devServer config when not enabled', () => {
+            var config = new WebpackConfig();
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.addEntry('main', './main');
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.devServer).to.be.undefined;
+        });
+
+        it('contentBase is calculated correctly', () => {
+            var config = new WebpackConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.addEntry('main', './main');
+            config.useWebpackDevServer();
+
+            const actualConfig = configGenerator(config);
+            // contentBase should point to the "document root", which
+            // is calculated as outputPath, but without the publicPath portion
+            expect(actualConfig.devServer.contentBase).to.equal('/tmp/public');
+            expect(actualConfig.devServer.publicPath).to.equal('/build/')
+        });
+
+        it('error contentBase of contentBase cannot be determined', () => {
+            var config = new WebpackConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/other-path');
+            config.addEntry('main', './main');
+            config.useWebpackDevServer();
+
+            expect(() => {
+                configGenerator(config);
+            }).to.throw('Unable to determine contentBase');
+        });
+    });
 });

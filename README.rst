@@ -149,6 +149,41 @@ or compile them as smaller files:
     # in production servers, run this command to reduce the size of all files
     $ NODE_ENV=production ./node_modules/.bin/webpack
 
+Hot Module Replacement (HRM) & webpack-dev-server
+-------------------------------------------------
+
+`Hot Module Replacement`_ is a Webpack concept where "modules" can be automatically
+updated in the browser without needing to refresh the page! To use it, activate
+the webpack-dev-server in your config:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+
+    if (!Remix.isProduction()) {
+        Remix.useWebpackDevServer();
+    }
+
+Next, make sure that ``webpack-dev-server`` is installed:
+
+.. code-block:: terminal
+
+    npm install webpack-dev-server --save-dev
+
+Now, instead of running ``webpack``, run:
+
+.. code-block:: terminal
+
+    ./node_modules/.bin/webpack-dev-server --hot --inline
+
+Make sure you've activate the :ref:`manifest.json versioning <load-manifest-files>`
+when linking to your assets.
+
+That's it! Now, modify a CSS file - you should see your browser
+update without needing to refresh! To use it with JavaScript, you'll
+need to do a bit more work. For example, see this article about
+using `HMR with React`_.
+
 Enabling Source Maps
 --------------------
 
@@ -200,10 +235,10 @@ on your page before any other JavaScript file:
 .. code-block:: twig
 
     <!-- these two files now must be included in every page -->
-    <script src="{{ asset('build/manifest.js') }}"></script>
-    <script src="{{ asset('build/vendor.js') }}"></script>
+    <script src="{{ asset('/build/manifest.js') }}"></script>
+    <script src="{{ asset('/build/vendor.js') }}"></script>
     <!-- here you link to the specific JS files needed by the current page -->
-    <script src="{{ asset('build/app.js') }}"></script>
+    <script src="{{ asset('/build/app.js') }}"></script>
 
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
@@ -228,15 +263,48 @@ will also change, invalidating any existing cache:
         // add hashing to all asset filenames
         .enableVersioning()
 
-Since the filename of the assets is unknown and can change constantly, you cannot
-link to those assets in your templates. Use the ``asset()`` Twig function
-provided by Symfony to link to them:
+How, each filename will have a hash automatically added to its
+filename. To link to these assets, Remix creates a ``manifest.json``
+file with all the new filenames (explained next).
 
-TODO - mention the ``json_manifest_file`` strategy.
+.. _load-manifest-files:
+
+Loading Assets from the manifest.json File
+------------------------------------------
+
+Whenever you run webpack, a ``manifest.json`` file is automatically
+created in your ``outputPath`` directory:
+
+.. code-block:: json
+
+    {
+        "/build/app.js": "/build/app.123abc.js",
+        "/build/dashboard.css": "/build/dashboard.a4bf2d.css"
+    }
+
+To include ``script`` and ``link`` on your page that point to the
+correct path, you need to read this.
+
+If you're using Symfony, it's easy! Just activate the ``json_manifest_file``
+versioning strategy in ``config.yml``:
+
+.. code-block:: yaml
+
+    # app/config/config.yml
+    framework:
+        # ...
+        assets:
+            # feature is supported in Symfony 3.3 and higher
+            json_manifest_path: '%kernel.project_dir%/build/manifest.json'
+
+That's it! Just be sure to wrap each path in the Twig ``asset()`` function
+like normal:
 
 .. code-block:: twig
 
-    <script src="{{ asset('build/app.js') }}"></script>
+    <script src="{{ asset('/build/app.js') }}"></script>
+
+    <link href="{{ asset('/build/dashboard.css') }}" rel="stylesheet" />
 
 Creating your JavaScript Files
 ------------------------------
@@ -556,3 +624,5 @@ the ``assert()`` function will take care of things for you, with no changes.
 .. _`linting`: https://stylelint.io/
 .. _`Babel`: http://babeljs.io/
 .. _`babel-react-preset`: https://babeljs.io/docs/plugins/preset-react/
+.. _`Hot Module Replacement`: https://webpack.js.org/concepts/hot-module-replacement/
+.. _`HMR with React`: https://webpack.js.org/guides/hmr-react/

@@ -119,6 +119,52 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('useWebpackDevServer', () => {
+        it('Set with no arguments', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('/build');
+            config.useWebpackDevServer();
+
+            expect(config.getRealPublicPath()).to.equal('http://localhost:8080/build/');
+        });
+
+        it('Set and control URL', () => {
+            var config = new WebpackConfig();
+            config.setPublicPath('/build');
+            config.useWebpackDevServer('https://localhost:9000');
+
+            expect(config.getRealPublicPath()).to.equal('https://localhost:9000/build/');
+        });
+
+        it('Exception if publicCDNPath already set', () => {
+            var config = new WebpackConfig();
+
+            config.setPublicCDNPath('http://foo.com');
+
+            expect(() => {
+                config.useWebpackDevServer();
+            }).to.throw('cannot use setPublicCDNPath() and useWebpackDevServer() at the same time');
+        });
+
+        it('Exception if calling setPublicCDNPath after useWebpackDevServer', () => {
+            var config = new WebpackConfig();
+
+            config.useWebpackDevServer();
+
+            expect(() => {
+                config.setPublicCDNPath('http://foo.com');
+            }).to.throw('cannot use setPublicCDNPath() and useWebpackDevServer() at the same time');
+        });
+
+        it('Exception if URL is not a URL!', () => {
+            var config = new WebpackConfig();
+
+            expect(() => {
+                config.useWebpackDevServer('localhost:8090');
+            }).to.throw('you must pass a full URL (e.g. http://localhost:8090)');
+        });
+    });
+
     describe('addEntry', () => {
         it('Calling with a duplicate name throws an error', () => {
             var config = new WebpackConfig();

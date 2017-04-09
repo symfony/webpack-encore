@@ -56,6 +56,27 @@ module.exports = {
         return this;
     },
 
+    /**
+     * Call this to use the webpack-dev-server
+     *
+     * This will initialize the needed devServer config
+     * and point the URLs to the webpackDevServerUrl
+     * (http://localhost:8080 by default).
+     *
+     * Be sure to execute the webpack-dev-server when this
+     * option is set:
+     *
+     *     ./node_modules/.bin/webpack-dev-server --hot --inline
+     *
+     * @param {string} webpackDevServerUrl
+     * @returns {exports}
+     */
+    useWebpackDevServer(webpackDevServerUrl = null) {
+        webpackConfig.useWebpackDevServer(webpackDevServerUrl);
+
+        return this;
+    },
+
     enableVersioning(enabled = true) {
         webpackConfig.enableVersioning(enabled);
 
