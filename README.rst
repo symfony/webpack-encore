@@ -87,8 +87,8 @@ Then, require those JavaScript/Sass modules from your own files:
 .. code-block:: js
 
     // app/Resources/assets/ks/app.js
-    @require('jquery');
-    @require('bootstrap-saas');
+    require('jquery');
+    require('bootstrap-saas');
 
     // ...add here your own application JavaScript code
 
@@ -122,11 +122,11 @@ can link to the compiled assets from the templates of your Symfony application:
     <html>
         <head>
             <!-- ... -->
-            <link rel="stylesheet" href="{{ asset('/build/css/app.css') }}">
+            <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
         </head>
         <body>
             <!-- ... -->
-            <script src="{{ asset('/build/js/app.js') }}"></script>
+            <script src="{{ asset('build/js/app.js') }}"></script>
         </body>
     </html>
 
@@ -177,7 +177,7 @@ Now, instead of running ``webpack``, run:
 
     ./node_modules/.bin/webpack-dev-server --hot --inline
 
-Make sure you've activate the :ref:`manifest.json versioning <load-manifest-files>`
+Make sure you've activated the :ref:`manifest.json versioning <load-manifest-files>`
 when linking to your assets.
 
 That's it! Now, modify a CSS file - you should see your browser
@@ -237,10 +237,10 @@ on your page before any other JavaScript file:
 .. code-block:: twig
 
     <!-- these two files now must be included in every page -->
-    <script src="{{ asset('/build/manifest.js') }}"></script>
-    <script src="{{ asset('/build/vendor.js') }}"></script>
+    <script src="{{ asset('build/manifest.js') }}"></script>
+    <script src="{{ asset('build/vendor.js') }}"></script>
     <!-- here you link to the specific JS files needed by the current page -->
-    <script src="{{ asset('/build/app.js') }}"></script>
+    <script src="{{ asset('build/app.js') }}"></script>
 
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
@@ -304,9 +304,9 @@ like normal:
 
 .. code-block:: twig
 
-    <script src="{{ asset('/build/app.js') }}"></script>
+    <script src="{{ asset('build/app.js') }}"></script>
 
-    <link href="{{ asset('/build/dashboard.css') }}" rel="stylesheet" />
+    <link href="{{ asset('build/dashboard.css') }}" rel="stylesheet" />
 
 Creating your JavaScript Files
 ------------------------------
@@ -372,7 +372,7 @@ In Symfony applications, Twig is executed on the server and JavaScript on the
 browser. However, you can bridge them in templates executing Twig code to
 generate code or contents that are processed later via JavaScript:
 
-.. code-block: twig
+.. code-block:: twig
 
     RatingPlugin('.user-rating').create({
         // when Twig code is executed, the application checks for the existence of the
@@ -600,11 +600,11 @@ are uploaded to the CDN, configure it in Remix:
     ;
 
     if (Remix.isProduction()) {
-        Remix.setPublicCDNPath('http://my-cool-app.com.global.prod.fastly.net');
+        Remix.setPublicCDNPath('https://my-cool-app.com.global.prod.fastly.net');
     }
 
 That's it! Internally, Webpack will now know to load assets from your
-CDN - e.g. ``http://my-cool-app.com.global.prod.fastly.net/build/dashboard.js``.
+CDN - e.g. ``https://my-cool-app.com.global.prod.fastly.net/build/dashboard.js``.
 You just need to make sure that the ``script`` and ``link`` tags you include on
 your pages also uses the CDN. Fortunately, the ``manifest.json`` is automatically
 updated to point to the CDN. In Symfony, as long as you've configured `Asset Versioning`_,
@@ -613,7 +613,7 @@ the ``assert()`` function will take care of things for you, with no changes.
 .. code-block:: js
 
     {# Same code you had before and setting up the CDN #}
-    <script src="{{ asset('/build/dashboard.js') }}"></script>
+    <script src="{{ asset('build/dashboard.js') }}"></script>
 
 .. _`Webpack Remix`: https://www.npmjs.com/package/@weaverryan/webpack-remix
 .. _`Webpack`: https://webpack.js.org/
