@@ -122,11 +122,11 @@ can link to the compiled assets from the templates of your Symfony application:
     <html>
         <head>
             <!-- ... -->
-            <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
+            <link rel="stylesheet" href="{{ asset('/build/css/app.css') }}">
         </head>
         <body>
             <!-- ... -->
-            <script src="{{ asset('build/js/app.js') }}"></script>
+            <script src="{{ asset('/build/js/app.js') }}"></script>
         </body>
     </html>
 
@@ -237,10 +237,10 @@ on your page before any other JavaScript file:
 .. code-block:: twig
 
     <!-- these two files now must be included in every page -->
-    <script src="{{ asset('build/manifest.js') }}"></script>
-    <script src="{{ asset('build/vendor.js') }}"></script>
+    <script src="{{ asset('/build/manifest.js') }}"></script>
+    <script src="{{ asset('/build/vendor.js') }}"></script>
     <!-- here you link to the specific JS files needed by the current page -->
-    <script src="{{ asset('build/app.js') }}"></script>
+    <script src="{{ asset('/build/app.js') }}"></script>
 
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
@@ -304,9 +304,9 @@ like normal:
 
 .. code-block:: twig
 
-    <script src="{{ asset('build/app.js') }}"></script>
+    <script src="{{ asset('/build/app.js') }}"></script>
 
-    <link href="{{ asset('build/dashboard.css') }}" rel="stylesheet" />
+    <link href="{{ asset('/build/dashboard.css') }}" rel="stylesheet" />
 
 Creating your JavaScript Files
 ------------------------------
@@ -613,7 +613,7 @@ the ``assert()`` function will take care of things for you, with no changes.
 .. code-block:: js
 
     {# Same code you had before and setting up the CDN #}
-    <script src="{{ asset('build/dashboard.js') }}"></script>
+    <script src="{{ asset('/build/dashboard.js') }}"></script>
 
 .. _`Webpack Remix`: https://www.npmjs.com/package/@weaverryan/webpack-remix
 .. _`Webpack`: https://webpack.js.org/
