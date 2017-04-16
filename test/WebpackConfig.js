@@ -241,14 +241,19 @@ describe('WebpackConfig object', () => {
                 jQuery: 'jquery'
             });
             config.autoProvideVariables({
+                bar: './bar',
                 foo: './foo'
+            });
+            config.autoProvideVariables({
+                foo: './foo2'
             });
 
             expect(JSON.stringify(config.providedVariables))
                 .to.equal(JSON.stringify({
-                    foo: './foo',
                     $: 'jquery',
                     jQuery: 'jquery',
+                    bar: './bar',
+                    foo: './foo2',
                 }))
             ;
         });
