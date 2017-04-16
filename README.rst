@@ -87,8 +87,8 @@ Then, require those JavaScript/Sass modules from your own files:
 .. code-block:: js
 
     // app/Resources/assets/ks/app.js
-    @require('jquery');
-    @require('bootstrap-saas');
+    require('jquery');
+    require('bootstrap-saas');
 
     // ...add here your own application JavaScript code
 
@@ -177,7 +177,7 @@ Now, instead of running ``webpack``, run:
 
     ./node_modules/.bin/webpack-dev-server --hot --inline
 
-Make sure you've activate the :ref:`manifest.json versioning <load-manifest-files>`
+Make sure you've activated the :ref:`manifest.json versioning <load-manifest-files>`
 when linking to your assets.
 
 That's it! Now, modify a CSS file - you should see your browser
@@ -372,7 +372,7 @@ In Symfony applications, Twig is executed on the server and JavaScript on the
 browser. However, you can bridge them in templates executing Twig code to
 generate code or contents that are processed later via JavaScript:
 
-.. code-block: twig
+.. code-block:: twig
 
     RatingPlugin('.user-rating').create({
         // when Twig code is executed, the application checks for the existence of the
@@ -600,11 +600,11 @@ are uploaded to the CDN, configure it in Remix:
     ;
 
     if (Remix.isProduction()) {
-        Remix.setPublicCDNPath('http://my-cool-app.com.global.prod.fastly.net');
+        Remix.setPublicCDNPath('https://my-cool-app.com.global.prod.fastly.net');
     }
 
 That's it! Internally, Webpack will now know to load assets from your
-CDN - e.g. ``http://my-cool-app.com.global.prod.fastly.net/build/dashboard.js``.
+CDN - e.g. ``https://my-cool-app.com.global.prod.fastly.net/build/dashboard.js``.
 You just need to make sure that the ``script`` and ``link`` tags you include on
 your pages also uses the CDN. Fortunately, the ``manifest.json`` is automatically
 updated to point to the CDN. In Symfony, as long as you've configured `Asset Versioning`_,
