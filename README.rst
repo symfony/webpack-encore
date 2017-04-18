@@ -594,21 +594,28 @@ are uploaded to the CDN, configure it in Remix:
     // ...
 
     Remix
-        // keep this setting the same as before!
-        .setPublicPath('/build')
+        .setOutputPath('web/build/')
+        // in dev mode, don't use the CDN
+        .setPublicPath('/build');
         // ...
     ;
 
     if (Remix.isProduction()) {
-        Remix.setPublicCDNPath('https://my-cool-app.com.global.prod.fastly.net');
+        Remix.setPublicPath('https://my-cool-app.com.global.prod.fastly.net');
+        // guarantee that the keys in manifest.json are *still*
+        // prefixed with /build
+        // (e.g. "build/dashboard.js": "https://my-cool-app.com.global.prod.fastly.net/dashboard.js")
+        Remix.setManifestKeyPrefix('/build');
+    } else {
+
     }
 
 That's it! Internally, Webpack will now know to load assets from your
-CDN - e.g. ``https://my-cool-app.com.global.prod.fastly.net/build/dashboard.js``.
+CDN - e.g. ``https://my-cool-app.com.global.prod.fastly.net/dashboard.js``.
 You just need to make sure that the ``script`` and ``link`` tags you include on
 your pages also uses the CDN. Fortunately, the ``manifest.json`` is automatically
 updated to point to the CDN. In Symfony, as long as you've configured `Asset Versioning`_,
-the ``assert()`` function will take care of things for you, with no changes.
+the ``asset()`` function will take care of things for you, with no changes.
 
 .. code-block:: js
 

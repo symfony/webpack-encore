@@ -1,17 +1,74 @@
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
+const validator = require('./lib/validate-config');
 
 webpackConfig = new WebpackConfig();
 
 module.exports = {
+    /**
+     * The directory where your files should be output.
+     *
+     * If relative (e.g. /web/build), it will be set relative
+     * to the directory where your package.json lives.
+     *
+     * @param {string} outputPath
+     * @returns {exports}
+     */
     setOutputPath(outputPath) {
         webpackConfig.setOutputPath(outputPath);
 
         return this;
     },
 
+    /**
+     * The public version of outputPath: the public path to outputPath.
+     *
+     * For example, if "web" is your document root, then:
+     *      .setOutputPath('/web/build')
+     *      .setPublicPath('/build')
+     *
+     * This can also be set to an absolute URL if you're using
+     * a CDN: publicPath is used as the prefix to all asset paths
+     * in the manifest.json file and internally in webpack:
+     *      .setOutputPath('/web/build')
+     *      .setPublicPath('https://coolcdn.com')
+     *      // needed when public path is absolute
+     *      .setManifestKeyPrefix('/build')
+     *
+     * @param {string} publicPath
+     * @returns {exports}
+     */
     setPublicPath(publicPath) {
         webpackConfig.setPublicPath(publicPath);
+
+        return this;
+    },
+
+    /**
+     * Used as a prefix to the *keys* in manifest.json. Not usually needed.
+     *
+     * You don't normally need to set this. When you *do* need to set
+     * it, an error will notify you.
+     *
+     * Typically, publicPath is used in the keys inside manifest.json.
+     * But if publicPath is absolute, then we require you to set this.
+     * For example:
+     *
+     *      .setOutputPath('/web/build')
+     *      .setPublicPath('https://coolcdn.com/FOO')
+     *      .setManifestKeyPrefix('/build')
+     *
+     * The manifest.json file would look something like this:
+     *
+     *      {
+     *          "/build/main.js": "https://coolcdn.com/FOO/main.a54f3ccd2.js"
+     *      }
+     *
+     * @param {string} manifestKeyPrefix
+     * @returns {exports}
+     */
+    setManifestKeyPrefix(manifestKeyPrefix) {
+        webpackConfig.setManifestKeyPrefix(manifestKeyPrefix);
 
         return this;
     },
@@ -34,12 +91,6 @@ module.exports = {
      */
     setContext(context) {
         webpackConfig.setContext(context);
-
-        return this;
-    },
-
-    setPublicCDNPath(publicCDNPath) {
-        webpackConfig.setPublicCDNPath(publicCDNPath);
 
         return this;
     },
@@ -174,6 +225,8 @@ module.exports = {
     },
 
     getWebpackConfig() {
+        validator(webpackConfig);
+
         return configGenerator(webpackConfig);
     }
 };

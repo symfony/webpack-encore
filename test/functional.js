@@ -47,13 +47,13 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('setPublicCDNPath loads assets from the CDN', (done) => {
+        it('setPublicPath with CDN loads assets from the CDN', (done) => {
             var config = testSetup.createWebpackConfig('public/assets');
             config.addEntry('main', './js/code_splitting');
             config.addStyleEntry('font', './css/roboto_font.css');
             config.addStyleEntry('bg', './css/background_image.scss');
-            config.setPublicPath('/assets');
-            config.setPublicCDNPath('http://localhost:8090/assets');
+            config.setPublicPath('http://localhost:8090/assets');
+            config.setManifestKeyPrefix('/assets');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -90,6 +90,77 @@ describe('Functional tests using webpack', function() {
                             // we did this to check that the internally-loaded assets
                             // use the CDN, even if the entry point does not
                             'http://127.0.0.1:8080/assets/main.js'
+                        ]);
+
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('The devServer config loads successfully', (done) => {
+            var config = testSetup.createWebpackConfig('public/assets');
+            config.addEntry('main', './js/code_splitting');
+            config.addStyleEntry('font', './css/roboto_font.css');
+            config.addStyleEntry('bg', './css/background_image.scss');
+            config.setPublicPath('/assets');
+            config.useWebpackDevServer('http://localhost:8090');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that the publicPath is set correctly
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    '__webpack_require__.p = "http://localhost:8090/assets/";'
+                );
+
+                webpackAssert.assertOutputFileContains(
+                    'bg.css',
+                    'http://localhost:8090/assets/images/symfony_logo.png'
+                );
+                // manifest file has CDN in value
+                webpackAssert.assertManifestPath(
+                    '/assets/main.js',
+                    'http://localhost:8090/assets/main.js'
+                );
+
+                testSetup.requestTestPage(
+                    'public',
+                    ['/assets/main.js'],
+                    (browser) => {
+                        webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                            '0.js',
+                            // guarantee that we assert that main.js is loaded from the
+                            // main server, as it's simply a script tag to main.js on the page
+                            // we did this to check that the internally-loaded assets
+                            // use the CDN, even if the entry point does not
+                            'http://127.0.0.1:8080/assets/main.js'
+                        ]);
+
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('Deploying to a subdirectory is no problem', (done) => {
+            var config = testSetup.createWebpackConfig('subdirectory/build');
+            config.addEntry('main', './js/code_splitting');
+            config.setPublicPath('/subdirectory/build');
+            config.setManifestKeyPrefix('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertManifestPath(
+                    '/build/main.js',
+                    '/subdirectory/build/main.js'
+                );
+
+                testSetup.requestTestPage(
+                    '', // the webroot will not include the /subdirectory/build part
+                    ['/subdirectory/build/main.js'],
+                    (browser) => {
+                        webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                            'http://127.0.0.1:8080/subdirectory/build/0.js',
+                            'http://127.0.0.1:8080/subdirectory/build/main.js'
                         ]);
 
                         done();

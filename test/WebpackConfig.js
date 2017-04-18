@@ -70,52 +70,39 @@ describe('WebpackConfig object', () => {
             expect(config.publicPath).to.equal('/foo/');
         });
 
-        it('passing a URL throws an error', () => {
-            var config = new WebpackConfig();
-
-            expect(() => {
-                config.setPublicPath('://example.com/foo');
-            }).to.throw('must pass a path');
-        });
-    });
-
-    describe('setPublicCDNPath', () => {
         it('https://example.com => https://example.com/', () => {
             var config = new WebpackConfig();
-            config.setPublicCDNPath('https://example.com');
+            config.setPublicPath('https://example.com');
 
-            expect(config.publicCDNPath).to.equal('https://example.com/');
+            expect(config.publicPath).to.equal('https://example.com/');
         });
 
-        it('https://example.com/ => https://example.com/', () => {
-            var config = new WebpackConfig();
-            config.setPublicCDNPath('https://example.com/');
-
-            expect(config.publicCDNPath).to.equal('https://example.com/');
-        });
-
-        it('passing a path throws an error', () => {
-            var config = new WebpackConfig();
-
-            expect(() => {
-                config.setPublicCDNPath('/foo');
-            }).to.throw('must pass a full URL');
-        });
-
-        it('foo => throws an error', () => {
-            var config = new WebpackConfig();
-
-            expect(() => {
-                config.setPublicPath('foo');
-            }).to.throw('must start with "/"');
-        });
-
-        it('foo/ => throws an error', () => {
+        it('foo/ throws an exception', () => {
             var config = new WebpackConfig();
 
             expect(() => {
                 config.setPublicPath('foo/');
-            }).to.throw('must start with "/"');
+            }).to.throw('The value passed to setPublicPath() must start with "/"');
+        });
+
+        it('Setting to a URL when using devServer throws an error', () => {
+            var config = new WebpackConfig();
+            config.useWebpackDevServer();
+
+            expect(() => {
+                config.setPublicPath('https://examplecdn.com');
+            }).to.throw('You cannot pass an absolute URL to setPublicPath() and useWebpackDevServer()');
+        });
+    });
+
+    describe('setManifestKeyPrefix', () => {
+
+        it('You can set it!', () => {
+            var config = new WebpackConfig();
+            config.setManifestKeyPrefix('/foo');
+
+            // trailing slash added
+            expect(config.manifestKeyPrefix).to.equal('/foo/');
         });
     });
 
@@ -153,24 +140,14 @@ describe('WebpackConfig object', () => {
             expect(config.getRealPublicPath()).to.equal('https://localhost:9000/build/');
         });
 
-        it('Exception if publicCDNPath already set', () => {
+        it('Exception if publicPath is set to an absolute URL', () => {
             var config = new WebpackConfig();
 
-            config.setPublicCDNPath('http://foo.com');
+            config.setPublicPath('http://foo.com');
 
             expect(() => {
                 config.useWebpackDevServer();
-            }).to.throw('cannot use setPublicCDNPath() and useWebpackDevServer() at the same time');
-        });
-
-        it('Exception if calling setPublicCDNPath after useWebpackDevServer', () => {
-            var config = new WebpackConfig();
-
-            config.useWebpackDevServer();
-
-            expect(() => {
-                config.setPublicCDNPath('http://foo.com');
-            }).to.throw('cannot use setPublicCDNPath() and useWebpackDevServer() at the same time');
+            }).to.throw('You cannot pass an absolute URL to setPublicPath() and useWebpackDevServer()');
         });
 
         it('Exception if URL is not a URL!', () => {
@@ -178,7 +155,7 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.useWebpackDevServer('localhost:8090');
-            }).to.throw('you must pass a full URL (e.g. http://localhost:8090)');
+            }).to.throw('you must pass an absolute URL (e.g. http://localhost:8090)');
         });
     });
 
