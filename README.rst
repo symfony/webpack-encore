@@ -17,15 +17,17 @@ Installation
 ------------
 
 Webpack Remix is a JavaScript package, so it's not installed using Composer but
-using any of the JavaScript package managers (for example, `npm`_ and `yarn`_):
+using any of the JavaScript package managers:
 
 .. code-block:: terminal
 
-    # if you prefer npm
-    $ npm install --save-dev @weaverryan/webpack-remix
-
-    # if you prefer yarn
     $ yarn add @weaverryan/webpack-remix
+
+.. note::
+
+    This article uses the `yarn`_ package manager to install JavaScript packages.
+    If you prefer to use `npm`_, replace ``yarn add xxx`` by ``npm install xxx``
+    and ``yarn add --dev xxx`` by ``npm install --save-dev xxx``.
 
 These commands create or modify the ``package.json`` file and the ``node_modules/``
 directory at the root of your Symfony project. When using Yarn, a file called
@@ -169,7 +171,7 @@ Next, make sure that ``webpack-dev-server`` is installed:
 
 .. code-block:: terminal
 
-    npm install webpack-dev-server --save-dev
+    yarn add --dev webpack-dev-server
 
 Now, instead of running ``webpack``, run:
 
@@ -349,7 +351,7 @@ the ``less-loader``:
 
 .. code-block:: terminal
 
-    npm install less-loader less --save-dev
+    yarn add --dev less-loader less
 
 Now, just enable it in ``webpack.config.js``:
 
@@ -503,8 +505,8 @@ along with the `babel-preset-react`_:
 
 .. code-block:: terminal
 
-    npm react react-dom --save-dev
-    npm install babel-preset-react --save-dev
+    yarn add --dev react react-dom
+    yarn add --dev babel-preset-react
 
 Next, enable react in your ``webpack.config.js``:
 
@@ -532,7 +534,7 @@ First, download ``postcss-loader`` and ``postcss-load-config``:
 
 .. code-block:: terminal
 
-    npm install postcss-loader postcss-load-config --save-dev
+    yarn add --dev postcss-loader postcss-load-config
 
 Next, create a ``postcss.config.js`` file at the root of your project:
 
@@ -541,7 +543,7 @@ Next, create a ``postcss.config.js`` file at the root of your project:
     module.exports = {
         plugins: [
             // include whatever plugins you want
-            // but make sure you install these via npm/yarn!
+            // but make sure you install these via yarn or npm!
             require('autoprefixer')
         ]
     }
