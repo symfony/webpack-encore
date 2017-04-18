@@ -606,8 +606,6 @@ are uploaded to the CDN, configure it in Remix:
         // prefixed with /build
         // (e.g. "build/dashboard.js": "https://my-cool-app.com.global.prod.fastly.net/dashboard.js")
         Remix.setManifestKeyPrefix('/build');
-    } else {
-
     }
 
 That's it! Internally, Webpack will now know to load assets from your
