@@ -123,7 +123,9 @@ describe('The config-generator function', () => {
             expect(actualConfig.output.publicPath).to.equal('/build/');
             const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
             expect(manifestPlugin.opts.publicPath).to.equal('/build/');
-            expect(manifestPlugin.opts.basePath).to.equal('/build/');
+            // basePath matches publicPath, *without* the opening slash
+            // we do that by convention: keys do not start with /
+            expect(manifestPlugin.opts.basePath).to.equal('build/');
         });
 
         it('when manifestKeyPrefix is set, that is used instead', () => {
@@ -140,7 +142,22 @@ describe('The config-generator function', () => {
             const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
             expect(manifestPlugin.opts.publicPath).to.equal('/subdirectory/build/');
             // base path matches manifestKeyPrefix + trailing slash
+            // the opening slash is kept, since the user is overriding this setting
             expect(manifestPlugin.opts.basePath).to.equal('/build/');
+        });
+
+        it('manifestKeyPrefix can be empty', () => {
+            var config = new WebpackConfig();
+            config.outputPath = '/tmp/web/build';
+            config.addEntry('main', './main');
+            config.setPublicPath('/build');
+            config.setManifestKeyPrefix('');
+
+            const actualConfig = configGenerator(config);
+
+            const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
+            expect(manifestPlugin.opts.publicPath).to.equal('/build/');
+            expect(manifestPlugin.opts.basePath).to.equal('');
         });
     });
 

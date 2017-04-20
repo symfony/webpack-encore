@@ -104,6 +104,14 @@ describe('WebpackConfig object', () => {
             // trailing slash added
             expect(config.manifestKeyPrefix).to.equal('/foo/');
         });
+
+        it('You can set it blank', () => {
+            var config = new WebpackConfig();
+            config.setManifestKeyPrefix('');
+
+            // trailing slash not added
+            expect(config.manifestKeyPrefix).to.equal('');
+        });
     });
 
     describe('useWebpackDevServer', () => {
