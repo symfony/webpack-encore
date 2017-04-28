@@ -85,7 +85,7 @@ module.exports = {
      *
      *      // webpack.config.js
      *      // guarantee the context is your root directory
-     *      Remix.setContext(__dirname);
+     *      Encore.setContext(__dirname);
      *
      * @param context
      */
@@ -184,7 +184,7 @@ module.exports = {
      *
      * https://babeljs.io/docs/usage/babelrc/
      *
-     * Remix.configureBabel(function(babelConfig) {
+     * Encore.configureBabel(function(babelConfig) {
      *      // change the babelConfig
      * });
      *

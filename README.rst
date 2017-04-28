@@ -1,13 +1,13 @@
-webpack-remix
-=============
+Webpack Encore
+==============
 
-`Webpack Remix`_ is a JavaScript package provided by Symfony to simplify the
+`Webpack Encore`_ is a JavaScript package provided by Symfony to simplify the
 integration of `Webpack`_ into Symfony applications. It's not a replacement for
 Webpack, but a thin API on top of it, so it stays in the same spirit of Webpack
-and it doesn't hide or change any of its features. Using Webpack Remix is
+and it doesn't hide or change any of its features. Using Encore is
 optional, but recommended to improve your productivity.
 
-Webpack Remix replaces `Assetic`_ as the recommended way to manage web assets in
+Webpack Encore replaces `Assetic`_ as the recommended way to manage web assets in
 Symfony applications. You can use it even if your application doesn't fully use
 modern JavaScript features. However, if your application uses JavaScript
 toolkits different than Webpack, such as Grunt or Gulp, you can't use this
@@ -16,7 +16,7 @@ package.
 Installation
 ------------
 
-Webpack Remix is a JavaScript package, so it's not installed using Composer but
+Webpack Encore is a JavaScript package, so it's not installed using Composer but
 using any of the JavaScript package managers:
 
 .. code-block:: terminal
@@ -42,9 +42,9 @@ and it's fully compatible with Webpack. This is the typical structure of the fil
 
 .. code-block:: javascript
 
-    var Remix = require('@weaverryan/webpack-remix');
+    var Encore = require('@weaverryan/webpack-remix');
 
-    Remix
+    Encore
         // where should all compiled files (CSS, JS, fonts) be stored?
         .setOutputPath('web/build/')
         // what's the public path to this directory (relative to your project's web/ dir)
@@ -61,12 +61,12 @@ and it's fully compatible with Webpack. This is the typical structure of the fil
     ;
 
     // export the final configuration
-    module.exports = Remix.getWebpackConfig();
+    module.exports = Encore.getWebpackConfig();
 
 The First Example
 -----------------
 
-Let's consider that you are adding Webpack Remix to a simple traditional/legacy
+Let's consider that you are adding Encore to a simple traditional/legacy
 Symfony application that uses Bootstrap Saas and defines just these two files:
 ``app.scss`` and ``app.js`` in ``app/Resources/assets/``.
 
@@ -94,14 +94,14 @@ Then, require those JavaScript/Sass modules from your own files:
 
     // ...add here your own application JavaScript code
 
-Finally, define the Webpack Remix configuration needed to compile these assets
+Finally, define the Encore configuration needed to compile these assets
 and generate the final ``app.css`` and ``app.js`` files served by the application:
 
 .. code-block:: javascript
 
-    var Remix = require('@weaverryan/webpack-remix');
+    var Encore = require('@weaverryan/webpack-remix');
 
-    Remix
+    Encore
         .setOutputPath('web/build/')
         .setPublicPath('/build')
         .autoProvidejQuery() // this option is explained later
@@ -112,7 +112,7 @@ and generate the final ``app.css`` and ``app.js`` files served by the applicatio
         .addStylesEntry('css/app', './app/Resources/assets/scss/app.scss')
     ;
 
-    module.exports = Remix.getWebpackConfig();
+    module.exports = Encore.getWebpackConfig();
 
 The final missing step is to actually compile the assets using the
 ``webpack.config.js`` configuration, as explained in the next section. Then you
@@ -162,9 +162,9 @@ the webpack-dev-server in your config:
 
     // webpack.config.js
 
-    Remix
+    Encore
         // ...
-        .useWebpackDevServer(!Remix.isProduction)
+        .useWebpackDevServer(!Encore.isProduction)
     ;
 
 Next, make sure that ``webpack-dev-server`` is installed:
@@ -195,7 +195,7 @@ asset (e.g. the Sass code that was compiled to CSS or the TypeScript code that
 was compiled to JavaScript). Source maps are useful for debugging purposes but
 unnecessary when executing the application in production.
 
-Webpack Remix inlines source maps in the compiled assets only in the development
+Encore inlines source maps in the compiled assets only in the development
 environment, but you can control this behavior with the ``enableSourceMaps()``
 method:
 
@@ -204,11 +204,11 @@ method:
     // webpack.config.js
     // ...
 
-    Remix
+    Encore
         // ...
 
         // this is the default behavior...
-        .enableSourceMaps(!Remix.isProduction())
+        .enableSourceMaps(!Encore.isProduction())
         // ... but you can override it by passing a boolean value
         .enableSourceMaps(true)
     ;
@@ -224,7 +224,7 @@ time. Create this vendor file with the ``createSharedEntry()`` method:
 
 .. code-block:: javascript
 
-    Remix
+    Encore
         // ...
         .addEntry('...', '...')
         .addEntry('...', '...')
@@ -259,7 +259,7 @@ will also change, invalidating any existing cache:
 
 .. code-block:: javascript
 
-    Remix
+    Encore
         // ...
         .addEntry('app', '...')
         .addEntry('...', '...')
@@ -268,7 +268,7 @@ will also change, invalidating any existing cache:
         .enableVersioning()
 
 How, each filename will have a hash automatically added to its
-filename. To link to these assets, Remix creates a ``manifest.json``
+filename. To link to these assets, Encore creates a ``manifest.json``
 file with all the new filenames (explained next).
 
 .. _load-manifest-files:
@@ -340,7 +340,7 @@ the handling of file paths is a bit different:
 Using SASS
 ----------
 
-Remix automatically processes any files that end in ``.sass``
+Encore automatically processes any files that end in ``.sass``
 or ``.scss``. No setup required!
 
 Using LESS
@@ -360,7 +360,7 @@ Now, just enable it in ``webpack.config.js``:
     // webpack.config.js
     // ...
 
-    Remix
+    Encore
         // ...
         .enableLess()
     ;
@@ -383,7 +383,7 @@ generate code or contents that are processed later via JavaScript:
         // ...
     });
 
-When using webpack-remix you can no longer use this technique because Twig and
+When using Encore you can no longer use this technique because Twig and
 JavaScript are completely separated. The alternative solution is to use HTML
 ``data`` attributes to store some information that is retrieved later by
 JavaScript:
@@ -419,7 +419,7 @@ are not defined, you'll get these errors:
     Uncaught ReferenceError: $ is not defined at [...]
     Uncaught ReferenceError: jQuery is not defined at [...]
 
-Instead of rewriting all those applications, webpack-remix proposes a different
+Instead of rewriting all those applications, Encore proposes a different
 solution. Thanks to the ``autoProvidejQuery()`` method, whenever a JavaScript
 file uses the ``$`` or ``jQuery`` variables, webpack automatically requires
 jQuery and creates those variables for you.
@@ -429,7 +429,7 @@ file:
 
 .. code-block:: javascript
 
-    Remix
+    Encore
         .autoProvidejQuery()
         .addEntry('...', '...')
         // ...
@@ -440,7 +440,7 @@ method from webpack. In practice, it's equivalent to doing:
 
 .. code-block:: javascript
 
-    Remix
+    Encore
         // you can use this method to provide other common global variables,
         // such as '_' for the 'underscore' library
         .autoProvideVariables({
@@ -465,7 +465,7 @@ Full Configuration Example
 --------------------------
 
 .. TODO:
-.. Show here a full and complex example of using Webpack Remix in a real
+.. Show here a full and complex example of using Encore in a real
 .. Symfony application such as symfony.com
 
 Configuring Babel
@@ -482,7 +482,7 @@ Need to configure Babel yourself? No problem - there are two options:
     // webpack.config.js
     // ...
 
-    Remix
+    Encore
         // ...
 
         // Option 1) configure babel right inside webpack.config.js
@@ -490,7 +490,7 @@ Need to configure Babel yourself? No problem - there are two options:
             babelConfig.presets.push('es2017');
         })
 
-        // Option 2) Create a .babelrc file, then tell Remix it exists
+        // Option 2) Create a .babelrc file, then tell Encore it exists
         .useBabelRcFile()
     ;
 
@@ -515,7 +515,7 @@ Next, enable react in your ``webpack.config.js``:
     // webpack.config.js
     // ...
 
-    Remix
+    Encore
         // ...
         .enableReact()
     ;
@@ -548,14 +548,14 @@ Next, create a ``postcss.config.js`` file at the root of your project:
         ]
     }
 
-Finally, enable PostCSS in Remix:
+Finally, enable PostCSS in Encore:
 
 .. code-block:: javascript
 
     // webpack.config.js
     // ...
 
-    Remix
+    Encore
         // ...
         .enablePostCss()
     ;
@@ -575,7 +575,7 @@ to clean up the directory before each build:
     // webpack.config.js
     // ...
 
-    Remix
+    Encore
         .setOutputPath('web/build/')
         // ...
 
@@ -587,27 +587,27 @@ Using a CDN
 -----------
 
 Are you deploying to a CDN? That's awesome :) - and configuring
-Remix for that is easy. Once you've made sure that your built files
-are uploaded to the CDN, configure it in Remix:
+Encore for that is easy. Once you've made sure that your built files
+are uploaded to the CDN, configure it in Encore:
 
 .. code-block:: javascript
 
     // webpack.config.js
     // ...
 
-    Remix
+    Encore
         .setOutputPath('web/build/')
         // in dev mode, don't use the CDN
         .setPublicPath('/build');
         // ...
     ;
 
-    if (Remix.isProduction()) {
-        Remix.setPublicPath('https://my-cool-app.com.global.prod.fastly.net');
+    if (Encore.isProduction()) {
+        Encore.setPublicPath('https://my-cool-app.com.global.prod.fastly.net');
         // guarantee that the keys in manifest.json are *still*
         // prefixed with /build
         // (e.g. "build/dashboard.js": "https://my-cool-app.com.global.prod.fastly.net/dashboard.js")
-        Remix.setManifestKeyPrefix('/build');
+        Encore.setManifestKeyPrefix('/build');
     }
 
 That's it! Internally, Webpack will now know to load assets from your
@@ -622,7 +622,7 @@ the ``asset()`` function will take care of things for you, with no changes.
     {# Same code you had before and setting up the CDN #}
     <script src="{{ asset('/build/dashboard.js') }}"></script>
 
-.. _`Webpack Remix`: https://www.npmjs.com/package/@weaverryan/webpack-remix
+.. _`Webpack Encore`: https://www.npmjs.com/package/@weaverryan/webpack-remix
 .. _`Webpack`: https://webpack.js.org/
 .. _`Assetic`: http://symfony.com/doc/current/assetic/asset_management.html
 .. _`npm`: https://www.npmjs.com/
