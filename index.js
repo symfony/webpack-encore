@@ -1,6 +1,7 @@
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/validate-config');
+const PrettyError = require('pretty-error');
 
 webpackConfig = new WebpackConfig();
 
@@ -225,8 +226,21 @@ module.exports = {
     },
 
     getWebpackConfig() {
-        validator(webpackConfig);
+        try {
+            validator(webpackConfig);
 
-        return configGenerator(webpackConfig);
+            return configGenerator(webpackConfig);
+        } catch (error) {
+            // prettifies errors thrown by our library
+            const pe = new PrettyError();
+            pe.appendStyle({
+                // hides the full paths below each stack item
+                'pretty-error > trace > item > footer > addr': {
+                   display: 'none'
+                }
+            });
+
+            console.log(pe.render(error));
+        }
     }
 };
