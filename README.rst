@@ -575,7 +575,7 @@ Finally, enable PostCSS in Encore:
 
     Encore
         // ...
-        .enablePostCss()
+        .enablePostCssLoader()
     ;
 
 That's it! The ``postcss-loader`` will now be used for all CSS, SASS, etc

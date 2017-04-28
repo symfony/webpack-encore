@@ -168,8 +168,8 @@ module.exports = {
      *
      * https://github.com/postcss/postcss-loader
      */
-    enablePostCss(enabled = true) {
-        webpackConfig.enablePostCss(enabled);
+    enablePostCssLoader(enabled = true) {
+        webpackConfig.enablePostCssLoader(enabled);
 
         return this;
     },

@@ -376,7 +376,7 @@ describe('Functional tests using webpack', function() {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', ['./css/autoprefixer_test.css']);
-            config.enablePostCss();
+            config.enablePostCssLoader();
 
             testSetup.saveTemporaryFileToFixturesDirectory(
                 'postcss.config.js',

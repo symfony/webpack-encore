@@ -226,27 +226,27 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enablePostCSS() adds the postcss-loader', () => {
-        it('enablePostCSS(false)', () => {
+    describe('enablePostCssLoader() adds the postcss-loader', () => {
+        it('enablePostCssLoader(false)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enablePostCss(false);
+            config.enablePostCssLoader(false);
 
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader')
         });
 
-        it('enablePostCSS(true)', () => {
+        it('enablePostCssLoader(true)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enablePostCss();
+            config.enablePostCssLoader();
 
             const actualConfig = configGenerator(config);
 
