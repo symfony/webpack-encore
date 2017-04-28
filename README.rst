@@ -21,7 +21,7 @@ using any of the JavaScript package managers:
 
 .. code-block:: terminal
 
-    $ yarn add @weaverryan/webpack-remix
+    $ yarn add @weaverryan/webpack-remix webpack webpack-dev-server
 
 .. note::
 
