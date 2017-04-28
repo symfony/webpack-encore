@@ -39,7 +39,7 @@ describe('Functional tests using webpack', function() {
                     '__webpack_require__'
                 );
                 webpackAssert.assertManifestPath(
-                    '/build/main.js',
+                    'build/main.js',
                     '/build/main.js'
                 );
 
@@ -53,7 +53,7 @@ describe('Functional tests using webpack', function() {
             config.addStyleEntry('font', './css/roboto_font.css');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.setPublicPath('http://localhost:8090/assets');
-            config.setManifestKeyPrefix('/assets');
+            config.setManifestKeyPrefix('assets');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -75,7 +75,7 @@ describe('Functional tests using webpack', function() {
                 );
                 // manifest file has CDN in value
                 webpackAssert.assertManifestPath(
-                    '/assets/main.js',
+                    'assets/main.js',
                     'http://localhost:8090/assets/main.js'
                 );
 
@@ -119,7 +119,7 @@ describe('Functional tests using webpack', function() {
                 );
                 // manifest file has CDN in value
                 webpackAssert.assertManifestPath(
-                    '/assets/main.js',
+                    'assets/main.js',
                     'http://localhost:8090/assets/main.js'
                 );
 
@@ -146,11 +146,11 @@ describe('Functional tests using webpack', function() {
             var config = testSetup.createWebpackConfig('subdirectory/build');
             config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/subdirectory/build');
-            config.setManifestKeyPrefix('/build');
+            config.setManifestKeyPrefix('build');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 webpackAssert.assertManifestPath(
-                    '/build/main.js',
+                    'build/main.js',
                     '/subdirectory/build/main.js'
                 );
 
@@ -166,6 +166,22 @@ describe('Functional tests using webpack', function() {
                         done();
                     }
                 );
+            });
+        });
+
+        it('Empty manifestKeyPrefix is allowed', (done) => {
+            var config = testSetup.createWebpackConfig('build');
+            config.addEntry('main', './js/code_splitting');
+            config.setPublicPath('/build');
+            config.setManifestKeyPrefix('');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertManifestPath(
+                    'main.js',
+                    '/build/main.js'
+                );
+
+                done();
             });
         });
 

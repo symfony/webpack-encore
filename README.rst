@@ -124,11 +124,11 @@ can link to the compiled assets from the templates of your Symfony application:
     <html>
         <head>
             <!-- ... -->
-            <link rel="stylesheet" href="{{ asset('/build/css/app.css') }}">
+            <link rel="stylesheet" href="{{ asset('build/css/app.css') }}">
         </head>
         <body>
             <!-- ... -->
-            <script src="{{ asset('/build/js/app.js') }}"></script>
+            <script src="{{ asset('build/js/app.js') }}"></script>
         </body>
     </html>
 
@@ -239,10 +239,10 @@ on your page before any other JavaScript file:
 .. code-block:: twig
 
     <!-- these two files now must be included in every page -->
-    <script src="{{ asset('/build/manifest.js') }}"></script>
-    <script src="{{ asset('/build/vendor.js') }}"></script>
+    <script src="{{ asset('build/manifest.js') }}"></script>
+    <script src="{{ asset('build/vendor.js') }}"></script>
     <!-- here you link to the specific JS files needed by the current page -->
-    <script src="{{ asset('/build/app.js') }}"></script>
+    <script src="{{ asset('build/app.js') }}"></script>
 
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
@@ -282,8 +282,8 @@ created in your ``outputPath`` directory:
 .. code-block:: json
 
     {
-        "/build/app.js": "/build/app.123abc.js",
-        "/build/dashboard.css": "/build/dashboard.a4bf2d.css"
+        "build/app.js": "/build/app.123abc.js",
+        "build/dashboard.css": "/build/dashboard.a4bf2d.css"
     }
 
 To include ``script`` and ``link`` on your page that point to the
@@ -306,9 +306,9 @@ like normal:
 
 .. code-block:: twig
 
-    <script src="{{ asset('/build/app.js') }}"></script>
+    <script src="{{ asset('build/app.js') }}"></script>
 
-    <link href="{{ asset('/build/dashboard.css') }}" rel="stylesheet" />
+    <link href="{{ asset('build/dashboard.css') }}" rel="stylesheet" />
 
 Creating your JavaScript Files
 ------------------------------
@@ -605,9 +605,9 @@ are uploaded to the CDN, configure it in Encore:
     if (Encore.isProduction()) {
         Encore.setPublicPath('https://my-cool-app.com.global.prod.fastly.net');
         // guarantee that the keys in manifest.json are *still*
-        // prefixed with /build
+        // prefixed with build/
         // (e.g. "build/dashboard.js": "https://my-cool-app.com.global.prod.fastly.net/dashboard.js")
-        Encore.setManifestKeyPrefix('/build');
+        Encore.setManifestKeyPrefix('build/');
     }
 
 That's it! Internally, Webpack will now know to load assets from your
@@ -620,7 +620,7 @@ the ``asset()`` function will take care of things for you, with no changes.
 .. code-block:: js
 
     {# Same code you had before and setting up the CDN #}
-    <script src="{{ asset('/build/dashboard.js') }}"></script>
+    <script src="{{ asset('build/dashboard.js') }}"></script>
 
 .. _`Webpack Encore`: https://www.npmjs.com/package/@weaverryan/webpack-remix
 .. _`Webpack`: https://webpack.js.org/
