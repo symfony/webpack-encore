@@ -226,8 +226,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enabledPostCSS() adds the postcss-loader', () => {
-        it('enabledPostCSS(false)', () => {
+    describe('enablePostCSS() adds the postcss-loader', () => {
+        it('enablePostCSS(false)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
@@ -240,7 +240,7 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader')
         });
 
-        it('enabledPostCSS(true)', () => {
+        it('enablePostCSS(true)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
@@ -254,27 +254,55 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enabledLess() adds the less-loader', () => {
-        it('enabledLess(false)', () => {
+    describe('enableSassLoader() adds the sass-loader', () => {
+        it('enableSassLoader(false)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableLess(false);
+            config.enableSassLoader(false);
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('sass-loader')
+        });
+
+        it('enableSassLoader(true)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableSassLoader();
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('sass-loader')
+        });
+    });
+
+    describe('enableLessLoader() adds the less-loader', () => {
+        it('enableLessLoader(false)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableLessLoader(false);
 
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader')
         });
 
-        it('enabledLess(true)', () => {
+        it('enableLessLoader(true)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableLess();
+            config.enableLessLoader();
 
             const actualConfig = configGenerator(config);
 

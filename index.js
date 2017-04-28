@@ -174,8 +174,26 @@ module.exports = {
         return this;
     },
 
-    enableLess(enabled = true) {
-        webpackConfig.enableLess(enabled);
+    /**
+     * Call this if you plan on loading SASS files.
+     *
+     * @param enabled
+     * @returns {exports}
+     */
+    enableSassLoader(enabled = true) {
+        webpackConfig.enableSassLoader(enabled);
+
+        return this;
+    },
+
+    /**
+     * Call this if you plan on loading less files.
+     *
+     * @param enabled
+     * @returns {exports}
+     */
+    enableLessLoader(enabled = true) {
+        webpackConfig.enableLessLoader(enabled);
 
         return this;
     },
