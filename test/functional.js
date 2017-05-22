@@ -477,7 +477,7 @@ module.exports = {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
-            config.enableReact();
+            config.enableReactPreset();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the JSX

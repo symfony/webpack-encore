@@ -359,13 +359,13 @@ describe('The config-generator function', () => {
             expect(jsRule.use.options.presets).to.include('foo');
         });
 
-        it('enableReact() passes react preset to babel', () => {
+        it('enableReactPreset() passes react preset to babel', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableReact();
+            config.enableReactPreset();
             config.configureBabel(function (babelConfig) {
                 babelConfig.presets.push('foo');
             });

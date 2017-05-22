@@ -535,11 +535,11 @@ Next, enable react in your ``webpack.config.js``:
 
     Encore
         // ...
-        .enableReact()
+        .enableReactPreset()
     ;
 
 That's it! Your ``.js`` and ``.jsx`` files will now be transformed
-using the ``babel-react-loader``!
+through ``babel-preset-react``.
 
 Enabling PostCSS (postcss-loader)
 ---------------------------------

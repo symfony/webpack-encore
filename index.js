@@ -227,8 +227,8 @@ module.exports = {
         return this;
     },
 
-    enableReact(enabled = true) {
-        webpackConfig.enableReact(enabled);
+    enableReactPreset(enabled = true) {
+        webpackConfig.enableReactPreset(enabled);
 
         return this;
     },
