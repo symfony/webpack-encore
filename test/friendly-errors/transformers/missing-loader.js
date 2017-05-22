@@ -46,6 +46,7 @@ describe('transform/missing-loader', () => {
             const actualError = transform(Object.assign({}, startError));
 
             expect(actualError.name).to.deep.equal('Loader not enabled');
+            expect(actualError.type).to.deep.equal('loader-not-enabled');
             expect(actualError.loaderName).to.deep.equal('sass');
         });
     });
