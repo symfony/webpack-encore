@@ -4,6 +4,8 @@ const validator = require('./lib/validate-config');
 const PrettyError = require('pretty-error');
 
 webpackConfig = new WebpackConfig();
+const nodeEnv = process.env.NODE_ENV ? process.env.NODE_ENV : 'dev';
+webpackConfig.setEnvironment(nodeEnv);
 
 module.exports = {
     /**
