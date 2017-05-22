@@ -253,12 +253,13 @@ module.exports = {
             const pe = new PrettyError();
             pe.appendStyle({
                 // hides the full paths below each stack item
-                'pretty-error > trace > item > footer > addr': {
+                'pretty-error > trace': {
                    display: 'none'
                 }
             });
 
             console.log(pe.render(error));
+            process.exit(1);
         }
     }
 };
