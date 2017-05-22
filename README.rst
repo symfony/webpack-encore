@@ -340,8 +340,26 @@ the handling of file paths is a bit different:
 Using SASS
 ----------
 
-Encore automatically processes any files that end in ``.sass``
-or ``.scss``. No setup required!
+To use the SASS pre-processor, first install the dependencies:
+
+.. code-block:: terminal
+
+    yarn add --dev sass-loader node-sass
+
+Now, just enable it in ``webpack.config.js``:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    // ...
+
+    Encore
+        // ...
+        .enableSassLoader()
+    ;
+
+That's it! All files ending in ``.sass`` or ``.scss`` will
+be processed.
 
 Using LESS
 ----------
@@ -362,7 +380,7 @@ Now, just enable it in ``webpack.config.js``:
 
     Encore
         // ...
-        .enableLess()
+        .enableLessLoader()
     ;
 
 That's it! All files ending in ``.less`` will be pre-processed!
@@ -517,11 +535,11 @@ Next, enable react in your ``webpack.config.js``:
 
     Encore
         // ...
-        .enableReact()
+        .enableReactPreset()
     ;
 
 That's it! Your ``.js`` and ``.jsx`` files will now be transformed
-using the ``babel-react-loader``!
+through ``babel-preset-react``.
 
 Enabling PostCSS (postcss-loader)
 ---------------------------------
@@ -557,7 +575,7 @@ Finally, enable PostCSS in Encore:
 
     Encore
         // ...
-        .enablePostCss()
+        .enablePostCssLoader()
     ;
 
 That's it! The ``postcss-loader`` will now be used for all CSS, SASS, etc

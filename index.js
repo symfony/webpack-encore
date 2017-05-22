@@ -1,6 +1,7 @@
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/validate-config');
+const PrettyError = require('pretty-error');
 
 webpackConfig = new WebpackConfig();
 
@@ -167,14 +168,32 @@ module.exports = {
      *
      * https://github.com/postcss/postcss-loader
      */
-    enablePostCss(enabled = true) {
-        webpackConfig.enablePostCss(enabled);
+    enablePostCssLoader(enabled = true) {
+        webpackConfig.enablePostCssLoader(enabled);
 
         return this;
     },
 
-    enableLess(enabled = true) {
-        webpackConfig.enableLess(enabled);
+    /**
+     * Call this if you plan on loading SASS files.
+     *
+     * @param enabled
+     * @returns {exports}
+     */
+    enableSassLoader(enabled = true) {
+        webpackConfig.enableSassLoader(enabled);
+
+        return this;
+    },
+
+    /**
+     * Call this if you plan on loading less files.
+     *
+     * @param enabled
+     * @returns {exports}
+     */
+    enableLessLoader(enabled = true) {
+        webpackConfig.enableLessLoader(enabled);
 
         return this;
     },
@@ -208,8 +227,8 @@ module.exports = {
         return this;
     },
 
-    enableReact(enabled = true) {
-        webpackConfig.enableReact(enabled);
+    enableReactPreset(enabled = true) {
+        webpackConfig.enableReactPreset(enabled);
 
         return this;
     },
@@ -225,8 +244,21 @@ module.exports = {
     },
 
     getWebpackConfig() {
-        validator(webpackConfig);
+        try {
+            validator(webpackConfig);
 
-        return configGenerator(webpackConfig);
+            return configGenerator(webpackConfig);
+        } catch (error) {
+            // prettifies errors thrown by our library
+            const pe = new PrettyError();
+            pe.appendStyle({
+                // hides the full paths below each stack item
+                'pretty-error > trace > item > footer > addr': {
+                   display: 'none'
+                }
+            });
+
+            console.log(pe.render(error));
+        }
     }
 };

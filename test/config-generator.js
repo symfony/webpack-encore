@@ -226,27 +226,27 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enabledPostCSS() adds the postcss-loader', () => {
-        it('enabledPostCSS(false)', () => {
+    describe('enablePostCssLoader() adds the postcss-loader', () => {
+        it('enablePostCssLoader(false)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enablePostCss(false);
+            config.enablePostCssLoader(false);
 
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader')
         });
 
-        it('enabledPostCSS(true)', () => {
+        it('enablePostCssLoader(true)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enablePostCss();
+            config.enablePostCssLoader();
 
             const actualConfig = configGenerator(config);
 
@@ -254,27 +254,55 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enabledLess() adds the less-loader', () => {
-        it('enabledLess(false)', () => {
+    describe('enableSassLoader() adds the sass-loader', () => {
+        it('enableSassLoader(false)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableLess(false);
+            config.enableSassLoader(false);
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('sass-loader')
+        });
+
+        it('enableSassLoader(true)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableSassLoader();
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('sass-loader')
+        });
+    });
+
+    describe('enableLessLoader() adds the less-loader', () => {
+        it('enableLessLoader(false)', () => {
+            var config = new WebpackConfig();
+            config.context = '/tmp/context';
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableLessLoader(false);
 
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader')
         });
 
-        it('enabledLess(true)', () => {
+        it('enableLessLoader(true)', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableLess();
+            config.enableLessLoader();
 
             const actualConfig = configGenerator(config);
 
@@ -331,13 +359,13 @@ describe('The config-generator function', () => {
             expect(jsRule.use.options.presets).to.include('foo');
         });
 
-        it('enableReact() passes react preset to babel', () => {
+        it('enableReactPreset() passes react preset to babel', () => {
             var config = new WebpackConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableReact();
+            config.enableReactPreset();
             config.configureBabel(function (babelConfig) {
                 babelConfig.presets.push('foo');
             });

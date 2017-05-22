@@ -53,6 +53,7 @@ describe('Functional tests using webpack', function() {
             config.addStyleEntry('font', './css/roboto_font.css');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.setPublicPath('http://localhost:8090/assets');
+            config.enableSassLoader();
             config.setManifestKeyPrefix('assets');
 
             testSetup.runWebpack(config, (webpackAssert) => {
@@ -104,6 +105,7 @@ describe('Functional tests using webpack', function() {
             config.addStyleEntry('font', './css/roboto_font.css');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.setPublicPath('/assets');
+            config.enableSassLoader();
             config.useWebpackDevServer('http://localhost:8090');
 
             testSetup.runWebpack(config, (webpackAssert) => {
@@ -215,6 +217,7 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/build');
             config.addStyleEntry('h1', './css/h1_style.css');
             config.addStyleEntry('bg', './css/background_image.scss');
+            config.enableSassLoader();
             config.enableVersioning(true);
 
             testSetup.runWebpack(config, (webpackAssert) => {
@@ -248,6 +251,7 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/build');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.addStyleEntry('font', './css/roboto_font.css');
+            config.enableSassLoader();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -294,6 +298,7 @@ describe('Functional tests using webpack', function() {
             config.addEntry('main', './js/no_require');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.addStyleEntry('font', './css/roboto_font.css');
+            config.enableSassLoader();
             config.enableSourceMaps();
 
             testSetup.runWebpack(config, (webpackAssert) => {
@@ -316,6 +321,7 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/build');
             // loads sass_features.scss via require.ensure
             config.addEntry('main', './js/code_split_load_scss');
+            config.enableSassLoader();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // make sure sass is parsed
@@ -376,7 +382,7 @@ describe('Functional tests using webpack', function() {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', ['./css/autoprefixer_test.css']);
-            config.enablePostCss();
+            config.enablePostCssLoader();
 
             testSetup.saveTemporaryFileToFixturesDirectory(
                 'postcss.config.js',
@@ -404,7 +410,7 @@ module.exports = {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', ['./css/h2_styles.less']);
-            config.enableLess();
+            config.enableLessLoader();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that less did its work!
@@ -471,7 +477,7 @@ module.exports = {
             var config = testSetup.createWebpackConfig('www/build');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
-            config.enableReact();
+            config.enableReactPreset();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the JSX
