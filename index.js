@@ -4,7 +4,7 @@ const validator = require('./lib/validate-config');
 const PrettyError = require('pretty-error');
 const commandConfig = require('./lib/command-config');
 
-webpackConfig = new WebpackConfig();
+const webpackConfig = new WebpackConfig();
 
 // determine the environment
 let environment = commandConfig.environment;
@@ -26,7 +26,7 @@ module.exports = {
      * to the directory where your package.json lives.
      *
      * @param {string} outputPath
-     * @returns {exports}
+     * @return {exports}
      */
     setOutputPath(outputPath) {
         webpackConfig.setOutputPath(outputPath);
@@ -50,7 +50,7 @@ module.exports = {
      *      .setManifestKeyPrefix('/build')
      *
      * @param {string} publicPath
-     * @returns {exports}
+     * @return {exports}
      */
     setPublicPath(publicPath) {
         webpackConfig.setPublicPath(publicPath);
@@ -79,7 +79,7 @@ module.exports = {
      *      }
      *
      * @param {string} manifestKeyPrefix
-     * @returns {exports}
+     * @return {exports}
      */
     setManifestKeyPrefix(manifestKeyPrefix) {
         webpackConfig.setManifestKeyPrefix(manifestKeyPrefix);
@@ -101,7 +101,8 @@ module.exports = {
      *      // guarantee the context is your root directory
      *      Encore.setContext(__dirname);
      *
-     * @param context
+     * @param {string} context
+     * @return {exports}
      */
     setContext(context) {
         webpackConfig.setContext(context);
@@ -136,7 +137,7 @@ module.exports = {
      * False can be passed as an argument to disable the dev server.
      *
      * @param {string|bool} webpackDevServerUrl
-     * @returns {exports}
+     * @return {exports}
      */
     useWebpackDevServer(webpackDevServerUrl = null) {
         webpackConfig.useWebpackDevServer(webpackDevServerUrl);
@@ -156,18 +157,55 @@ module.exports = {
         return this;
     },
 
+    /**
+     * Add a "commons" file that holds JS shared by multiple chunks.
+     *
+     * @param {string} name The chunk name (e.g. vendor)
+     * @param {Array}  files Array of files to put in the vendor entry
+     * @return {exports}
+     */
     createSharedEntry(name, files) {
         webpackConfig.createSharedEntry(name, files);
 
         return this;
     },
 
+    /**
+     * Automatically make some variables available everywhere!
+     *
+     * Usage:
+     *
+     *  WebpackConfig.autoProvideVariables({
+     *      $: 'jquery',
+     *      jQuery: 'jquery'
+     *  });
+     *
+     *  Then, whenever $ or jQuery are found in any
+     *  modules, webpack will automatically require
+     *  the "jquery" module so that the variable is available.
+     *
+     *  This is useful for older packages, that might
+     *  expect jQuery (or something else) to be a global variable.
+     *
+     * @param {Array} variables
+     * @return {exports}
+     */
     autoProvideVariables(variables) {
         webpackConfig.autoProvideVariables(variables);
 
         return this;
     },
 
+    /**
+     * Makes jQuery available everywhere. Equivalent to
+     *
+     *  WebpackConfig.autoProvideVariables({
+     *      $: 'jquery',
+     *      jQuery: 'jquery'
+     *  });
+     *
+     * @return {exports}
+     */
     autoProvidejQuery() {
         webpackConfig.autoProvidejQuery();
 
@@ -180,6 +218,9 @@ module.exports = {
      * Once enabled, you must have a postcss.config.js config file.
      *
      * https://github.com/postcss/postcss-loader
+     *
+     * @param {boolean} enabled
+     * @return {exports}
      */
     enablePostCssLoader(enabled = true) {
         webpackConfig.enablePostCssLoader(enabled);
@@ -190,8 +231,8 @@ module.exports = {
     /**
      * Call this if you plan on loading SASS files.
      *
-     * @param enabled
-     * @returns {exports}
+     * @param {boolean} enabled
+     * @return {exports}
      */
     enableSassLoader(enabled = true) {
         webpackConfig.enableSassLoader(enabled);
@@ -202,8 +243,8 @@ module.exports = {
     /**
      * Call this if you plan on loading less files.
      *
-     * @param enabled
-     * @returns {exports}
+     * @param {boolean} enabled
+     * @return {exports}
      */
     enableLessLoader(enabled = true) {
         webpackConfig.enableLessLoader(enabled);
@@ -221,6 +262,7 @@ module.exports = {
      * });
      *
      * @param {function} callback
+     * @return {exports}
      */
     configureBabel(callback) {
         webpackConfig.configureBabel(callback);
@@ -232,7 +274,8 @@ module.exports = {
      * Should the babel-loader be allowed to load config from
      * a .babelrc file?
      *
-     * @param shouldUse
+     * @param {boolean} shouldUse
+     * @return {exports}
      */
     useBabelRcFile(shouldUse = true) {
         webpackConfig.useBabelRcFile(shouldUse);
@@ -267,12 +310,12 @@ module.exports = {
             pe.appendStyle({
                 // hides the full paths below each stack item
                 'pretty-error > trace': {
-                   display: 'none'
+                    display: 'none'
                 }
             });
 
             console.log(pe.render(error));
-            process.exit(1);
+            process.exit(1); // eslint-disable-line
         }
     }
 };

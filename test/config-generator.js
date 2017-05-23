@@ -94,7 +94,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.devtool).to.be.undefined;
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('?sourceMap')
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('?sourceMap');
         });
 
         it('with sourcemaps', () => {
@@ -107,7 +107,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.devtool).to.equal('#inline-source-map');
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('?sourceMap')
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('?sourceMap');
         });
     });
 
@@ -237,7 +237,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader')
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader');
         });
 
         it('enablePostCssLoader(true)', () => {
@@ -250,7 +250,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('postcss-loader')
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('postcss-loader');
         });
     });
 
@@ -265,7 +265,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('sass-loader')
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('sass-loader');
         });
 
         it('enableSassLoader(true)', () => {
@@ -278,7 +278,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('sass-loader')
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('sass-loader');
         });
     });
 
@@ -293,7 +293,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader')
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader');
         });
 
         it('enableLessLoader(true)', () => {
@@ -306,7 +306,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('less-loader')
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('less-loader');
         });
     });
 
@@ -323,7 +323,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use.options.presets)).to.equal(JSON.stringify([['env', {"modules": false}]]));
+            expect(JSON.stringify(jsRule.use.options.presets)).to.equal(JSON.stringify([['env', { 'modules': false }]]));
         });
 
         it('useBabelRcFile() passes *no* config', () => {
@@ -339,7 +339,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // the options should only contain the cacheDirectory option
-            expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({'cacheDirectory': true}));
+            expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({ 'cacheDirectory': true }));
         });
 
         it('configureBabel() passes babel options', () => {
@@ -348,7 +348,7 @@ describe('The config-generator function', () => {
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.configureBabel(function (babelConfig) {
+            config.configureBabel(function(babelConfig) {
                 babelConfig.presets.push('foo');
             });
 
@@ -366,7 +366,7 @@ describe('The config-generator function', () => {
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
             config.enableReactPreset();
-            config.configureBabel(function (babelConfig) {
+            config.configureBabel(function(babelConfig) {
                 babelConfig.presets.push('foo');
             });
 
@@ -431,7 +431,7 @@ describe('The config-generator function', () => {
             // contentBase should point to the "document root", which
             // is calculated as outputPath, but without the publicPath portion
             expect(actualConfig.devServer.contentBase).to.equal('/tmp/public');
-            expect(actualConfig.devServer.publicPath).to.equal('/build/')
+            expect(actualConfig.devServer.publicPath).to.equal('/build/');
         });
 
         it('contentBase works ok with manifestKeyPrefix', () => {
@@ -447,7 +447,7 @@ describe('The config-generator function', () => {
             // contentBase should point to the "document root", which
             // is calculated as outputPath, but without the publicPath portion
             expect(actualConfig.devServer.contentBase).to.equal('/tmp/public');
-            expect(actualConfig.devServer.publicPath).to.equal('/subdirectory/build/')
+            expect(actualConfig.devServer.publicPath).to.equal('/subdirectory/build/');
         });
     });
 });

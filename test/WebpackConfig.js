@@ -1,4 +1,4 @@
-var expect    = require('chai').expect;
+var expect = require('chai').expect;
 var WebpackConfig = require('../lib/WebpackConfig');
 var path = require('path');
 var fs = require('fs');
