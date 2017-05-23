@@ -21,7 +21,7 @@ using any of the JavaScript package managers:
 
 .. code-block:: terminal
 
-    $ yarn add @weaverryan/webpack-remix webpack webpack-dev-server
+    $ yarn add @weaverryan/webpack-remix
 
 .. note::
 
@@ -62,6 +62,12 @@ and it's fully compatible with Webpack. This is the typical structure of the fil
 
     // export the final configuration
     module.exports = Encore.getWebpackConfig();
+
+To build the assets, use the ``encore`` executable:
+
+.. code-block:: terminal
+
+    $ ./node_modules/.bin/encore dev
 
 The First Example
 -----------------
@@ -144,43 +150,28 @@ or compile them as smaller files:
 .. code-block:: terminal
 
     # in 'dev' environment, run this command to compile assets once
-    $ ./node_modules/.bin/webpack --progress
+    $ ./node_modules/.bin/encore dev
     # ... you can use '--watch' to recompile automatically if assets change
-    $ ./node_modules/.bin/webpack --progress --watch
+    $ ./node_modules/.bin/encore dev --watch
 
     # in production servers, run this command to reduce the size of all files
-    $ NODE_ENV=production ./node_modules/.bin/webpack
+    $ ./node_modules/.bin/encore production
 
 Hot Module Replacement (HRM) & webpack-dev-server
 -------------------------------------------------
 
 `Hot Module Replacement`_ is a Webpack concept where "modules" can be automatically
-updated in the browser without needing to refresh the page! To use it, activate
-the webpack-dev-server in your config:
+updated in the browser without needing to refresh the page!
 
-.. code-block:: javascript
-
-    // webpack.config.js
-
-    Encore
-        // ...
-        .useWebpackDevServer(!Encore.isProduction)
-    ;
-
-Next, make sure that ``webpack-dev-server`` is installed:
+To use it, execute encore with the ``dev-server`` option:
 
 .. code-block:: terminal
 
-    yarn add --dev webpack-dev-server
+    ./node_modules/.bin/encore dev-server --hot --inline
 
-Now, instead of running ``webpack``, run:
-
-.. code-block:: terminal
-
-    ./node_modules/.bin/webpack-dev-server --hot --inline
-
-Make sure you've activated the :ref:`manifest.json versioning <load-manifest-files>`
-when linking to your assets.
+This serves the assets from a new server at ``http://localhost:8080``.
+If you've activated the :ref:`manifest.json versioning <load-manifest-files>`
+you're done! The paths in your templates will automatically point to the dev server.
 
 That's it! Now, modify a CSS file - you should see your browser
 update without needing to refresh! To use it with JavaScript, you'll
