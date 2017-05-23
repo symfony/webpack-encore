@@ -21,7 +21,7 @@ using any of the JavaScript package managers:
 
 .. code-block:: terminal
 
-    $ yarn add @weaverryan/webpack-remix webpack webpack-dev-server
+    $ yarn add @weaverryan/webpack-remix
 
 .. note::
 
@@ -163,20 +163,15 @@ Hot Module Replacement (HRM) & webpack-dev-server
 `Hot Module Replacement`_ is a Webpack concept where "modules" can be automatically
 updated in the browser without needing to refresh the page!
 
-Make sure that ``webpack-dev-server`` is installed:
-
-.. code-block:: terminal
-
-    yarn add --dev webpack-dev-server
-
-Now, execute encore with the ``dev-server`` option:
+To use it, execute encore with the ``dev-server`` option:
 
 .. code-block:: terminal
 
     ./node_modules/.bin/encore dev-server --hot --inline
 
-Make sure you've activated the :ref:`manifest.json versioning <load-manifest-files>`
-when linking to your assets.
+This serves the assets from a new server at ``http://localhost:8080``.
+If you've activated the :ref:`manifest.json versioning <load-manifest-files>`
+you're done! The paths in your templates will automatically point to the dev server.
 
 That's it! Now, modify a CSS file - you should see your browser
 update without needing to refresh! To use it with JavaScript, you'll
