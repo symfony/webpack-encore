@@ -202,10 +202,9 @@ describe('Functional tests using webpack', function() {
                     'styles.css',
                     'font-size: 50px;'
                 );
-                // todo - this isn't the biggest deal, but it's failing
-                // assertManifestPathDoesNotExist(
-                //     'public/styles.js'
-                // );
+                webpackAssert.assertManifestPathDoesNotExist(
+                    'styles.js'
+                );
 
                 done();
             });
