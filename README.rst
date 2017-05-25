@@ -157,6 +157,11 @@ or compile them as smaller files:
     # in production servers, run this command to reduce the size of all files
     $ ./node_modules/.bin/encore production
 
+.. note::
+
+    You will need to restart ``encore`` each time you update
+    your ``webpack.config.js`` file.
+
 Hot Module Replacement (HRM) & webpack-dev-server
 -------------------------------------------------
 
