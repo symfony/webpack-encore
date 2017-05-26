@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
-const WebpackConfig = require('../lib/WebpackConfig');
-const validate = require('../lib/validate-config');
+const WebpackConfig = require('../../lib/WebpackConfig');
+const validator = require('../../lib/config/validator');
 const webpack = require('webpack');
 
 function createConfig() {
@@ -12,14 +12,14 @@ function createConfig() {
     return config;
 }
 
-describe('The validate-config function', () => {
+describe('The validator function', () => {
     it('throws an error if there are no entries', () => {
         const config = new WebpackConfig();
         config.publicPath = '/';
         config.outputPath = '/tmp';
 
         expect(() => {
-            validate(config);
+            validator(config);
         }).to.throw('No entries found!');
     });
 
@@ -29,7 +29,7 @@ describe('The validate-config function', () => {
         config.addEntry('main', './main');
 
         expect(() => {
-            validate(config);
+            validator(config);
         }).to.throw('Missing output path');
     });
 
@@ -39,7 +39,7 @@ describe('The validate-config function', () => {
         config.addEntry('main', './main');
 
         expect(() => {
-            validate(config);
+            validator(config);
         }).to.throw('Missing public path');
     });
 
@@ -48,7 +48,7 @@ describe('The validate-config function', () => {
         config.setPublicPath('https://cdn.example.com');
 
         expect(() => {
-            validate(config);
+            validator(config);
         }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. /build/) to use');
     });
 
@@ -58,7 +58,7 @@ describe('The validate-config function', () => {
         config.setPublicPath('/subdirectory/build');
 
         expect(() => {
-            validate(config);
+            validator(config);
         }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. /build/) to use');
     });
 
@@ -68,7 +68,7 @@ describe('The validate-config function', () => {
         config.useWebpackDevServer();
 
         expect(() => {
-            validate(config);
+            validator(config);
         }).to.throw('Don\'t enable versioning with useWebpackDevServer()');
     });
 });

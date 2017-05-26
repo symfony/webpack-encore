@@ -1,6 +1,6 @@
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
-const validator = require('./lib/validate-config');
+const validator = require('./lib/config/validator');
 const PrettyError = require('pretty-error');
 const commandConfig = require('./lib/command-config');
 
