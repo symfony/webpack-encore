@@ -105,7 +105,7 @@ describe('The config-generator function', () => {
             config.useSourceMaps = true;
 
             const actualConfig = configGenerator(config);
-            expect(actualConfig.devtool).to.equal('#inline-source-map');
+            expect(actualConfig.devtool).to.equal('cheap-eval-source-map');
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('?sourceMap');
         });
@@ -323,7 +323,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use.options.presets)).to.equal(JSON.stringify([['env', { 'modules': false }]]));
+            expect(JSON.stringify(jsRule.use.options.presets)).contains('env');
         });
 
         it('useBabelRcFile() passes *no* config', () => {
