@@ -75,11 +75,9 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.output)).to.equal(JSON.stringify({
-                path: '/tmp/public-path',
-                filename: '[name].js',
-                publicPath: '/public-path/'
-            }));
+            expect(actualConfig.output.path).to.equal('/tmp/public-path');
+            expect(actualConfig.output.filename).to.equal('[name].js');
+            expect(actualConfig.output.publicPath).to.equal('/public-path/');
         });
     });
 
@@ -105,7 +103,7 @@ describe('The config-generator function', () => {
             config.useSourceMaps = true;
 
             const actualConfig = configGenerator(config);
-            expect(actualConfig.devtool).to.equal('cheap-eval-source-map');
+            expect(actualConfig.devtool).to.equal('inline-source-map');
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('?sourceMap');
         });
