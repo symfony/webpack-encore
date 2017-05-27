@@ -1,10 +1,15 @@
 const expect = require('chai').expect;
 const WebpackConfig = require('../lib/WebpackConfig');
+const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const ManifestPlugin = require('./../lib/webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+
+createConfig = function(runtime = null) {
+    return new WebpackConfig(runtime ? runtime : new RuntimeConfig());
+};
 
 function findPlugin(pluginConstructor, plugins) {
     for (let plugin of plugins) {
@@ -33,7 +38,7 @@ describe('The config-generator function', () => {
 
     describe('Test basic output properties', () => {
         it('Returns an object with the correct properties', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             // setting explicitly to make test more dependable
             config.context = '/foo/dir';
             config.addEntry('main', './main');
@@ -50,7 +55,7 @@ describe('The config-generator function', () => {
         });
 
         it('entries and styleEntries are merged', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.publicPath = '/';
             config.outputPath = '/tmp';
             config.addEntry('main', './main');
@@ -67,7 +72,7 @@ describe('The config-generator function', () => {
         });
 
         it('basic output', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
 
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path/';
@@ -83,7 +88,7 @@ describe('The config-generator function', () => {
 
     describe('Test source maps changes', () => {
         it('without sourcemaps', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -96,7 +101,7 @@ describe('The config-generator function', () => {
         });
 
         it('with sourcemaps', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -111,7 +116,7 @@ describe('The config-generator function', () => {
 
     describe('Test publicPath and manifestKeyPrefix variants', () => {
         it('with normal publicPath, manifestKeyPrefix matches it', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/web/build';
             config.addEntry('main', './main');
             config.setPublicPath('/build');
@@ -127,7 +132,7 @@ describe('The config-generator function', () => {
         });
 
         it('when manifestKeyPrefix is set, that is used instead', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/web/build';
             config.addEntry('main', './main');
             // pretend we're installed to a subdirectory
@@ -145,7 +150,7 @@ describe('The config-generator function', () => {
         });
 
         it('manifestKeyPrefix can be empty', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/web/build';
             config.addEntry('main', './main');
             config.setPublicPath('/build');
@@ -161,7 +166,7 @@ describe('The config-generator function', () => {
 
     describe('Test versioning changes', () => {
         it('with versioning', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -178,12 +183,13 @@ describe('The config-generator function', () => {
 
     describe('Test production changes', () => {
         it('not in production', () => {
-            var config = new WebpackConfig();
+            const runtime = new RuntimeConfig();
+            runtime.environment = 'dev';
+            const config = createConfig(runtime);
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.environment = 'dev';
             config.enableVersioning(true);
 
             const actualConfig = configGenerator(config);
@@ -199,12 +205,13 @@ describe('The config-generator function', () => {
         });
 
         it('YES to production', () => {
-            var config = new WebpackConfig();
+            const runtime = new RuntimeConfig();
+            runtime.environment = 'production';
+            const config = createConfig(runtime);
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.environment = 'production';
             config.enableVersioning(true);
 
             const actualConfig = configGenerator(config);
@@ -226,7 +233,7 @@ describe('The config-generator function', () => {
 
     describe('enablePostCssLoader() adds the postcss-loader', () => {
         it('enablePostCssLoader(false)', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -239,7 +246,7 @@ describe('The config-generator function', () => {
         });
 
         it('enablePostCssLoader(true)', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -254,7 +261,7 @@ describe('The config-generator function', () => {
 
     describe('enableSassLoader() adds the sass-loader', () => {
         it('enableSassLoader(false)', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -267,7 +274,7 @@ describe('The config-generator function', () => {
         });
 
         it('enableSassLoader(true)', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -282,7 +289,7 @@ describe('The config-generator function', () => {
 
     describe('enableLessLoader() adds the less-loader', () => {
         it('enableLessLoader(false)', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -295,7 +302,7 @@ describe('The config-generator function', () => {
         });
 
         it('enableLessLoader(true)', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -310,7 +317,7 @@ describe('The config-generator function', () => {
 
     describe('.js rule receives different configuration', () => {
         it('Use default config', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -325,7 +332,7 @@ describe('The config-generator function', () => {
         });
 
         it('useBabelRcFile() passes *no* config', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -341,7 +348,7 @@ describe('The config-generator function', () => {
         });
 
         it('configureBabel() passes babel options', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -358,7 +365,7 @@ describe('The config-generator function', () => {
         });
 
         it('enableReactPreset() passes react preset to babel', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -380,7 +387,7 @@ describe('The config-generator function', () => {
 
     describe('cleanupOutputBeforeBuild() adds CleanWebpackPlugin', () => {
         it('without cleanupOutputBeforeBuild()', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -393,7 +400,7 @@ describe('The config-generator function', () => {
         });
 
         it('with cleanupOutputBeforeBuild()', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -409,7 +416,7 @@ describe('The config-generator function', () => {
 
     describe('test for devServer config', () => {
         it('no devServer config when not enabled', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.publicPath = '/';
             config.outputPath = '/tmp';
             config.addEntry('main', './main');
@@ -419,7 +426,7 @@ describe('The config-generator function', () => {
         });
 
         it('contentBase is calculated correctly', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
             config.addEntry('main', './main');
@@ -430,10 +437,11 @@ describe('The config-generator function', () => {
             // is calculated as outputPath, but without the publicPath portion
             expect(actualConfig.devServer.contentBase).to.equal('/tmp/public');
             expect(actualConfig.devServer.publicPath).to.equal('/build/');
+
         });
 
         it('contentBase works ok with manifestKeyPrefix', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/subdirectory/build');
             // this "fixes" the incompatibility between outputPath and publicPath

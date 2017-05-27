@@ -2,21 +2,14 @@ const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
 const PrettyError = require('pretty-error');
-const commandConfig = require('./lib/command-config');
+const runtimeConfig = require('./lib/context').runtimeConfig;
 
-const webpackConfig = new WebpackConfig();
-
-// determine the environment
-let environment = commandConfig.environment;
-if (environment === null) {
-    environment = process.env.NODE_ENV ? process.env.NODE_ENV : 'dev';
+// at this time, the encore executable should have set the runtimeConfig
+if (!runtimeConfig) {
+    throw new Error('Are you trying to require index.js directly?');
 }
-webpackConfig.setEnvironment(environment);
 
-if (commandConfig.useDevServer) {
-    // todo - allow URL to be passed in
-    webpackConfig.useWebpackDevServer(commandConfig.devServerUrl);
-}
+const webpackConfig = new WebpackConfig(runtimeConfig);
 
 module.exports = {
     /**

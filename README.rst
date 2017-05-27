@@ -144,7 +144,7 @@ Compiling your Assets
 Once your JavaScript and CSS files have been created and your ``webpack.config.js``
 file has been defined, you are ready to compile the assets and use them in your
 application. There are several commands available because depending on the
-execution environment (``dev`` or ``prod``) you may need to compile assets faster
+execution environment (dev versus production) you may need to compile assets faster
 or compile them as smaller files:
 
 .. code-block:: terminal

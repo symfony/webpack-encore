@@ -1,10 +1,11 @@
 const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
+const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const validator = require('../../lib/config/validator');
 const webpack = require('webpack');
 
 function createConfig() {
-    const config = new WebpackConfig();
+    const config = new WebpackConfig(new RuntimeConfig());
     config.outputPath = '/tmp/public/build';
     config.setPublicPath('/build');
     config.addEntry('main', './main');
@@ -14,7 +15,7 @@ function createConfig() {
 
 describe('The validator function', () => {
     it('throws an error if there are no entries', () => {
-        const config = new WebpackConfig();
+        const config = new WebpackConfig(new RuntimeConfig());
         config.publicPath = '/';
         config.outputPath = '/tmp';
 
@@ -24,7 +25,7 @@ describe('The validator function', () => {
     });
 
     it('throws an error if there is no output path', () => {
-        const config = new WebpackConfig();
+        const config = new WebpackConfig(new RuntimeConfig());
         config.publicPath = '/';
         config.addEntry('main', './main');
 
@@ -34,7 +35,7 @@ describe('The validator function', () => {
     });
 
     it('throws an error if there is no public path', () => {
-        const config = new WebpackConfig();
+        const config = new WebpackConfig(new RuntimeConfig());
         config.outputPath = '/tmp';
         config.addEntry('main', './main');
 

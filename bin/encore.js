@@ -1,62 +1,50 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const commandConfig = require('../lib/command-config');
+const parseYargs = require('../lib/config/parse-argv');
+const context = require('../lib/context');
 const chalk = require('chalk');
-const pkgUp = require('pkg-up');
 
-const argv = require('yargs').argv;
+const runtimeConfig = parseYargs(require('yargs').argv);
+context.runtimeConfig = runtimeConfig;
 
-const validCommands = ['dev', 'production', 'dev-server'];
-
-const command = argv._[0];
 // remove the command from the output
 process.argv.splice(2, 1);
-if (typeof command == 'undefined') {
+
+if (!runtimeConfig.isValidCommand) {
+    if (runtimeConfig.command) {
+        console.log(chalk.bgRed.white(`Invalid command "${runtimeConfig.command}"`));
+        console.log();
+    }
     showUsageInstructions();
 
     process.exit(1);
 }
 
-commandConfig.useDevServer = false;
-switch (command) {
-    case 'dev':
-        commandConfig.environment = 'dev';
-        break;
-    case 'production':
-        commandConfig.environment = 'production';
-        break;
-    case 'dev-server':
-        commandConfig.useDevServer = true;
-        if (argv.host || argv.port) {
-            const host = argv.host ? argv.host : 'localhost';
-            const port = argv.port ? argv.port : '8080';
+if (runtimeConfig.helpRequested) {
+    showUsageInstructions();
 
-            commandConfig.devServerUrl = `http://${host}:${port}`;
-        }
-        commandConfig.environment = 'dev';
-
-        break;
-    default:
-        console.log(chalk.bgRed.white(`Invalid command "${command}"`));
-        console.log();
-        showUsageInstructions();
-
-        process.exit(1);
+    // allow it to continue to the help command of webpack
 }
 
-if (commandConfig.useDevServer) {
+if (runtimeConfig.useDevServer) {
     console.log('Running webpack-dev-server ...');
+    console.log();
 
     return require('webpack-dev-server/bin/webpack-dev-server');
 } else {
     console.log('Running webpack ...');
+    console.log();
 
     return require('webpack/bin/webpack');
 }
 
 function showUsageInstructions() {
+    const validCommands = ['dev', 'production', 'dev-server'];
+
     console.log(`usage ${chalk.green('encore')} [${ validCommands.map(command => chalk.green(command)).join('|') }]`);
+    console.log();
+    console.log('encore is a thin executable around the webpack or webpack-dev-server executables');
     console.log();
     console.log('Commands:');
     console.log(`    ${chalk.green('dev')}        : runs webpack for development`);
@@ -73,4 +61,3 @@ function showUsageInstructions() {
     console.log(chalk.yellow('    encore production'));
     console.log();
 }
-

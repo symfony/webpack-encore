@@ -1,20 +1,25 @@
-var expect = require('chai').expect;
-var WebpackConfig = require('../lib/WebpackConfig');
-var path = require('path');
-var fs = require('fs');
+const expect = require('chai').expect;
+const WebpackConfig = require('../lib/WebpackConfig');
+const RuntimeConfig = require('../lib/config/RuntimeConfig');
+const path = require('path');
+const fs = require('fs');
+
+createConfig = function() {
+    return new WebpackConfig(new RuntimeConfig());
+};
 
 describe('WebpackConfig object', () => {
 
     describe('setOutputPath', () => {
         it('use absolute, existent path', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setOutputPath(__dirname);
 
             expect(config.outputPath).to.equal(__dirname);
         });
 
         it('relative path, becomes absolute', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setOutputPath('assets');
 
             // the "context" dir is resolved to the directory
@@ -33,7 +38,7 @@ describe('WebpackConfig object', () => {
                 fs.rmdirSync(targetPath);
             }
 
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setOutputPath(targetPath);
 
             expect(fs.existsSync(config.outputPath)).to.be.true;
@@ -48,7 +53,7 @@ describe('WebpackConfig object', () => {
                 fs.rmdirSync(targetPath);
             }
 
-            var config = new WebpackConfig();
+            const config = createConfig();
             expect(() => {
                 config.setOutputPath(targetPath);
             }).to.throw('create this directory');
@@ -57,28 +62,28 @@ describe('WebpackConfig object', () => {
 
     describe('setPublicPath', () => {
         it('/foo => /foo/', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setPublicPath('/foo');
 
             expect(config.publicPath).to.equal('/foo/');
         });
 
         it('/foo/ => /foo/', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setPublicPath('/foo/');
 
             expect(config.publicPath).to.equal('/foo/');
         });
 
         it('https://example.com => https://example.com/', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setPublicPath('https://example.com');
 
             expect(config.publicPath).to.equal('https://example.com/');
         });
 
         it('foo/ throws an exception', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
 
             expect(() => {
                 config.setPublicPath('foo/');
@@ -86,7 +91,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Setting to a URL when using devServer throws an error', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.useWebpackDevServer();
 
             expect(() => {
@@ -98,7 +103,7 @@ describe('WebpackConfig object', () => {
     describe('setManifestKeyPrefix', () => {
 
         it('You can set it!', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setManifestKeyPrefix('/foo');
 
             // trailing slash added
@@ -106,7 +111,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('You can set it blank', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setManifestKeyPrefix('');
 
             // trailing slash not added
@@ -116,7 +121,7 @@ describe('WebpackConfig object', () => {
 
     describe('useWebpackDevServer', () => {
         it('Set with no arguments', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setPublicPath('/build');
             config.useWebpackDevServer();
 
@@ -124,7 +129,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Set to false', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setPublicPath('/build');
             config.useWebpackDevServer(false);
 
@@ -133,7 +138,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Set to true', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setPublicPath('/build');
             config.useWebpackDevServer(true);
 
@@ -141,7 +146,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Set and control URL', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.setPublicPath('/build');
             config.useWebpackDevServer('https://localhost:9000');
 
@@ -149,7 +154,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Exception if publicPath is set to an absolute URL', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
 
             config.setPublicPath('http://foo.com');
 
@@ -159,7 +164,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Exception if URL is not a URL!', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
 
             expect(() => {
                 config.useWebpackDevServer('localhost:8090');
@@ -169,7 +174,7 @@ describe('WebpackConfig object', () => {
 
     describe('addEntry', () => {
         it('Calling with a duplicate name throws an error', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.addEntry('entry_foo', './foo.js');
 
             expect(() => {
@@ -178,7 +183,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Calling with a duplicate of addStyleEntry', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.addStyleEntry('main', './main.scss');
 
             expect(() => {
@@ -189,7 +194,7 @@ describe('WebpackConfig object', () => {
 
     describe('addStyleEntry', () => {
         it('Calling with a duplicate name throws an error', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.addStyleEntry('entry_foo', './foo.css');
 
             expect(() => {
@@ -198,7 +203,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Calling with a duplicate of addEntry', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.addEntry('main', './main.scss');
 
             expect(() => {
@@ -209,7 +214,7 @@ describe('WebpackConfig object', () => {
 
     describe('createSharedEntry', () => {
         it('Calling twice throws an error', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.createSharedEntry('vendor', 'jquery');
 
             expect(() => {
@@ -220,7 +225,7 @@ describe('WebpackConfig object', () => {
 
     describe('autoProvideVariables', () => {
         it('Calling multiple times merges', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
             config.autoProvideVariables({
                 $: 'jquery',
                 jQuery: 'jquery'
@@ -244,7 +249,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Calling with string throws an error', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
 
             expect(() => {
                 config.autoProvideVariables('jquery');
@@ -252,7 +257,7 @@ describe('WebpackConfig object', () => {
         });
 
         it('Calling with an Array throws an error', () => {
-            var config = new WebpackConfig();
+            const config = createConfig();
 
             expect(() => {
                 config.autoProvideVariables(['jquery']);
