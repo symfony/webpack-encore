@@ -14,6 +14,8 @@ createTestDirectory= function() {
         path.join(projectDir, 'package.json'),
         ''
     );
+
+    return projectDir;
 };
 
 describe('parse-runtime', () => {
