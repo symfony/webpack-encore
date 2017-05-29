@@ -1,11 +1,11 @@
 const expect = require('chai').expect;
-const parseArgv = require('../../lib/config/parse-argv');
+const parseArgv = require('../../lib/config/parse-runtime');
 
 createArgv = function(argv) {
     return require('yargs/yargs')(argv).argv;
 };
 
-describe('parse-argv', () => {
+describe('parse-runtime', () => {
     it('Basic usage', () => {
         const config = parseArgv(createArgv(['fooCommand', '--bar', '--help']));
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const parseYargs = require('../lib/config/parse-argv');
+const parseYargs = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
 const chalk = require('chalk');
 
