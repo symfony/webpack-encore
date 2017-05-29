@@ -4,9 +4,12 @@ const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const path = require('path');
 const fs = require('fs');
 
-createConfig = function() {
-    return new WebpackConfig(new RuntimeConfig());
-};
+function createConfig() {
+    const runtimeConfig = new RuntimeConfig();
+    runtimeConfig.context = __dirname;
+
+    return new WebpackConfig(runtimeConfig);
+}
 
 describe('WebpackConfig object', () => {
 
@@ -22,18 +25,17 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
             config.setOutputPath('assets');
 
-            // the "context" dir is resolved to the directory
-            // of this plugin, because it holds a package.json
+            // __dirname is the context
             expect(config.outputPath).to.equal(
-                path.join(__dirname, '../assets')
+                path.join(__dirname, '/assets')
             );
 
             // cleanup!
-            fs.rmdirSync(path.join(__dirname, '../assets'));
+            fs.rmdirSync(path.join(__dirname, '/assets'));
         });
 
         it('non-existent path creates directory', () => {
-            var targetPath = path.join(__dirname, 'new_dir');
+            const targetPath = path.join(__dirname, 'new_dir');
             if (fs.existsSync(targetPath)) {
                 fs.rmdirSync(targetPath);
             }

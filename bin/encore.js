@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 
 const path = require('path');
-const parseYargs = require('../lib/config/parse-runtime');
+const parseRuntime = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
 const chalk = require('chalk');
 
-const runtimeConfig = parseYargs(require('yargs').argv);
+const runtimeConfig = parseRuntime(
+    require('yargs').argv,
+    process.cwd()
+);
 context.runtimeConfig = runtimeConfig;
 
 // remove the command from the output

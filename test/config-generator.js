@@ -7,9 +7,15 @@ const ManifestPlugin = require('./../lib/webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
-createConfig = function(runtime = null) {
-    return new WebpackConfig(runtime ? runtime : new RuntimeConfig());
-};
+function createConfig(context = null, environment = 'dev') {
+    context = context ? context : __dirname;
+
+    const runtimeConfig = new RuntimeConfig();
+    runtimeConfig.context = context;
+    runtimeConfig.environment = environment;
+
+    return new WebpackConfig(runtimeConfig);
+}
 
 function findPlugin(pluginConstructor, plugins) {
     for (let plugin of plugins) {
@@ -38,9 +44,8 @@ describe('The config-generator function', () => {
 
     describe('Test basic output properties', () => {
         it('Returns an object with the correct properties', () => {
-            const config = createConfig();
-            // setting explicitly to make test more dependable
-            config.context = '/foo/dir';
+            // setting context explicitly to make test more dependable
+            const config = createConfig('/foo/dir');
             config.addEntry('main', './main');
             config.publicPath = '/';
             config.outputPath = '/tmp';
@@ -183,10 +188,7 @@ describe('The config-generator function', () => {
 
     describe('Test production changes', () => {
         it('not in production', () => {
-            const runtime = new RuntimeConfig();
-            runtime.environment = 'dev';
-            const config = createConfig(runtime);
-            config.context = '/tmp/context';
+            const config = createConfig('/tmp/context', 'dev');
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -205,10 +207,7 @@ describe('The config-generator function', () => {
         });
 
         it('YES to production', () => {
-            const runtime = new RuntimeConfig();
-            runtime.environment = 'production';
-            const config = createConfig(runtime);
-            config.context = '/tmp/context';
+            const config = createConfig(null, 'production');
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -234,7 +233,6 @@ describe('The config-generator function', () => {
     describe('enablePostCssLoader() adds the postcss-loader', () => {
         it('enablePostCssLoader(false)', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -247,7 +245,6 @@ describe('The config-generator function', () => {
 
         it('enablePostCssLoader(true)', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -262,7 +259,6 @@ describe('The config-generator function', () => {
     describe('enableSassLoader() adds the sass-loader', () => {
         it('enableSassLoader(false)', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -275,7 +271,6 @@ describe('The config-generator function', () => {
 
         it('enableSassLoader(true)', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -290,7 +285,6 @@ describe('The config-generator function', () => {
     describe('enableLessLoader() adds the less-loader', () => {
         it('enableLessLoader(false)', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -303,7 +297,6 @@ describe('The config-generator function', () => {
 
         it('enableLessLoader(true)', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -318,7 +311,6 @@ describe('The config-generator function', () => {
     describe('.js rule receives different configuration', () => {
         it('Use default config', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -333,7 +325,6 @@ describe('The config-generator function', () => {
 
         it('useBabelRcFile() passes *no* config', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -349,7 +340,6 @@ describe('The config-generator function', () => {
 
         it('configureBabel() passes babel options', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -366,7 +356,6 @@ describe('The config-generator function', () => {
 
         it('enableReactPreset() passes react preset to babel', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -388,7 +377,6 @@ describe('The config-generator function', () => {
     describe('cleanupOutputBeforeBuild() adds CleanWebpackPlugin', () => {
         it('without cleanupOutputBeforeBuild()', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -401,7 +389,6 @@ describe('The config-generator function', () => {
 
         it('with cleanupOutputBeforeBuild()', () => {
             const config = createConfig();
-            config.context = '/tmp/context';
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
