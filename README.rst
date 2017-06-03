@@ -547,18 +547,18 @@ First, download ``postcss-loader`` and ``postcss-load-config``:
 
 .. code-block:: terminal
 
-    yarn add --dev postcss-loader postcss-load-config
+    yarn add --dev postcss-loader
 
 Next, create a ``postcss.config.js`` file at the root of your project:
 
 .. code-block:: javascript
 
     module.exports = {
-        plugins: [
+        plugins: {
             // include whatever plugins you want
             // but make sure you install these via yarn or npm!
-            require('autoprefixer')
-        ]
+            autoprefixer: {}
+        }
     }
 
 Finally, enable PostCSS in Encore:
