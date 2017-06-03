@@ -92,29 +92,6 @@ module.exports = {
         return this;
     },
 
-    /**
-     * Call this to use the webpack-dev-server
-     *
-     * This will initialize the needed devServer config
-     * and point the URLs to the webpackDevServerUrl
-     * (http://localhost:8080 by default).
-     *
-     * Be sure to execute the webpack-dev-server when this
-     * option is set:
-     *
-     *     ./node_modules/.bin/webpack-dev-server --hot --inline
-     *
-     * False can be passed as an argument to disable the dev server.
-     *
-     * @param {string|bool} webpackDevServerUrl
-     * @return {exports}
-     */
-    useWebpackDevServer(webpackDevServerUrl = null) {
-        webpackConfig.useWebpackDevServer(webpackDevServerUrl);
-
-        return this;
-    },
-
     enableVersioning(enabled = true) {
         webpackConfig.enableVersioning(enabled);
 
@@ -236,19 +213,6 @@ module.exports = {
      */
     configureBabel(callback) {
         webpackConfig.configureBabel(callback);
-
-        return this;
-    },
-
-    /**
-     * Should the babel-loader be allowed to load config from
-     * a .babelrc file?
-     *
-     * @param {boolean} shouldUse
-     * @return {exports}
-     */
-    useBabelRcFile(shouldUse = true) {
-        webpackConfig.useBabelRcFile(shouldUse);
 
         return this;
     },

@@ -485,11 +485,12 @@ Full Configuration Example
 Configuring Babel
 -----------------
 
-Babel_ is automatically configured for all ``.js`` files via the
-``babel-loader``. By default, the ``env`` preset is used without
-any extra options.
+Babel_ is automatically configured for all ``.js`` and ``.jsx`` files
+via the ``babel-loader`` with sensible defaults (e.g. with the ``env``
+preset and ``react`` if requested).
 
-Need to configure Babel yourself? No problem - there are two options:
+Need to extend the Babel configuration further? No problem! The easiest
+way is via ``configureBabel()``:
 
 .. code-block:: javascript
 
@@ -499,17 +500,15 @@ Need to configure Babel yourself? No problem - there are two options:
     Encore
         // ...
 
-        // Option 1) configure babel right inside webpack.config.js
+        // modify our default Babel configuration
         .configureBabel(function(babelConfig) {
             babelConfig.presets.push('es2017');
         })
-
-        // Option 2) Create a .babelrc file, then tell Encore it exists
-        .useBabelRcFile()
     ;
 
-If you create a ``.babelrc`` file, don't forget to call ``useBabelRcFile()``.
-Otherwise, the default config will override your file's settings.
+You can also create a standard ``.babelrc`` file at the root of your project.
+Just make sure to configure it with all the presets you need: as soon as a
+``.babelrc`` is present, Encore can no longer add *any* Babel configuration for you!
 
 Using React
 -----------

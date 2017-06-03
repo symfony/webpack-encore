@@ -1,8 +1,20 @@
+'use strict';
+
 const chai = require('chai');
 chai.use(require('chai-fs'));
 const expect = chai.expect;
 const path = require('path');
 const testSetup = require('../lib/test/setup');
+const fs = require('fs-extra');
+
+function createWebpackConfig(outputDirName = '', command, argv = {}) {
+    return testSetup.createWebpackConfig(
+        testSetup.createTestAppDir(),
+        outputDirName,
+        command,
+        argv
+    );
+}
 
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
@@ -10,14 +22,11 @@ describe('Functional tests using webpack', function() {
 
     describe('Basic scenarios', () => {
         beforeEach(() => {
-            testSetup.emptyTestDir();
-        });
-        afterEach(() => {
-            testSetup.deleteTemporaryFiles();
+            testSetup.emptyTmpDir();
         });
 
         it('Builds a simple .js file + manifest.json', (done) => {
-            const config = testSetup.createWebpackConfig('web/build');
+            const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/no_require');
             config.setPublicPath('/build');
 
@@ -48,7 +57,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('setPublicPath with CDN loads assets from the CDN', (done) => {
-            const config = testSetup.createWebpackConfig('public/assets');
+            const config = createWebpackConfig('public/assets', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.addStyleEntry('font', './css/roboto_font.css');
             config.addStyleEntry('bg', './css/background_image.scss');
@@ -81,7 +90,7 @@ describe('Functional tests using webpack', function() {
                 );
 
                 testSetup.requestTestPage(
-                    'public',
+                    path.join(config.getContext(), 'public'),
                     ['/assets/main.js'],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
@@ -100,13 +109,14 @@ describe('Functional tests using webpack', function() {
         });
 
         it('The devServer config loads successfully', (done) => {
-            const config = testSetup.createWebpackConfig('public/assets');
+            const config = createWebpackConfig('public/assets', 'dev-server', {
+                port: '8090'
+            });
             config.addEntry('main', './js/code_splitting');
             config.addStyleEntry('font', './css/roboto_font.css');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.setPublicPath('/assets');
             config.enableSassLoader();
-            config.useWebpackDevServer('http://localhost:8090');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that the publicPath is set correctly
@@ -126,7 +136,7 @@ describe('Functional tests using webpack', function() {
                 );
 
                 testSetup.requestTestPage(
-                    'public',
+                    path.join(config.getContext(), 'public'),
                     ['/assets/main.js'],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
@@ -145,7 +155,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('Deploying to a subdirectory is no problem', (done) => {
-            const config = testSetup.createWebpackConfig('subdirectory/build');
+            const config = createWebpackConfig('subdirectory/build', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/subdirectory/build');
             config.setManifestKeyPrefix('build');
@@ -157,7 +167,8 @@ describe('Functional tests using webpack', function() {
                 );
 
                 testSetup.requestTestPage(
-                    '', // the webroot will not include the /subdirectory/build part
+                    // the webroot will not include the /subdirectory/build part
+                    path.join(config.getContext(), ''),
                     ['/subdirectory/build/main.js'],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
@@ -172,7 +183,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('Empty manifestKeyPrefix is allowed', (done) => {
-            const config = testSetup.createWebpackConfig('build');
+            const config = createWebpackConfig('build', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/build');
             config.setManifestKeyPrefix('');
@@ -188,7 +199,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('addStyleEntry .js files are removed', (done) => {
-            const config = testSetup.createWebpackConfig('web');
+            const config = createWebpackConfig('web', 'dev');
             config.addEntry('main', './js/no_require');
             config.setPublicPath('/');
             config.addStyleEntry('styles', './css/h1_style.css');
@@ -211,21 +222,21 @@ describe('Functional tests using webpack', function() {
         });
 
         it('enableVersioning applies to js, css & manifest', (done) => {
-            const config = testSetup.createWebpackConfig('web/build');
+            const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/build');
             config.addStyleEntry('h1', './css/h1_style.css');
-            config.addStyleEntry('bg', './css/background_image.scss');
+            config.addStyleEntry('bg', './css/another_bg_image.css');
             config.enableSassLoader();
             config.enableVersioning(true);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.fc540f51a2e2ae008038.js', // chunks are also versioned
+                        '0.38a901b572534329da92.js', // chunks are also versioned
                         'main.292c0347ed1240663cb1.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
-                        'bg.f8a1ccfa5977d7c46fe2431ba5eef51e.css',
+                        'bg.42ced8eae2254268bb3c65f1e65bd041.css',
                         'manifest.json'
                     ]
                 );
@@ -237,7 +248,7 @@ describe('Functional tests using webpack', function() {
                 );
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.f8a1ccfa5977d7c46fe2431ba5eef51e.css',
+                    'bg.42ced8eae2254268bb3c65f1e65bd041.css',
                     '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
                 );
 
@@ -246,7 +257,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('font and image files are copied correctly', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.addStyleEntry('font', './css/roboto_font.css');
@@ -292,7 +303,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('enableSourceMaps() adds to .js, css & scss', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/no_require');
             config.addStyleEntry('bg', './css/background_image.scss');
@@ -315,8 +326,32 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('Without enableSourceMaps(), there are no sourcemaps', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/no_require');
+            config.addStyleEntry('bg', './css/background_image.scss');
+            config.addStyleEntry('font', './css/roboto_font.css');
+            config.enableSassLoader();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertOutputFileDoesNotHaveSourcemap(
+                    'main.js'
+                );
+                // TODO - fix this, there IS always a sourcemap in .sass files
+                // webpackAssert.assertOutputFileDoesNotHaveSourcemap(
+                //     'bg.css'
+                // );
+                webpackAssert.assertOutputFileDoesNotHaveSourcemap(
+                    'font.css'
+                );
+
+                done();
+            });
+        });
+
         it('Code splitting a scss file works', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             // loads sass_features.scss via require.ensure
             config.addEntry('main', './js/code_split_load_scss');
@@ -339,7 +374,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('createdSharedEntry() creates commons files', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require', './js/code_splitting']);
             config.addEntry('other', ['./js/no_require']);
@@ -362,7 +397,7 @@ describe('Functional tests using webpack', function() {
         });
 
         it('in production mode, code is uglified', (done) => {
-            const config = testSetup.createWebpackConfig('www/build', 'production');
+            const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require']);
 
@@ -378,21 +413,23 @@ describe('Functional tests using webpack', function() {
         });
 
         it('PostCSS works when enabled', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
-            config.setPublicPath('/build');
-            config.addStyleEntry('styles', ['./css/autoprefixer_test.css']);
-            config.enablePostCssLoader();
+            const appDir = testSetup.createTestAppDir();
 
-            testSetup.saveTemporaryFileToFixturesDirectory(
-                'postcss.config.js',
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
                 `
 module.exports = {
   plugins: [
     require('autoprefixer')()
   ]
 }
-`
+                `
             );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addStyleEntry('styles', ['./css/autoprefixer_test.css']);
+            config.enablePostCssLoader();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that the autoprefixer did its work!
@@ -406,7 +443,7 @@ module.exports = {
         });
 
         it('less processes when enabled', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', ['./css/h2_styles.less']);
             config.enableLessLoader();
@@ -424,7 +461,7 @@ module.exports = {
         });
 
         it('Babel is executed on .js files', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/arrow_function');
 
@@ -440,14 +477,12 @@ module.exports = {
         });
 
         it('Babel can be configured via .babelrc', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
-            config.setPublicPath('/build');
-            config.addEntry('main', './js/class-syntax');
-            config.useBabelRcFile();
+            // create the .babelrc file first, so we see it
+            const appDir = testSetup.createTestAppDir();
 
-            testSetup.saveTemporaryFileToFixturesDirectory(
-                '.babelrc',
-                `
+            fs.writeFileSync(
+                path.join(appDir, '.babelrc'),
+`
 {
   "presets": [
     ["env", {
@@ -459,6 +494,10 @@ module.exports = {
 }
 `
             );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/class-syntax');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the arrow function
@@ -473,7 +512,7 @@ module.exports = {
         });
 
         it('When enabled, react JSX is transformed!', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
             config.enableReactPreset();
@@ -490,7 +529,7 @@ module.exports = {
         });
 
         it('The output directory is cleaned between builds', (done) => {
-            const config = testSetup.createWebpackConfig('www/build');
+            const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/no_require');
             config.cleanupOutputBeforeBuild();

@@ -5,17 +5,16 @@ const validator = require('../../lib/config/validator');
 const webpack = require('webpack');
 
 function createConfig() {
-    const config = new WebpackConfig(new RuntimeConfig());
-    config.outputPath = '/tmp/public/build';
-    config.setPublicPath('/build');
-    config.addEntry('main', './main');
+    const runtimeConfig = new RuntimeConfig();
+    runtimeConfig.context = __dirname;
+    runtimeConfig.babelRcFileExists = false;
 
-    return config;
+    return new WebpackConfig(runtimeConfig);
 }
 
 describe('The validator function', () => {
     it('throws an error if there are no entries', () => {
-        const config = new WebpackConfig(new RuntimeConfig());
+        const config = createConfig();
         config.publicPath = '/';
         config.outputPath = '/tmp';
 
@@ -25,7 +24,7 @@ describe('The validator function', () => {
     });
 
     it('throws an error if there is no output path', () => {
-        const config = new WebpackConfig(new RuntimeConfig());
+        const config = createConfig();
         config.publicPath = '/';
         config.addEntry('main', './main');
 
@@ -35,7 +34,7 @@ describe('The validator function', () => {
     });
 
     it('throws an error if there is no public path', () => {
-        const config = new WebpackConfig(new RuntimeConfig());
+        const config = createConfig();
         config.outputPath = '/tmp';
         config.addEntry('main', './main');
 
@@ -46,6 +45,9 @@ describe('The validator function', () => {
 
     it('with absolute publicPath, manifestKeyPrefix must be set', () => {
         const config = createConfig();
+        config.outputPath = '/tmp/public/build';
+        config.setPublicPath('/build');
+        config.addEntry('main', './main');
         config.setPublicPath('https://cdn.example.com');
 
         expect(() => {
@@ -55,6 +57,8 @@ describe('The validator function', () => {
 
     it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', () => {
         const config = createConfig();
+        config.outputPath = '/tmp/public/build';
+        config.addEntry('main', './main');
         // pretend we're installed to a subdirectory
         config.setPublicPath('/subdirectory/build');
 
@@ -65,11 +69,14 @@ describe('The validator function', () => {
 
     it('cannot use versioning with webpack-dev-server', () => {
         const config = createConfig();
+        config.outputPath = '/tmp/public/build';
+        config.setPublicPath('/build');
+        config.addEntry('main', './main');
+        config.runtimeConfig.useDevServer = true;
         config.enableVersioning();
-        config.useWebpackDevServer();
 
         expect(() => {
             validator(config);
-        }).to.throw('Don\'t enable versioning with useWebpackDevServer()');
+        }).to.throw('Don\'t enable versioning with the dev-server');
     });
 });

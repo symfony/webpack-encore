@@ -7,12 +7,20 @@ const ManifestPlugin = require('./../lib/webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
-function createConfig(context = null, environment = 'dev') {
-    context = context ? context : __dirname;
+function createConfig(runtimeConfig = null) {
+    runtimeConfig = runtimeConfig ? runtimeConfig : new RuntimeConfig();
 
-    const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = context;
-    runtimeConfig.environment = environment;
+    if (null === runtimeConfig.context) {
+        runtimeConfig.context = __dirname;
+    }
+
+    if (null === runtimeConfig.environment) {
+        runtimeConfig.environment = 'dev';
+    }
+
+    if (null === runtimeConfig.babelRcFileExists) {
+        runtimeConfig.babelRcFileExists = false;
+    }
 
     return new WebpackConfig(runtimeConfig);
 }
@@ -45,7 +53,9 @@ describe('The config-generator function', () => {
     describe('Test basic output properties', () => {
         it('Returns an object with the correct properties', () => {
             // setting context explicitly to make test more dependable
-            const config = createConfig('/foo/dir');
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.context = '/foo/dir';
+            const config = createConfig(runtimeConfig);
             config.addEntry('main', './main');
             config.publicPath = '/';
             config.outputPath = '/tmp';
@@ -188,7 +198,10 @@ describe('The config-generator function', () => {
 
     describe('Test production changes', () => {
         it('not in production', () => {
-            const config = createConfig('/tmp/context', 'dev');
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.context = '/tmp/context';
+            runtimeConfig.environment = 'dev';
+            const config = createConfig(runtimeConfig);
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -207,7 +220,9 @@ describe('The config-generator function', () => {
         });
 
         it('YES to production', () => {
-            const config = createConfig(null, 'production');
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.environment = 'production';
+            const config = createConfig(runtimeConfig);
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
@@ -323,12 +338,13 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(jsRule.use.options.presets)).contains('env');
         });
 
-        it('useBabelRcFile() passes *no* config', () => {
-            const config = createConfig();
+        it('If .babelrc is present, we pass *no* config', () => {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.babelRcFileExists = true;
+            const config = createConfig(runtimeConfig);
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.useBabelRcFile();
 
             const actualConfig = configGenerator(config);
 
@@ -404,6 +420,7 @@ describe('The config-generator function', () => {
     describe('test for devServer config', () => {
         it('no devServer config when not enabled', () => {
             const config = createConfig();
+            config.runtimeConfig.useDevServer = false;
             config.publicPath = '/';
             config.outputPath = '/tmp';
             config.addEntry('main', './main');
@@ -414,10 +431,11 @@ describe('The config-generator function', () => {
 
         it('contentBase is calculated correctly', () => {
             const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
             config.addEntry('main', './main');
-            config.useWebpackDevServer();
 
             const actualConfig = configGenerator(config);
             // contentBase should point to the "document root", which
@@ -429,12 +447,13 @@ describe('The config-generator function', () => {
 
         it('contentBase works ok with manifestKeyPrefix', () => {
             const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/subdirectory/build');
             // this "fixes" the incompatibility between outputPath and publicPath
             config.setManifestKeyPrefix('/build/');
             config.addEntry('main', './main');
-            config.useWebpackDevServer();
 
             const actualConfig = configGenerator(config);
             // contentBase should point to the "document root", which

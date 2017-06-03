@@ -1,36 +1,39 @@
+'use strict';
+
 const expect = require('chai').expect;
 const parseArgv = require('../../lib/config/parse-runtime');
 const testSetup = require('../../lib/test/setup');
 const fs = require('fs-extra');
 const path = require('path');
 
-createArgv = function(argv) {
+function createArgv (argv) {
     return require('yargs/yargs')(argv).argv;
-};
+}
 
-createTestDirectory= function() {
-    const projectDir = testSetup.createTestProjectDir();
+function createTestDirectory () {
+    const projectDir = testSetup.createTestAppDir();
     fs.writeFileSync(
         path.join(projectDir, 'package.json'),
         ''
     );
 
     return projectDir;
-};
+}
 
 describe('parse-runtime', () => {
     beforeEach(() => {
-        testSetup.emptyTestDir();
+        testSetup.emptyTmpDir();
     });
 
     it('Basic usage', () => {
         const testDir = createTestDirectory();
-        const config = parseArgv(createArgv(['fooCommand', '--bar', '--help']), testDir);
+        const config = parseArgv(createArgv(['foobar', '--bar', '--help']), testDir);
 
-        expect(config.command).to.equal('fooCommand');
+        expect(config.command).to.equal('foobar');
         expect(config.context).to.equal(testDir);
         expect(config.helpRequested).to.be.true;
         expect(config.isValidCommand).to.be.false;
+        expect(config.babelRcFileExists).to.be.false;
     });
 
     it('dev command', () => {
@@ -55,7 +58,7 @@ describe('parse-runtime', () => {
 
         expect(config.environment).to.equal('dev');
         expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('http://foohost.l:9999')
+        expect(config.devServerUrl).to.equal('http://foohost.l:9999/')
     });
 
     it('dev-server command https', () => {
@@ -63,7 +66,7 @@ describe('parse-runtime', () => {
         const config = parseArgv(createArgv(['dev-server', '--https', '--host', 'foohost.l', '--port', '9999']), testDir);
 
         expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('https://foohost.l:9999')
+        expect(config.devServerUrl).to.equal('https://foohost.l:9999/')
     });
 
     it('--context is parsed correctly', () => {
@@ -71,5 +74,17 @@ describe('parse-runtime', () => {
         const config = parseArgv(createArgv(['dev', '--context', '/tmp/custom-context']), testDir);
 
         expect(config.context).to.equal('/tmp/custom-context');
+    });
+
+    it('.babelrc detected when present', () => {
+        const projectDir = createTestDirectory();
+        fs.writeFileSync(
+            path.join(projectDir, '.babelrc'),
+            ''
+        );
+
+        const config = parseArgv(createArgv(['dev']), projectDir);
+
+        expect(config.babelRcFileExists).to.be.true;
     });
 });

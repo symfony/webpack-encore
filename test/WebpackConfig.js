@@ -7,6 +7,7 @@ const fs = require('fs');
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
     runtimeConfig.context = __dirname;
+    runtimeConfig.babelRcFileExists = false;
 
     return new WebpackConfig(runtimeConfig);
 }
@@ -94,11 +95,11 @@ describe('WebpackConfig object', () => {
 
         it('Setting to a URL when using devServer throws an error', () => {
             const config = createConfig();
-            config.useWebpackDevServer();
+            config.runtimeConfig.useDevServer = true;
 
             expect(() => {
                 config.setPublicPath('https://examplecdn.com');
-            }).to.throw('You cannot pass an absolute URL to setPublicPath() and useWebpackDevServer()');
+            }).to.throw('You cannot pass an absolute URL to setPublicPath() and use the dev-server');
         });
     });
 
@@ -118,59 +119,6 @@ describe('WebpackConfig object', () => {
 
             // trailing slash not added
             expect(config.manifestKeyPrefix).to.equal('');
-        });
-    });
-
-    describe('useWebpackDevServer', () => {
-        it('Set with no arguments', () => {
-            const config = createConfig();
-            config.setPublicPath('/build');
-            config.useWebpackDevServer();
-
-            expect(config.getRealPublicPath()).to.equal('http://localhost:8080/build/');
-        });
-
-        it('Set to false', () => {
-            const config = createConfig();
-            config.setPublicPath('/build');
-            config.useWebpackDevServer(false);
-
-            expect(config.getRealPublicPath()).to.equal('/build/');
-            expect(config.webpackDevServerUrl).to.be.null;
-        });
-
-        it('Set to true', () => {
-            const config = createConfig();
-            config.setPublicPath('/build');
-            config.useWebpackDevServer(true);
-
-            expect(config.getRealPublicPath()).to.equal('http://localhost:8080/build/');
-        });
-
-        it('Set and control URL', () => {
-            const config = createConfig();
-            config.setPublicPath('/build');
-            config.useWebpackDevServer('https://localhost:9000');
-
-            expect(config.getRealPublicPath()).to.equal('https://localhost:9000/build/');
-        });
-
-        it('Exception if publicPath is set to an absolute URL', () => {
-            const config = createConfig();
-
-            config.setPublicPath('http://foo.com');
-
-            expect(() => {
-                config.useWebpackDevServer();
-            }).to.throw('You cannot pass an absolute URL to setPublicPath() and useWebpackDevServer()');
-        });
-
-        it('Exception if URL is not a URL!', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.useWebpackDevServer('localhost:8090');
-            }).to.throw('you must pass an absolute URL (e.g. http://localhost:8090)');
         });
     });
 
