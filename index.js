@@ -1,3 +1,5 @@
+'use strict';
+
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');

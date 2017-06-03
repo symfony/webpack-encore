@@ -1,3 +1,5 @@
+'use strict';
+
 const expect = require('chai').expect;
 const formatter = require('../../../lib/friendly-errors/formatters/missing-loader');
 

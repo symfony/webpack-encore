@@ -1,3 +1,5 @@
+'use strict';
+
 const expect = require('chai').expect;
 const transform = require('../../../lib/friendly-errors/transformers/missing-loader');
 
