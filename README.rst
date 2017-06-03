@@ -16,8 +16,9 @@ package.
 Installation
 ------------
 
-Webpack Encore is a JavaScript package, so it's not installed using Composer but
-using any of the JavaScript package managers:
+First, make sure you `install Node.js`_ and also the `yarn package manager`_.
+
+Then, install Encore with yarn:
 
 .. code-block:: terminal
 
@@ -648,3 +649,5 @@ the ``asset()`` function will take care of things for you, with no changes.
 .. _`babel-react-preset`: https://babeljs.io/docs/plugins/preset-react/
 .. _`Hot Module Replacement`: https://webpack.js.org/concepts/hot-module-replacement/
 .. _`HMR with React`: https://webpack.js.org/guides/hmr-react/
+.. _`install Node.js`: https://nodejs.org/en/download/
+.. _`yarn package manager`: https://yarnpkg.com/lang/en/docs/install/
