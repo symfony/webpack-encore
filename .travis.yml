@@ -1,0 +1,20 @@
+sudo: false
+language: node_js
+
+cache:
+  directories:
+    - $HOME/.npm
+
+matrix:
+  include:
+    - os: linux
+      node_js: "7"
+      env: JOB_PART=travis:lint
+    - os: linux
+      node_js: "7"
+      env: JOB_PART=test
+    - os: linux
+      node_js: "6"
+      env: JOB_PART=test
+
+script: npm run $JOB_PART
