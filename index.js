@@ -243,12 +243,6 @@ module.exports = {
         } catch (error) {
             // prettifies errors thrown by our library
             const pe = new PrettyError();
-            pe.appendStyle({
-                // hides the full paths below each stack item
-                'pretty-error > trace': {
-                    display: 'none'
-                }
-            });
 
             console.log(pe.render(error));
             process.exit(1); // eslint-disable-line
