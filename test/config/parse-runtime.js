@@ -54,6 +54,15 @@ describe('parse-runtime', () => {
 
     it('dev-server command', () => {
         const testDir = createTestDirectory();
+        const config = parseArgv(createArgv(['dev-server', '--bar']), testDir);
+
+        expect(config.environment).to.equal('dev');
+        expect(config.useDevServer).to.be.true;
+        expect(config.devServerUrl).to.equal('http://localhost:8080/')
+    });
+
+    it('dev-server command with options', () => {
+        const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev-server', '--bar', '--host', 'foohost.l', '--port', '9999']), testDir);
 
         expect(config.environment).to.equal('dev');
