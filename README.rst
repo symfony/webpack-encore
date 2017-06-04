@@ -1,11 +1,11 @@
 Webpack Encore
 ==============
 
-`Webpack Encore`_ is a JavaScript package provided by Symfony to simplify the
-integration of `Webpack`_ into Symfony applications. It's not a replacement for
-Webpack, but a thin API on top of it, so it stays in the same spirit of Webpack
-and it doesn't hide or change any of its features. Using Encore is
-optional, but recommended to improve your productivity.
+`Webpack Encore`_ is a JavaScript package that simplifies the integration of
+`Webpack`_ into Symfony applications. It's not a replacement for Webpack, but a
+thin API on top of it. It stays in the same spirit of Webpack and doesn't hide
+or change any of its features. Using Encore is *optional*, but recommended to
+improve your productivity.
 
 Webpack Encore replaces `Assetic`_ as the recommended way to manage web assets in
 Symfony applications. You can use it even if your application doesn't fully use
@@ -22,13 +22,13 @@ Then, install Encore with yarn:
 
 .. code-block:: terminal
 
-    $ yarn add @weaverryan/webpack-remix
+    $ yarn add @symfony/webpack-encore
 
 .. note::
 
-    This article uses the `yarn`_ package manager to install JavaScript packages.
-    If you prefer to use `npm`_, replace ``yarn add xxx`` by ``npm install xxx``
-    and ``yarn add --dev xxx`` by ``npm install --save-dev xxx``.
+    If you prefer to use `npm`_ instead of `yarn`_, replace ``yarn add xxx`` by
+    ``npm install xxx`` and ``yarn add --dev xxx`` by ``npm install --save-dev
+    xxx``.
 
 These commands create or modify the ``package.json`` file and the ``node_modules/``
 directory at the root of your Symfony project. When using Yarn, a file called
@@ -37,13 +37,13 @@ directory at the root of your Symfony project. When using Yarn, a file called
 Basic Usage
 -----------
 
-First, create a file called ``webpack.config.js`` at the root of your Symfony
-project. This file contains all the configuration related to front-end assets
-and it's fully compatible with Webpack. This is the typical structure of the file:
+Create a file called ``webpack.config.js`` at the root of your Symfony project.
+This file contains all the configuration related to front-end assets and it's
+fully compatible with Webpack. This is the typical structure of the file:
 
 .. code-block:: javascript
 
-    var Encore = require('@weaverryan/webpack-remix');
+    var Encore = require('@symfony/webpack-encore');
 
     Encore
         // where should all compiled files (CSS, JS, fonts) be stored?
@@ -101,12 +101,13 @@ Then, require those JavaScript/Sass modules from your own files:
 
     // ...add here your own application JavaScript code
 
-Finally, define the Encore configuration needed to compile these assets
-and generate the final ``app.css`` and ``app.js`` files served by the application:
+Finally, define the Encore configuration needed to compile these assets and
+generate the final ``app.css`` and ``app.js`` files served by the application
+in ``webpack.config.js``:
 
 .. code-block:: javascript
 
-    var Encore = require('@weaverryan/webpack-remix');
+    var Encore = require('@symfony/webpack-encore');
 
     Encore
         .setOutputPath('web/build/')
@@ -121,9 +122,9 @@ and generate the final ``app.css`` and ``app.js`` files served by the applicatio
 
     module.exports = Encore.getWebpackConfig();
 
-The final missing step is to actually compile the assets using the
-``webpack.config.js`` configuration, as explained in the next section. Then you
-can link to the compiled assets from the templates of your Symfony application:
+The final missing step is to actually compile the assets as explained in the
+next section. Then reference the compiled assets in the templates of your
+Symfony application:
 
 .. code-block:: twig
 
@@ -142,11 +143,11 @@ can link to the compiled assets from the templates of your Symfony application:
 Compiling your Assets
 ---------------------
 
-Once your JavaScript and CSS files have been created and your ``webpack.config.js``
-file has been defined, you are ready to compile the assets and use them in your
-application. There are several commands available because depending on the
-execution environment (dev versus production) you may need to compile assets faster
-or compile them as smaller files:
+Once your JavaScript and CSS files have been created and your
+``webpack.config.js`` file has been defined, you are ready to compile the
+assets and use them in your application. There are several commands available
+depending on the execution environment. Compile assets faster in ``dev`` and
+compile them as smaller files for ``production``:
 
 .. code-block:: terminal
 
@@ -160,8 +161,7 @@ or compile them as smaller files:
 
 .. note::
 
-    You will need to restart ``encore`` each time you update
-    your ``webpack.config.js`` file.
+    Restart ``encore`` each time you update your ``webpack.config.js`` file.
 
 Hot Module Replacement (HRM) & webpack-dev-server
 -------------------------------------------------
@@ -169,7 +169,7 @@ Hot Module Replacement (HRM) & webpack-dev-server
 `Hot Module Replacement`_ is a Webpack concept where "modules" can be automatically
 updated in the browser without needing to refresh the page!
 
-To use it, execute encore with the ``dev-server`` option:
+To use it, execute ``encore`` with the ``dev-server`` command:
 
 .. code-block:: terminal
 
@@ -214,10 +214,10 @@ Creating Shared Entries
 -----------------------
 
 For performance reasons, it's usual to extract a few common modules into a
-separate JavaScript file that it's included in every page. Besides, this
-improves the performance of your application because this "common file" (usually
-called "vendor file") rarely changes, so the browsers can cache it for a long
-time. Create this vendor file with the ``createSharedEntry()`` method:
+separate JavaScript file that is included in every page. Besides, this improves
+the performance of your application because this "common file" (usually called
+"vendor file") rarely changes, so the browsers can cache it for a long time.
+Create this vendor file with the ``createSharedEntry()`` method:
 
 .. code-block:: javascript
 
@@ -264,9 +264,8 @@ will also change, invalidating any existing cache:
         // add hashing to all asset filenames
         .enableVersioning()
 
-How, each filename will have a hash automatically added to its
-filename. To link to these assets, Encore creates a ``manifest.json``
-file with all the new filenames (explained next).
+To link to these assets, Encore creates a ``manifest.json`` file with all the
+new filenames (explained next).
 
 .. _load-manifest-files:
 
@@ -283,11 +282,8 @@ created in your ``outputPath`` directory:
         "build/dashboard.css": "/build/dashboard.a4bf2d.css"
     }
 
-To include ``script`` and ``link`` on your page that point to the
-correct path, you need to read this.
-
-If you're using Symfony, it's easy! Just activate the ``json_manifest_file``
-versioning strategy in ``config.yml``:
+To include ``script`` and ``link`` on your page that point to the correct path,
+activate the ``json_manifest_file`` versioning strategy in ``config.yml``:
 
 .. code-block:: yaml
 
@@ -328,7 +324,7 @@ the handling of file paths is a bit different:
     // path is considered relative to node_modules/ dir
     require('bootstrap-star-rating/css/star-rating.css');
 
-    // when a file path is given and it starts with '/' or './', it's considered
+    // when a file path is given and it starts with '/', './', or '../', it's considered
     // as the full file path for the asset (it can live outside the node_modules/ dir)
     require('../../../../../node_modules/bootstrap-star-rating/themes/krajee-svg/theme.css');
 
@@ -337,13 +333,13 @@ the handling of file paths is a bit different:
 Using Sass
 ----------
 
-To use the Sass pre-processor, first install the dependencies:
+To use the Sass pre-processor, install the dependencies:
 
 .. code-block:: terminal
 
     yarn add --dev sass-loader node-sass
 
-Now, just enable it in ``webpack.config.js``:
+And enable it in ``webpack.config.js``:
 
 .. code-block:: javascript
 
@@ -361,14 +357,13 @@ be processed.
 Using LESS
 ----------
 
-To use the LESS pre-processor, first install ``less`` and
-the ``less-loader``:
+To use the LESS pre-processor, install the dependencies:
 
 .. code-block:: terminal
 
     yarn add --dev less-loader less
 
-Now, just enable it in ``webpack.config.js``:
+And enable it in ``webpack.config.js``:
 
 .. code-block:: javascript
 
@@ -380,7 +375,7 @@ Now, just enable it in ``webpack.config.js``:
         .enableLessLoader()
     ;
 
-That's it! All files ending in ``.less`` will be pre-processed!
+That's it! All files ending in ``.less`` will be pre-processed.
 
 Passing Information from Twig to JavaScript
 -------------------------------------------
@@ -399,9 +394,8 @@ generate code or contents that are processed later via JavaScript:
     });
 
 When using Encore you can no longer use this technique because Twig and
-JavaScript are completely separated. The alternative solution is to use HTML
-``data`` attributes to store some information that is retrieved later by
-JavaScript:
+JavaScript are completely separated. The solution is to use HTML ``data``
+attributes to store some information that is retrieved later by JavaScript:
 
 .. code-block:: twig
 
@@ -410,13 +404,13 @@ JavaScript:
     </div>
 
 There is no size limit in the value of the ``data-`` attributes, so you can
-store any content, no matter its length. The only caveat is that you must encode
-the value using Twig's ``html`` escaping strategy to avoid messing with HTML
-attributes:
+store any content, no matter its length. The only caveat is that you must
+encode the value using Twig's ``html_attr`` escaping strategy to avoid messing
+with HTML attributes:
 
 .. code-block:: twig
 
-    <div data-user-profile="{{ app.user ? app.user.profileAsJson|e('html') : '' }}">
+    <div data-user-profile="{{ app.user ? app.user.profileAsJson|e('html_attr') : '' }}">
         <!-- ... -->
     </div>
 
@@ -486,12 +480,12 @@ Full Configuration Example
 Configuring Babel
 -----------------
 
-Babel_ is automatically configured for all ``.js`` and ``.jsx`` files
-via the ``babel-loader`` with sensible defaults (e.g. with the ``env``
-preset and ``react`` if requested).
+`Babel`_ is automatically configured for all ``.js`` and ``.jsx`` files via the
+``babel-loader`` with sensible defaults (e.g. with the ``env`` preset and
+``react`` if requested).
 
-Need to extend the Babel configuration further? No problem! The easiest
-way is via ``configureBabel()``:
+Need to extend the Babel configuration further?The easiest way is via
+``configureBabel()``:
 
 .. code-block:: javascript
 
@@ -509,20 +503,21 @@ way is via ``configureBabel()``:
 
 You can also create a standard ``.babelrc`` file at the root of your project.
 Just make sure to configure it with all the presets you need: as soon as a
-``.babelrc`` is present, Encore can no longer add *any* Babel configuration for you!
+``.babelrc`` is present, Encore can no longer add *any* Babel configuration for
+you!
 
 Using React
 -----------
 
-Using React? No problem! Make sure you have React installed,
-along with the `babel-preset-react`_:
+Using React? Make sure you have React installed, along with the
+`babel-preset-react`_:
 
 .. code-block:: terminal
 
     yarn add --dev react react-dom
     yarn add --dev babel-preset-react
 
-Next, enable react in your ``webpack.config.js``:
+Enable react in your ``webpack.config.js``:
 
 .. code-block:: javascript
 
@@ -534,15 +529,14 @@ Next, enable react in your ``webpack.config.js``:
         .enableReactPreset()
     ;
 
-That's it! Your ``.js`` and ``.jsx`` files will now be transformed
-through ``babel-preset-react``.
+That's it! Your ``.js`` and ``.jsx`` files will now be transformed through
+``babel-preset-react``.
 
 Enabling PostCSS (postcss-loader)
 ---------------------------------
 
-`PostCSS`_ is a CSS post-processing tool that can transform your
-CSS in a lot of cool ways, like `autoprefixing`_, `linting`_ and
-a lot more!
+`PostCSS`_ is a CSS post-processing tool that can transform your CSS in a lot
+of cool ways, like `autoprefixing`_, `linting`_ and a lot more!
 
 First, download ``postcss-loader`` and ``postcss-load-config``:
 
@@ -580,9 +574,9 @@ files.
 Cleaning up old Files
 ---------------------
 
-If you use versioning, then eventually your output directory
-will have a *lot* of old files. No problem! Just tell Webpack
-to clean up the directory before each build:
+If you use versioning, then eventually your output directory will have a *lot*
+of old files. Tell Webpack to clean up the directory before each build via
+``cleanupOutputBeforeBuild``:
 
 .. code-block:: javascript
 
@@ -624,19 +618,20 @@ are uploaded to the CDN, configure it in Encore:
         Encore.setManifestKeyPrefix('build/');
     }
 
-That's it! Internally, Webpack will now know to load assets from your
-CDN - e.g. ``https://my-cool-app.com.global.prod.fastly.net/dashboard.js``.
-You just need to make sure that the ``script`` and ``link`` tags you include on
-your pages also uses the CDN. Fortunately, the ``manifest.json`` is automatically
-updated to point to the CDN. In Symfony, as long as you've configured `Asset Versioning`_,
-the ``asset()`` function will take care of things for you, with no changes.
+That's it! Internally, Webpack will now know to load assets from your CDN -
+e.g. ``https://my-cool-app.com.global.prod.fastly.net/dashboard.js``. You just
+need to make sure that the ``script`` and ``link`` tags you include on your
+pages also uses the CDN. Fortunately, the ``manifest.json`` is automatically
+updated to point to the CDN. In Symfony, as long as you've configured `Asset
+Versioning`_, the ``asset()`` function will take care of things for you, with
+no changes.
 
 .. code-block:: js
 
     {# Same code you had before and setting up the CDN #}
     <script src="{{ asset('build/dashboard.js') }}"></script>
 
-.. _`Webpack Encore`: https://www.npmjs.com/package/@weaverryan/webpack-remix
+.. _`Webpack Encore`: https://www.npmjs.com/package/@symfony/webpack-encore
 .. _`Webpack`: https://webpack.js.org/
 .. _`Assetic`: http://symfony.com/doc/current/assetic/asset_management.html
 .. _`npm`: https://www.npmjs.com/
