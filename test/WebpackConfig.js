@@ -216,4 +216,30 @@ describe('WebpackConfig object', () => {
             }).to.throw('must pass an object');
         });
     });
+
+    describe.only('configureBabel', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureBabel(testCallback);
+            expect(config.babelConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureBabel('FOO');
+            }).to.throw('must be a callback function');
+        });
+
+        it('Calling when .babelrc is present throws an exception', () => {
+            const config = createConfig();
+            config.runtimeConfig.babelRcFileExists = true;
+
+            expect(() => {
+                config.configureBabel(() => {});
+            }).to.throw('configureBabel() cannot be called because your app has a .babelrc file');
+        });
+    });
 });
