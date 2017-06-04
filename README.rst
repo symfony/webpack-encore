@@ -243,7 +243,7 @@ on your page before any other JavaScript file:
 
 The ``vendor.js`` file contains all the common code that has been extracted from
 the other files, so it's obvious that must be included. The other file (``manifest.js``)
-is less obvious, but it's needed so webpack knows how to load those shared modules.
+is less obvious, but it's needed so Webpack knows how to load those shared modules.
 
 Asset Versioning
 ----------------
@@ -273,7 +273,7 @@ file with all the new filenames (explained next).
 Loading Assets from the manifest.json File
 ------------------------------------------
 
-Whenever you run webpack, a ``manifest.json`` file is automatically
+Whenever you run Webpack, a ``manifest.json`` file is automatically
 created in your ``outputPath`` directory:
 
 .. code-block:: json
@@ -319,8 +319,8 @@ the handling of file paths is a bit different:
 
     // app/Resources/assets/js/showcase.js
 
-    // when no file path is defined (i.e. no file extension) webpack loads the
-    // given JavaScript module installed in node_modules/ dir (webpack knows all
+    // when no file path is defined (i.e. no file extension) Webpack loads the
+    // given JavaScript module installed in node_modules/ dir (Webpack knows all
     // the specific files that must be loaded and in which order)
     require('bootstrap-star-rating');
 
@@ -334,10 +334,10 @@ the handling of file paths is a bit different:
 
     // ...
 
-Using SASS
+Using Sass
 ----------
 
-To use the SASS pre-processor, first install the dependencies:
+To use the Sass pre-processor, first install the dependencies:
 
 .. code-block:: terminal
 
@@ -424,7 +424,7 @@ jQuery and Legacy Applications
 ------------------------------
 
 Some legacy JavaScript applications use programming practices that doesn't go
-along with the new practices promoted by webpack. The most common of those
+along with the new practices promoted by Webpack. The most common of those
 problems is using code (e.g. jQuery plugins) that assume that jQuery is already
 available via the the ``$`` or ``jQuery`` global variables. If those variables
 are not defined, you'll get these errors:
@@ -436,11 +436,11 @@ are not defined, you'll get these errors:
 
 Instead of rewriting all those applications, Encore proposes a different
 solution. Thanks to the ``autoProvidejQuery()`` method, whenever a JavaScript
-file uses the ``$`` or ``jQuery`` variables, webpack automatically requires
+file uses the ``$`` or ``jQuery`` variables, Webpack automatically requires
 jQuery and creates those variables for you.
 
-So, when working with legacy applications, add the following to your ``webpack.config.js``
-file:
+So, when working with legacy applications, add the following to your
+``webpack.config.js`` file:
 
 .. code-block:: javascript
 
@@ -451,7 +451,7 @@ file:
     ;
 
 Internally, this ``autoProvidejQuery()`` method uses the ``autoProvideVariables()``
-method from webpack. In practice, it's equivalent to doing:
+method from Webpack. In practice, it's equivalent to doing:
 
 .. code-block:: javascript
 
@@ -467,9 +467,9 @@ method from webpack. In practice, it's equivalent to doing:
     ;
 
 If you also need to provide access to ``$`` and ``jQuery`` variables outside of
-the JavaScript files processed by webpack, you must create the global variables
+the JavaScript files processed by Webpack, you must create the global variables
 yourself in some file loaded before the legacy JavaScript code. For example, you
-can define a ``common.js`` file processed by webpack and loaded in every page
+can define a ``common.js`` file processed by Webpack and loaded in every page
 with the following content:
 
 .. code-block:: javascript
