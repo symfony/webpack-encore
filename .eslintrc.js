@@ -1,6 +1,6 @@
 module.exports = {
     "root": true,
-    "plugins": ["node"],
+    "plugins": ["node", "header"],
     "extends": ["eslint:recommended", "plugin:node/recommended"],
     "env": {
         "node": true,
@@ -53,7 +53,8 @@ module.exports = {
         ],
         "node/no-unpublished-bin": "error",
         "node/no-unpublished-require": "error",
-        "node/process-exit-as-throw": "error"
+        "node/process-exit-as-throw": "error",
+        "header/header": [2, "block", {"pattern": "This file is part of the Symfony package"}]
     }
 };
 

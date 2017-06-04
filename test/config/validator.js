@@ -1,10 +1,18 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 'use strict';
 
 const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const validator = require('../../lib/config/validator');
-const webpack = require('webpack');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

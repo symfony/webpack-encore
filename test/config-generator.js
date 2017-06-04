@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 'use strict';
 
 const expect = require('chai').expect;
@@ -42,7 +51,7 @@ function findPlugin(pluginConstructor, plugins) {
  */
 function findRule(regex, rules) {
     for (let rule of rules) {
-        if (rule.test.toString() == regex.toString()) {
+        if (rule.test.toString() === regex.toString()) {
             return rule;
         }
     }

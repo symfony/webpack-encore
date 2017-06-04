@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 'use strict';
 
 const expect = require('chai').expect;
@@ -6,11 +15,11 @@ const testSetup = require('../../lib/test/setup');
 const fs = require('fs-extra');
 const path = require('path');
 
-function createArgv (argv) {
+function createArgv(argv) {
     return require('yargs/yargs')(argv).argv;
 }
 
-function createTestDirectory () {
+function createTestDirectory() {
     const projectDir = testSetup.createTestAppDir();
     fs.writeFileSync(
         path.join(projectDir, 'package.json'),
@@ -58,7 +67,7 @@ describe('parse-runtime', () => {
 
         expect(config.environment).to.equal('dev');
         expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('http://localhost:8080/')
+        expect(config.devServerUrl).to.equal('http://localhost:8080/');
     });
 
     it('dev-server command with options', () => {
@@ -67,7 +76,7 @@ describe('parse-runtime', () => {
 
         expect(config.environment).to.equal('dev');
         expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('http://foohost.l:9999/')
+        expect(config.devServerUrl).to.equal('http://foohost.l:9999/');
     });
 
     it('dev-server command https', () => {
@@ -75,7 +84,7 @@ describe('parse-runtime', () => {
         const config = parseArgv(createArgv(['dev-server', '--https', '--host', 'foohost.l', '--port', '9999']), testDir);
 
         expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('https://foohost.l:9999/')
+        expect(config.devServerUrl).to.equal('https://foohost.l:9999/');
     });
 
     it('--context is parsed correctly', () => {
