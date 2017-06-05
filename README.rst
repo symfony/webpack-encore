@@ -151,38 +151,37 @@ compile them as smaller files for ``production``:
 
 .. code-block:: terminal
 
-    # in 'dev' environment, run this command to compile assets once
+    # run this command to compile assets once (in dev mode)
     $ ./node_modules/.bin/encore dev
-    # ... you can use '--watch' to recompile automatically if assets change
+
+    # use '--watch' to recompile automatically when files change
     $ ./node_modules/.bin/encore dev --watch
 
-    # in production servers, run this command to reduce the size of all files
+    # when deploying, use "production" to optimize file size
     $ ./node_modules/.bin/encore production
 
 .. note::
 
     Restart ``encore`` each time you update your ``webpack.config.js`` file.
 
-Hot Module Replacement (HRM) & webpack-dev-server
--------------------------------------------------
+Using webpack-dev-server
+------------------------
 
-`Hot Module Replacement`_ is a Webpack concept where "modules" can be automatically
-updated in the browser without needing to refresh the page!
-
-To use it, execute ``encore`` with the ``dev-server`` command:
+You can also use the `webpack-dev-server`_ by running:
 
 .. code-block:: terminal
 
-    ./node_modules/.bin/encore dev-server --hot --inline
+    ./node_modules/.bin/encore dev-server
 
-This serves the assets from a new server at ``http://localhost:8080``.
+.. note::
+
+    Hot module replacement is currently not supported.
+
+This serves the assets from a new server at ``http://localhost:8080``
+(it does not actually write any files to disk). This means your
+``script`` and ``link`` tags need to change to point to this.
 If you've activated the :ref:`manifest.json versioning <load-manifest-files>`
-you're done! The paths in your templates will automatically point to the dev server.
-
-That's it! Now, modify a CSS file - you should see your browser
-update without needing to refresh! To use it with JavaScript, you'll
-need to do a bit more work. For example, see this article about
-using `HMR with React`_.
+you're done: the paths in your templates will automatically point to the dev server.
 
 Enabling Source Maps
 --------------------
@@ -642,7 +641,5 @@ no changes.
 .. _`linting`: https://stylelint.io/
 .. _`Babel`: http://babeljs.io/
 .. _`babel-react-preset`: https://babeljs.io/docs/plugins/preset-react/
-.. _`Hot Module Replacement`: https://webpack.js.org/concepts/hot-module-replacement/
-.. _`HMR with React`: https://webpack.js.org/guides/hmr-react/
 .. _`install Node.js`: https://nodejs.org/en/download/
 .. _`yarn package manager`: https://yarnpkg.com/lang/en/docs/install/
