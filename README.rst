@@ -82,7 +82,7 @@ front-end:
 
 .. code-block:: terminal
 
-    $ yarn add jquery bootstrap-sass
+    $ yarn add jquery bootstrap-sass --dev
 
 Then, require those JavaScript/Sass modules from your own files:
 
@@ -95,8 +95,8 @@ Then, require those JavaScript/Sass modules from your own files:
 
 .. code-block:: js
 
-    // app/Resources/assets/ks/app.js
-    require('jquery');
+    // app/Resources/assets/js/app.js
+    const $ = require('jquery');
     require('bootstrap-saas');
 
     // ...add here your own application JavaScript code
@@ -292,7 +292,7 @@ activate the ``json_manifest_file`` versioning strategy in ``config.yml``:
         # ...
         assets:
             # feature is supported in Symfony 3.3 and higher
-            json_manifest_path: '%kernel.project_dir%/build/manifest.json'
+            json_manifest_path: '%kernel.project_dir%/web/build/manifest.json'
 
 That's it! Just be sure to wrap each path in the Twig ``asset()`` function
 like normal:
