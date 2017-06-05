@@ -513,8 +513,7 @@ Using React? Make sure you have React installed, along with the
 
 .. code-block:: terminal
 
-    yarn add --dev react react-dom
-    yarn add --dev babel-preset-react
+    yarn add --dev react react-dom babel-preset-react
 
 Enable react in your ``webpack.config.js``:
 
