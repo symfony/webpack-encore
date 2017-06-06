@@ -315,7 +315,7 @@ describe('The config-generator function', () => {
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableSassLoader({resolve_url_loader: false});
+            config.enableSassLoader({ resolve_url_loader: false });
 
             const actualConfig = configGenerator(config);
 

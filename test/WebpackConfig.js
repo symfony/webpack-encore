@@ -262,7 +262,7 @@ describe('WebpackConfig object', () => {
 
         it('Pass valid config', () => {
             const config = createConfig();
-            config.enableSassLoader({resolve_url_loader: false});
+            config.enableSassLoader({ resolve_url_loader: false });
 
             expect(config.useSassLoader).to.be.true;
             expect(config.sassOptions.resolve_url_loader).to.be.false;
@@ -272,7 +272,7 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
 
             expect(() => {
-                config.enableSassLoader({fake_option: false});
+                config.enableSassLoader({ fake_option: false });
             }).to.throw('Invalid option "fake_option" passed to enableSassLoader()');
         });
     });
