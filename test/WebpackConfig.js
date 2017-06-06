@@ -226,7 +226,7 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe.only('configureBabel', () => {
+    describe('configureBabel', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
             const testCallback = () => {};
