@@ -232,10 +232,20 @@ module.exports = {
     /**
      * Call this if you plan on loading SASS files.
      *
+     * Supported options:
+     *      * {bool} resolve_url_loader (default=true)
+     *              Whether or not to use the resolve-url-loader.
+     *              Setting to false can increase performance in some
+     *              cases, especially when using bootstrap_sass. But,
+     *              when disabled, all url()'s are resolved relative
+     *              to the original entry file... not whatever file
+     *              the url() appears in.
+     *
+     * @param {object} options
      * @return {exports}
      */
-    enableSassLoader() {
-        webpackConfig.enableSassLoader();
+    enableSassLoader(options = {}) {
+        webpackConfig.enableSassLoader(options);
 
         return this;
     },
