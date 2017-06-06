@@ -251,4 +251,29 @@ describe('WebpackConfig object', () => {
             }).to.throw('configureBabel() cannot be called because your app has a .babelrc file');
         });
     });
+
+    describe('enableSassLoader', () => {
+        it('Call with no config', () => {
+            const config = createConfig();
+            config.enableSassLoader();
+
+            expect(config.useSassLoader).to.be.true;
+        });
+
+        it('Pass valid config', () => {
+            const config = createConfig();
+            config.enableSassLoader({ resolve_url_loader: false });
+
+            expect(config.useSassLoader).to.be.true;
+            expect(config.sassOptions.resolve_url_loader).to.be.false;
+        });
+
+        it('Pass invalid config', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableSassLoader({ fake_option: false });
+            }).to.throw('Invalid option "fake_option" passed to enableSassLoader()');
+        });
+    });
 });
