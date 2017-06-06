@@ -221,11 +221,10 @@ module.exports = {
      *
      * https://github.com/postcss/postcss-loader
      *
-     * @param {boolean} enabled
      * @return {exports}
      */
-    enablePostCssLoader(enabled = true) {
-        webpackConfig.enablePostCssLoader(enabled);
+    enablePostCssLoader() {
+        webpackConfig.enablePostCssLoader();
 
         return this;
     },
@@ -233,11 +232,10 @@ module.exports = {
     /**
      * Call this if you plan on loading SASS files.
      *
-     * @param {boolean} enabled
      * @return {exports}
      */
-    enableSassLoader(enabled = true) {
-        webpackConfig.enableSassLoader(enabled);
+    enableSassLoader() {
+        webpackConfig.enableSassLoader();
 
         return this;
     },
@@ -245,11 +243,10 @@ module.exports = {
     /**
      * Call this if you plan on loading less files.
      *
-     * @param {boolean} enabled
      * @return {exports}
      */
-    enableLessLoader(enabled = true) {
-        webpackConfig.enableLessLoader(enabled);
+    enableLessLoader() {
+        webpackConfig.enableLessLoader();
 
         return this;
     },
@@ -276,11 +273,10 @@ module.exports = {
      * If enabled, the react preset is added to Babel:
      * https://babeljs.io/docs/plugins/preset-react/
      *
-     * @param {boolean} enabled
      * @returns {exports}
      */
-    enableReactPreset(enabled = true) {
-        webpackConfig.enableReactPreset(enabled);
+    enableReactPreset() {
+        webpackConfig.enableReactPreset();
 
         return this;
     },

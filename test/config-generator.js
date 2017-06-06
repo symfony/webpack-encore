@@ -257,19 +257,19 @@ describe('The config-generator function', () => {
     });
 
     describe('enablePostCssLoader() adds the postcss-loader', () => {
-        it('enablePostCssLoader(false)', () => {
+        it('without enablePostCssLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enablePostCssLoader(false);
+            //config.enablePostCssLoader();
 
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader');
         });
 
-        it('enablePostCssLoader(true)', () => {
+        it('enablePostCssLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -283,19 +283,19 @@ describe('The config-generator function', () => {
     });
 
     describe('enableSassLoader() adds the sass-loader', () => {
-        it('enableSassLoader(false)', () => {
+        it('without enableSassLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableSassLoader(false);
+            // config.enableSassLoader();
 
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('sass-loader');
         });
 
-        it('enableSassLoader(true)', () => {
+        it('enableSassLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -309,19 +309,19 @@ describe('The config-generator function', () => {
     });
 
     describe('enableLessLoader() adds the less-loader', () => {
-        it('enableLessLoader(false)', () => {
+        it('without enableLessLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableLessLoader(false);
+            // do not enable the less loader
 
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader');
         });
 
-        it('enableLessLoader(true)', () => {
+        it('enableLessLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
