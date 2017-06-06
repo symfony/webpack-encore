@@ -62,7 +62,7 @@ describe('The validator function', () => {
 
         expect(() => {
             validator(config);
-        }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. /build/) to use');
+        }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
     });
 
     it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', () => {
@@ -74,7 +74,7 @@ describe('The validator function', () => {
 
         expect(() => {
             validator(config);
-        }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. /build/) to use');
+        }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
     });
 
     it('cannot use versioning with webpack-dev-server', () => {
