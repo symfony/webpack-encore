@@ -225,6 +225,10 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertManifestPathDoesNotExist(
                     'styles.js'
                 );
+                webpackAssert.assertManifestPath(
+                    'styles.css',
+                    '/styles.css'
+                );
 
                 done();
             });
