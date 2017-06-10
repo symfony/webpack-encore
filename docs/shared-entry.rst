@@ -1,5 +1,5 @@
-Creating a Shared Entry
-=======================
+Creating a Shared Commons Entry
+===============================
 
 Suppose you have multiple entry files and *each* requires ``jquery``. In this
 case, *each* output file will contain jQuery, slowing down your user's experience.

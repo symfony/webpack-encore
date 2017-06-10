@@ -159,4 +159,9 @@ In this case, ``main.js`` is being added to an entry called ``app`` in ``webpack
 
 As soon as you require a CSS file, both an ``app.js`` **and** an ``app.css`` file
 will be created. You'll need to add a link tag to the ``app.css`` file in your
-templates.
+templates:
+
+.. code-block:: diff
+
+    <link rel="stylesheet" href="{{ asset('build/global.css') }}">
+    + <link rel="stylesheet" href="{{ asset('build/app.css') }}">
