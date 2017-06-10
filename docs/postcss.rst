@@ -8,7 +8,7 @@ First, download ``postcss-loader`` and any plugins you want, like ``autoprefixer
 
 .. code-block:: terminal
 
-    yarn add --dev postcss-loader autoprefixer
+    $ yarn add --dev postcss-loader autoprefixer
 
 Next, create a ``postcss.config.js`` file at the root of your project:
 
@@ -33,7 +33,7 @@ Then, Enable the loader in Encore!
     +     .enablePostCssLoader()
     ;
 
-That's it! The ``postcss-loader`` will now be used for all CSS, SASS, etc
+That's it! The ``postcss-loader`` will now be used for all CSS, Sass, etc
 files.
 
 .. _`PostCSS`: http://postcss.org/

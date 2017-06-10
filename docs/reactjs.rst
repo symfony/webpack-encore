@@ -6,7 +6,7 @@ Using React? Make sure you have React installed, along with the
 
 .. code-block:: terminal
 
-    yarn add --dev react react-dom babel-preset-react
+    $ yarn add --dev react react-dom prop-types babel-preset-react
 
 Enable react in your ``webpack.config.js``:
 
@@ -23,4 +23,4 @@ Enable react in your ``webpack.config.js``:
 That's it! Your ``.js`` and ``.jsx`` files will now be transformed through
 ``babel-preset-react``.
 
-.. _`babel-react-preset`: https://babeljs.io/docs/plugins/preset-react/
+.. _`babel-preset-react`: https://babeljs.io/docs/plugins/preset-react/

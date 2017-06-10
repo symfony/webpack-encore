@@ -15,14 +15,14 @@ Then, install Encore into your project with yarn:
     ``npm install xxx --save-dev``.
 
 This command creates (or modifies) a ``package.json`` file and downloads
-dependencies into a ``node_modules`` directory. When using Yarn, a file called
+dependencies into a ``node_modules/`` directory. When using Yarn, a file called
 ``yarn.lock`` is also created/updated. When using npm 5, a ``package-lock.json``
 file is created/updated.
 
 .. tip::
 
     You should commit ``package.json`` and ``yarn.lock`` (or ``package-lock.json``
-    if using npm) to version control, but ignore ``node_modules``.
+    if using npm) to version control, but ignore ``node_modules/``.
 
 Next, create your ``webpack.config.js`` in :doc:`/simple-example`!
 

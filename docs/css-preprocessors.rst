@@ -1,4 +1,4 @@
-CSS Preprocessors: SASS, LESS, etc
+CSS Preprocessors: Sass, LESS, etc
 ==================================
 
 Using Sass
@@ -8,7 +8,7 @@ To use the Sass pre-processor, install the dependencies:
 
 .. code-block:: terminal
 
-    yarn add --dev sass-loader node-sass
+    $ yarn add --dev sass-loader node-sass
 
 And enable it in ``webpack.config.js``:
 
@@ -32,7 +32,7 @@ To use the LESS pre-processor, install the dependencies:
 
 .. code-block:: terminal
 
-    yarn add --dev less-loader less
+    $ yarn add --dev less-loader less
 
 And enable it in ``webpack.config.js``:
 

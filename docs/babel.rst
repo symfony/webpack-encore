@@ -16,7 +16,7 @@ Need to extend the Babel configuration further? The easiest way is via
     Encore
         // ...
 
-        // modify our default Babel configuration
+        // modify the default Babel configuration
         .configureBabel(function(babelConfig) {
             babelConfig.presets.push('es2017');
         })

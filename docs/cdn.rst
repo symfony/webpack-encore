@@ -36,12 +36,12 @@ e.g. ``https://my-cool-app.com.global.prod.fastly.net/dashboard.js``.
     directly from your web server.
 
 You *do* need to make sure that the ``script`` and ``link`` tags you include on your
-pages also uses the CDN. Fortunately, the ``manifest.json`` is automatically
+pages also uses the CDN. Fortunately, the ``manifest.json`` paths are
 updated to point to the CDN. In Symfony, as long as you've configured
 :doc:`Asset Versioning </versioning>`_, you're done! The ``manifest.json``
 file includes the full CDN URL:
 
 .. code-block:: js
 
-    {# Same code you had before and setting up the CDN #}
+    {# Your script/link tags don't need to change at all to support the CDN #}
     <script src="{{ asset('build/dashboard.js') }}"></script>
