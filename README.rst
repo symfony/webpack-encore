@@ -21,4 +21,4 @@ Documentation
 
 `Read the Documentation on symfony.com`_
 
-.. _`Read the Documentation on symfony.com`: http://symfony.com/doc/current/encore/index.html
+.. _`Read the Documentation on symfony.com`: http://symfony.com/doc/current/frontend.html
