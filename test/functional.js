@@ -29,10 +29,11 @@ describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
     this.timeout(5000);
 
+    after(() => {
+        testSetup.emptyTmpDir();
+    });
+
     describe('Basic scenarios', () => {
-        beforeEach(() => {
-            testSetup.emptyTmpDir();
-        });
 
         it('Builds a simple .js file + manifest.json', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
