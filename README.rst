@@ -21,4 +21,7 @@ Documentation
 
 `Read the Documentation on symfony.com`_
 
+.. _`Webpack`: https://webpack.js.org/
+.. _`Webpacker`: https://github.com/rails/webpacker
+.. _`Mix`: https://laravel.com/docs/5.4/mix
 .. _`Read the Documentation on symfony.com`: http://symfony.com/doc/current/frontend.html
