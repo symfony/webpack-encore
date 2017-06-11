@@ -16,15 +16,15 @@
     "type": "git",
     "url": "git+https://github.com/weaverryan/webpack-remix.git"
   },
-  "author": "Ryan Weaver <ryan@knpuniversity.com> (https://knpuniversity.com)",
+  "author": "Ryan Weaver <ryan@knpuniversity.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/weaverryan/webpack-remix/issues"
+    "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
     "node": ">=6.0.0"
   },
-  "homepage": "https://github.com/weaverryan/webpack-remix",
+  "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
     "babel-core": "^6.24.0",
     "babel-loader": "^7.0.0",
