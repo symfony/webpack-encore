@@ -14,7 +14,7 @@ const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ManifestPlugin = require('./../lib/webpack-manifest-plugin');
+const ManifestPlugin = require('./../lib/webpack/webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
