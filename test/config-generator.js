@@ -221,7 +221,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const loaderOptionsPlugin = findPlugin(webpack.LoaderOptionsPlugin, actualConfig.plugins);
-            expect(loaderOptionsPlugin.options.minimize).to.equal(false);
             expect(loaderOptionsPlugin.options.debug).to.equal(true);
             expect(loaderOptionsPlugin.options.options.context).to.equal('/tmp/context');
             expect(loaderOptionsPlugin.options.options.output.path).to.equal('/tmp/output/public-path');
@@ -242,7 +241,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const loaderOptionsPlugin = findPlugin(webpack.LoaderOptionsPlugin, actualConfig.plugins);
-            expect(loaderOptionsPlugin.options.minimize).to.equal(true);
             expect(loaderOptionsPlugin.options.debug).to.equal(false);
 
             const moduleHashedIdsPlugin = findPlugin(webpack.HashedModuleIdsPlugin, actualConfig.plugins);
