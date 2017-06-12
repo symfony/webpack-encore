@@ -414,12 +414,18 @@ describe('Functional tests using webpack', function() {
             const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require']);
+            config.addEntry('styles', './css/h1_style.css');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // the comment should not live in the file
                 webpackAssert.assertOutputFileDoesNotContain(
                     'main.js',
                     '// comments in no_require.js'
+                );
+                // extra spaces should not live in the CSS file
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'styles.css',
+                    '    font-size: 50px;'
                 );
 
                 done();
