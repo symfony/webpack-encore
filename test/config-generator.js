@@ -348,6 +348,30 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('addLoader() adds custom rules', () => {
+        it('addLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addLoader(/\.custom$/, 'custom-loader');
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.module.rules).to.deep.include({ 'test': /\.custom$/, 'use': 'custom-loader', 'include': null, 'exclude': null });
+        });
+
+        it('addLoader() with custom exlude path', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addLoader(/\.custom$/, 'custom-loader', { 'exclude': 'node_modules' });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.module.rules).to.deep.include({ 'test': /\.custom$/, 'use': 'custom-loader', 'include': null, 'exclude': 'node_modules' });
+        });
+    });
+
     describe('.js rule receives different configuration', () => {
         it('Use default config', () => {
             const config = createConfig();
