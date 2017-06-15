@@ -55,6 +55,20 @@ describe('path-util getContentBase()', () => {
             const actualContentBase = pathUtil.getContentBase(config);
             expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
         });
+
+        it('contentBase is calculated correctly with no public path', function() {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+
+            const actualContentBase = pathUtil.getContentBase(config);
+            // contentBase should point to the "document root", which
+            // is calculated as outputPath, but without the publicPath portion
+            expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
+        });
     });
 
     describe('validatePublicPathAndManifestKeyPrefix', () => {
