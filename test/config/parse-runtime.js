@@ -68,6 +68,7 @@ describe('parse-runtime', () => {
         expect(config.environment).to.equal('dev');
         expect(config.useDevServer).to.be.true;
         expect(config.devServerUrl).to.equal('http://localhost:8080/');
+        expect(config.useHotModuleReplacement).to.be.false;
     });
 
     it('dev-server command with options', () => {
@@ -104,5 +105,13 @@ describe('parse-runtime', () => {
         const config = parseArgv(createArgv(['dev']), projectDir);
 
         expect(config.babelRcFileExists).to.be.true;
+    });
+
+    it('dev-server command hot', () => {
+        const testDir = createTestDirectory();
+        const config = parseArgv(createArgv(['dev-server', '--hot']), testDir);
+
+        expect(config.useDevServer).to.be.true;
+        expect(config.useHotModuleReplacement).to.be.true;
     });
 });
