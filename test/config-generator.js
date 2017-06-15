@@ -373,7 +373,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use.options.presets)).contains('env');
+            expect(JSON.stringify(jsRule.use[0].options.presets)).contains('env');
         });
 
         it('If .babelrc is present, we pass *no* config', () => {
@@ -389,7 +389,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // the options should only contain the cacheDirectory option
-            expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({ 'cacheDirectory': true }));
+            expect(JSON.stringify(jsRule.use[0].options)).to.equal(JSON.stringify({ 'cacheDirectory': true }));
         });
 
         it('configureBabel() passes babel options', () => {
@@ -405,7 +405,7 @@ describe('The config-generator function', () => {
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
-            expect(jsRule.use.options.presets).to.include('foo');
+            expect(jsRule.use[0].options.presets).to.include('foo');
         });
 
         it('enableReactPreset() passes react preset to babel', () => {
@@ -422,9 +422,9 @@ describe('The config-generator function', () => {
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
-            expect(jsRule.use.options.presets).to.include('react');
+            expect(jsRule.use[0].options.presets).to.include('react');
             // foo is also still there, not overridden
-            expect(jsRule.use.options.presets).to.include('foo');
+            expect(jsRule.use[0].options.presets).to.include('foo');
         });
     });
 
