@@ -373,6 +373,33 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.devServer).to.be.undefined;
         });
+
+        it('devServer no hot mode', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.useHotModuleReplacement = false;
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.addEntry('main', './main');
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.devServer).to.not.be.undefined;
+            expect(actualConfig.devServer.hot).to.be.false;
+        });
+
+        it('hot mode', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.useHotModuleReplacement = true;
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.addEntry('main', './main');
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.devServer.hot).to.be.true;
+        });
     });
 
     describe('test for addPlugin config', () => {
