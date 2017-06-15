@@ -487,4 +487,18 @@ describe('The config-generator function', () => {
             expect(actualConfig.devServer.publicPath).to.equal('/subdirectory/build/');
         });
     });
+
+    describe('test for addPlugin config', () => {
+        it('extra plugin is set correctly', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+
+            const actualConfig = configGenerator(config);
+
+            const ignorePlugin = findPlugin(webpack.IgnorePlugin, actualConfig.plugins);
+            expect(ignorePlugin).to.not.be.undefined;
+        });
+    });
 });

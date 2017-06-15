@@ -127,6 +127,21 @@ module.exports = {
     },
 
     /**
+     * Add a plugin to the sets of plugins already registered by Encore
+     *
+     * For example, if you want to add the "webpack.IgnorePlugin()", then:
+     *      .addPlugin(new webpack.IgnorePlugin(requestRegExp, contextRegExp))
+     *
+     * @param {string} plugin
+     * @return {exports}
+     */
+    addPlugin(plugin) {
+        webpackConfig.addPlugin(plugin);
+
+        return this;
+    },
+
+    /**
      * When enabled, files are rendered with a hash based
      * on their contents (e.g. main.a2b61cc.js)
      *
