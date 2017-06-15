@@ -281,17 +281,9 @@ describe('WebpackConfig object', () => {
         it('Adds a new loader with default options', () => {
             const config = createConfig();
 
-            config.addLoader(/\.custom$/, 'custom-loader');
+            config.addLoader({ 'test': /\.custom$/, 'loader': 'custom-loader' });
 
-            expect(Array.from(config.loaders)).to.deep.equals([{ 'test': /\.custom$/, 'use': 'custom-loader', 'include': null, 'exclude': null }]);
-        });
-
-        it('Adds a custom exclude path', () => {
-            const config = createConfig();
-
-            config.addLoader(/\.custom$/, 'custom-loader', { 'exclude': 'node_modules' });
-
-            expect(Array.from(config.loaders)).to.deep.equals([{ 'test': /\.custom$/, 'use': 'custom-loader', 'include': null, 'exclude': 'node_modules' }]);
+            expect(Array.from(config.loaders)).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
         });
     });
 });
