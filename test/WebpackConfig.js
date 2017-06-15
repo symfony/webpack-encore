@@ -278,7 +278,7 @@ describe('WebpackConfig object', () => {
     });
 
     describe('addLoader', () => {
-        it('Adds a new loader with default options', () => {
+        it('Adds a new loader', () => {
             const config = createConfig();
 
             config.addLoader({ 'test': /\.custom$/, 'loader': 'custom-loader' });
