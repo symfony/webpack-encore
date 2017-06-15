@@ -554,11 +554,15 @@ module.exports = {
             config.addEntry('main', './js/no_require');
             config.cleanupOutputBeforeBuild();
             testSetup.touchFileInOutputDir('file.txt', config);
+            testSetup.touchFileInOutputDir('deeper/other.txt', config);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // make sure the file was cleaned up!
                 webpackAssert.assertOutputFileDoesNotExist(
                     'file.txt'
+                );
+                webpackAssert.assertOutputFileDoesNotExist(
+                    'deeper/other.txt'
                 );
 
                 done();
