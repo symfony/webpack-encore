@@ -330,7 +330,8 @@ module.exports = {
     },
 
     /**
-     * If enabled, the react preset is added to Babel:
+     * If enabled, the react preset is added to Babel.
+     *
      * https://babeljs.io/docs/plugins/preset-react/
      *
      * @returns {exports}
@@ -342,14 +343,15 @@ module.exports = {
     },
 
     /**
-     * If enabled, the vue-loader is added:
-     * https://vue-loader.vuejs.org/en/
+     * If enabled, the Vue.js loader is enabled.
      *
-     * @param {object} options see https://vue-loader.vuejs.org/en/configurations/advanced.html
-     * @return {exports}
+     * https://github.com/vuejs/vue-loader
+     *
+     * @param {object} vueLoaderOptions: https://vue-loader.vuejs.org/en/configurations/advanced.html
+     * @returns {exports}
      */
-    enableVueLoader(options = {}) {
-        webpackConfig.enableVueLoader(options);
+    enableVueLoader(vueLoaderOptions = {}) {
+        webpackConfig.enableVueLoader(vueLoaderOptions);
 
         return this;
     },
