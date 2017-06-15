@@ -136,6 +136,32 @@ module.exports = {
     },
 
     /**
+     * Adds a custom loader config
+     *
+     * @param {object} loader The loader config object
+     *
+     * @returns {exports}
+     */
+    addLoader(loader) {
+        webpackConfig.addLoader(loader);
+
+        return this;
+    },
+
+    /**
+     * Alias to addLoader
+     *
+     * @param {object} rule
+     *
+     * @returns {exports}
+     */
+    addRule(rule) {
+        this.addLoader(rule);
+
+        return this;
+    },
+
+    /**
      * When enabled, files are rendered with a hash based
      * on their contents (e.g. main.a2b61cc.js)
      *
