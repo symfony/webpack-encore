@@ -283,7 +283,7 @@ describe('WebpackConfig object', () => {
 
             config.addLoader({ 'test': /\.custom$/, 'loader': 'custom-loader' });
 
-            expect(Array.from(config.loaders)).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
+            expect(config.loaders).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
         });
     });
 });
