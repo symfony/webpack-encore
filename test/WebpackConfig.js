@@ -276,4 +276,14 @@ describe('WebpackConfig object', () => {
             }).to.throw('Invalid option "fake_option" passed to enableSassLoader()');
         });
     });
+
+    describe('addLoader', () => {
+        it('Adds a new loader', () => {
+            const config = createConfig();
+
+            config.addLoader({ 'test': /\.custom$/, 'loader': 'custom-loader' });
+
+            expect(config.loaders).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
+        });
+    });
 });
