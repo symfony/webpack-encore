@@ -466,39 +466,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.devServer).to.be.undefined;
         });
-
-        it('contentBase is calculated correctly', () => {
-            const config = createConfig();
-            config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.outputPath = '/tmp/public/build';
-            config.setPublicPath('/build/');
-            config.addEntry('main', './main');
-
-            const actualConfig = configGenerator(config);
-            // contentBase should point to the "document root", which
-            // is calculated as outputPath, but without the publicPath portion
-            expect(actualConfig.devServer.contentBase).to.equal('/tmp/public');
-            expect(actualConfig.devServer.publicPath).to.equal('/build/');
-
-        });
-
-        it('contentBase works ok with manifestKeyPrefix', () => {
-            const config = createConfig();
-            config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.outputPath = '/tmp/public/build';
-            config.setPublicPath('/subdirectory/build');
-            // this "fixes" the incompatibility between outputPath and publicPath
-            config.setManifestKeyPrefix('/build/');
-            config.addEntry('main', './main');
-
-            const actualConfig = configGenerator(config);
-            // contentBase should point to the "document root", which
-            // is calculated as outputPath, but without the publicPath portion
-            expect(actualConfig.devServer.contentBase).to.equal('/tmp/public');
-            expect(actualConfig.devServer.publicPath).to.equal('/subdirectory/build/');
-        });
     });
 
     describe('test for addPlugin config', () => {
