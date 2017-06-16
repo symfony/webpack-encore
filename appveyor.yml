@@ -1,12 +1,9 @@
-# Should we cache local modules ?
-# cache:
-#  - node_modules
+cache:
+  - node_modules
 
 environment:
   matrix:
     - nodejs_version: "6"
-    - nodejs_version: "7"
-    - nodejs_version: "8"
 
 platform:
   - x86
@@ -19,7 +16,6 @@ install:
 test_script:
   - node --version
   - npm --version
-  - IF %nodejs_version% EQU 7 npm run travis:lint 
   - npm run test
 
 build: off
