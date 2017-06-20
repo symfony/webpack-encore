@@ -248,7 +248,7 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.configureBabel(() => {});
-            }).to.throw('configureBabel() cannot be called because your app has a .babelrc file');
+            }).to.throw('configureBabel() cannot be called because your app already has Babel configuration');
         });
     });
 
