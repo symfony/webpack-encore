@@ -278,6 +278,23 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableVueLoader', () => {
+        it('Call with no config', () => {
+            const config = createConfig();
+            config.enableVueLoader();
+
+            expect(config.useVueLoader).to.be.true;
+        });
+
+        it('Pass config', () => {
+            const config = createConfig();
+            config.enableVueLoader({ extractCSS: true });
+
+            expect(config.useVueLoader).to.be.true;
+            expect(config.vueOptions.extractCSS).to.be.true;
+        });
+    });
+
     describe('addPlugin', () => {
         it('extends the current registered plugins', () => {
             const config = createConfig();

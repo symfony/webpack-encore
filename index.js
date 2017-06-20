@@ -342,6 +342,19 @@ module.exports = {
     },
 
     /**
+     * If enabled, the vue-loader is added:
+     * https://vue-loader.vuejs.org/en/
+     *
+     * @param {object} options see https://vue-loader.vuejs.org/en/configurations/advanced.html
+     * @return {exports}
+     */
+    enableVueLoader(options = {}) {
+        webpackConfig.enableVueLoader(options);
+
+        return this;
+    },
+
+    /**
      * If enabled, the output directory is emptied between
      * each build (to remove old files).
      *
