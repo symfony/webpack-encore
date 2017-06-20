@@ -306,7 +306,19 @@ describe('WebpackConfig object', () => {
             expect(config.useVueLoader).to.be.true;
             expect(config.vueOptions.extractCSS).to.be.true;
         });
+    });
 
+    describe('addPlugin', () => {
+        it('extends the current registered plugins', () => {
+            const config = createConfig();
+            const nbOfPlugins = config.plugins.length;
+
+            expect(nbOfPlugins).to.equal(0);
+
+            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+
+            expect(config.plugins.length).to.equal(1);
+        });
     });
 
     describe('addLoader', () => {
