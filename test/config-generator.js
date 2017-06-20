@@ -375,57 +375,6 @@ describe('The config-generator function', () => {
             // check for the default env preset only
             expect(JSON.stringify(jsRule.use[0].options.presets)).contains('env');
         });
-
-        it('If .babelrc is present, we pass *no* config', () => {
-            const runtimeConfig = new RuntimeConfig();
-            runtimeConfig.babelRcFileExists = true;
-            const config = createConfig(runtimeConfig);
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-
-            const actualConfig = configGenerator(config);
-
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
-
-            // the options should only contain the cacheDirectory option
-            expect(JSON.stringify(jsRule.use[0].options)).to.equal(JSON.stringify({ 'cacheDirectory': true }));
-        });
-
-        it('configureBabel() passes babel options', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.configureBabel(function(babelConfig) {
-                babelConfig.presets.push('foo');
-            });
-
-            const actualConfig = configGenerator(config);
-
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
-
-            expect(jsRule.use[0].options.presets).to.include('foo');
-        });
-
-        it('enableReactPreset() passes react preset to babel', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enableReactPreset();
-            config.configureBabel(function(babelConfig) {
-                babelConfig.presets.push('foo');
-            });
-
-            const actualConfig = configGenerator(config);
-
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
-
-            expect(jsRule.use[0].options.presets).to.include('react');
-            // foo is also still there, not overridden
-            expect(jsRule.use[0].options.presets).to.include('foo');
-        });
     });
 
     describe('cleanupOutputBeforeBuild() adds CleanWebpackPlugin', () => {
