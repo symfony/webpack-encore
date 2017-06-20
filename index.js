@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 'use strict';
 
 const WebpackConfig = require('./lib/WebpackConfig');
@@ -137,6 +146,32 @@ module.exports = {
      */
     addPlugin(plugin) {
         webpackConfig.addPlugin(plugin);
+
+        return this;
+    },
+
+    /**
+     * Adds a custom loader config
+     *
+     * @param {object} loader The loader config object
+     *
+     * @returns {exports}
+     */
+    addLoader(loader) {
+        webpackConfig.addLoader(loader);
+
+        return this;
+    },
+
+    /**
+     * Alias to addLoader
+     *
+     * @param {object} rule
+     *
+     * @returns {exports}
+     */
+    addRule(rule) {
+        this.addLoader(rule);
 
         return this;
     },

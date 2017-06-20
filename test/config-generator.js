@@ -348,6 +348,19 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('addLoader() adds a custom loader', () => {
+        it('addLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addLoader({ 'test': /\.custom$/, 'loader': 'custom-loader' });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.module.rules).to.deep.include({ 'test': /\.custom$/, 'loader': 'custom-loader' });
+        });
+    });
+
     describe('.js rule receives different configuration', () => {
         it('Use default config', () => {
             const config = createConfig();

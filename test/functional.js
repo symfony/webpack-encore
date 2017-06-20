@@ -25,6 +25,18 @@ function createWebpackConfig(outputDirName = '', command, argv = {}) {
     );
 }
 
+function convertToManifestPath(assetSrc, webpackConfig) {
+    const manifestData = JSON.parse(
+        fs.readFileSync(path.join(webpackConfig.outputPath, 'manifest.json'), 'utf8')
+    );
+
+    if (typeof manifestData[assetSrc] === 'undefined') {
+        throw new Error(`Path ${assetSrc} not found in manifest!`);
+    }
+
+    return manifestData[assetSrc];
+}
+
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
     this.timeout(5000);
@@ -101,7 +113,10 @@ describe('Functional tests using webpack', function() {
 
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'public'),
-                    ['/assets/main.js'],
+                    [
+                        // purposely load this NOT from the CDN
+                        'assets/main.js'
+                    ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
                             '0.js',
@@ -147,15 +162,13 @@ describe('Functional tests using webpack', function() {
 
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'public'),
-                    ['/assets/main.js'],
+                    [
+                        convertToManifestPath('assets/main.js', config)
+                    ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
                             '0.js',
-                            // guarantee that we assert that main.js is loaded from the
-                            // main server, as it's simply a script tag to main.js on the page
-                            // we did this to check that the internally-loaded assets
-                            // use the CDN, even if the entry point does not
-                            'http://127.0.0.1:8080/assets/main.js'
+                            'main.js'
                         ]);
 
                         done();
@@ -179,7 +192,9 @@ describe('Functional tests using webpack', function() {
                 testSetup.requestTestPage(
                     // the webroot will not include the /subdirectory/build part
                     path.join(config.getContext(), ''),
-                    ['/subdirectory/build/main.js'],
+                    [
+                        convertToManifestPath('build/main.js', config)
+                    ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
                             'http://127.0.0.1:8080/subdirectory/build/0.js',
@@ -554,11 +569,15 @@ module.exports = {
             config.addEntry('main', './js/no_require');
             config.cleanupOutputBeforeBuild();
             testSetup.touchFileInOutputDir('file.txt', config);
+            testSetup.touchFileInOutputDir('deeper/other.txt', config);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // make sure the file was cleaned up!
                 webpackAssert.assertOutputFileDoesNotExist(
                     'file.txt'
+                );
+                webpackAssert.assertOutputFileDoesNotExist(
+                    'deeper/other.txt'
                 );
 
                 done();

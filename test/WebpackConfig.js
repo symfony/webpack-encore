@@ -290,4 +290,14 @@ describe('WebpackConfig object', () => {
             expect(config.plugins.length).to.equal(1);
         });
     });
+
+    describe('addLoader', () => {
+        it('Adds a new loader', () => {
+            const config = createConfig();
+
+            config.addLoader({ 'test': /\.custom$/, 'loader': 'custom-loader' });
+
+            expect(config.loaders).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
+        });
+    });
 });
