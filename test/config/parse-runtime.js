@@ -23,7 +23,7 @@ function createTestDirectory() {
     const projectDir = testSetup.createTestAppDir();
     fs.writeFileSync(
         path.join(projectDir, 'package.json'),
-        ''
+        '{}'
     );
 
     return projectDir;
