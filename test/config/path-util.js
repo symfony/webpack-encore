@@ -124,4 +124,32 @@ describe('path-util getContentBase()', () => {
             }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
         });
     });
+
+    describe('getRelativeOutputPath', () => {
+        it('Works with Unix paths', function() {
+            if (isWindows()) {
+                this.skip();
+            }
+
+            const config = createConfig();
+            config.runtimeConfig.context = '/tmp/webpack-encore';
+            config.outputPath = '/tmp/webpack-encore/public/build';
+
+            const actualPath = pathUtil.getRelativeOutputPath(config);
+            expect(actualPath).to.equal('public/build');
+        });
+
+        it('Works with Windows paths', function() {
+            if (!isWindows()) {
+                this.skip();
+            }
+
+            const config = createConfig();
+            config.runtimeConfig.context = 'C:\\projects\\webpack-encore';
+            config.outputPath = 'C:\\projects\\webpack-encore\\public\\build';
+
+            const actualPath = pathUtil.getRelativeOutputPath(config);
+            expect(actualPath).to.equal('public\\build');
+        });
+    });
 });

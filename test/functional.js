@@ -39,7 +39,7 @@ function convertToManifestPath(assetSrc, webpackConfig) {
 
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
-    this.timeout(5000);
+    this.timeout(8000);
 
     after(() => {
         testSetup.emptyTmpDir();
