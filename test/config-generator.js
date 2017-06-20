@@ -236,7 +236,6 @@ describe('The config-generator function', () => {
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.enableVersioning(true);
 
             const actualConfig = configGenerator(config);
 
