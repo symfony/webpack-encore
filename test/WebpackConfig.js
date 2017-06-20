@@ -14,6 +14,7 @@ const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const path = require('path');
 const fs = require('fs');
+const webpack = require('webpack');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -274,6 +275,19 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.enableSassLoader({ fake_option: false });
             }).to.throw('Invalid option "fake_option" passed to enableSassLoader()');
+        });
+    });
+
+    describe('addPlugin', () => {
+        it('extends the current registered plugins', () => {
+            const config = createConfig();
+            const nbOfPlugins = config.plugins.length;
+
+            expect(nbOfPlugins).to.equal(0);
+
+            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+
+            expect(config.plugins.length).to.equal(1);
         });
     });
 
