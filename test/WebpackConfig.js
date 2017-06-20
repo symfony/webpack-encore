@@ -14,6 +14,7 @@ const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const path = require('path');
 const fs = require('fs');
+const webpack = require('webpack');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -248,7 +249,7 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.configureBabel(() => {});
-            }).to.throw('configureBabel() cannot be called because your app has a .babelrc file');
+            }).to.throw('configureBabel() cannot be called because your app already has Babel configuration');
         });
     });
 
@@ -291,6 +292,18 @@ describe('WebpackConfig object', () => {
 
             expect(config.useVueLoader).to.be.true;
             expect(config.vueOptions.extractCSS).to.be.true;
+        });
+
+    describe('addPlugin', () => {
+        it('extends the current registered plugins', () => {
+            const config = createConfig();
+            const nbOfPlugins = config.plugins.length;
+
+            expect(nbOfPlugins).to.equal(0);
+
+            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+
+            expect(config.plugins.length).to.equal(1);
         });
 
     });
