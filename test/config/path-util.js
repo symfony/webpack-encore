@@ -24,68 +24,36 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-/**
- * Some tests are very specific to different operating systems.
- * We use this to only run them when needed.
- *
- * @returns {boolean}
- */
-function isWindows() {
-    return process.platform === 'win32';
-}
+const isWindows = (process.platform === 'win32');
 
 describe('path-util getContentBase()', () => {
     describe('getContentBase()', () => {
         it('contentBase is calculated correctly', function() {
-            if (isWindows()) {
-                this.skip();
-            }
-
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.outputPath = '/tmp/public/build';
+            config.outputPath = isWindows ? 'C:\\tmp\\public\\build': '/tmp/public/build';
             config.setPublicPath('/build/');
             config.addEntry('main', './main');
 
             const actualContentBase = pathUtil.getContentBase(config);
             // contentBase should point to the "document root", which
             // is calculated as outputPath, but without the publicPath portion
-            expect(actualContentBase).to.equal('/tmp/public');
+            expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
         });
 
         it('contentBase works ok with manifestKeyPrefix', function() {
-            if (isWindows()) {
-                this.skip();
-            }
-
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.outputPath = '/tmp/public/build';
+            config.outputPath = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
             config.setPublicPath('/subdirectory/build');
             // this "fixes" the incompatibility between outputPath and publicPath
             config.setManifestKeyPrefix('/build/');
             config.addEntry('main', './main');
 
             const actualContentBase = pathUtil.getContentBase(config);
-            expect(actualContentBase).to.equal('/tmp/public');
-        });
-
-        it('contentBase is calculated correctly on Windows', function() {
-            if (!isWindows()) {
-                this.skip();
-            }
-
-            const config = createConfig();
-            config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.outputPath = 'C:\\projects\\webpack-encore\\public\\build';
-            config.setPublicPath('/build/');
-            config.addEntry('main', './main');
-
-            const actualContentBase = pathUtil.getContentBase(config);
-            expect(actualContentBase).to.equal('C:\\projects\\webpack-encore\\public');
+            expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
         });
     });
 
@@ -114,7 +82,8 @@ describe('path-util getContentBase()', () => {
 
         it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', () => {
             const config = createConfig();
-            config.outputPath = '/tmp/public/build';
+
+            config.outputPath  = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
             config.addEntry('main', './main');
             // pretend we're installed to a subdirectory
             config.setPublicPath('/subdirectory/build');
@@ -126,30 +95,18 @@ describe('path-util getContentBase()', () => {
     });
 
     describe('getRelativeOutputPath', () => {
-        it('Works with Unix paths', function() {
-            if (isWindows()) {
-                this.skip();
+        it('basic usage', function() {
+            const config = createConfig();
+            if (isWindows) {
+                config.runtimeConfig.context = 'C:\\projects\\webpack-encore';
+                config.outputPath = 'C:\\projects\\webpack-encore\\public\\build';
+            } else {
+                config.runtimeConfig.context = '/tmp/webpack-encore';
+                config.outputPath = '/tmp/webpack-encore/public/build';
             }
 
-            const config = createConfig();
-            config.runtimeConfig.context = '/tmp/webpack-encore';
-            config.outputPath = '/tmp/webpack-encore/public/build';
-
             const actualPath = pathUtil.getRelativeOutputPath(config);
-            expect(actualPath).to.equal('public/build');
-        });
-
-        it('Works with Windows paths', function() {
-            if (!isWindows()) {
-                this.skip();
-            }
-
-            const config = createConfig();
-            config.runtimeConfig.context = 'C:\\projects\\webpack-encore';
-            config.outputPath = 'C:\\projects\\webpack-encore\\public\\build';
-
-            const actualPath = pathUtil.getRelativeOutputPath(config);
-            expect(actualPath).to.equal('public\\build');
+            expect(actualPath).to.equal(isWindows ? 'public\\build' : 'public/build');
         });
     });
 });
