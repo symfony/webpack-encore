@@ -2,9 +2,6 @@ cache:
   - node_modules
   - "%LOCALAPPDATA%\\Yarn"
 
-init:
-  - git config --global core.autocrlf true
-
 environment:
   nodejs_version: "6"
 
