@@ -254,32 +254,6 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enablePostCssLoader() adds the postcss-loader', () => {
-        it('without enablePostCssLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            //config.enablePostCssLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader');
-        });
-
-        it('enablePostCssLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enablePostCssLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('postcss-loader');
-        });
-    });
-
     describe('enableSassLoader() adds the sass-loader', () => {
         it('without enableSassLoader()', () => {
             const config = createConfig();
@@ -303,22 +277,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('sass-loader');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('resolve-url-loader');
-            // sourceMap option is needed for resolve-url-loader
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":true');
-        });
-
-        it('enableSassLoader() without resolve_url_loader', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enableSassLoader({ resolve_url_loader: false });
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('resolve-url-loader');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":false');
         });
     });
 
@@ -373,58 +331,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use.options.presets)).contains('env');
-        });
-
-        it('If .babelrc is present, we pass *no* config', () => {
-            const runtimeConfig = new RuntimeConfig();
-            runtimeConfig.babelRcFileExists = true;
-            const config = createConfig(runtimeConfig);
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-
-            const actualConfig = configGenerator(config);
-
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
-
-            // the options should only contain the cacheDirectory option
-            expect(JSON.stringify(jsRule.use.options)).to.equal(JSON.stringify({ 'cacheDirectory': true }));
-        });
-
-        it('configureBabel() passes babel options', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.configureBabel(function(babelConfig) {
-                babelConfig.presets.push('foo');
-            });
-
-            const actualConfig = configGenerator(config);
-
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
-
-            expect(jsRule.use.options.presets).to.include('foo');
-        });
-
-        it('enableReactPreset() passes react preset to babel', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enableReactPreset();
-            config.configureBabel(function(babelConfig) {
-                babelConfig.presets.push('foo');
-            });
-
-            const actualConfig = configGenerator(config);
-
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
-
-            expect(jsRule.use.options.presets).to.include('react');
-            // foo is also still there, not overridden
-            expect(jsRule.use.options.presets).to.include('foo');
+            expect(JSON.stringify(jsRule.use[0].options.presets)).contains('env');
         });
     });
 
