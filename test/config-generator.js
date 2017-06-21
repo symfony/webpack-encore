@@ -378,8 +378,8 @@ describe('The config-generator function', () => {
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.runtimeConfig.useHotModuleReplacement = false;
-            config.outputPath = '/tmp/public/build';
-            config.setPublicPath('/build/');
+            config.outputPath = '/tmp/public';
+            config.setPublicPath('/');
             config.addEntry('main', './main');
 
             const actualConfig = configGenerator(config);
@@ -392,8 +392,8 @@ describe('The config-generator function', () => {
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.runtimeConfig.useHotModuleReplacement = true;
-            config.outputPath = '/tmp/public/build';
-            config.setPublicPath('/build/');
+            config.outputPath = '/tmp/public';
+            config.setPublicPath('/');
             config.addEntry('main', './main');
 
             const actualConfig = configGenerator(config);
