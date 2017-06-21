@@ -45,7 +45,7 @@ describe('Functional tests using webpack', function() {
         testSetup.emptyTmpDir();
     });
 
-    describe('Basic scenarios', () => {
+    describe('Basic scenarios.', () => {
 
         it('Builds a few simple entries file + manifest.json', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
@@ -577,6 +577,23 @@ module.exports = {
                 webpackAssert.assertOutputFileContains(
                     'main.js',
                     'React.createElement'
+                );
+
+                done();
+            });
+        });
+
+        it('When enabled, TypeScript is compiled!', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/render.ts', './js/index.ts']);
+            config.enableTypeScriptLoader();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that ts-loader transformed the ts file
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'document.getElementById(\'wrapper\').innerHTML = "<h1> Hello World!</h1>";'
                 );
 
                 done();

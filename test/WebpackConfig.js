@@ -278,6 +278,31 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableTypeScriptLoader', () => {
+        it('Call with no config', () => {
+            const config = createConfig();
+            config.enableTypeScriptLoader();
+
+            expect(config.useTypeScriptLoader).to.be.true;
+        });
+
+        it('Pass valid config', () => {
+            const config = createConfig();
+            config.enableTypeScriptLoader({ transpileOnly: true });
+
+            expect(config.useTypeScriptLoader).to.be.true;
+            expect(config.typeScriptOptions.transpileOnly).to.be.true;
+        });
+
+        it('Pass invalid config', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableTypeScriptLoader({ fake_option: false });
+            }).to.throw('Invalid option "fake_option" passed to enableTypeScriptLoader()');
+        });
+    });
+
     describe('addPlugin', () => {
         it('extends the current registered plugins', () => {
             const config = createConfig();
