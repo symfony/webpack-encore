@@ -89,15 +89,15 @@ describe('path-util getContentBase()', () => {
         });
     });
 
-    describe('generateManifestKeyPrefix', () => {
+    describe('validatePublicPathAndManifestKeyPrefix', () => {
         it('manifestKeyPrefix is correctly not required on windows', () => {
             const config = createConfig();
             config.outputPath = 'C:\\projects\\webpack-encore\\web\\build';
             config.setPublicPath('/build/');
             config.addEntry('main', './main');
 
-            const actualPrefix = pathUtil.generateManifestKeyPrefix(config);
-            expect(actualPrefix).to.equal('build/');
+            // NOT throwing an error is the assertion
+            pathUtil.validatePublicPathAndManifestKeyPrefix(config);
         });
 
         it('with absolute publicPath, manifestKeyPrefix must be set', () => {
@@ -108,7 +108,7 @@ describe('path-util getContentBase()', () => {
             config.setPublicPath('https://cdn.example.com');
 
             expect(() => {
-                pathUtil.generateManifestKeyPrefix(config);
+                pathUtil.validatePublicPathAndManifestKeyPrefix(config);
             }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
         });
 
@@ -120,7 +120,7 @@ describe('path-util getContentBase()', () => {
             config.setPublicPath('/subdirectory/build');
 
             expect(() => {
-                pathUtil.generateManifestKeyPrefix(config);
+                pathUtil.validatePublicPathAndManifestKeyPrefix(config);
             }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
         });
     });
