@@ -39,7 +39,7 @@ function convertToManifestPath(assetSrc, webpackConfig) {
 
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
-    this.timeout(5000);
+    this.timeout(8000);
 
     after(() => {
         testSetup.emptyTmpDir();
@@ -47,17 +47,25 @@ describe('Functional tests using webpack', function() {
 
     describe('Basic scenarios', () => {
 
-        it('Builds a simple .js file + manifest.json', (done) => {
+        it('Builds a few simple entries file + manifest.json', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/no_require');
+            config.addStyleEntry('font', './css/roboto_font.css');
+            config.addStyleEntry('bg', './css/another_bg_image.css');
             config.setPublicPath('/build');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // should have a main.js file
                 // should have a manifest.json with public/main.js
 
-                expect(config.outputPath).to.be.a.directory()
-                    .with.files(['main.js', 'manifest.json']);
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'font.css',
+                    'bg.css',
+                    'fonts/Roboto.woff2',
+                    'images/symfony_logo.png',
+                    'manifest.json'
+                ]);
 
                 // check that main.js has the correct contents
                 webpackAssert.assertOutputFileContains(
@@ -72,6 +80,18 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertManifestPath(
                     'build/main.js',
                     '/build/main.js'
+                );
+                webpackAssert.assertManifestPath(
+                    'build/font.css',
+                    '/build/font.css'
+                );
+                webpackAssert.assertManifestPath(
+                    'build/fonts/Roboto.woff2',
+                    '/build/fonts/Roboto.woff2'
+                );
+                webpackAssert.assertManifestPath(
+                    'build/images/symfony_logo.png',
+                    '/build/images/symfony_logo.png'
                 );
 
                 done();

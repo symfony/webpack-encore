@@ -53,30 +53,6 @@ describe('The validator function', () => {
         }).to.throw('Missing public path');
     });
 
-    it('with absolute publicPath, manifestKeyPrefix must be set', () => {
-        const config = createConfig();
-        config.outputPath = '/tmp/public/build';
-        config.setPublicPath('/build');
-        config.addEntry('main', './main');
-        config.setPublicPath('https://cdn.example.com');
-
-        expect(() => {
-            validator(config);
-        }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
-    });
-
-    it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', () => {
-        const config = createConfig();
-        config.outputPath = '/tmp/public/build';
-        config.addEntry('main', './main');
-        // pretend we're installed to a subdirectory
-        config.setPublicPath('/subdirectory/build');
-
-        expect(() => {
-            validator(config);
-        }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
-    });
-
     it('cannot use versioning with webpack-dev-server', () => {
         const config = createConfig();
         config.outputPath = '/tmp/public/build';
