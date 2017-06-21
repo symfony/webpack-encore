@@ -342,6 +342,21 @@ module.exports = {
     },
 
     /**
+     * Call this if you plan on loading TypeScript files.
+     *
+     * Supported options:
+     * @see https://github.com/TypeStrong/ts-loader/blob/master/README.md#available-options
+     *
+     * @param {object} options
+     * @return {exports}
+     */
+    enableTypeScriptLoader(options = {}) {
+        webpackConfig.enableTypeScriptLoader(options);
+
+        return this;
+    },
+
+    /**
      * If enabled, the output directory is emptied between
      * each build (to remove old files).
      *
