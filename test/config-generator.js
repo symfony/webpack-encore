@@ -392,8 +392,8 @@ describe('The config-generator function', () => {
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.runtimeConfig.useHotModuleReplacement = true;
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
             config.addEntry('main', './main');
 
             const actualConfig = configGenerator(config);
