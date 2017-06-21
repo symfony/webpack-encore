@@ -1,5 +1,7 @@
 # Webpack Encore: A Simple & Powerful Webpack API
 
+[![Build Status](https://travis-ci.org/symfony/webpack-encore.svg?branch=master)](https://travis-ci.org/symfony/webpack-encore)
+
 Webpack Encore is a simpler way to integrate [Webpack](https://webpack.js.org/) into your
 application. It *wraps* Webpack, giving you a clean & powerful API
 for bundling JavaScript modules, pre-processing CSS & JS and compiling
