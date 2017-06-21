@@ -1,9 +1,9 @@
 cache:
   - node_modules
+  - "%LOCALAPPDATA%\\Yarn"
 
 environment:
-  matrix:
-    - nodejs_version: "6"
+  nodejs_version: "6"
 
 platform:
   - x86
@@ -11,11 +11,11 @@ platform:
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
-  - npm install
+  - yarn
 
 test_script:
   - node --version
-  - npm --version
-  - npm run test
+  - yarn --version
+  - yarn run test
 
 build: off
