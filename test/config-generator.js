@@ -254,32 +254,6 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enablePostCssLoader() adds the postcss-loader', () => {
-        it('without enablePostCssLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            //config.enablePostCssLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('postcss-loader');
-        });
-
-        it('enablePostCssLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enablePostCssLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('postcss-loader');
-        });
-    });
-
     describe('enableSassLoader() adds the sass-loader', () => {
         it('without enableSassLoader()', () => {
             const config = createConfig();
@@ -303,22 +277,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('sass-loader');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('resolve-url-loader');
-            // sourceMap option is needed for resolve-url-loader
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":true');
-        });
-
-        it('enableSassLoader() without resolve_url_loader', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enableSassLoader({ resolve_url_loader: false });
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('resolve-url-loader');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":false');
         });
     });
 

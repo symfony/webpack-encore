@@ -1,0 +1,85 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+'use strict';
+
+const expect = require('chai').expect;
+const WebpackConfig = require('../../lib/WebpackConfig');
+const RuntimeConfig = require('../../lib/config/RuntimeConfig');
+const sassLoader = require('../../lib/loaders/sass');
+const cssLoader = require('../../lib/loaders/css');
+const sinon = require('sinon');
+
+function createConfig() {
+    const runtimeConfig = new RuntimeConfig();
+    runtimeConfig.context = __dirname;
+    runtimeConfig.babelRcFileExists = false;
+
+    return new WebpackConfig(runtimeConfig);
+}
+
+describe('loaders/sass', () => {
+    it('getLoaders() basic usage', () => {
+        const config = createConfig();
+        config.enableSourceMaps(true);
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        const actualLoaders = sassLoader.getLoaders(config);
+        expect(actualLoaders).to.have.lengthOf(2);
+        expect(actualLoaders[0].loader).to.equal('resolve-url-loader');
+        expect(actualLoaders[0].options.sourceMap).to.be.true;
+
+        expect(actualLoaders[1].loader).to.equal('sass-loader');
+        expect(actualLoaders[1].options.sourceMap).to.be.true;
+
+        cssLoader.getLoaders.restore();
+    });
+
+    it('getLoaders() with resolve-url-loader but not sourcemaps', () => {
+        const config = createConfig();
+        config.enableSourceMaps(false);
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        const actualLoaders = sassLoader.getLoaders(config);
+        expect(actualLoaders).to.have.lengthOf(2);
+        expect(actualLoaders[0].loader).to.equal('resolve-url-loader');
+        expect(actualLoaders[0].options.sourceMap).to.be.false;
+
+        expect(actualLoaders[1].loader).to.equal('sass-loader');
+        // sourcemaps always enabled when resolve-url-loader is enabled
+        expect(actualLoaders[1].options.sourceMap).to.be.true;
+
+        cssLoader.getLoaders.restore();
+    });
+
+    it('getLoaders() without resolve-url-loader', () => {
+        const config = createConfig();
+        config.enableSassLoader({
+            resolve_url_loader: false,
+        });
+        config.enableSourceMaps(false);
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        const actualLoaders = sassLoader.getLoaders(config);
+        expect(actualLoaders).to.have.lengthOf(1);
+        expect(actualLoaders[0].loader).to.equal('sass-loader');
+        expect(actualLoaders[0].options.sourceMap).to.be.false;
+
+        cssLoader.getLoaders.restore();
+    });
+});
