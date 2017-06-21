@@ -32,7 +32,7 @@ describe('path-util getContentBase()', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.outputPath = isWindows ? 'C:\\tmp\\public\\build': '/tmp/public/build';
+            config.outputPath = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
             config.setPublicPath('/build/');
             config.addEntry('main', './main');
 
@@ -83,7 +83,7 @@ describe('path-util getContentBase()', () => {
         it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', () => {
             const config = createConfig();
 
-            config.outputPath  = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
+            config.outputPath = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
             config.addEntry('main', './main');
             // pretend we're installed to a subdirectory
             config.setPublicPath('/subdirectory/build');
