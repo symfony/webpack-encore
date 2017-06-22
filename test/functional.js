@@ -601,6 +601,32 @@ module.exports = {
             });
         });
 
+        it('When enabled, react JSX and TypeScript work nice together!', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/CoolReactComponent.jsx', './js/render2.tsx']);
+            config.enableReactPreset();
+            config.configureTypeScript(function(tsConfig) {
+                tsConfig.compilerOptions = { 'jsx': 'preserve' };
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the JSX
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'React.createElement'
+                );
+
+                // and also ts-loader did its job
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'document.getElementById(\'wrapper\').innerHTML = "<h1> Hello World!</h1>";'
+                );
+
+                done();
+            });
+        });
+
         it('The output directory is cleaned between builds', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
