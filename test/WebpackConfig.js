@@ -278,28 +278,20 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('enableTypeScriptLoader', () => {
-        it('Call with no config', () => {
+    describe('configureTypeScript', () => {
+        it('Calling method sets it', () => {
             const config = createConfig();
-            config.enableTypeScriptLoader();
-
-            expect(config.useTypeScriptLoader).to.be.true;
+            const testCallback = () => {};
+            config.configureTypeScript(testCallback);
+            expect(config.tsConfigurationCallback).to.equal(testCallback);
         });
 
-        it('Pass valid config', () => {
-            const config = createConfig();
-            config.enableTypeScriptLoader({ transpileOnly: true });
-
-            expect(config.useTypeScriptLoader).to.be.true;
-            expect(config.typeScriptOptions.transpileOnly).to.be.true;
-        });
-
-        it('Pass invalid config', () => {
+        it('Calling with non-callback throws an error', () => {
             const config = createConfig();
 
             expect(() => {
-                config.enableTypeScriptLoader({ fake_option: false });
-            }).to.throw('Invalid option "fake_option" passed to enableTypeScriptLoader()');
+                config.configureTypeScript('FOO');
+            }).to.throw('must be a callback function');
         });
     });
 

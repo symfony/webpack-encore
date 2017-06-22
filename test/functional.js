@@ -583,11 +583,12 @@ module.exports = {
             });
         });
 
-        it('When enabled, TypeScript is compiled!', (done) => {
+        it('When configured, TypeScript is compiled!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/render.ts', './js/index.ts']);
-            config.enableTypeScriptLoader();
+            const testCallback = () => {};
+            config.configureTypeScript(testCallback);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that ts-loader transformed the ts file
