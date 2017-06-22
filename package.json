@@ -43,7 +43,7 @@
     "style-loader": "^0.13.2",
     "webpack": "^2.2.0",
     "webpack-chunk-hash": "^0.4.0",
-    "webpack-dev-server": "^2.5.0",
+    "webpack-dev-server": "^2.4.5",
     "yargs": "^8.0.1"
   },
   "devDependencies": {
