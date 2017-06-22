@@ -344,14 +344,18 @@ module.exports = {
     /**
      * Call this if you plan on loading TypeScript files.
      *
-     * Supported options:
+     * Encore.configureTypeScript(function(tsConfig) {
+     *      // change the tsConfig
+     * });
+     *
+     * Supported configuration options:
      * @see https://github.com/TypeStrong/ts-loader/blob/master/README.md#available-options
      *
-     * @param {object} options
+     * @param {function} callback
      * @return {exports}
      */
-    enableTypeScriptLoader(options = {}) {
-        webpackConfig.enableTypeScriptLoader(options);
+    configureTypeScript(callback) {
+        webpackConfig.configureTypeScript(callback);
 
         return this;
     },
