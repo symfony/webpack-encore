@@ -18,6 +18,8 @@ const ManifestPlugin = require('./../lib/webpack/webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
+const isWindows = (process.platform === 'win32');
+
 function createConfig(runtimeConfig = null) {
     runtimeConfig = runtimeConfig ? runtimeConfig : new RuntimeConfig();
 
@@ -378,7 +380,7 @@ describe('The config-generator function', () => {
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.runtimeConfig.useHotModuleReplacement = false;
-            config.outputPath = '/tmp/public';
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
             config.setPublicPath('/');
             config.addEntry('main', './main');
 
@@ -392,7 +394,7 @@ describe('The config-generator function', () => {
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.runtimeConfig.useHotModuleReplacement = true;
-            config.outputPath = '/tmp/public';
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
             config.setPublicPath('/');
             config.addEntry('main', './main');
 
