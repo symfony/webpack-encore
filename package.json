@@ -41,7 +41,7 @@
     "pretty-error": "^2.1.0",
     "resolve-url-loader": "^2.0.2",
     "style-loader": "^0.13.2",
-    "webpack": "^2.2.0",
+    "webpack": ">=2.2.0 <4",
     "webpack-chunk-hash": "^0.4.0",
     "webpack-dev-server": "^2.4.5",
     "yargs": "^8.0.1"
