@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-06-20T17:07:33Z
+
+@stof Ah, I totally understand now. I've updated the PR to *always* use one of the plugins, instead of adding a new option. Regardless of where you do versioning, it seems like an edge case to me to "be ok with" your asset contents often changing... even when you didn't make any code changes to it. So, at the cost of a slight increase in asset size (in one example I saw, the asset size went from 296kb to 300kb), I'd like to be consistent and always give this "expected" behavior. If someone later *really* wants to minimize their asset size at the expense of the content sometimes changing, they can make a request (and we can add a method to allow that to be configured). This feels like a more sensible default to me.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-06-21T10:57:04Z
+
+@weaverryan fine with me
