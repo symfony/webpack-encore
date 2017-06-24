@@ -617,7 +617,7 @@ module.exports = {
              * That's because, in theory, you should be able to
              * run Encore from other directories, give you set
              * the context. However, in this case, the vue-loader
-             * users load-postcss-config to load the postcss config,
+             * uses load-postcss-config to load the postcss config,
              * but it uses process.cwd() to find it, instead of the
              * context. So, in this case, we *must* set the cwd()
              * to be the temp test directory.
@@ -637,6 +637,8 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', './vuejs/main');
             config.enableVueLoader();
+            config.enableSassLoader();
+            config.enableLessLoader();
             config.configureBabel(function(config) {
                 config.presets = [
                     ['env', {
@@ -681,6 +683,18 @@ module.exports = {
                     }
                 );
             });
+        });
+
+        it('Vue.js error when using non-activated loaders', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs/main');
+            config.enableVueLoader();
+
+            testSetup.runWebpack(config, (webpackAssert, stats) => {
+                expect(stats.toJson().errors[0]).to.contain('Cannot process lang="less" inside');
+                done();
+            }, true);
         });
     });
 });

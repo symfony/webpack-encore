@@ -36,6 +36,7 @@
     "file-loader": "^0.10.1",
     "friendly-errors-webpack-plugin": "^1.6.1",
     "fs-extra": "^2.0.0",
+    "loader-utils": "^1.1.0",
     "lodash": ">=3.5 <5",
     "pkg-up": "^1.0.0",
     "pretty-error": "^2.1.0",
