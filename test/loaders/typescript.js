@@ -46,8 +46,6 @@ describe('loaders/typescript', () => {
         expect(actualLoaders[1].options.foo).to.equal('bar');
         // defaults
         expect(actualLoaders[1].options.silent).to.be.true;
-        expect(actualLoaders[1].options.transpileOnly).to.be.false;
-        expect(actualLoaders[1].options.logLevel).to.equal('info');
     });
 
 });
