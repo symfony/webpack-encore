@@ -1,5 +1,5 @@
 function render() {
-    document.getElementById('wrapper').innerHTML = "<h1> Hello World!</h1>";
+    document.getElementById('app').innerHTML = "<h1>Welcome to Your TypeScript App</h1>";
 }
 
 export = render;
