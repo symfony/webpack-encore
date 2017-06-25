@@ -347,11 +347,19 @@ module.exports = {
      *
      * https://github.com/vuejs/vue-loader
      *
-     * @param {object} vueLoaderOptions: https://vue-loader.vuejs.org/en/configurations/advanced.html
+     *     Encore.enableVueLoader();
+     *
+     *     // or configure the vue-loader options
+     *     // https://vue-loader.vuejs.org/en/configurations/advanced.html
+     *     Encore.enableVueLoader(function(options) {
+     *          options.preLoaders = { ... }
+     *     });
+     *
+     * @param {function} vueLoaderOptionsCallback
      * @returns {exports}
      */
-    enableVueLoader(vueLoaderOptions = {}) {
-        webpackConfig.enableVueLoader(vueLoaderOptions);
+    enableVueLoader(vueLoaderOptionsCallback = () => {}) {
+        webpackConfig.enableVueLoader(vueLoaderOptionsCallback);
 
         return this;
     },

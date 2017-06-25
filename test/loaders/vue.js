@@ -31,7 +31,7 @@ describe('loaders/vue', () => {
         // enable postcss, then really prove that its loader does not show up below
         config.enablePostCssLoader();
 
-        const actualLoaders = vueLoader.getLoaders(config, {});
+        const actualLoaders = vueLoader.getLoaders(config, () => {});
         expect(actualLoaders).to.have.lengthOf(1);
         expect(Object.keys(actualLoaders[0].options.loaders)).to.have.lengthOf(5);
 
@@ -46,7 +46,9 @@ describe('loaders/vue', () => {
 
         const actualLoaders = vueLoader.getLoaders(
             config,
-            { postLoaders: { foo: 'foo-loader' } }
+            (options) => {
+                options.postLoaders = { foo: 'foo-loader' };
+            }
         );
 
         expect(actualLoaders).to.have.lengthOf(1);

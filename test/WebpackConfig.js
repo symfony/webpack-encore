@@ -301,10 +301,13 @@ describe('WebpackConfig object', () => {
 
         it('Pass config', () => {
             const config = createConfig();
-            config.enableVueLoader({ preLoaders: { foo: 'foo-loader' } });
+            const callback = (options) => {
+                options.preLoaders = { foo: 'foo-loader' };
+            };
+            config.enableVueLoader(callback);
 
             expect(config.useVueLoader).to.be.true;
-            expect(config.vueLoaderOptions.preLoaders.foo).to.equal('foo-loader');
+            expect(config.vueLoaderOptionsCallback).to.equal(callback);
         });
     });
 
