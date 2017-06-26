@@ -611,9 +611,6 @@ module.exports = {
 
                         // assert that the ts module rendered
                         browser.assert.text('#app h1', 'Welcome to Your TypeScript App');
-                        // make sure the styles are not inline
-                        browser.assert.elements('style', 0);
-
                         done();
                     }
                 );
@@ -625,9 +622,8 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/CoolReactComponent.jsx', './js/render2.tsx']);
             config.enableReactPreset();
-            config.configureTypeScript(function(tsConfig) {
-                tsConfig.compilerOptions = { 'jsx': 'preserve' };
-            });
+            const testCallback = () => {};
+            config.enableTypeScriptLoader(testCallback);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the JSX
