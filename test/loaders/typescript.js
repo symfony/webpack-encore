@@ -25,7 +25,7 @@ function createConfig() {
 describe('loaders/typescript', () => {
     it('getLoaders() basic usage', () => {
         const config = createConfig();
-        config.configureTypeScript(function(config) {
+        config.enableTypeScriptLoader(function(config) {
             config.foo = 'bar';
         });
 
@@ -37,7 +37,7 @@ describe('loaders/typescript', () => {
 
     it('getLoaders() check defaults configuration values', () => {
         const config = createConfig();
-        config.configureTypeScript(function(config) {
+        config.enableTypeScriptLoader(function(config) {
             config.foo = 'bar';
         });
 

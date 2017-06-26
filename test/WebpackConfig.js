@@ -278,11 +278,11 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureTypeScript', () => {
+    describe('enableTypeScriptLoader', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
             const testCallback = () => {};
-            config.configureTypeScript(testCallback);
+            config.enableTypeScriptLoader(testCallback);
             expect(config.tsConfigurationCallback).to.equal(testCallback);
         });
 
@@ -290,7 +290,11 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureTypeScript('FOO');
+                config.enableTypeScriptLoader('FOO');
+            }).to.throw('must be a callback function');
+
+            expect(() => {
+                config.enableTypeScriptLoader();
             }).to.throw('must be a callback function');
         });
     });

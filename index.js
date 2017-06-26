@@ -344,7 +344,7 @@ module.exports = {
     /**
      * Call this if you plan on loading TypeScript files.
      *
-     * Encore.configureTypeScript(function(tsConfig) {
+     * Encore.enableTypeScriptLoader(function(tsConfig) {
      *      // change the tsConfig
      * });
      *
@@ -354,8 +354,8 @@ module.exports = {
      * @param {function} callback
      * @return {exports}
      */
-    configureTypeScript(callback) {
-        webpackConfig.configureTypeScript(callback);
+    enableTypeScriptLoader(callback) {
+        webpackConfig.enableTypeScriptLoader(callback);
 
         return this;
     },

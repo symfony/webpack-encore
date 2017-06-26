@@ -588,7 +588,7 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/render.ts', './js/index.ts']);
             const testCallback = () => {};
-            config.configureTypeScript(testCallback);
+            config.enableTypeScriptLoader(testCallback);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that ts-loader transformed the ts file
