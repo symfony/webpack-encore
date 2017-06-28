@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by jdreesen at 2017-06-25T14:57:52Z
+
+Don't you mean jQuery should be exposed by doing this instead (as described in your comment in https://github.com/symfony/webpack-encore/issues/32#issuecomment-310906900):
+
+```js
+global.$ = global.jQuery = require('jquery');
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-06-25T19:13:16Z
+
+Thanks @jdreesen - I copied the wrong version :). Updated my comment
