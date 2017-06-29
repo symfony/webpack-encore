@@ -45,7 +45,7 @@ describe('Functional tests using webpack', function() {
         testSetup.emptyTmpDir();
     });
 
-    describe('Basic scenarios', () => {
+    describe('Basic scenarios.', () => {
 
         it('Builds a few simple entries file + manifest.json', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
@@ -580,6 +580,40 @@ module.exports = {
                 );
 
                 done();
+            });
+        });
+
+        it('When configured, TypeScript is compiled!', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/render.ts', './js/index.ts']);
+            const testCallback = () => {};
+            config.enableTypeScriptLoader(testCallback);
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that ts-loader transformed the ts file
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'document.getElementById(\'app\').innerHTML = "<h1>Welcome to Your TypeScript App</h1>";'
+                );
+
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'manifest.json'
+                ]);
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/main.js'
+                    ],
+                    (browser) => {
+
+                        // assert that the ts module rendered
+                        browser.assert.text('#app h1', 'Welcome to Your TypeScript App');
+                        done();
+                    }
+                );
             });
         });
 

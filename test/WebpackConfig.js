@@ -278,6 +278,27 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableTypeScriptLoader', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.enableTypeScriptLoader(testCallback);
+            expect(config.tsConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableTypeScriptLoader('FOO');
+            }).to.throw('must be a callback function');
+
+            expect(() => {
+                config.enableTypeScriptLoader();
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('addPlugin', () => {
         it('extends the current registered plugins', () => {
             const config = createConfig();

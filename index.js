@@ -343,6 +343,23 @@ module.exports = {
     },
 
     /**
+     * Call this if you plan on loading TypeScript files.
+     *
+     * Encore.enableTypeScriptLoader(function(tsConfig) {
+     *      // change the tsConfig
+     * });
+     *
+     * Supported configuration options:
+     * @see https://github.com/TypeStrong/ts-loader/blob/master/README.md#available-options
+     *
+     * @param {function} callback
+     * @return {exports}
+     */
+    enableTypeScriptLoader(callback) {
+        webpackConfig.enableTypeScriptLoader(callback);
+    }
+
+    /**
      * If enabled, the Vue.js loader is enabled.
      *
      * https://github.com/vuejs/vue-loader
