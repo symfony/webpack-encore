@@ -291,6 +291,39 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableVueLoader', () => {
+        it('Call with no config', () => {
+            const config = createConfig();
+            config.enableVueLoader();
+
+            expect(config.useVueLoader).to.be.true;
+        });
+
+        it('Pass config', () => {
+            const config = createConfig();
+            const callback = (options) => {
+                options.preLoaders = { foo: 'foo-loader' };
+            };
+            config.enableVueLoader(callback);
+
+            expect(config.useVueLoader).to.be.true;
+            expect(config.vueLoaderOptionsCallback).to.equal(callback);
+        });
+    });
+
+    describe('addPlugin', () => {
+        it('extends the current registered plugins', () => {
+            const config = createConfig();
+            const nbOfPlugins = config.plugins.length;
+
+            expect(nbOfPlugins).to.equal(0);
+
+            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+
+            expect(config.plugins.length).to.equal(1);
+        });
+    });
+
     describe('addLoader', () => {
         it('Adds a new loader', () => {
             const config = createConfig();

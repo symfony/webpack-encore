@@ -82,4 +82,22 @@ describe('loaders/sass', () => {
 
         cssLoader.getLoaders.restore();
     });
+
+    it('getLoaders() with extra options', () => {
+        const config = createConfig();
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        const actualLoaders = sassLoader.getLoaders(config, {
+            custom_option: 'foo'
+        });
+        // the normal option
+        expect(actualLoaders[1].options.sourceMap).to.be.true;
+        // custom option
+        expect(actualLoaders[1].options.custom_option).to.equal('foo');
+
+        cssLoader.getLoaders.restore();
+    });
 });

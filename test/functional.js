@@ -41,7 +41,7 @@ describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
     this.timeout(8000);
 
-    after(() => {
+    before(() => {
         testSetup.emptyTmpDir();
     });
 
@@ -602,6 +602,99 @@ module.exports = {
 
                 done();
             });
+        });
+
+        it('Vue.js is compiled correctly', (done) => {
+            const cwd = process.cwd();
+            after(() => {
+                process.chdir(cwd);
+            });
+
+            const appDir = testSetup.createTestAppDir();
+            /*
+             * Most of the time, we don't explicitly use chdir
+             * in order to set the cwd() to the test directory.
+             * That's because, in theory, you should be able to
+             * run Encore from other directories, give you set
+             * the context. However, in this case, the vue-loader
+             * uses load-postcss-config to load the postcss config,
+             * but it uses process.cwd() to find it, instead of the
+             * context. So, in this case, we *must* set the cwd()
+             * to be the temp test directory.
+             */
+            process.chdir(appDir);
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}                            `
+            );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs/main');
+            config.enableVueLoader();
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.configureBabel(function(config) {
+                config.presets = [
+                    ['env', {
+                        'targets': {
+                            'chrome': 52
+                        }
+                    }]
+                ];
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'images/logo.png',
+                    'manifest.json'
+                ]);
+
+                // test that our custom babel config is used
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'class TestClassSyntax'
+                );
+
+                webpackAssert.assertOutputFileContains(
+                    'main.css',
+                    '-ms-flexbox'
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        // assert that the vue.js app rendered
+                        browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
+                        // make sure the styles are not inlined
+                        browser.assert.elements('style', 0);
+
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('Vue.js error when using non-activated loaders', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs/main');
+            config.enableVueLoader();
+
+            testSetup.runWebpack(config, (webpackAssert, stats) => {
+                expect(stats.toJson().errors[0]).to.contain('Cannot process lang="less" inside');
+                done();
+            }, true);
         });
     });
 });
