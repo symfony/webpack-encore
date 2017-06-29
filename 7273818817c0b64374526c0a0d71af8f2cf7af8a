@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-06-23T01:48:25Z
+
+This is ready to go 🍰  Notes:
+
+* HMR works for JavaScript (wooohoo!) but not for styles, because we're using ExtractTextPlugin like the rest of the library (see #3)
+
+* I added the `.vue` extension always, not just when the vue-loader is enabled. This should give better errors - if I use vue and require a `.vue` file without the extension, instead of not finding the file, you'll get an error about the `vue-loader` needing to be enabled.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-06-25T20:24:02Z
+
+I added one more commit to change the vue-loader options to a callback - consistent with #50 and `configureBabelLoader()`
