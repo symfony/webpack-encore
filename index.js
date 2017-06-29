@@ -330,7 +330,8 @@ module.exports = {
     },
 
     /**
-     * If enabled, the react preset is added to Babel:
+     * If enabled, the react preset is added to Babel.
+     *
      * https://babeljs.io/docs/plugins/preset-react/
      *
      * @returns {exports}
@@ -356,6 +357,26 @@ module.exports = {
      */
     enableTypeScriptLoader(callback) {
         webpackConfig.enableTypeScriptLoader(callback);
+    }
+
+    /**
+     * If enabled, the Vue.js loader is enabled.
+     *
+     * https://github.com/vuejs/vue-loader
+     *
+     *     Encore.enableVueLoader();
+     *
+     *     // or configure the vue-loader options
+     *     // https://vue-loader.vuejs.org/en/configurations/advanced.html
+     *     Encore.enableVueLoader(function(options) {
+     *          options.preLoaders = { ... }
+     *     });
+     *
+     * @param {function} vueLoaderOptionsCallback
+     * @returns {exports}
+     */
+    enableVueLoader(vueLoaderOptionsCallback = () => {}) {
+        webpackConfig.enableVueLoader(vueLoaderOptionsCallback);
 
         return this;
     },
