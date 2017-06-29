@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-06-21T17:33:35Z
+
+Hey @davidmpaz! I would be very happy to accept this :). Can you rebase - I recently merged some PR's?
+
+> Future work would be to include also support to happypack and fork-ts-checker-webpack-plugin
+
+Indeed - happypack is totally unrelated to TypeScript, correct? And `fork-ts-checker-webpack-plugin` simply adds extra type-checking (and so therefore, build errors/warnings), correct? I just want to minimize BC breaks - so I want to make sure "future things" won't be actually difficult to add later :).
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-06-22T08:20:00Z
+
+Hey @weaverryan  I have updated PR. To answer some of your questions:
+
+> `happypack` is totally unrelated to TypeScript, correct?
+
+Yes. These are the loaders currently known to be supported: https://github.com/amireh/happypack/wiki/Loader-Compatibility-List. This plugin IMHO is critical when having slow build, for now it can be added seperated to Encore but will be nice to have this one also included. I havent check yet other solutions to reduce build time.
+
+> And `fork-ts-checker-webpack-plugin` simply adds extra type-checking (and so therefore, build errors/warnings), correct?
+
+This one makes the types checking in separate thread, meaning that TypeScript compiler doesn't need to do it, making compilation time faster by setting [`transpileOnly = true`](https://github.com/TypeStrong/ts-loader#transpileonly-boolean-defaultfalse) to loader. Actually I did not add this one as "default" setup in loaders because `eslint` was complaining about the module not being published, not sure what that was.
+
+But actually this could be included as bonus on Encore alongside with `ts-loader`. Encore could handle transparently the configuration in case users decide to enable the *type checking in separate* thread to speed up compilation/build time. In my case I reduced several (~2-3k) ms.
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-06-23T07:10:14Z
+
+Hey @weaverryan I have added some comments, let me know your thoughts. I need to leave the updates for the weekend probably, if not, on Monday I make a new round.
+
+thanks for the feedback and looking forward.
+
+cheers
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-06-25T14:29:12Z
+
+One more thing - can you run `yarn install` - it should create an updated `yarn.lock` file that needs to be committed.
