@@ -105,13 +105,12 @@ describe('WebpackConfig object', () => {
             }).to.throw('The value passed to setPublicPath() must start with "/"');
         });
 
-        it('Setting to a URL when using devServer throws an error', () => {
+        it('You can set to a URL when using devServer', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
+            config.setPublicPath('https://examplecdn.com');
 
-            expect(() => {
-                config.setPublicPath('https://examplecdn.com');
-            }).to.throw('You cannot pass an absolute URL to setPublicPath() and use the dev-server');
+            expect(config.publicPath).to.equal('https://examplecdn.com/');
         });
     });
 
