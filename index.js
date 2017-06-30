@@ -357,7 +357,7 @@ module.exports = {
      */
     enableTypeScriptLoader(callback) {
         webpackConfig.enableTypeScriptLoader(callback);
-    }
+    },
 
     /**
      * If enabled, the Vue.js loader is enabled.
