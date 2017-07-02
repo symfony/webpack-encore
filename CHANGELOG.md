@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 0.10.0
+
+ * [BC BREAK] If you're using `enableSassLoader()` AND passing an options
+   array, the options now need to be moved to the second argument:
+
+   ```js
+   // before
+   .enableSassLoader({ resolve_url_loader: true });
+
+   // after
+   enableSassLoader(function(sassOptions) {}, {
+       resolve_url_loader: true
+   })
+   ```
+
 ## 0.9.1
 
  * Syntax error fix - #64
