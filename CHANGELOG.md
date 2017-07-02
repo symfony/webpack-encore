@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.9.1
+
+ * Syntax error fix - #64
+
 ## 0.9.0
 
  * [BEHAVIOR CHANGE] When using `autoProvidejQuery()`, `window.jQuery` is now also
