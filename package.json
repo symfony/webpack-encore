@@ -1,11 +1,11 @@
 {
   "name": "@symfony/webpack-encore",
-  "version": "0.8.0",
+  "version": "0.9.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec test --recursive",
-    "lint": "./node_modules/.bin/eslint lib test",
+    "lint": "./node_modules/.bin/eslint lib test index.js",
     "travis:lint": "npm run lint && npm run nsp",
     "nsp": "./node_modules/.bin/nsp check --output summary"
   },
