@@ -292,10 +292,6 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.enableTypeScriptLoader('FOO');
             }).to.throw('must be a callback function');
-
-            expect(() => {
-                config.enableTypeScriptLoader();
-            }).to.throw('must be a callback function');
         });
     });
 
