@@ -20,7 +20,7 @@ if (!runtimeConfig) {
     throw new Error('Are you trying to require index.js directly?');
 }
 
-const webpackConfig = new WebpackConfig(runtimeConfig);
+let webpackConfig = new WebpackConfig(runtimeConfig);
 
 module.exports = {
     /**
@@ -396,7 +396,7 @@ module.exports = {
     /**
      * Is this currently a "production" build?
      *
-     * @returns {*}
+     * @returns {boolean}
      */
     isProduction() {
         return webpackConfig.isProduction();
@@ -421,5 +421,17 @@ module.exports = {
             console.log(pe.render(error));
             process.exit(1); // eslint-disable-line
         }
+    },
+
+    /**
+     * Resets the Encore state to allow building a new config.
+     *
+     * getWebpackConfig should be used before resetting to build
+     * a config for the existing state.
+     *
+     * @returns {void}
+     */
+    reset() {
+        webpackConfig = new WebpackConfig(runtimeConfig);
     }
 };
