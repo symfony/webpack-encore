@@ -66,7 +66,7 @@ describe('loaders/sass', () => {
 
     it('getLoaders() without resolve-url-loader', () => {
         const config = createConfig();
-        config.enableSassLoader({
+        config.enableSassLoader(() => {}, {
             resolve_url_loader: false,
         });
         config.enableSourceMaps(false);
@@ -98,6 +98,33 @@ describe('loaders/sass', () => {
         // custom option
         expect(actualLoaders[1].options.custom_option).to.equal('foo');
 
+        cssLoader.getLoaders.restore();
+    });
+
+    it('getLoaders() with options callback', () => {
+        const config = createConfig();
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        config.enableSassLoader(function(sassOptions) {
+            sassOptions.custom_optiona = 'baz';
+            sassOptions.other_option = true;
+        });
+
+        const actualLoaders = sassLoader.getLoaders(config, {
+            custom_optiona: 'foo',
+            custom_optionb: 'bar'
+        });
+
+        expect(actualLoaders[1].options).to.deep.equals({
+            sourceMap: true,
+            // callback wins over passed in options
+            custom_optiona: 'baz',
+            custom_optionb: 'bar',
+            other_option: true
+        });
         cssLoader.getLoaders.restore();
     });
 });

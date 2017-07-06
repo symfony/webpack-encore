@@ -282,6 +282,18 @@ module.exports = {
     /**
      * Call this if you plan on loading SASS files.
      *
+     *     Encore.enableSassLoader();
+     *
+     * Or pass options to node-sass
+     *
+     *     Encore.enableSassLoader(function(options) {
+     *         // https://github.com/sass/node-sass#options
+     *         // options.includePaths = [...]
+     *     }, {
+     *         // set optional Encore-specific options
+     *         // resolve_url_loader: true
+     *     });
+     *
      * Supported options:
      *      * {bool} resolve_url_loader (default=true)
      *              Whether or not to use the resolve-url-loader.
@@ -291,11 +303,12 @@ module.exports = {
      *              to the original entry file... not whatever file
      *              the url() appears in.
      *
-     * @param {object} options
+     * @param {function} sassLoaderOptionsCallback
+     * @param {object} encoreOptions
      * @return {exports}
      */
-    enableSassLoader(options = {}) {
-        webpackConfig.enableSassLoader(options);
+    enableSassLoader(sassLoaderOptionsCallback = () => {}, encoreOptions = {}) {
+        webpackConfig.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
 
         return this;
     },
