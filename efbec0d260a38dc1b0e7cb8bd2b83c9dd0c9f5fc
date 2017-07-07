@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by stof at 2017-07-06T12:40:33Z
+
+AFAIK, we have no tests for the Encore layer itself currently (which might be related to the fact that it was not resettable btw), which is why there is no test changes currently.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-06T15:24:21Z
+
+> AFAIK, we have no tests for the Encore layer itself currently
+
+Correct: specifically there is no test for `index.js`. I think it would be a good idea to create a smoke test - e.g. configure Encore with a few basic things, call `getWebpackConfig()`, reset it, configure a few other things and call `getWebpackConfig()` again (asserting very basic things on the config in both cases). If you can add that here, awesome. Otherwise, we can add it later - this is a pretty simple patch and doesn't affect any existing code.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-07-06T15:27:19Z
+
+`getWebpackConfig` is hard to test cleanly if you want to cover it all, as it calls `process.exit`. This would require actually using a subprocess. So I will leave it for later
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-06T19:50:40Z
+
+It only calls `process.exit()` if there is a validation error. So yea, testing that case is not worth it. But testing a successful case as a "smoke test" should not be too hard.
