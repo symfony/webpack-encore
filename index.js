@@ -20,7 +20,7 @@ if (!runtimeConfig) {
     throw new Error('Are you trying to require index.js directly?');
 }
 
-const webpackConfig = new WebpackConfig(runtimeConfig);
+let webpackConfig = new WebpackConfig(runtimeConfig);
 
 module.exports = {
     /**
@@ -282,6 +282,18 @@ module.exports = {
     /**
      * Call this if you plan on loading SASS files.
      *
+     *     Encore.enableSassLoader();
+     *
+     * Or pass options to node-sass
+     *
+     *     Encore.enableSassLoader(function(options) {
+     *         // https://github.com/sass/node-sass#options
+     *         // options.includePaths = [...]
+     *     }, {
+     *         // set optional Encore-specific options
+     *         // resolve_url_loader: true
+     *     });
+     *
      * Supported options:
      *      * {bool} resolve_url_loader (default=true)
      *              Whether or not to use the resolve-url-loader.
@@ -291,11 +303,12 @@ module.exports = {
      *              to the original entry file... not whatever file
      *              the url() appears in.
      *
-     * @param {object} options
+     * @param {function} sassLoaderOptionsCallback
+     * @param {object} encoreOptions
      * @return {exports}
      */
-    enableSassLoader(options = {}) {
-        webpackConfig.enableSassLoader(options);
+    enableSassLoader(sassLoaderOptionsCallback = () => {}, encoreOptions = {}) {
+        webpackConfig.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
 
         return this;
     },
@@ -330,13 +343,55 @@ module.exports = {
     },
 
     /**
-     * If enabled, the react preset is added to Babel:
+     * If enabled, the react preset is added to Babel.
+     *
      * https://babeljs.io/docs/plugins/preset-react/
      *
      * @returns {exports}
      */
     enableReactPreset() {
         webpackConfig.enableReactPreset();
+
+        return this;
+    },
+
+    /**
+     * Call this if you plan on loading TypeScript files.
+     *
+     * Encore.enableTypeScriptLoader()
+     *
+     * Or, configure the ts-loader options:
+     *
+     * Encore.enableTypeScriptLoader(function(tsConfig) {
+     *      // https://github.com/TypeStrong/ts-loader/blob/master/README.md#loader-options
+     *      // tsConfig.silent = false;
+     * });
+     *
+     * @param {function} callback
+     * @return {exports}
+     */
+    enableTypeScriptLoader(callback = () => {}) {
+        webpackConfig.enableTypeScriptLoader(callback);
+    },
+
+    /**
+     * If enabled, the Vue.js loader is enabled.
+     *
+     * https://github.com/vuejs/vue-loader
+     *
+     *     Encore.enableVueLoader();
+     *
+     *     // or configure the vue-loader options
+     *     // https://vue-loader.vuejs.org/en/configurations/advanced.html
+     *     Encore.enableVueLoader(function(options) {
+     *          options.preLoaders = { ... }
+     *     });
+     *
+     * @param {function} vueLoaderOptionsCallback
+     * @returns {exports}
+     */
+    enableVueLoader(vueLoaderOptionsCallback = () => {}) {
+        webpackConfig.enableVueLoader(vueLoaderOptionsCallback);
 
         return this;
     },
@@ -356,7 +411,7 @@ module.exports = {
     /**
      * Is this currently a "production" build?
      *
-     * @returns {*}
+     * @returns {boolean}
      */
     isProduction() {
         return webpackConfig.isProduction();
@@ -381,5 +436,17 @@ module.exports = {
             console.log(pe.render(error));
             process.exit(1); // eslint-disable-line
         }
+    },
+
+    /**
+     * Resets the Encore state to allow building a new config.
+     *
+     * getWebpackConfig should be used before resetting to build
+     * a config for the existing state.
+     *
+     * @returns {void}
+     */
+    reset() {
+        webpackConfig = new WebpackConfig(runtimeConfig);
     }
 };

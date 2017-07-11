@@ -263,7 +263,7 @@ describe('WebpackConfig object', () => {
 
         it('Pass valid config', () => {
             const config = createConfig();
-            config.enableSassLoader({ resolve_url_loader: false });
+            config.enableSassLoader(() => {}, { resolve_url_loader: false });
 
             expect(config.useSassLoader).to.be.true;
             expect(config.sassOptions.resolve_url_loader).to.be.false;
@@ -273,8 +273,66 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
 
             expect(() => {
-                config.enableSassLoader({ fake_option: false });
+                config.enableSassLoader(() => {}, { fake_option: false });
             }).to.throw('Invalid option "fake_option" passed to enableSassLoader()');
+        });
+
+        it('Pass options callback', () => {
+            const config = createConfig();
+            const callback = (sassOptions) => {};
+            config.enableSassLoader(callback);
+
+            expect(config.sassLoaderOptionsCallback).to.equal(callback);
+        });
+    });
+
+    describe('enableTypeScriptLoader', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.enableTypeScriptLoader(testCallback);
+            expect(config.tsConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableTypeScriptLoader('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
+    describe('addPlugin', () => {
+        it('extends the current registered plugins', () => {
+            const config = createConfig();
+            const nbOfPlugins = config.plugins.length;
+
+            expect(nbOfPlugins).to.equal(0);
+
+            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+
+            expect(config.plugins.length).to.equal(1);
+        });
+    });
+
+    describe('enableVueLoader', () => {
+        it('Call with no config', () => {
+            const config = createConfig();
+            config.enableVueLoader();
+
+            expect(config.useVueLoader).to.be.true;
+        });
+
+        it('Pass config', () => {
+            const config = createConfig();
+            const callback = (options) => {
+                options.preLoaders = { foo: 'foo-loader' };
+            };
+            config.enableVueLoader(callback);
+
+            expect(config.useVueLoader).to.be.true;
+            expect(config.vueLoaderOptionsCallback).to.equal(callback);
         });
     });
 

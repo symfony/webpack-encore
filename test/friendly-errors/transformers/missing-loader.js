@@ -60,5 +60,18 @@ describe('transform/missing-loader', () => {
             expect(actualError.type).to.deep.equal('loader-not-enabled');
             expect(actualError.loaderName).to.deep.equal('sass');
         });
+
+        it('Typescript error is properly transformed', () => {
+            const startError = {
+                name: 'ModuleParseError',
+                message: 'You may need an appropriate loader',
+                file: '/path/to/file.ts'
+            };
+            const actualError = transform(Object.assign({}, startError));
+
+            expect(actualError.name).to.deep.equal('Loader not enabled');
+            expect(actualError.type).to.deep.equal('loader-not-enabled');
+            expect(actualError.loaderName).to.deep.equal('typescript');
+        });
     });
 });
