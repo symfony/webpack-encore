@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.11.0
+
+ * The `webpack` page was upgraded from version 2.2 to 3.1 #53. The
+    `extract-text-webpack-plugin` package was also upgraded from
+    2.1 to 3.0.
+
 ## 0.10.0
 
  * [BC BREAK] If you're using `enableSassLoader()` AND passing an options
