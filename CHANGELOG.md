@@ -15,6 +15,12 @@
    })
    ```
 
+ * Allowing typescript options callback to be optional - #75
+
+ * Allow the Encore singleton to be reset - #83
+
+ * Fixing bug with vue-loader and sass - #89
+
 ## 0.9.1
 
  * Syntax error fix - #64
