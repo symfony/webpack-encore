@@ -282,7 +282,7 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.38a901b572534329da92.js', // chunks are also versioned
+                        '0.d002be21e9bcf76057e9.js', // chunks are also versioned
                         'main.292c0347ed1240663cb1.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
                         'bg.42ced8eae2254268bb3c65f1e65bd041.css',
