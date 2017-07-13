@@ -375,23 +375,6 @@ describe('The config-generator function', () => {
             expect(actualConfig.devServer).to.be.undefined;
         });
 
-        it('devServer and an absolute URL as publicPath', () => {
-            const config = createConfig();
-            config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
-            config.setManifestKeyPrefix('public');
-            config.setPublicPath('https://cdn.example.com');
-            config.addEntry('main', './main');
-
-            const actualConfig = configGenerator(config);
-            expect(actualConfig.output.publicPath).to.equal('https://cdn.example.com/');
-            expect(actualConfig.devServer).to.not.be.undefined;
-
-            const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
-            expect(manifestPlugin.opts.publicPath).to.equal('https://cdn.example.com/');
-        });
-
         it('devServer no hot mode', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
