@@ -150,7 +150,7 @@ describe('WebpackConfig object', () => {
             config.setPublicPath('http://coolcdn.com/public');
             config.setManifestKeyPrefix('/public/');
 
-            expect(config.getRealPublicPath()).to.equal('http://coolcdn.com/public');
+            expect(config.getRealPublicPath()).to.equal('http://coolcdn.com/public/');
         });
     });
 
