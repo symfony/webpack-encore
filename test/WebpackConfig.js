@@ -105,12 +105,52 @@ describe('WebpackConfig object', () => {
             }).to.throw('The value passed to setPublicPath() must start with "/"');
         });
 
-        it('You can set to a URL when using devServer', () => {
+        it('Setting to a URL when using devServer throws an error', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.setPublicPath('https://examplecdn.com');
 
-            expect(config.publicPath).to.equal('https://examplecdn.com/');
+            expect(() => {
+                config.setPublicPath('https://examplecdn.com');
+            }).to.throw('You cannot pass an absolute URL to setPublicPath() and use the dev-server');
+        });
+    });
+
+    describe('getRealPublicPath', () => {
+        it('Returns normal with no dev server', () => {
+            const config = createConfig();
+            config.setPublicPath('/public');
+
+            expect(config.getRealPublicPath()).to.equal('/public/');
+        });
+
+        it('Prefix when using devServer', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.setPublicPath('/public');
+
+            expect(config.getRealPublicPath()).to.equal('http://localhost:8080/public/');
+        });
+
+        it('No prefix with devServer & devServerKeepPublicPath option', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.devServerKeepPublicPath = true;
+            config.setPublicPath('/public');
+
+            expect(config.getRealPublicPath()).to.equal('/public/');
+        });
+
+        it('devServer & devServerKeepPublicPath option allows absolute publicPath', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.devServerKeepPublicPath = true;
+            config.setPublicPath('http://coolcdn.com/public');
+            config.setManifestKeyPrefix('/public/');
+
+            expect(config.getRealPublicPath()).to.equal('http://coolcdn.com/public');
         });
     });
 
