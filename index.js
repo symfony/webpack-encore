@@ -14,6 +14,7 @@ const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
 const PrettyError = require('pretty-error');
 const runtimeConfig = require('./lib/context').runtimeConfig;
+const logger = require('./lib/logger');
 
 // at this time, the encore executable should have set the runtimeConfig
 if (!runtimeConfig) {
@@ -21,6 +22,9 @@ if (!runtimeConfig) {
 }
 
 let webpackConfig = new WebpackConfig(runtimeConfig);
+if (runtimeConfig.verbose) {
+    logger.verbose();
+}
 
 module.exports = {
     /**

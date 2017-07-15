@@ -104,15 +104,6 @@ describe('WebpackConfig object', () => {
                 config.setPublicPath('foo/');
             }).to.throw('The value passed to setPublicPath() must start with "/"');
         });
-
-        it('Setting to a URL when using devServer throws an error', () => {
-            const config = createConfig();
-            config.runtimeConfig.useDevServer = true;
-
-            expect(() => {
-                config.setPublicPath('https://examplecdn.com');
-            }).to.throw('You cannot pass an absolute URL to setPublicPath() and use the dev-server');
-        });
     });
 
     describe('getRealPublicPath', () => {
@@ -142,11 +133,10 @@ describe('WebpackConfig object', () => {
             expect(config.getRealPublicPath()).to.equal('/public/');
         });
 
-        it('devServer & devServerKeepPublicPath option allows absolute publicPath', () => {
+        it('devServer does not prefix if publicPath is absolute', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
-            config.runtimeConfig.devServerKeepPublicPath = true;
             config.setPublicPath('http://coolcdn.com/public');
             config.setManifestKeyPrefix('/public/');
 
