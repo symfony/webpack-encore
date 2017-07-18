@@ -332,6 +332,30 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableForkedTypeScriptTypesChecking', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            config.enableTypeScriptLoader();
+            config.enableForkedTypeScriptTypesChecking({
+                tsconfig: './js/tsconfig.json',
+                silent: true
+            });
+
+            expect(config.useForkedTypeScriptTypeChecking).to.be.true;
+            expect(config.forkedTypeScriptTypesCheckOptions.silent).to.be.true;
+            expect(config.forkedTypeScriptTypesCheckOptions.tsconfig).to.equal('./js/tsconfig.json');
+        });
+
+        it('Calling without TypeScript loader throws an error', () => {
+            const config = createConfig();
+            expect(() => {
+                config.enableForkedTypeScriptTypesChecking();
+            }).to.throw(
+                'TypeScript loader must be enabled. Call `enableTypeScriptLoader()` first.'
+            );
+        });
+    });
+
     describe('addPlugin', () => {
         it('extends the current registered plugins', () => {
             const config = createConfig();
