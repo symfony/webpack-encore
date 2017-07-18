@@ -332,6 +332,25 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableForkedTypeScriptTypesChecking', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            config.enableTypeScriptLoader();
+            const testCallback = () => {};
+            config.enableForkedTypeScriptTypesChecking(testCallback);
+            expect(config.forkedTypeScriptTypesCheckOptionsCallback)
+                .to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableForkedTypeScriptTypesChecking('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('addPlugin', () => {
         it('extends the current registered plugins', () => {
             const config = createConfig();
