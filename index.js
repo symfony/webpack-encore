@@ -381,6 +381,20 @@ module.exports = {
     },
 
     /**
+     * Call this to enable forked type checking for TypeScript loader
+     * https://github.com/TypeStrong/ts-loader/blob/v2.3.0/README.md#faster-builds
+     *
+     * This is a build optimization API to reduce build times.
+     *
+     *
+     * @param {Object} forkedTypeScriptTypesCheckOptions
+     * @return {exports}
+     */
+    enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptions = {}) {
+        webpackConfig.enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptions);
+    },
+
+    /**
      * If enabled, the Vue.js loader is enabled.
      *
      * https://github.com/vuejs/vue-loader
