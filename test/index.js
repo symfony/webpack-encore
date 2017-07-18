@@ -186,6 +186,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableForkedTypeScriptTypesChecking', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableForkedTypeScriptTypesChecking();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enableVueLoader', () => {
 
         it('must return the API object', () => {
