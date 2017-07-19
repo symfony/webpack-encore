@@ -392,6 +392,8 @@ module.exports = {
      */
     enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptions = {}) {
         webpackConfig.enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptions);
+
+        return this;
     },
 
     /**
