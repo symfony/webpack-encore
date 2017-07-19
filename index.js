@@ -372,6 +372,8 @@ module.exports = {
      */
     enableTypeScriptLoader(callback = () => {}) {
         webpackConfig.enableTypeScriptLoader(callback);
+
+        return this;
     },
 
     /**
