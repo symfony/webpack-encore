@@ -11,7 +11,7 @@
 
 const expect = require('chai').expect;
 require('../lib/context').runtimeConfig = {};
-const api = require('../index.js');
+const api = require('../index');
 
 describe('Public API', () => {
 
