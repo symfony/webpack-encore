@@ -430,4 +430,22 @@ describe('WebpackConfig object', () => {
             expect(config.loaders).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
         });
     });
+
+    describe('disableImagesLoader', () => {
+        it('Disable default images loader', () => {
+            const config = createConfig();
+            config.disableImagesLoader();
+
+            expect(config.useImagesLoader).to.be.false;
+        });
+    });
+
+    describe('disableFontsLoader', () => {
+        it('Disable default fonts loader', () => {
+            const config = createConfig();
+            config.disableFontsLoader();
+
+            expect(config.useFontsLoader).to.be.false;
+        });
+    });
 });

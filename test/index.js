@@ -204,6 +204,24 @@ describe('Public API', () => {
 
     });
 
+    describe('disableImagesLoader', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableImagesLoader();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('disableFontsLoader', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableFontsLoader();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('cleanupOutputBeforeBuild', () => {
 
         it('must return the API object', () => {
