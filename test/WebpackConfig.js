@@ -430,4 +430,13 @@ describe('WebpackConfig object', () => {
             expect(config.loaders).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
         });
     });
+
+    describe('disableAssetsLoaders', () => {
+        it('Disable default assets loaders', () => {
+            const config = createConfig();
+            config.disableAssetsLoaders();
+
+            expect(config.useAssetsLoaders).to.be.false;
+        });
+    });
 });

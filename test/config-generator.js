@@ -416,4 +416,36 @@ describe('The config-generator function', () => {
             expect(ignorePlugin).to.not.be.undefined;
         });
     });
+
+    describe('disableAssetsLoaders() removes the default assets loaders', () => {
+        it('without disableAssetsLoaders()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            // do not call disableAssetsLoaders
+
+            const actualConfig = configGenerator(config);
+
+            expect(function() {
+                findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+                findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            }).to.not.throw();
+        });
+
+        it('with disableAssetsLoaders()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.disableAssetsLoaders();
+
+            const actualConfig = configGenerator(config);
+
+            expect(function() {
+                findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+                findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            }).to.throw();
+        });
+    });
 });

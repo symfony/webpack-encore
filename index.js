@@ -430,6 +430,18 @@ module.exports = {
     },
 
     /**
+     * Call this if you wish to disable the default
+     * assets loaders (images and fonts).
+     *
+     * @returns {exports}
+     */
+    disableAssetsLoaders() {
+        webpackConfig.disableAssetsLoaders();
+
+        return this;
+    },
+
+    /**
      * If enabled, the output directory is emptied between
      * each build (to remove old files).
      *
