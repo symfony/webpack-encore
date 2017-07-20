@@ -30,7 +30,7 @@ describe('Public API', () => {
             const returnedValue = api.setPublicPath('/');
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('setManifestKeyPrefix', () => {
@@ -39,7 +39,7 @@ describe('Public API', () => {
             const returnedValue = api.setManifestKeyPrefix('/build');
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('addEntry', () => {
@@ -48,7 +48,7 @@ describe('Public API', () => {
             const returnedValue = api.addEntry('entry', 'main.js');
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('addStyleEntry', () => {
@@ -57,7 +57,7 @@ describe('Public API', () => {
             const returnedValue = api.addStyleEntry('styleEntry', 'main.css');
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('addPlugin', () => {
@@ -66,7 +66,7 @@ describe('Public API', () => {
             const returnedValue = api.addPlugin(null);
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('addLoader', () => {
@@ -75,7 +75,7 @@ describe('Public API', () => {
             const returnedValue = api.addLoader(null);
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('addRule', () => {
@@ -84,7 +84,7 @@ describe('Public API', () => {
             const returnedValue = api.addRule(null);
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enableVersioning', () => {
@@ -93,7 +93,7 @@ describe('Public API', () => {
             const returnedValue = api.enableVersioning();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enableSourceMaps', () => {
@@ -102,7 +102,7 @@ describe('Public API', () => {
             const returnedValue = api.enableSourceMaps();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('createSharedEntry', () => {
@@ -111,7 +111,7 @@ describe('Public API', () => {
             const returnedValue = api.createSharedEntry('sharedEntry', 'vendor.js');
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('autoProvideVariables', () => {
@@ -120,7 +120,7 @@ describe('Public API', () => {
             const returnedValue = api.autoProvideVariables({});
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('autoProvidejQuery', () => {
@@ -129,7 +129,7 @@ describe('Public API', () => {
             const returnedValue = api.autoProvidejQuery();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enablePostCssLoader', () => {
@@ -138,7 +138,7 @@ describe('Public API', () => {
             const returnedValue = api.enablePostCssLoader();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enableSassLoader', () => {
@@ -147,7 +147,7 @@ describe('Public API', () => {
             const returnedValue = api.enableSassLoader();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enableLessLoader', () => {
@@ -156,7 +156,7 @@ describe('Public API', () => {
             const returnedValue = api.enableLessLoader();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('setOutputPath', () => {
@@ -165,7 +165,7 @@ describe('Public API', () => {
             const returnedValue = api.configureBabel(() => {});
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enableReactPreset', () => {
@@ -174,7 +174,7 @@ describe('Public API', () => {
             const returnedValue = api.enableReactPreset();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enableTypeScriptLoader', () => {
@@ -183,7 +183,7 @@ describe('Public API', () => {
             const returnedValue = api.enableTypeScriptLoader();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('enableVueLoader', () => {
@@ -192,7 +192,7 @@ describe('Public API', () => {
             const returnedValue = api.enableVueLoader();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 
     describe('cleanupOutputBeforeBuild', () => {
@@ -201,6 +201,6 @@ describe('Public API', () => {
             const returnedValue = api.cleanupOutputBeforeBuild();
             expect(returnedValue).to.equal(api);
         });
-        
+
     });
 });
