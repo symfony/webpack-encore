@@ -1,0 +1,115 @@
+---------------------------------------------------------------------------
+
+by samjarrett at 2017-07-16T08:36:54Z
+
+Hey @weaverryan thanks for the heads-up! I gave this a go with config like this:
+
+```js
+if (!Encore.isProduction()) {
+    Encore
+        .setPublicPath('http://dev.vcap.me:8080')
+        .setManifestKeyPrefix('/assets/build/')
+    ;
+}
+```
+
+and when I run the command with `encore dev-server --host 0.0.0.0`, I get the warning on the command line about using setPublicPath() and dev-server, but it seems like the config was being ignored?
+
+Example - paths to CSS are being generated as relative:
+
+```html
+<link href="/assets/build/global.css" rel="stylesheet">
+```
+
+if I disable the above Encore settings in my webpack conf, my path to CSS is this:
+
+```html
+<link href="http://0.0.0.0:8080/assets/build/global.css" rel="stylesheet">
+```
+
+have I missed something?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-17T13:31:27Z
+
+Thanks @samjarrett! Hmm... I bet I missed one small detail - i'll take a look at this soon and ping back when I'm sure it's ready :)
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-17T13:45:55Z
+
+Hi @weaverryan,
+just a question, will this PR also address #78 ? ... from:
+
+> When used, your publicPath is not prefixed with the dev server URL
+
+I think this will create some troubles when using live reloading with Browser Sync. Resources are not written in file system but kept in memory.
+
+So do we need that url: `http://localhost:8080` as prefix when developing or do we need to set it as absolute url in order to get latest updates from compilations?
+
+How do you think i could do with this PR to address #78 ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-19T12:24:32Z
+
+Yo @davidmpaz!
+
+> will this PR also address #78
+
+It won't, but this was step 1 towards that (they're kind of unrelated, but work in the same area). So, we're definitely going to address that :).
+
+> [weaverryan] When used, your publicPath is not prefixed with the dev server URL
+
+> [davidmpaz] I think this will create some troubles when using live reloading with Browser Sync. Resources are not written in file system but kept in memory.
+
+You're 100% right. Your link/script tags need to be prefixed with the absolute URL to the dev-server... *and*, internally, webpack's `publicPath` needs to also be set to the absolute URL to the dev-server (+ the output directory, so something like `http://localhost:8080/build`). The latter is needed for code splitting, and believe it's used in the compiled CSS files to point to assets like fonts, images, etc.
+
+Buuuuut, in @samjarrett's situation, the `dev-server` is setup to bind at `0.0.0.0:8080`, but from the perspective of his app, the `dev-server` is running at `http://dev.vcap.me:8080`. In other words, there's a disconnect between the host that we tell the `dev-server` to bind to... and the host that the app should actually use for fetch assets.
+
+tl;dr; for 99% of the use-cases, the assets will still be prefixed with the dev server URL. But this PR *allows* them to be disconnected. Well, it will once I get it fully working ;).
+
+> How do you think i could do with this PR to address #78 ?
+
+I just shot you a question over on that issue. When we answer that, I think it'll be a pretty easy PR. We're throwing the exception now because we simply cannot determine the `contentBase` in your situation.
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-19T13:27:26Z
+
+@weaverryan, got it thanks!!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-21T00:54:11Z
+
+My apologies @samjarrett - this is (and was) totally ready to go after all :). There's one mistake in your script:
+
+```js
+if (!Encore.isProduction()) {
+    Encore
+        .setPublicPath('http://dev.vcap.me:8080')
+        // I removed the opening slash
+        .setManifestKeyPrefix('assets/build/')
+    ;
+}
+```
+
+The manifest key normally doesn't start with a `/` - we make sure of that. So, I'm guessing (assuming you're using Symfony) that your template looks like this:
+
+```twig
+<script src="{{ asset('assets/build/main.js') }}">
+```
+
+Because you had `.setManifestKeyPrefix('/assets/build/')`, it changed the keys in `manifest.json` to start with a `/`, and so the path (`assets/build/main.js`) wasn't found in `manifest.json` and wasn't transformed (i.e. it was left alone).
+
+I'm going to make a PR to guarantee that `setManifestKeyPrefix()` has no opening `/`. I originally allowed this... to add a bit more flexibility. But it's going to mess people up I think.
+
+Soooo, make this one line change, and let me know how things look. I appreciate it!
+
+---------------------------------------------------------------------------
+
+by samjarrett at 2017-07-21T12:05:50Z
+
+Works well @weaverryan, thanks!
