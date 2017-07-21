@@ -69,6 +69,7 @@ describe('parse-runtime', () => {
         expect(config.useDevServer).to.be.true;
         expect(config.devServerUrl).to.equal('http://localhost:8080/');
         expect(config.useHotModuleReplacement).to.be.false;
+        expect(config.devServerKeepPublicPath).to.be.false;
     });
 
     it('dev-server command with options', () => {
@@ -113,5 +114,13 @@ describe('parse-runtime', () => {
 
         expect(config.useDevServer).to.be.true;
         expect(config.useHotModuleReplacement).to.be.true;
+    });
+
+    it('dev-server command --keep-public-path', () => {
+        const testDir = createTestDirectory();
+        const config = parseArgv(createArgv(['dev-server', '--keep-public-path']), testDir);
+
+        expect(config.useDevServer).to.be.true;
+        expect(config.devServerKeepPublicPath).to.be.true;
     });
 });

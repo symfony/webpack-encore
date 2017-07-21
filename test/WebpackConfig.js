@@ -104,14 +104,43 @@ describe('WebpackConfig object', () => {
                 config.setPublicPath('foo/');
             }).to.throw('The value passed to setPublicPath() must start with "/"');
         });
+    });
 
-        it('Setting to a URL when using devServer throws an error', () => {
+    describe('getRealPublicPath', () => {
+        it('Returns normal with no dev server', () => {
+            const config = createConfig();
+            config.setPublicPath('/public');
+
+            expect(config.getRealPublicPath()).to.equal('/public/');
+        });
+
+        it('Prefix when using devServer', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.setPublicPath('/public');
 
-            expect(() => {
-                config.setPublicPath('https://examplecdn.com');
-            }).to.throw('You cannot pass an absolute URL to setPublicPath() and use the dev-server');
+            expect(config.getRealPublicPath()).to.equal('http://localhost:8080/public/');
+        });
+
+        it('No prefix with devServer & devServerKeepPublicPath option', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.devServerKeepPublicPath = true;
+            config.setPublicPath('/public');
+
+            expect(config.getRealPublicPath()).to.equal('/public/');
+        });
+
+        it('devServer does not prefix if publicPath is absolute', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.setPublicPath('http://coolcdn.com/public');
+            config.setManifestKeyPrefix('/public/');
+
+            expect(config.getRealPublicPath()).to.equal('http://coolcdn.com/public/');
         });
     });
 
