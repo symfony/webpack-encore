@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-19T16:30:51Z
+
+We should definitely make a test for the pubic API, to prevents such cases in future. Do you think you could add some @ldiringer ?
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-20T08:53:28Z
+
+what do you think if `api.js` file get renamed to `index.js`, that way it explicitly says what part is testing?
+
+tests look great!. Thank you very much, i hope this get merged soon.
+
+---------------------------------------------------------------------------
+
+by ldiringer at 2017-07-20T12:02:48Z
+
+All done. Thank you for the review @davidmpaz!
