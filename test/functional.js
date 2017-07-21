@@ -668,8 +668,8 @@ module.exports = {
         });
 
         it('TypeScript is compiled and type checking is done in separate process!', (done) => {
-            this.timeout(15000);
-            setTimeout(done, 15000);
+            this.timeout(8000);
+            setTimeout(done, 7000);
 
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
