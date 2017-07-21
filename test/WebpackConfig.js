@@ -148,10 +148,10 @@ describe('WebpackConfig object', () => {
 
         it('You can set it!', () => {
             const config = createConfig();
-            config.setManifestKeyPrefix('/foo');
+            config.setManifestKeyPrefix('foo');
 
             // trailing slash added
-            expect(config.manifestKeyPrefix).to.equal('/foo/');
+            expect(config.manifestKeyPrefix).to.equal('foo/');
         });
 
         it('You can set it blank', () => {
@@ -160,6 +160,14 @@ describe('WebpackConfig object', () => {
 
             // trailing slash not added
             expect(config.manifestKeyPrefix).to.equal('');
+        });
+
+        it('You cannot use an opening slash', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.setManifestKeyPrefix('/foo/');
+            }).to.throw('the value passed to setManifestKeyPrefix() cannot start with "/"');
         });
     });
 
