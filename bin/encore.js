@@ -10,7 +10,6 @@
 
 'use strict';
 
-const path = require('path');
 const parseRuntime = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
 const chalk = require('chalk');
@@ -62,11 +61,14 @@ function showUsageInstructions() {
     console.log('Commands:');
     console.log(`    ${chalk.green('dev')}        : runs webpack for development`);
     console.log('       - Supports any webpack options (e.g. --watch)');
+    console.log();
     console.log(`    ${chalk.green('dev-server')} : runs webpack-dev-server`);
     console.log(`       - ${chalk.yellow('--host')} The hostname/ip address the webpack-dev-server will bind to`);
     console.log(`       - ${chalk.yellow('--port')} The port the webpack-dev-server will bind to`);
     console.log(`       - ${chalk.yellow('--hot')}  Enable HMR on webpack-dev-server`);
+    console.log(`       - ${chalk.yellow('--keep-public-path')} Do not change the public path (it is usually prefixed by the dev server URL)`);
     console.log('       - Supports any webpack-dev-server options');
+    console.log();
     console.log(`    ${chalk.green('production')} : runs webpack for production`);
     console.log('       - Supports any webpack options (e.g. --watch)');
     console.log();

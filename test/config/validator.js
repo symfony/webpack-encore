@@ -13,6 +13,9 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const validator = require('../../lib/config/validator');
+const logger = require('../../lib/logger');
+
+logger.quiet();
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -64,5 +67,20 @@ describe('The validator function', () => {
         expect(() => {
             validator(config);
         }).to.throw('Don\'t enable versioning with the dev-server');
+    });
+
+    it('warning with dev-server and absolute publicPath', () => {
+        const config = createConfig();
+        config.outputPath = '/tmp/public/build';
+        config.setPublicPath('https://absoluteurl.com/build');
+        config.setManifestKeyPrefix('build/');
+        config.addEntry('main', './main');
+        config.runtimeConfig.useDevServer = true;
+
+        logger.clearMessages();
+        validator(config);
+
+        expect(logger.getMessages().warning).to.have.lengthOf(1);
+        expect(logger.getMessages().warning[0]).to.include('Passing an absolute URL to setPublicPath() *and* using the dev-server can cause issues');
     });
 });
