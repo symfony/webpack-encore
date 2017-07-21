@@ -204,6 +204,15 @@ describe('Public API', () => {
 
     });
 
+    describe('disableAssetsLoaders', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableAssetsLoaders();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('cleanupOutputBeforeBuild', () => {
 
         it('must return the API object', () => {
