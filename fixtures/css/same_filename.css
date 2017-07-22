@@ -1,0 +1,17 @@
+h4 {
+  background: top left url('./../images/symfony_logo.png') no-repeat;
+}
+
+h5 {
+  background: top left url('./../images/same_filename/symfony_logo.png') no-repeat;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('./../fonts/Roboto.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Roboto2';
+    src: url('./../fonts/same_filename/Roboto.woff2') format('woff2');
+}
