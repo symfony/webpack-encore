@@ -13,6 +13,7 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const tsLoader = require('../../lib/loaders/typescript');
+let ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -28,9 +29,11 @@ describe('plugins/forkedtypecheck', () => {
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking();
 
+        expect(config.plugins).to.have.lengthOf(0);
         const tsTypeChecker = require('../../lib/plugins/forked-ts-types');
-        const actualPlugins = tsTypeChecker.getPlugins(config);
-        expect(actualPlugins).to.have.lengthOf(1);
+        tsTypeChecker(config);
+        expect(config.plugins).to.have.lengthOf(1);
+        expect(config.plugins[0]).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
         // after enabling plugin, check typescript loader has right config
         const actualLoaders = tsLoader.getLoaders(config);
         expect(actualLoaders[1].options.transpileOnly).to.be.true;
