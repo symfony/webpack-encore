@@ -1,0 +1,104 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-19T12:28:55Z
+
+I'll check this out tonight! Excited about this!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-21T01:31:52Z
+
+Ok, just checked this out! Breaking things into smaller pieces is a win :). To be honest, I'm struggling on a few of the details about "how best" to do this... but since it's internal stuff, we shouldn't sweat it too much.
+
+> From now on only public API with proper options is needed, for most cases.
+
+What do you mean by this?
+
+About the individual plugins files, naming the method `getPlugins()` and allowing each to return an array of plugins looks weird to me (I realize you based it off of my `getLoaders()`... and it felt weird there too :) ). What if each plugin file exports just a function... and what if we pass `plugins` *to* that function and have it modify the array. So:
+
+```js
+// clean.js
+module.exports = function(plugins, webpackConfig, paths, cleanUpOptions = {}) {
+    let config = Object.assign({}, cleanUpOptions, {
+        root: webpackConfig.outputPath,
+        verbose: false,
+    });
+
+    plugins.push(new CleanWebpackPlugin(paths, config));
+};
+```
+
+`config-generator.js` would look like this:
+
+```js
+if (this.webpackConfig.cleanupOutput) {
+    cleanPluginUtil(plugins, this.webpackConfig, ['**/*']);
+}
+```
+
+Actually, we could go a step further, and include the logic of whether or not a plugin should be enabled, inside of that file:
+
+```js
+// clean.js
+module.exports = function(plugins, webpackConfig, paths, cleanUpOptions = {}) {
+    if (!this.webpackConfig.cleanupOutput) {
+        return;
+    }
+
+    let config = // ...
+    // rest of file
+};
+```
+
+It still doesn't feel perfect, but maybe good enough for the next step :).
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-21T08:42:29Z
+
+To answer your first comment
+
+Regarding:
+
+>From now on only public API with proper options is needed, for most cases.
+
+I did mean that with this approach (broken into smaller pieces). Any future plugin (`fork-ts-checker-webpack-plugin`, `browser-sync`, etc..) can be easily integrated by creating another plugin module and adding respective public API. It was not a comment for internally used plugins, those are already integrated it ins owns way.
+
+For:
+>What if each plugin file exports just a function... and what if we pass plugins to that function and have it modify the array.
+
+I like this idea far more than current one, actually I was trying to get some result similar to an interface implementation, as long as all plugins integration follow same pattern i don't see any problem. To your suggestion though I would only change one thing, function signature:
+```
+module.exports = function(webpackConfig, paths, cleanUpOptions = {}) {
+```
+I think we don't need the plugin array any more because `webpackConfig` already contain plugins on its own, plugins that are added later on by:
+```
+this.webpackConfig.plugins.forEach(function(plugin) {
+    plugins.push(plugin);
+});
+```
+we could push to `webpackConfig.plugins` directly and get rid of that intermediate piece of code. Since plugin execution in webpack matters, we could ask as *convention* to users to add any custom plugin through `addPlugin()` api at the end of `Encore` calls.
+
+What do you think?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-22T19:42:05Z
+
+> I did mean that with this approach (broken into smaller pieces). Any future plugin (fork-ts-checker-webpack-plugin, browser-sync, etc..) can be easily integrated by creating another plugin module and adding respective public API
+
+I understand!
+
+> I think we don't need the plugin array any more because webpackConfig already contain plugins on its own, plugins that are added later on by:
+
+This sounds good... but so far, when we call `ConfigGenerator.getWebpackConfig()`, we never modify the `WebpackConfig`. I think we should continue to *not* modify this object: it's our input only.
+
+Do we agree on enough to get this to a good spot? I feel pretty comfortable - it's internal stuff anyways, which we can continue to iterate on. I don't want to delay this PR too much more :).
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-23T14:36:47Z
+
+I feel also comfortable with the result. Thanks for the clarifications, did helped a lot.
