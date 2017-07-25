@@ -483,7 +483,9 @@ module.exports = {
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.setPublicPath('/build');
-            config.addStyleEntry('styles', ['./css/autoprefixer_test.css']);
+            // load a file that @import's another file, so that we can
+            // test that @import resources are parsed through postcss
+            config.addStyleEntry('styles', ['./css/imports_autoprefixer.css']);
             config.enablePostCssLoader();
 
             testSetup.runWebpack(config, (webpackAssert) => {
