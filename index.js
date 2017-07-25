@@ -431,12 +431,24 @@ module.exports = {
 
     /**
      * Call this if you wish to disable the default
-     * assets loaders (images and fonts).
+     * images loader.
      *
      * @returns {exports}
      */
-    disableAssetsLoaders() {
-        webpackConfig.disableAssetsLoaders();
+    disableImagesLoader() {
+        webpackConfig.disableImagesLoader();
+
+        return this;
+    },
+
+    /**
+     * Call this if you wish to disable the default
+     * fonts loader.
+     *
+     * @returns {exports}
+     */
+    disableFontsLoader() {
+        webpackConfig.disableFontsLoader();
 
         return this;
     },

@@ -417,33 +417,61 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('disableAssetsLoaders() removes the default assets loaders', () => {
-        it('without disableAssetsLoaders()', () => {
+    describe('disableImagesLoader() removes the default images loader', () => {
+        it('without disableImagesLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            // do not call disableAssetsLoaders
+            // do not call disableImagesLoader
 
             const actualConfig = configGenerator(config);
 
             expect(function() {
                 findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+            }).to.not.throw();
+        });
+
+        it('with disableImagesLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.disableImagesLoader();
+
+            const actualConfig = configGenerator(config);
+
+            expect(function() {
+                findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+            }).to.throw();
+        });
+    });
+
+    describe('disableFontsLoader() removes the default fonts loader', () => {
+        it('without disableFontsLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            // do not call disableFontsLoader
+
+            const actualConfig = configGenerator(config);
+
+            expect(function() {
                 findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
             }).to.not.throw();
         });
 
-        it('with disableAssetsLoaders()', () => {
+        it('with disableFontsLoader()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.disableAssetsLoaders();
+            config.disableFontsLoader();
 
             const actualConfig = configGenerator(config);
 
             expect(function() {
-                findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
                 findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
             }).to.throw();
         });

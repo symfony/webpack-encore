@@ -431,12 +431,21 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('disableAssetsLoaders', () => {
-        it('Disable default assets loaders', () => {
+    describe('disableImagesLoader', () => {
+        it('Disable default images loader', () => {
             const config = createConfig();
-            config.disableAssetsLoaders();
+            config.disableImagesLoader();
 
-            expect(config.useAssetsLoaders).to.be.false;
+            expect(config.useImagesLoader).to.be.false;
+        });
+    });
+
+    describe('disableFontsLoader', () => {
+        it('Disable default fonts loader', () => {
+            const config = createConfig();
+            config.disableFontsLoader();
+
+            expect(config.useFontsLoader).to.be.false;
         });
     });
 });

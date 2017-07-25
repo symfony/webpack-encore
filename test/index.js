@@ -204,10 +204,19 @@ describe('Public API', () => {
 
     });
 
-    describe('disableAssetsLoaders', () => {
+    describe('disableImagesLoader', () => {
 
         it('must return the API object', () => {
-            const returnedValue = api.disableAssetsLoaders();
+            const returnedValue = api.disableImagesLoader();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('disableFontsLoader', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableFontsLoader();
             expect(returnedValue).to.equal(api);
         });
 
