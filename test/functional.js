@@ -62,8 +62,8 @@ describe('Functional tests using webpack', function() {
                     'main.js',
                     'font.css',
                     'bg.css',
-                    'fonts/Roboto.9896f773628188b649ed5824fa363290.woff2',
-                    'images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png',
+                    'fonts/Roboto.9896f773.woff2',
+                    'images/symfony_logo.ea1ca6f7.png',
                     'manifest.json'
                 ]);
 
@@ -87,11 +87,11 @@ describe('Functional tests using webpack', function() {
                 );
                 webpackAssert.assertManifestPath(
                     'build/fonts/Roboto.woff2',
-                    '/build/fonts/Roboto.9896f773628188b649ed5824fa363290.woff2'
+                    '/build/fonts/Roboto.9896f773.woff2'
                 );
                 webpackAssert.assertManifestPath(
                     'build/images/symfony_logo.png',
-                    '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                    '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
                 done();
@@ -119,11 +119,11 @@ describe('Functional tests using webpack', function() {
 
                 webpackAssert.assertOutputFileContains(
                     'bg.css',
-                    'http://localhost:8090/assets/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                    'http://localhost:8090/assets/images/symfony_logo.ea1ca6f7.png'
                 );
                 webpackAssert.assertOutputFileContains(
                     'font.css',
-                    'http://localhost:8090/assets/fonts/Roboto.9896f773628188b649ed5824fa363290.woff2'
+                    'http://localhost:8090/assets/fonts/Roboto.9896f773.woff2'
                 );
                 // manifest file has CDN in value
                 webpackAssert.assertManifestPath(
@@ -172,7 +172,7 @@ describe('Functional tests using webpack', function() {
 
                 webpackAssert.assertOutputFileContains(
                     'bg.css',
-                    'http://localhost:8090/assets/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                    'http://localhost:8090/assets/images/symfony_logo.ea1ca6f7.png'
                 );
                 // manifest file has CDN in value
                 webpackAssert.assertManifestPath(
@@ -285,20 +285,20 @@ describe('Functional tests using webpack', function() {
                         '0.d002be21e9bcf76057e9.js', // chunks are also versioned
                         'main.292c0347ed1240663cb1.js',
                         'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
-                        'bg.42ced8eae2254268bb3c65f1e65bd041.css',
+                        'bg.483832e48e67e6a3b7f0ae064eadca51.css',
                         'manifest.json'
                     ]
                 );
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
-                        'symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                        'symfony_logo.ea1ca6f7.png'
                     ]
                 );
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.42ced8eae2254268bb3c65f1e65bd041.css',
-                    '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                    'bg.483832e48e67e6a3b7f0ae064eadca51.css',
+                    '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
                 done();
@@ -323,24 +323,24 @@ describe('Functional tests using webpack', function() {
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
-                        'symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                        'symfony_logo.ea1ca6f7.png'
                     ]
                 );
 
                 expect(path.join(config.outputPath, 'fonts')).to.be.a.directory()
                     .with.files([
-                        'Roboto.9896f773628188b649ed5824fa363290.woff2'
+                        'Roboto.9896f773.woff2'
                     ]
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'bg.css',
-                    '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                    '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'font.css',
-                    '/build/fonts/Roboto.9896f773628188b649ed5824fa363290.woff2'
+                    '/build/fonts/Roboto.9896f773.woff2'
                 );
 
                 done();
@@ -363,36 +363,36 @@ describe('Functional tests using webpack', function() {
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
-                        'symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png',
-                        'symfony_logo.f27119c20951b473f2de80c000d60fa8.png'
+                        'symfony_logo.ea1ca6f7.png',
+                        'symfony_logo.f27119c2.png'
                     ]
                 );
 
                 expect(path.join(config.outputPath, 'fonts')).to.be.a.directory()
                     .with.files([
-                        'Roboto.9896f773628188b649ed5824fa363290.woff2',
-                        'Roboto.3c37aa69cd77e6a53a067170fa8fe2e9.woff2'
+                        'Roboto.9896f773.woff2',
+                        'Roboto.3c37aa69.woff2'
                     ]
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/images/symfony_logo.ea1ca6f7f3719118f301a5cfcb1df3c0.png'
+                    '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/images/symfony_logo.f27119c20951b473f2de80c000d60fa8.png'
+                    '/build/images/symfony_logo.f27119c2.png'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/fonts/Roboto.9896f773628188b649ed5824fa363290.woff2'
+                    '/build/fonts/Roboto.9896f773.woff2'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/fonts/Roboto.3c37aa69cd77e6a53a067170fa8fe2e9.woff2'
+                    '/build/fonts/Roboto.3c37aa69.woff2'
                 );
 
                 done();
@@ -780,7 +780,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    'images/logo.82b9c7a5a3f405032b1db71a25f67021.png',
+                    'images/logo.82b9c7a5.png',
                     'manifest.json'
                 ]);
 
