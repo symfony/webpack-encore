@@ -29,7 +29,7 @@ describe('bin/encore.js', function() {
             `
 const Encore = require('../../index.js');
 Encore
-    .setOutputPath('${testDir}/build')
+    .setOutputPath('/build')
     .setPublicPath('/build')
     .addEntry('main', './js/no_require')
 ;
