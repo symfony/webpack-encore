@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 0.12.0
+
+ * Fixed a bug with webpack 3.4.0 ("Can't resolve dev") - #114.
+
+ * Added `--keep-public-path` option to `dev-server` that allows
+   you to specify that you do *not* want your `publicPath` to
+   automatically point at the dev-server URL. Also relaxed the
+   requirements when using `dev-server` so that you *can* now
+   specify a custom, fully-qualified `publicPath` URL - #96
+
+ * Fixed bug where `@import` CSS wouldn't use postcss - #108
+
 ## 0.11.0
 
  * The `webpack` package was upgraded from version 2.2 to 3.1 #53. The
