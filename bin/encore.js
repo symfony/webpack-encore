@@ -15,7 +15,7 @@ const context = require('../lib/context');
 const chalk = require('chalk');
 
 const runtimeConfig = parseRuntime(
-    require('yargs').argv,
+    require('yargs/yargs')(process.argv.slice(2)).argv,
     process.cwd()
 );
 context.runtimeConfig = runtimeConfig;
