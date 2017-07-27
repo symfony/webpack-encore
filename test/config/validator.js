@@ -15,8 +15,6 @@ const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const validator = require('../../lib/config/validator');
 const logger = require('../../lib/logger');
 
-logger.quiet();
-
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
     runtimeConfig.context = __dirname;
@@ -77,7 +75,8 @@ describe('The validator function', () => {
         config.addEntry('main', './main');
         config.runtimeConfig.useDevServer = true;
 
-        logger.clearMessages();
+        logger.reset();
+        logger.quiet();
         validator(config);
 
         expect(logger.getMessages().warning).to.have.lengthOf(1);
