@@ -39,7 +39,7 @@ module.exports = Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
-        exec(`node '${binPath}' dev --context='${testDir}'`, { cwd: testDir }, (err, stdout, stderr) => {
+        exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
