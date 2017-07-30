@@ -386,7 +386,6 @@ module.exports = {
      *
      * This is a build optimization API to reduce build times.
      *
-     *
      * @param {function} forkedTypeScriptTypesCheckOptionsCallback
      * @return {exports}
      */
