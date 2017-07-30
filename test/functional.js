@@ -681,7 +681,9 @@ module.exports = {
             });
 
             expect(function() {
-                testSetup.runWebpack(config, (webpackAssert) => { done(); });
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    done();
+                });
             }).to.throw('wrong `tsconfig` path in fork plugin configuration (should be a relative or absolute path)');
         });
 
