@@ -336,23 +336,18 @@ describe('WebpackConfig object', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
             config.enableTypeScriptLoader();
-            config.enableForkedTypeScriptTypesChecking({
-                tsconfig: './js/tsconfig.json',
-                silent: true
-            });
-
-            expect(config.useForkedTypeScriptTypeChecking).to.be.true;
-            expect(config.forkedTypeScriptTypesCheckOptions.silent).to.be.true;
-            expect(config.forkedTypeScriptTypesCheckOptions.tsconfig).to.equal('./js/tsconfig.json');
+            const testCallback = () => {};
+            config.enableForkedTypeScriptTypesChecking(testCallback);
+            expect(config.forkedTypeScriptTypesCheckOptionsCallback)
+                .to.equal(testCallback);
         });
 
-        it('Calling without TypeScript loader throws an error', () => {
+        it('Calling with non-callback throws an error', () => {
             const config = createConfig();
+
             expect(() => {
-                config.enableForkedTypeScriptTypesChecking();
-            }).to.throw(
-                'TypeScript loader must be enabled. Call `enableTypeScriptLoader()` first.'
-            );
+                config.enableForkedTypeScriptTypesChecking('FOO');
+            }).to.throw('must be a callback function');
         });
     });
 

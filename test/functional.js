@@ -667,7 +667,7 @@ module.exports = {
             });
         });
 
-        it('TypeScript is compiled and type checking is done in separate process!', (done) => {
+        it('TypeScript is compiled and type checking is done in a separate process!', (done) => {
             this.timeout(8000);
             setTimeout(done, 7000);
 
@@ -675,9 +675,9 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/render.ts', './js/index.ts']);
             config.enableTypeScriptLoader();
-            config.enableForkedTypeScriptTypesChecking({
-                tsconfig: './js/tsconfig.json',
-                silent: true // remove to get output on terminal
+            config.enableForkedTypeScriptTypesChecking((config) => {
+                config.tsconfig = './js/tsconfig.json';
+                config.silent = true; // remove to get output on terminal
             });
 
             testSetup.runWebpack(config, (webpackAssert) => {
