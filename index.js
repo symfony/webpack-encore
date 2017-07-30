@@ -387,11 +387,13 @@ module.exports = {
      * This is a build optimization API to reduce build times.
      *
      *
-     * @param {Object} forkedTypeScriptTypesCheckOptions
+     * @param {function} forkedTypeScriptTypesCheckOptionsCallback
      * @return {exports}
      */
-    enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptions = {}) {
-        webpackConfig.enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptions);
+    enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
+        webpackConfig.enableForkedTypeScriptTypesChecking(
+            forkedTypeScriptTypesCheckOptionsCallback
+        );
 
         return this;
     },
