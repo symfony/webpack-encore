@@ -675,30 +675,14 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/render.ts', './js/index.ts']);
             config.enableTypeScriptLoader();
+            // test should fail if `config.tsconfig` is not set up properly
             config.enableForkedTypeScriptTypesChecking((config) => {
-                config.tsconfig = './js/tsconfig.json';
                 config.silent = true; // remove to get output on terminal
             });
 
-            testSetup.runWebpack(config, (webpackAssert) => {
-                // check that ts-loader transformed the ts file
-                webpackAssert.assertOutputFileContains(
-                    'main.js',
-                    'document.getElementById(\'app\').innerHTML = "<h1>Welcome to Your TypeScript App</h1>";'
-                );
-
-                expect(config.outputPath).to.be.a.directory().with.deep.files([
-                    'main.js',
-                    'manifest.json'
-                ]);
-
-                done();
-
-                // TODO find a way to confirm forked is used. Maybe terminal output?
-                // Output:
-                // Starting type checking service...
-                // Using 1 worker with 2048MB memory limit
-            });
+            expect(function() {
+                testSetup.runWebpack(config, (webpackAssert) => { done(); });
+            }).to.throw('wrong `tsconfig` path in fork plugin configuration (should be a relative or absolute path)');
         });
 
         it('The output directory is cleaned between builds', (done) => {
