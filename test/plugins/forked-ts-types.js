@@ -13,7 +13,7 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const tsLoader = require('../../lib/loaders/typescript');
-let ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
