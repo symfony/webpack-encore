@@ -375,19 +375,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('addPlugin', () => {
-        it('extends the current registered plugins', () => {
-            const config = createConfig();
-            const nbOfPlugins = config.plugins.length;
-
-            expect(nbOfPlugins).to.equal(0);
-
-            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
-
-            expect(config.plugins.length).to.equal(1);
-        });
-    });
-
     describe('enableVueLoader', () => {
         it('Call with no config', () => {
             const config = createConfig();
