@@ -339,6 +339,31 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableLessLoader', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            config.enableLessLoader();
+
+            expect(config.useLessLoader).to.be.true;
+        });
+
+        it('Calling with callback', () => {
+            const config = createConfig();
+            const callback = (lessOptions) => {};
+            config.enableLessLoader(callback);
+
+            expect(config.lessLoaderOptionsCallback).to.equal(callback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableLessLoader('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('enableTypeScriptLoader', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
