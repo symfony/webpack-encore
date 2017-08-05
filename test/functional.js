@@ -505,6 +505,11 @@ describe('Functional tests using webpack', function() {
                     'main.js',
                     '// comments in no_require.js'
                 );
+                // check for any webpack-added comments
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    '/*!'
+                );
                 // extra spaces should not live in the CSS file
                 webpackAssert.assertOutputFileDoesNotContain(
                     'styles.css',
