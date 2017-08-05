@@ -442,6 +442,30 @@ module.exports = {
     },
 
     /**
+     * Call this if you wish to disable the default
+     * images loader.
+     *
+     * @returns {exports}
+     */
+    disableImagesLoader() {
+        webpackConfig.disableImagesLoader();
+
+        return this;
+    },
+
+    /**
+     * Call this if you wish to disable the default
+     * fonts loader.
+     *
+     * @returns {exports}
+     */
+    disableFontsLoader() {
+        webpackConfig.disableFontsLoader();
+
+        return this;
+    },
+
+    /**
      * If enabled, the output directory is emptied between
      * each build (to remove old files).
      *
