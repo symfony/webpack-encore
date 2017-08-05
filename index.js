@@ -342,10 +342,21 @@ module.exports = {
     /**
      * Call this if you plan on loading less files.
      *
+     *     Encore.enableLessLoader();
+     *
+     * Or pass options to the loader
+     *
+     *     Encore.enableLessLoader(function(options) {
+     *         // https://github.com/webpack-contrib/less-loader#examples
+     *         // http://lesscss.org/usage/#command-line-usage-options
+     *         // options.relativeUrls = false;
+     *     });
+     *
+     * @param {function} lessLoaderOptionsCallback
      * @return {exports}
      */
-    enableLessLoader() {
-        webpackConfig.enableLessLoader();
+    enableLessLoader(lessLoaderOptionsCallback = () => {}) {
+        webpackConfig.enableLessLoader(lessLoaderOptionsCallback);
 
         return this;
     },
