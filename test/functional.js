@@ -288,13 +288,13 @@ describe('Functional tests using webpack', function() {
                         'bg.483832e48e67e6a3b7f0ae064eadca51.css',
                         'manifest.json'
                     ]
-                );
+                    );
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
                         'symfony_logo.ea1ca6f7.png'
                     ]
-                );
+                    );
 
                 webpackAssert.assertOutputFileContains(
                     'bg.483832e48e67e6a3b7f0ae064eadca51.css',
@@ -319,19 +319,19 @@ describe('Functional tests using webpack', function() {
                         'font.css',
                         'manifest.json'
                     ]
-                );
+                    );
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
                         'symfony_logo.ea1ca6f7.png'
                     ]
-                );
+                    );
 
                 expect(path.join(config.outputPath, 'fonts')).to.be.a.directory()
                     .with.files([
                         'Roboto.9896f773.woff2'
                     ]
-                );
+                    );
 
                 webpackAssert.assertOutputFileContains(
                     'bg.css',
@@ -359,21 +359,21 @@ describe('Functional tests using webpack', function() {
                         'styles.css',
                         'manifest.json'
                     ]
-                );
+                    );
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
                         'symfony_logo.ea1ca6f7.png',
                         'symfony_logo.f27119c2.png'
                     ]
-                );
+                    );
 
                 expect(path.join(config.outputPath, 'fonts')).to.be.a.directory()
                     .with.files([
                         'Roboto.9896f773.woff2',
                         'Roboto.3c37aa69.woff2'
                     ]
-                );
+                    );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
@@ -632,7 +632,7 @@ module.exports = {
 
             fs.writeFileSync(
                 path.join(appDir, '.babelrc'),
-`
+                `
 {
   "presets": [
     ["env", {
@@ -710,6 +710,26 @@ module.exports = {
                     }
                 );
             });
+        });
+
+        it('TypeScript is compiled and type checking is done in a separate process!', (done) => {
+            this.timeout(8000);
+            setTimeout(done, 7000);
+
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/render.ts', './js/index.ts']);
+            config.enableTypeScriptLoader();
+            // test should fail if `config.tsconfig` is not set up properly
+            config.enableForkedTypeScriptTypesChecking((config) => {
+                config.silent = true; // remove to get output on terminal
+            });
+
+            expect(function() {
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    done();
+                });
+            }).to.throw('wrong `tsconfig` path in fork plugin configuration (should be a relative or absolute path)');
         });
 
         it('The output directory is cleaned between builds', (done) => {
