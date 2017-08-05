@@ -19,13 +19,18 @@ const parseRuntime = require('./lib/config/parse-runtime');
 let webpackConfig = null;
 let runtimeConfig = require('./lib/context').runtimeConfig;
 
-// If runtimeConfig is already set webpackConfig can directly
-// be initialized here.
-if (runtimeConfig) {
-    webpackConfig = new WebpackConfig(runtimeConfig);
+function initializeWebpackConfig() {
     if (runtimeConfig.verbose) {
         logger.verbose();
     }
+
+    webpackConfig = new WebpackConfig(runtimeConfig);
+}
+
+// If runtimeConfig is already set webpackConfig can directly
+// be initialized here.
+if (runtimeConfig) {
+    initializeWebpackConfig();
 }
 
 const publicApi = {
@@ -465,8 +470,9 @@ const publicApi = {
     /**
      * Initialize the runtime environment.
      *
-     * It can be used to directly manipulate the Encore API without
-     * executing the "./node_module/.bin/encore" utility.
+     * This can be used to configure the Encore runtime if you're
+     * using Encore without executing the "./node_module/.bin/encore"
+     * utility (e.g. with karma-webpack).
      *
      * Encore.configureRuntimeEnvironment(
      *     // Environment to use (dev, dev-server, production)
@@ -498,11 +504,7 @@ const publicApi = {
             process.cwd()
         );
 
-        if (runtimeConfig.verbose) {
-            logger.verbose();
-        }
-
-        webpackConfig = new WebpackConfig(runtimeConfig);
+        initializeWebpackConfig();
 
         return this;
     },
@@ -534,24 +536,26 @@ const publicApiProxy = new Proxy(publicApi, {
             ];
 
             if (!webpackConfig && (safeMethods.indexOf(prop) === -1)) {
-                throw new Error(`Encore.${prop}() cannot be called yet because the runtime environment doesn't appear to be configured. Try calling Encore.configureRuntimeEnvironment() first.`);
-            } else {
-                // Either a safe method has been called or the webpackConfig
-                // object is already available. In this case act as a passthrough.
-                return (...parameters) => {
-                    try {
-                        const res = target[prop](...parameters);
-                        return (res === target) ? publicApiProxy : res;
-                    } catch (error) {
-                        // prettifies errors thrown by our library
-                        const pe = new PrettyError();
-
-                        console.log(pe.render(error));
-                        process.exit(1); // eslint-disable-line
-                    }
-                };
+                throw new Error(`Encore.${prop}() cannot be called yet because the runtime environment doesn't appear to be configured. Make sure you're using the encore executable or call Encore.configureRuntimeEnvironment() first if you're purposely not calling Encore directly.`);
             }
+
+            // Either a safe method has been called or the webpackConfig
+            // object is already available. In this case act as a passthrough.
+            return (...parameters) => {
+                try {
+                    const res = target[prop](...parameters);
+                    return (res === target) ? publicApiProxy : res;
+                } catch (error) {
+                    // prettifies errors thrown by our library
+                    const pe = new PrettyError();
+
+                    console.log(pe.render(error));
+                    process.exit(1); // eslint-disable-line
+                }
+            };
         }
+
+        return target[prop];
     }
 });
 
