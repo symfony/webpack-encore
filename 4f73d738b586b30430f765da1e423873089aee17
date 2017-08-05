@@ -1,0 +1,308 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-21T00:04:06Z
+
+Thanks @Lyrkan!
+
+I thought your suggestion here: https://github.com/symfony/webpack-encore/issues/73#issuecomment-316696094 was interesting:
+
+> Wouldn't it be enough to allow people to use the [path] placeholder (eg. with a keepAssetsPaths() method) ?
+
+I *did* think this would be an issue at first, but I think I'm wrong (other than the possible edge case of the `context` not being the root, as you mentioned - would need to play with things).
+
+Later you said:
+
+> Nevermind my previous comment, I thought about it a bit more and it'd probably be better to make it possible to override/disable the predefined image and font loaders entirely.
+
+What made you think this? What else would you want to change on the font/image loaders? If there's something beyond fixing this path issue, we could also add code to make these settings on these loaders configurable. I'm not -1 on this PR - but I want to understand the full picture so we offer the best solution.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2017-07-21T08:24:59Z
+
+Hi Ryan,
+
+I changed my mind about the first suggestion because it'll only cover one specific thing amongst many others that the users may need.
+
+Here are some of them off the top of my head:
+
+* Entirely replacing the loaders by other ones (such as [url-loader](https://github.com/webpack-contrib/url-loader) which allows to convert files to Data URIs based on their size)
+* Using different loaders/settings based on the source location (eg. to process images/fonts from vendors a different way)
+* Having more control over the whole file/path naming strategy: how is the path prefixed, whether or not to include a hash (and where) in the resulting filename, whether or not to include the full path, etc.
+
+Covering all these cases one by one would need a lot of new methods and may not be worth it since there already is `addLoader`.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-21T21:05:35Z
+
+Yo @Lyrkan!
+
+Hmm. First, let's strictly solve #73... which I think means (A) we *always* add `[hash]` for fonts/images or we *always* add `[path]` (they key *always* - I don't think the user should need to enable *anything* to avoid the bug of one image/font overriding another one).
+
+`[path]` seems nicer at first, but I have to play with it to see if we get any weird paths. Is there any downside to it you know of?
+
+About this PR specifically:
+
+> Entirely replacing the loaders by other ones (such as url-loader which allows to convert files to Data URIs based on their size)
+This just on its own seems like a nice feature... so it might *indeed* be something that's worth adding to the API (or something that we just automatically do, with some sensible default).
+
+> Using different loaders/settings based on the source location (eg. to process images/fonts from vendors a different way)
+It hasn't happened yet :). This could be legit, but I'd want to know what the real-world things people are trying to solve by needing different loaders.
+
+>Having more control over the whole file/path naming strategy: how is the path prefixed, whether or not to include a hash (and where) in the resulting filename, whether or not to include the full path, etc.
+Encore handles the versioning for you, and you really shouldn't care about the output paths.
+
+On the last 2 points, I'm not trying to totally disagree with you :). More, I'm playing devil's advocate: if we're going to make a change, I really want us to understand what real-world problems people are having. I agree with your points... but they're soft - they sounds like *possibilities* of what users might need - but not coming from real scenarios.
+
+Thanks for the convo on this! It's very helpful!
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2017-07-21T23:32:23Z
+
+Hey Ryan,
+
+I entirely agree with you about the fact that this PR doesn't solve #73 on its own and that something else should be done to the default behavior. I wouldn't mind creating another PR for that if we can settle on a way to do it.
+
+I'm not sure about adding the `[hash]` everytime. Some people may want to keep the same filenames between deployments and use a query-string strategy to avoid cache issues .
+
+About using `[path]`: I don't see any real downside (but if anyone reading this knows one, feel free to correct me), here are some examples (sorry for the length):
+
+## Initial config
+
+**Directory structure:**
+
+```
+.
+├── assets
+│   ├── css
+│   │   │── test1.scss
+│   │   └── subdirectory
+│   │       └── test2.scss
+│   └── images
+│       └── image.jpeg
+├── images
+│   └── image.jpeg
+├── node_modules
+│   ├── (...)
+│   └── vendor1
+│       └── images
+│           └── image.jpeg
+│
+└── webpack.config.js
+```
+
+**webpack.config.js:**
+
+```js
+Encore
+    .setOutputPath('web/build/')
+    .setPublicPath('/build')
+    .cleanupOutputBeforeBuild()
+    .addStyleEntry('test1', './assets/css/test1.scss')
+    .addStyleEntry('test2', './assets/css/subdirectory/test2.scss')
+    .enableSassLoader()
+;
+```
+
+**test1.scss:**
+
+```scss
+.test1-1 {
+  background-image: url('../images/image.jpeg');
+}
+
+.test1-2 {
+  background-image: url('../../images/image.jpeg');
+}
+
+.test1-3 {
+  background-image: url('../../node_modules/vendor1/images/image.jpeg');
+}
+
+.test1-4 {
+  background-image: url('../../node_modules/../assets/images/image.jpeg');
+}
+```
+
+**test2.scss:**
+
+```scss
+.test2-1 {
+  background-image: url('../../images/image.jpeg');
+}
+
+.test2-2 {
+  background-image: url('../../../node_modules/vendor1/images/image.jpeg');
+}
+```
+
+## Using the current default settings 😢
+
+```
+web
+└── build
+    ├── images
+    │   └── image.jpeg
+    ├── manifest.json
+    ├── test1.css
+    └── test2.css
+```
+
+## Using `name: '[path][name].[ext]'`
+
+It basically keeps the same structure as the input:
+
+```
+web
+└── build
+    ├── assets
+    │   └── images
+    │       └── image.jpeg
+    ├── images
+    │   └── image.jpeg
+    ├── manifest.json
+    ├── node_modules
+    │   └── vendor1
+    │       └── images
+    │           └── image.jpeg
+    ├── test1.css
+    └── test2.css
+```
+
+## Using `name: '[path][name].[ext]'` and `outputPath: 'images/'`
+
+It keeps the same structure as the input but puts everything inside an `images` directory:
+
+```
+web
+└── build
+    ├── images
+    │   ├── assets
+    │   │   └── images
+    │   │       └── image.jpeg
+    │   ├── images
+    │   │   └── image.jpeg
+    │   └── node_modules
+    │       └── vendor1
+    │           └── images
+    │               └── image.jpeg
+    ├── manifest.json
+    ├── test1.css
+    └── test2.css
+```
+
+## Using `name: '[path][name].[ext]'` and `context: './assets'`
+
+Just an example to show how it handles files when you end up outside of the `context` folder (it basically replaces every `..` by a `_`) :
+
+```
+web
+└── build
+    ├── _
+    │   ├── images
+    │   │   └── image.jpeg
+    │   └── node_modules
+    │       └── vendor1
+    │           └── images
+    │               └── image.jpeg
+    ├── images
+    │   └── image.jpeg
+    ├── manifest.json
+    ├── test1.css
+    └── test2.css
+```
+
+Let me know if you see some edge cases that we should test :)
+
+***
+
+Now, back to this PR!
+
+The first point was in my opinion the most important one: people may not want to use the default loader to handle images/fonts. I gave the `url-loader` as an example and I agree with you there: that one may be something that could be handled automatically by Encore.
+But it could have been any other loader (eg. [image-webpack-loader](https://www.npmjs.com/package/image-webpack-loader), [img-loader](https://www.npmjs.com/package/img-loader), [svg-sprite-loader](https://www.npmjs.com/package/svg-sprite-loader),...), and preventing people from using one that isn't supported by Encore could result in a frustrating experience.
+
+For the second point I may have chosen the wrong example. A "real scenario" could be to treat some `.svg` files differently from other image files in order to, for instance, regroup them into spritesheets using the [svg-sprite-loader](https://www.npmjs.com/package/svg-sprite-loader).
+
+I agree with you on the 3rd point (even if I actually do know some people who care about how the structure of the final build looks like 😄), so let's ignore it for now.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-22T01:02:48Z
+
+Wow :). You're research into the [path] is great!!!
+
+I can't think of any practical issues with [path] now that I see it. But, it seems like a heavy solution to solve the edge case of duplicate filenames - the directories get way bigger, node_modules is exposed as a directory name potentially (not a real problem, but odd). Especially when there is already a workaround (enabling versioning). You mention that people might want to version themselves - e.g. with a query parameter. That's totally true... but, you shouldn't rely on these paths from outside of webpack. If you're referencing the images in CSS, you don't care about the final path. And if you need to reference an image from outside of webpack (e.g. Just in an img tag), you should use a copy plugin to move the asset to a known directory (if you don't also reference that image from CSS, you will *need* a copy plugin to put it into the build dir). That copy ability is a todo still... I admit :)... but it will get done.
+
+So in this moment, I think the proper way to fix this is by enabling versioning: either we always include [hash] in the filename, or (if possible) we detect when we have an image collision and print a warning that the user needs to enable versioning to fix the problem.
+
+I'm lit of time to reply to the second part of your message. Apologies - I want to give it roper attention!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-22T01:27:31Z
+
+Hey, I find a few more minutes. I'm flying today, so working in short sprints! Zoom!
+
+> But it could have been any other loader (eg. image-webpack-loader, img-loader, svg-sprite-loader,...), and preventing people from using one that isn't supported by Encore could result in a frustrating experience.
+
+Definitely don't want a frustrating experience :). So `image-webpack-loader` and `img-loader` aren't replacements for the `file-loader` we're using now, it's just an additional loader that's applied before `file-loader`. That makes wonder instead of the existing loaders need an extension point instead of a full removal. And also... being able to optimize/minify images... just sounds like a potentially useful feature for Encore - it could be added, making this case unnecessary. But, an "escape hatch: is *probably* necessary...?
+
+So, I think adding the 2 methods for removing the 2 loaders is fine. There are only 4 loaders (the other 2 being .js and .css) that are forced on you... so allowing these to be removed, seems ok. But, it seems like *most* of your use-cases can be solved by allowing the user to *extend* the configuration for the loaders. An extension point (e.g. to add `img-loader` for images in addition to file-loader) is interesting...
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2017-07-22T13:20:40Z
+
+Hi Ryan,
+
+> But, it seems like a heavy solution to solve the edge case of duplicate filenames - the directories get way bigger, node_modules is exposed as a directory name potentially (not a real problem, but odd)
+
+Yep, that's what I meant by "ugly paths" in #73 :)
+
+> You mention that people might want to version themselves - e.g. with a query parameter. That's totally true... but, you shouldn't rely on these paths from outside of webpack. If you're referencing the images in CSS, you don't care about the final path.
+
+True, same thing if you `require(...)` them from JS/TS files (which is a bit more of an edge case, but can definitely happen) or from an HTML file (if you use something like the `html-loader`).
+
+> And if you need to reference an image from outside of webpack (e.g. Just in an img tag), you should use a copy plugin to move the asset to a known directory (if you don't also reference that image from CSS, you will need a copy plugin to put it into the build dir). That copy ability is a todo still... I admit :)... but it will get done.
+
+I guess you're right there too. Not sure about the copy as a recommended way to do that though, it would probably be easier for people to directly put this kind of images somewhere in their public folder. But that's another debate :)
+
+> So in this moment, I think the proper way to fix this is by enabling versioning: either we always include [hash] in the filename, or (if possible) we detect when we have an image collision and print a warning that the user needs to enable versioning to fix the problem.
+
+I'm not sure that the last part is do-able (in a non-hackish way), so yes, including the hash all the time in the default loaders may be the best solution for now after all. Do you want me to create a PR? *(edit: I've one ready [here](https://github.com/Lyrkan/webpack-encore/commits/always-add-hash-to-assets))*
+
+> But, an "escape hatch: is probably necessary...?
+
+I really see this PR like this: not something that would be *the* way to do it, but *one* way in case someone really needs it.
+
+It doesn't really add a lot of overhead and doesn't prevent adding other extensions/presets to the default loaders (such as using the `url-loader` or adding `img-loader` automatically in the chain).
+
+Would you prefer having a `disableImagesLoader` and a `disableFontsLoader` method instead of the current `disableDefaultLoaders` ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-25T00:39:26Z
+
+> I'm not sure that the last part is do-able (in a non-hackish way), so yes, including the hash all the time in the default loaders may be the best solution for now after all. Do you want me to create a PR? (edit: I've one ready here)
+
+Yes, please send a PR! I was happy to see your message: I was thinking more about this today and was convinced a hash was the correct behavior (it's also the default behavior of `file-loader` if you don't specify a filename).
+
+> Would you prefer having a disableImagesLoader and a disableFontsLoader method instead of the current disableDefaultLoaders ?
+
+I'm 👍 on this PR. But yes, I think `disableImagesLoader()` and `disableFontsLoader()` would be more clear / easier to find if you needed this.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-27T02:28:23Z
+
+Looks perfect to me - 👍
