@@ -1,0 +1,49 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-21T01:46:50Z
+
+I know what I'd like: option 2:
+
+> We refactor loader-features.js to be named more general and we include plugins dependencies also there as intended initially. But this way we need to check for missing packages earlier in WebpackConfig.js like I am doing now in this PR.
+
+Even if the normal error from Node is pretty good, I'd rather be able to make the error specific to Encore - e.g. "You run yarn XYZ in order to use enableForkedTypeScriptTypesChecking".
+
+I'll leave a comment that might help with the issue of where you place the "check" for the necessary packages.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-21T06:46:24Z
+
+Btw @weaverryan ... any idea how can I deal with that timeout error I receive from `functional.js` tests on appveyor ? I am considering now whether remove that test or not :(
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-21T14:22:56Z
+
+I believe that this timeout error on **Appveyor** and now **Travis**:
+```
+1) Functional tests using webpack Basic scenarios. TypeScript is compiled and type checking is done in separate process!:
+     Error: Timeout of 8000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves.
+```
+ is related to the cached `node_modules` directory. I had same errors locally in non related tests ([like now in travis](https://travis-ci.org/symfony/webpack-encore/builds/256071165?utm_source=github_status&utm_medium=notification)) when changing branches which uses differents modules, after an `npm install` error was gone.
+
+I will ignore them, after merging everything should be gone.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-07-21T21:19:19Z
+
+@davidmpaz Now that I look at this (nice work btw), is there any disadvantage to just *always* adding the forked type checking, if `fork-ts-checker-webpack-plugin` is enabled? I'd like Encore to try to automatically apply as many sane optimizations as it can. So, when you apply ts loader (but don't have `fork-ts-checker-webpack-plugin` installed), we could add a "recommendation" `console.log()` that you'll have better performance if you install it (this would be the first time we have one of these "recommendations" comments - but it's an idea I'd like to do more to help educate the user).
+
+---------------------------------------------------------------------------
+
+by davidmpaz at 2017-07-22T07:01:33Z
+
+thanks. Regarding disadvantages I can see in their docs:
+>It's very important to be aware that this plugin uses typescript's, not webpack's modules resolution. It means that you have to setup tsconfig.json correctly. For example if you set files: ['./src/someFile.ts'] in tsconfig.json, this plugin will check only someFile.ts for semantic errors. It's because of performance.
+
+And i did noticed that the plugin expect a `tsconfig.json` [file from here](https://github.com/Realytics/fork-ts-checker-webpack-plugin/blob/v0.2.7/lib/index.js#L90) if not, error is thrown. As far I remember for the `ts-loader`  is recommended but optional, not a requirement.
+
+Besides that, nothing more come to my mind.
