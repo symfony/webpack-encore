@@ -275,10 +275,20 @@ module.exports = {
      *
      * https://github.com/postcss/postcss-loader
      *
+     *     Encore.enablePostCssLoader();
+     *
+     * Or pass options to the loader
+     *
+     *     Encore.enablePostCssLoader(function(options) {
+     *         // https://github.com/postcss/postcss-loader#options
+     *         // options.config = {...}
+     *     })
+     *
+     * @param {function} postCssLoaderOptionsCallback
      * @return {exports}
      */
-    enablePostCssLoader() {
-        webpackConfig.enablePostCssLoader();
+    enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
+        webpackConfig.enablePostCssLoader(postCssLoaderOptionsCallback);
 
         return this;
     },

@@ -282,6 +282,30 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enablePostCssLoader', () => {
+        it('Call with no config', () => {
+            const config = createConfig();
+            config.enablePostCssLoader();
+
+            expect(config.usePostCssLoader).to.be.true;
+        });
+
+        it('Pass options callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.enablePostCssLoader(callback);
+
+            expect(config.usePostCssLoader).to.be.true;
+            expect(config.postCssLoaderOptionsCallback).to.equal(callback);
+        });
+
+        it('Pass invalid options callback', () => {
+            const config = createConfig();
+
+            expect(() => config.enablePostCssLoader('FOO')).to.throw('must be a callback function');
+        });
+    });
+
     describe('enableSassLoader', () => {
         it('Call with no config', () => {
             const config = createConfig();

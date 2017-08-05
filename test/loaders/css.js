@@ -44,14 +44,32 @@ describe('loaders/css', () => {
         expect(actualLoaders[0].options.minimize).to.be.true;
     });
 
-    it('getLoaders() with PostCSS', () => {
-        const config = createConfig();
-        config.enableSourceMaps();
-        config.enablePostCssLoader();
+    describe('getLoaders() with PostCSS', () => {
+        it('without options callback', () => {
+            const config = createConfig();
+            config.enableSourceMaps();
+            config.enablePostCssLoader();
 
-        const actualLoaders = cssLoader.getLoaders(config);
-        // css-loader & postcss-loader
-        expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[1].options.sourceMap).to.be.true;
+            const actualLoaders = cssLoader.getLoaders(config);
+            // css-loader & postcss-loader
+            expect(actualLoaders).to.have.lengthOf(2);
+            expect(actualLoaders[1].options.sourceMap).to.be.true;
+        });
+
+        it('with options callback', () => {
+            const config = createConfig();
+            config.enableSourceMaps();
+            config.enablePostCssLoader((options) => {
+                options.config = {
+                    path: 'config/postcss.config.js'
+                };
+            });
+
+            const actualLoaders = cssLoader.getLoaders(config);
+            // css-loader & postcss-loader
+            expect(actualLoaders).to.have.lengthOf(2);
+            expect(actualLoaders[1].options.sourceMap).to.be.true;
+            expect(actualLoaders[1].options.config.path).to.equal('config/postcss.config.js');
+        });
     });
 });
