@@ -39,4 +39,26 @@ describe('loaders/less', () => {
 
         cssLoader.getLoaders.restore();
     });
+
+    it('getLoaders() with options callback', () => {
+        const config = createConfig();
+        config.enableSourceMaps(true);
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        config.enableLessLoader(function(lessOptions) {
+            lessOptions.custom_option = 'foo';
+            lessOptions.other_option = true;
+        });
+
+        const actualLoaders = lessLoader.getLoaders(config);
+        expect(actualLoaders[0].options).to.deep.equals({
+            sourceMap: true,
+            custom_option: 'foo',
+            other_option: true
+        });
+        cssLoader.getLoaders.restore();
+    });
 });
