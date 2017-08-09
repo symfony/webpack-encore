@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 0.13.0
+
+ * [BEHAVIOR CHANGE] Image and font files now *always* include
+   a hash in their filename, and the hash is shorter - #110 via @Lyrkan
+
+ * Fixed a bug that caused extra comments to be in the final production
+   compiled JavaScript - #132 via @weaverryan
+
+ * `Encore.enablePostCssLoader()` now accepts an options callback -
+   #130 via @Lyrkan
+
+ * `Encore.enableLessLoader()` now accepts an options callback -
+   #134 via @Lyrkan
+
+ * Added `Encore.enableForkedTypeScriptTypesChecking()` to enable
+   [fork-ts-checker-webpack-plugin](https://github.com/Realytics/fork-ts-checker-webpack-plugin)
+   for faster typescript type checking - #101 via @davidmpaz
+
+ * Added `Encore.disableImagesLoader()` and `Encore.disableFontsLoader()`
+   to totally disable the `file-loader` rules for images and fonts -
+   #103 via @Lyrkan
+
 ## 0.12.0
 
  * Fixed a bug with webpack 3.4.0 ("Can't resolve dev") - #114.
