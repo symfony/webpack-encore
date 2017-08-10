@@ -13,20 +13,27 @@ const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
 const PrettyError = require('pretty-error');
-const runtimeConfig = require('./lib/context').runtimeConfig;
 const logger = require('./lib/logger');
+const parseRuntime = require('./lib/config/parse-runtime');
 
-// at this time, the encore executable should have set the runtimeConfig
-if (!runtimeConfig) {
-    throw new Error('Are you trying to require index.js directly?');
+let webpackConfig = null;
+let runtimeConfig = require('./lib/context').runtimeConfig;
+
+function initializeWebpackConfig() {
+    if (runtimeConfig.verbose) {
+        logger.verbose();
+    }
+
+    webpackConfig = new WebpackConfig(runtimeConfig);
 }
 
-let webpackConfig = new WebpackConfig(runtimeConfig);
-if (runtimeConfig.verbose) {
-    logger.verbose();
+// If runtimeConfig is already set webpackConfig can directly
+// be initialized here.
+if (runtimeConfig) {
+    initializeWebpackConfig();
 }
 
-module.exports = {
+const publicApi = {
     /**
      * The directory where your files should be output.
      *
@@ -493,17 +500,9 @@ module.exports = {
      * @returns {*}
      */
     getWebpackConfig() {
-        try {
-            validator(webpackConfig);
+        validator(webpackConfig);
 
-            return configGenerator(webpackConfig);
-        } catch (error) {
-            // prettifies errors thrown by our library
-            const pe = new PrettyError();
-
-            console.log(pe.render(error));
-            process.exit(1); // eslint-disable-line
-        }
+        return configGenerator(webpackConfig);
     },
 
     /**
@@ -516,5 +515,98 @@ module.exports = {
      */
     reset() {
         webpackConfig = new WebpackConfig(runtimeConfig);
-    }
+    },
+
+    /**
+     * Initialize the runtime environment.
+     *
+     * This can be used to configure the Encore runtime if you're
+     * using Encore without executing the "./node_module/.bin/encore"
+     * utility (e.g. with karma-webpack).
+     *
+     * Encore.configureRuntimeEnvironment(
+     *     // Environment to use (dev, dev-server, production)
+     *     'dev-server',
+     *
+     *     // Same options you would use with the
+     *     // CLI utility with their name in
+     *     // camelCase.
+     *     {
+     *         https: true,
+     *         keepPublicPath: true
+     *     }
+     * )
+     *
+     * Be aware than using this method will also reset the current
+     * webpack configuration.
+     *
+     * @param {string} environment
+     * @param {object} options
+     * @returns {exports}
+     */
+    configureRuntimeEnvironment(environment, options = {}) {
+        runtimeConfig = parseRuntime(
+            Object.assign(
+                {},
+                require('yargs/yargs')([environment]).argv,
+                options
+            ),
+            process.cwd()
+        );
+
+        initializeWebpackConfig();
+
+        return this;
+    },
+
+    /**
+     * Clear the runtime environment.
+     *
+     * Be aware than using this method will also reset the
+     * current webpack configuration.
+     *
+     * @returns {void}
+     */
+    clearRuntimeEnvironment() {
+        runtimeConfig = null;
+        webpackConfig = null;
+    },
 };
+
+// Proxy the API in order to prevent calls to most of its methods
+// if the webpackConfig object hasn't been initialized yet.
+const publicApiProxy = new Proxy(publicApi, {
+    get: (target, prop) => {
+        if (typeof target[prop] === 'function') {
+            // These methods of the public API can be called even if the
+            // webpackConfig object hasn't been initialized yet.
+            const safeMethods = [
+                'configureRuntimeEnvironment',
+                'clearRuntimeEnvironment',
+            ];
+
+            if (!webpackConfig && (safeMethods.indexOf(prop) === -1)) {
+                throw new Error(`Encore.${prop}() cannot be called yet because the runtime environment doesn't appear to be configured. Make sure you're using the encore executable or call Encore.configureRuntimeEnvironment() first if you're purposely not calling Encore directly.`);
+            }
+
+            // Either a safe method has been called or the webpackConfig
+            // object is already available. In this case act as a passthrough.
+            return (...parameters) => {
+                try {
+                    const res = target[prop](...parameters);
+                    return (res === target) ? publicApiProxy : res;
+                } catch (error) {
+                    // prettifies errors thrown by our library
+                    const pe = new PrettyError();
+
+                    console.log(pe.render(error));
+                    process.exit(1); // eslint-disable-line
+                }
+            };
+        }
+
+        return target[prop];
+    }
+});
+
+module.exports = publicApiProxy;

@@ -10,10 +10,12 @@
 'use strict';
 
 const expect = require('chai').expect;
-require('../lib/context').runtimeConfig = {};
 const api = require('../index');
 
 describe('Public API', () => {
+    beforeEach(() => {
+        api.configureRuntimeEnvironment('dev');
+    });
 
     describe('setOutputPath', () => {
 
@@ -229,5 +231,28 @@ describe('Public API', () => {
             expect(returnedValue).to.equal(api);
         });
 
+    });
+
+    describe('configureRuntimeEnvironment', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureRuntimeEnvironment('dev');
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('Runtime environment proxy', () => {
+        beforeEach(() => {
+            api.clearRuntimeEnvironment();
+        });
+
+        it('safe methods should be callable even if the runtime environment has not been configured', () => {
+            expect(() => api.clearRuntimeEnvironment()).to.not.throw();
+        });
+
+        it('unsafe methods should NOT be callable if the runtime environment has not been configured', () => {
+            expect(() => api.setOutputPath('/')).to.throw('Encore.setOutputPath() cannot be called yet');
+        });
     });
 });
