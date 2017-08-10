@@ -1,5 +1,5 @@
 /*
- * This file is part of the Symfony package.
+ * This file is part of the Symfony Webpack Encore package.
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
