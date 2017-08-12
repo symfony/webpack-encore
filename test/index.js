@@ -452,4 +452,13 @@ describe('Public API', () => {
             expect(() => api.setOutputPath('/')).to.throw('Encore.setOutputPath() cannot be called yet');
         });
     });
+
+    describe('enableBrowserSync', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.enableBrowserSync([]);
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
 });
