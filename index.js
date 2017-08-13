@@ -1157,61 +1157,13 @@ class Encore {
      *
      * @param {Array} paths
      * @param {function} browserSyncOptionsCallback
-     * @return {publicApi}
+     * @returns {Encore}
      */
     enableBrowserSync(paths, browserSyncOptionsCallback = () => {}) {
         webpackConfig.enableBrowserSync(paths, browserSyncOptionsCallback);
 
         return this;
     }
-
-    /**
-     * If enable, browser sync will start to provide live reload functionality
-     *
-     * https://www.browsersync.io/
-     *
-     * Call it to start a proxy redirecting requests to `backendUrl` while
-     * watching `paths` for changes. It start when using any of:
-     *
-     *      encore dev --watch
-     *      encore dev-server
-     *
-     * Use `browserSyncOptionsCallback` callback to configure `browser-sync`
-     * and `browser-sync-webpack-plugin` options.
-     *
-     * Options configured in callback can be used to overwrite everything,
-     * included `backendUrl` and `paths`. Notice that adding them as parameter
-     * here is just an idiomatic sugar to make easier providing sensible
-     * defaults and/or calling it.
-     *
-     *     Encore.enableBrowserSync(
-     *         'http://localhost:3100/',
-     *         ['./templates/*.twig', './src/*.php']
-     *     );
-     *
-     *     // or configure its options
-     *     // https://www.browsersync.io/docs/options
-     *     // https://github.com/Va1/browser-sync-webpack-plugin
-     *     Encore.enableBrowserSync('http://localhost:3100/',
-     *         ['./*.twig', './*.php']
-     *         function(browserSyncOptions, pluginOptions) {
-     *             browserSyncOptions.host = 'localhost';
-     *             // overrides `backendUrl` parameter
-     *             browserSyncOptions.proxy = 'http://localhost:8080'
-     *             pluginOptions.reload= false;
-     *         }
-     *     );
-     *
-     * @param {string} backendUrl
-     * @param {Array} paths
-     * @param {function} browserSyncOptionsCallback
-     * @return {publicApi}
-     */
-    enableBrowserSync(backendUrl, paths, browserSyncOptionsCallback = () => {}) {
-        webpackConfig.enableBrowserSync(backendUrl, paths, browserSyncOptionsCallback);
-
-        return this;
-    },
 
     /**
      * Call this if you wish to disable the default
