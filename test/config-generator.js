@@ -833,7 +833,7 @@ describe('The config-generator function', () => {
                 const config = createConfig();
                 config.outputPath = '/tmp/public/build';
                 config.setPublicPath('/build/');
-                config.enablePreactPreset({ preactCompat: true });
+                config.enablePreactPreset({preactCompat: true});
 
                 const actualConfig = configGenerator(config);
                 expect(actualConfig.resolve.alias).to.include.keys('react', 'react-dom');
