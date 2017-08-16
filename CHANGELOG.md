@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.14.0
+
+ * Added `Encore.configureFilenames()` so that you can fully control
+   the filename patterns for all types of files - #137 via @Lyrkan
+
+ * Added `Encore.configureRuntimeEnvironment()`, which is useful
+   if you need to require `webpack.config.js` from some non-Encore
+   process (e.g. Karma) - #115 via @Lyrkan
+
 ## 0.13.0
 
  * [BEHAVIOR CHANGE] Image and font files now *always* include
