@@ -44,6 +44,8 @@ if (runtimeConfig.useDevServer) {
     console.log();
 
     return require('webpack-dev-server/bin/webpack-dev-server');
+} else if (runtimeConfig.runGenerator) {
+    return require('../lib/generator')(runtimeConfig);
 } else {
     if (!runtimeConfig.outputJson) {
         console.log('Running webpack ...');
