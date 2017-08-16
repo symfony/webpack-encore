@@ -482,8 +482,8 @@ const publicApi = {
      *         fonts: 'fonts/[name].[hash:8].[ext]'
      *     });
      *
-     * Only the filenames defined in the first parameter
-     * of this method will be modified.
+     * It's safe to omit a key (e.g. css): the default naming strategy
+     * will be used for any file types not passed.
      *
      * If you are using Encore.enableVersioning()
      * make sure that your "js" filenames contain
