@@ -54,7 +54,7 @@ module.exports = {
         "node/no-unpublished-bin": "error",
         "node/no-unpublished-require": "error",
         "node/process-exit-as-throw": "error",
-        "header/header": [2, "block", {"pattern": "This file is part of the Symfony package"}]
+        "header/header": [2, "block", {"pattern": "This file is part of the Symfony Webpack Encore package"}]
     }
 };
 
