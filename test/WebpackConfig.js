@@ -460,4 +460,41 @@ describe('WebpackConfig object', () => {
             expect(config.useFontsLoader).to.be.false;
         });
     });
+
+    describe('configureFilenames', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            config.configureFilenames({
+                js: '[name].[chunkhash].js',
+                css: '[name].[contenthash].css',
+                images: 'images/[name].[hash:8].[ext]',
+                fonts: 'fonts/[name].[hash:8].[ext]'
+            });
+
+            expect(config.configuredFilenames).to.deep.equals({
+                js: '[name].[chunkhash].js',
+                css: '[name].[contenthash].css',
+                images: 'images/[name].[hash:8].[ext]',
+                fonts: 'fonts/[name].[hash:8].[ext]'
+            });
+        });
+
+        it('Calling with non-object throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureFilenames('FOO');
+            }).to.throw('must be an object');
+        });
+
+        it('Calling with an unknown key throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureFilenames({
+                    foo: 'bar'
+                });
+            }).to.throw('"foo" is not a valid key');
+        });
+    });
 });

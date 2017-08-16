@@ -484,6 +484,34 @@ const publicApi = {
     },
 
     /**
+     * Call this to change how the name of each output
+     * file is generated.
+     *
+     *     Encore.configureFilenames({
+     *         js: '[name].[chunkhash].js',
+     *         css: '[name].[contenthash].css',
+     *         images: 'images/[name].[hash:8].[ext]',
+     *         fonts: 'fonts/[name].[hash:8].[ext]'
+     *     });
+     *
+     * Only the filenames defined in the first parameter
+     * of this method will be modified.
+     *
+     * If you are using Encore.enableVersioning()
+     * make sure that your "js" filenames contain
+     * "[chunkhash]" and your "css" filenames contain
+     * "[contenthash]".
+     *
+     * @param {object} filenames
+     * @returns {exports}
+     */
+    configureFilenames(filenames) {
+        webpackConfig.configureFilenames(filenames);
+
+        return this;
+    },
+
+    /**
      * If enabled, the output directory is emptied between
      * each build (to remove old files).
      *

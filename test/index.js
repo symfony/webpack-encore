@@ -224,6 +224,15 @@ describe('Public API', () => {
 
     });
 
+    describe('configureFilenames', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.configureFilenames({});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('cleanupOutputBeforeBuild', () => {
 
         it('must return the API object', () => {
