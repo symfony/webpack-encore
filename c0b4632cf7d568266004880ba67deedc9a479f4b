@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2017-08-11T07:26:08Z
+
+Can you fix the eslint violation ?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2017-08-11T10:41:47Z
+
+@stof [Done](https://github.com/symfony/webpack-encore/pull/138/files#diff-4314c2590c86ecf46f6b93fe1c9ba28b)
