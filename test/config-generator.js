@@ -476,4 +476,57 @@ describe('The config-generator function', () => {
             }).to.throw();
         });
     });
+
+    describe('Test filenames changes', () => {
+        it('without versioning', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureFilenames({
+                js: '[name].foo.js',
+                css: '[name].foo.css',
+                images: '[name].foo.[ext]',
+                fonts: '[name].bar.[ext]'
+            });
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.output.filename).to.equal('[name].foo.js');
+
+            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
+            expect(extractTextPlugin.filename).to.equal('[name].foo.css');
+
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+            expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
+
+            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            expect(fontsRule.options.name).to.equal('[name].bar.[ext]');
+        });
+
+        it('with versioning', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableVersioning();
+            config.configureFilenames({
+                js: '[name].foo.js',
+                css: '[name].foo.css',
+                images: '[name].foo.[ext]',
+                fonts: '[name].bar.[ext]'
+            });
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.output.filename).to.equal('[name].foo.js');
+
+            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
+            expect(extractTextPlugin.filename).to.equal('[name].foo.css');
+
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+            expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
+
+            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            expect(fontsRule.options.name).to.equal('[name].bar.[ext]');
+        });
+    });
 });
