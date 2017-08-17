@@ -171,7 +171,7 @@ describe('WebpackConfig object', () => {
             });
 
             // fileName option overridden
-            expect(config.manifestOptions.fileName).to.equal('../../var/assets/manifest.json');
+            expect(config.manifestPluginOptions.fileName).to.equal('../../var/assets/manifest.json');
         });
 
         it('Setting a non object argument', () => {
