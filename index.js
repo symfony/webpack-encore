@@ -313,8 +313,7 @@ const publicApi = {
      * @param {function} postCssLoaderOptionsCallback
      * @return {exports}
      */
-    enablePostCssLoader(postCssLoaderOptionsCallback = () => {
-    }) {
+    enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
         webpackConfig.enablePostCssLoader(postCssLoaderOptionsCallback);
 
         return this;
@@ -348,8 +347,7 @@ const publicApi = {
      * @param {object} encoreOptions
      * @return {exports}
      */
-    enableSassLoader(sassLoaderOptionsCallback = () => {
-    }, encoreOptions = {}) {
+    enableSassLoader(sassLoaderOptionsCallback = () => {}, encoreOptions = {}) {
         webpackConfig.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
 
         return this;
@@ -371,8 +369,7 @@ const publicApi = {
      * @param {function} lessLoaderOptionsCallback
      * @return {exports}
      */
-    enableLessLoader(lessLoaderOptionsCallback = () => {
-    }) {
+    enableLessLoader(lessLoaderOptionsCallback = () => {}) {
         webpackConfig.enableLessLoader(lessLoaderOptionsCallback);
 
         return this;
@@ -424,8 +421,7 @@ const publicApi = {
      * @param {function} callback
      * @return {exports}
      */
-    enableTypeScriptLoader(callback = () => {
-    }) {
+    enableTypeScriptLoader(callback = () => {}) {
         webpackConfig.enableTypeScriptLoader(callback);
 
         return this;
@@ -440,8 +436,7 @@ const publicApi = {
      * @param {function} forkedTypeScriptTypesCheckOptionsCallback
      * @return {exports}
      */
-    enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {
-    }) {
+    enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
         webpackConfig.enableForkedTypeScriptTypesChecking(
             forkedTypeScriptTypesCheckOptionsCallback
         );
@@ -465,8 +460,7 @@ const publicApi = {
      * @param {function} vueLoaderOptionsCallback
      * @returns {exports}
      */
-    enableVueLoader(vueLoaderOptionsCallback = () => {
-    }) {
+    enableVueLoader(vueLoaderOptionsCallback = () => {}) {
         webpackConfig.enableVueLoader(vueLoaderOptionsCallback);
 
         return this;
