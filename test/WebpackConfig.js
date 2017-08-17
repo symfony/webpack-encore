@@ -163,6 +163,26 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('configureManifestPlugin', () => {
+        it('Setting custom options', () => {
+            const config = createConfig();
+            config.configureManifestPlugin({
+                fileName: '../../var/assets/manifest.json',
+            });
+
+            // fileName option overridden
+            expect(config.manifestOptions.fileName).to.equal('../../var/assets/manifest.json');
+        });
+
+        it('Setting a non object argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureManifestPlugin('../../var/assets/manifest.json');
+            }).to.throw('Argument 1 to configureManifestPlugin() must be an object');
+        });
+    });
+
     describe('addEntry', () => {
         it('Calling with a duplicate name throws an error', () => {
             const config = createConfig();
