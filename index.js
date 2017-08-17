@@ -113,7 +113,7 @@ const publicApi = {
      *      })
      *
      * @param {Object} options
-     * @returns {publicApi}
+     * @returns {exports}
      */
     configureManifestPlugin(options) {
         webpackConfig.configureManifestPlugin(options);
