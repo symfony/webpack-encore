@@ -108,15 +108,15 @@ const publicApi = {
      *
      * For example:
      *
-     *      .configureManifestPlugin({
-     *          fileName: '../../var/assets/manifest.json'
+     *      Encore.configureManifestPlugin(function(options){
+     *          options.fileName: '../../var/assets/manifest.json'
      *      })
      *
-     * @param {Object} options
+     * @param {function} manifestPluginOptionsCallback
      * @returns {exports}
      */
-    configureManifestPlugin(options) {
-        webpackConfig.configureManifestPlugin(options);
+    configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
+        webpackConfig.configureManifestPlugin(manifestPluginOptionsCallback);
 
         return this;
     },
