@@ -172,6 +172,15 @@ describe('WebpackConfig object', () => {
             // fileName option overridden
             expect(config.manifestPluginOptionsCallback).to.equal(callback);
         });
+
+        it('Setting invalid custom options argument', () => {
+            const config = createConfig();
+            const callback = 'invalid';
+
+            expect(() => {
+                config.configureManifestPlugin(callback);
+            }).to.throw('Argument 1 to configureManifestPlugin() must be a callback function');
+        });
     });
 
     describe('addEntry', () => {
