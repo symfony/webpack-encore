@@ -364,6 +364,24 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enablePreactPreset', () => {
+        it('Without preact-compat', () => {
+            const config = createConfig();
+            config.enablePreactPreset();
+
+            expect(config.usePreact).to.be.true;
+            expect(config.usePreactCompat).to.be.false;
+        });
+
+        it('With preact-compat', () => {
+            const config = createConfig();
+            config.enablePreactPreset(true);
+
+            expect(config.usePreact).to.be.true;
+            expect(config.usePreactCompat).to.be.true;
+        });
+    });
+
     describe('enableTypeScriptLoader', () => {
         it('Calling method sets it', () => {
             const config = createConfig();

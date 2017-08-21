@@ -65,4 +65,40 @@ describe('loaders/babel', () => {
         // foo is also still there, not overridden
         expect(actualLoaders[0].options.presets).to.include('foo');
     });
+
+    it('getLoaders() with preact', () => {
+        const config = createConfig();
+        config.enablePreactPreset();
+
+        config.configureBabel(function(babelConfig) {
+            babelConfig.plugins.push('foo');
+        });
+
+        const actualLoaders = babelLoader.getLoaders(config);
+
+        // transform-react-jsx & foo
+        expect(actualLoaders[0].options.plugins).to.have.lengthOf(2);
+        expect(actualLoaders[0].options.plugins).to.deep.include.members([
+            ['transform-react-jsx', { pragma: 'h' }],
+            'foo'
+        ]);
+    });
+
+    it('getLoaders() with preact and preact-compat', () => {
+        const config = createConfig();
+        config.enablePreactPreset(true);
+
+        config.configureBabel(function(babelConfig) {
+            babelConfig.plugins.push('foo');
+        });
+
+        const actualLoaders = babelLoader.getLoaders(config);
+
+        // transform-react-jsx & foo
+        expect(actualLoaders[0].options.plugins).to.have.lengthOf(2);
+        expect(actualLoaders[0].options.plugins).to.deep.include.members([
+            ['transform-react-jsx'],
+            'foo'
+        ]);
+    });
 });

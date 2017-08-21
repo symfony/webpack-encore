@@ -529,4 +529,32 @@ describe('The config-generator function', () => {
             expect(fontsRule.options.name).to.equal('[name].bar.[ext]');
         });
     });
+
+    describe('Test preact preset', () => {
+        describe('Without preact-compat', () => {
+            it('enablePreactPreset() does not add aliases to use preact-compat', () => {
+                const config = createConfig();
+                config.outputPath = '/tmp/public/build';
+                config.setPublicPath('/build/');
+                config.enablePreactPreset();
+
+                const actualConfig = configGenerator(config);
+                expect(actualConfig.resolve.alias).to.not.include.keys('react', 'react-dom');
+            });
+        });
+
+        describe('With preact-compat', () => {
+            it('enablePreactPreset(true) adds aliases to use preact-compat', () => {
+                const config = createConfig();
+                config.outputPath = '/tmp/public/build';
+                config.setPublicPath('/build/');
+                config.enablePreactPreset(true);
+
+                const actualConfig = configGenerator(config);
+                expect(actualConfig.resolve.alias).to.include.keys('react', 'react-dom');
+                expect(actualConfig.resolve.alias['react']).to.equal('preact-compat');
+                expect(actualConfig.resolve.alias['react-dom']).to.equal('preact-compat');
+            });
+        });
+    });
 });
