@@ -15,6 +15,8 @@ const validator = require('./lib/config/validator');
 const PrettyError = require('pretty-error');
 const logger = require('./lib/logger');
 const parseRuntime = require('./lib/config/parse-runtime');
+const chalk = require('chalk');
+const levenshtein = require('fast-levenshtein');
 
 let webpackConfig = null;
 let runtimeConfig = require('./lib/context').runtimeConfig;
@@ -631,6 +633,21 @@ const publicApiProxy = new Proxy(publicApi, {
                     process.exit(1); // eslint-disable-line
                 }
             };
+        } else if (typeof target[prop] === 'undefined') {
+            // Find the property with the closest Levenshtein distance
+            let similarProperty;
+            let minDistance = Number.MAX_VALUE;
+            for (const apiProperty in target) {
+                const distance = levenshtein.get(apiProperty, prop);
+                if (distance <= minDistance) {
+                    similarProperty = apiProperty;
+                    minDistance = distance;
+                }
+            }
+
+            const error = new Error(`${chalk.red(`Encore.${prop}`)} is not a recognized property, did you mean ${chalk.green(`Encore.${similarProperty}`)}?`);
+            console.log(new PrettyError().render(error));
+            process.exit(1); // eslint-disable-line
         }
 
         return target[prop];
