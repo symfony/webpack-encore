@@ -645,7 +645,7 @@ const publicApiProxy = new Proxy(publicApi, {
                 }
             }
 
-            const error = new Error(`${chalk.red(`Encore.${prop}`)} is not a recognized property, did you mean ${chalk.green(`Encore.${similarProperty}`)}?`);
+            const error = new Error(`${chalk.red(`Encore.${prop}`)} is not a recognized property or method, did you mean ${chalk.green(`Encore.${similarProperty}`)}?`);
             console.log(new PrettyError().render(error));
             process.exit(1); // eslint-disable-line
         }
