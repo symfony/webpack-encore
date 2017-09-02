@@ -103,6 +103,25 @@ const publicApi = {
     },
 
     /**
+     * Allows to set ManifestPlugin options and override default options
+     * List of available options can be found at https://github.com/danethurber/webpack-manifest-plugin
+     *
+     * For example:
+     *
+     *      Encore.configureManifestPlugin(function(options){
+     *          options.fileName: '../../var/assets/manifest.json'
+     *      })
+     *
+     * @param {function} manifestPluginOptionsCallback
+     * @returns {exports}
+     */
+    configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
+        webpackConfig.configureManifestPlugin(manifestPluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
      * Adds a JavaScript file that should be webpacked:
      *
      *      // final output file will be main.js in the output directory
