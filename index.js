@@ -115,8 +115,8 @@ const publicApi = {
     },
 
     /**
-     * Allows to set ManifestPlugin options and override default options
-     * List of available options can be found at https://github.com/danethurber/webpack-manifest-plugin
+     * Allows you to configure the options passed to webpack-manifest-plugin.
+     * A list of available options can be found at https://github.com/danethurber/webpack-manifest-plugin
      *
      * For example:
      *
