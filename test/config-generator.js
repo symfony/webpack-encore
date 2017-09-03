@@ -544,11 +544,11 @@ describe('The config-generator function', () => {
         });
 
         describe('With preact-compat', () => {
-            it('enablePreactPreset(true) adds aliases to use preact-compat', () => {
+            it('enablePreactPreset({ preactCompat: true }) adds aliases to use preact-compat', () => {
                 const config = createConfig();
                 config.outputPath = '/tmp/public/build';
                 config.setPublicPath('/build/');
-                config.enablePreactPreset(true);
+                config.enablePreactPreset({ preactCompat: true });
 
                 const actualConfig = configGenerator(config);
                 expect(actualConfig.resolve.alias).to.include.keys('react', 'react-dom');

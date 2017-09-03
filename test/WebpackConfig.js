@@ -370,15 +370,26 @@ describe('WebpackConfig object', () => {
             config.enablePreactPreset();
 
             expect(config.usePreact).to.be.true;
-            expect(config.usePreactCompat).to.be.false;
+            expect(config.preactOptions.preactCompat).to.be.false;
         });
 
         it('With preact-compat', () => {
             const config = createConfig();
-            config.enablePreactPreset(true);
+            config.enablePreactPreset({
+                preactCompat: true
+            });
 
             expect(config.usePreact).to.be.true;
-            expect(config.usePreactCompat).to.be.true;
+            expect(config.preactOptions.preactCompat).to.be.true;
+        });
+
+        it('With an invalid option', () => {
+            const config = createConfig();
+            expect(() => {
+                config.enablePreactPreset({
+                    foo: true
+                });
+            }).to.throw('Invalid option "foo"');
         });
     });
 
