@@ -651,7 +651,7 @@ module.exports = {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
-            config.enablePreactPreset(true);
+            config.enablePreactPreset({ preactCompat: true });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel transformed the JSX

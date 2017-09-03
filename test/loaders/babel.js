@@ -86,7 +86,7 @@ describe('loaders/babel', () => {
 
     it('getLoaders() with preact and preact-compat', () => {
         const config = createConfig();
-        config.enablePreactPreset(true);
+        config.enablePreactPreset({ preactCompat: true });
 
         config.configureBabel(function(babelConfig) {
             babelConfig.plugins.push('foo');

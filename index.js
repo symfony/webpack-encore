@@ -394,16 +394,15 @@ const publicApi = {
      *     Encore.enablePreactPreset()
      *
      * If you wish to also use preact-compat (https://github.com/developit/preact-compat)
-     * call that method with its first parameter set
-     * to true:
+     * you can enable it by setting the "preactCompat" option to true:
      *
-     *     Encore.enablePreactPreset(true)
+     *     Encore.enablePreactPreset({ preactCompat: true })
      *
-     * @param {boolean} usePreactCompat
+     * @param {object} options
      * @returns {exports}
      */
-    enablePreactPreset(usePreactCompat = false) {
-        webpackConfig.enablePreactPreset(usePreactCompat);
+    enablePreactPreset(options = {}) {
+        webpackConfig.enablePreactPreset(options);
 
         return this;
     },
