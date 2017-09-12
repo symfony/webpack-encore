@@ -163,12 +163,21 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureCleanWebpackPlugin', () => {
+    describe('cleanupOutputBeforeBuild', () => {
+        it('Enabling it with default settings', () => {
+            const config = createConfig();
+            config.cleanupOutputBeforeBuild();
+
+            expect(config.cleanupOutput).to.be.true;
+            expect(config.cleanWebpackPluginPaths).to.deep.equal(['**/*']);
+        });
+
         it('Setting paths and callback', () => {
             const config = createConfig();
             const callback = () => {};
-            config.configureCleanWebpackPlugin(['**/*.js', '**/*.css'], callback);
+            config.cleanupOutputBeforeBuild(['**/*.js', '**/*.css'], callback);
 
+            expect(config.cleanupOutput).to.be.true;
             expect(config.cleanWebpackPluginPaths).to.deep.equal(['**/*.js', '**/*.css']);
             expect(config.cleanWebpackPluginOptionsCallback).to.equal(callback);
         });
@@ -177,16 +186,16 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureCleanWebpackPlugin('foo', () => {});
-            }).to.throw('Argument 1 to configureCleanWebpackPlugin() must be an Array');
+                config.cleanupOutputBeforeBuild('foo', () => {});
+            }).to.throw('Argument 1 to cleanupOutputBeforeBuild() must be an Array');
         });
 
         it('Setting invalid callback argument', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureCleanWebpackPlugin(['**/*'], 'foo');
-            }).to.throw('Argument 2 to configureCleanWebpackPlugin() must be a callback function');
+                config.cleanupOutputBeforeBuild(['**/*'], 'foo');
+            }).to.throw('Argument 2 to cleanupOutputBeforeBuild() must be a callback function');
         });
     });
 

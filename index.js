@@ -103,26 +103,6 @@ const publicApi = {
     },
 
     /**
-     * Allows you to configure the paths and the options passed to the clean-webpack-plugin.
-     * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin
-     *
-     * For example:
-     *
-     *      Encore.configureCleanWebpackPlugin(['*.js'], (options) => {
-     *          options.dry = true;
-     *      })
-     *
-     * @param {Array} paths Paths that should be cleaned, relative to the "root" option
-     * @param {function} cleanWebpackPluginOptionsCallback
-     * @returns {exports}
-     */
-    configureCleanWebpackPlugin(paths = ['**/*'], cleanWebpackPluginOptionsCallback = () => {}) {
-        webpackConfig.configureCleanWebpackPlugin(paths, cleanWebpackPluginOptionsCallback);
-
-        return this;
-    },
-
-    /**
      * Allows you to configure the options passed to the DefinePlugin.
      * A list of available options can be found at https://webpack.js.org/plugins/define-plugin/
      *
@@ -638,10 +618,20 @@ const publicApi = {
      * If enabled, the output directory is emptied between
      * each build (to remove old files).
      *
+     * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin
+     *
+     * For example:
+     *
+     *      Encore.cleanupOutputBeforeBuild(['*.js'], (options) => {
+     *          options.dry = true;
+     *      })
+     *
+     * @param {Array} paths Paths that should be cleaned, relative to the "root" option
+     * @param {function} cleanWebpackPluginOptionsCallback
      * @returns {exports}
      */
-    cleanupOutputBeforeBuild() {
-        webpackConfig.cleanupOutputBeforeBuild();
+    cleanupOutputBeforeBuild(paths = ['**/*'], cleanWebpackPluginOptionsCallback = () => {}) {
+        webpackConfig.cleanupOutputBeforeBuild(paths, cleanWebpackPluginOptionsCallback);
 
         return this;
     },
