@@ -251,15 +251,6 @@ describe('Public API', () => {
 
     });
 
-    describe('configureCleanWebpackPlugin', () => {
-
-        it('should return the API object', () => {
-            const returnedValue = api.configureCleanWebpackPlugin(['**/*.js'], () => {});
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
     describe('configureDefinePlugin', () => {
 
         it('should return the API object', () => {

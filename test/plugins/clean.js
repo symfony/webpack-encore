@@ -49,9 +49,7 @@ describe('plugins/clean', () => {
         const config = createConfig();
         const plugins = [];
 
-        config.cleanupOutputBeforeBuild();
-
-        config.configureCleanWebpackPlugin(['**/*.js', '**/*.css'], (options) => {
+        config.cleanupOutputBeforeBuild(['**/*.js', '**/*.css'], (options) => {
             options.dry = true;
         });
 
