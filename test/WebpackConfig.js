@@ -394,6 +394,35 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enablePreactPreset', () => {
+        it('Without preact-compat', () => {
+            const config = createConfig();
+            config.enablePreactPreset();
+
+            expect(config.usePreact).to.be.true;
+            expect(config.preactOptions.preactCompat).to.be.false;
+        });
+
+        it('With preact-compat', () => {
+            const config = createConfig();
+            config.enablePreactPreset({
+                preactCompat: true
+            });
+
+            expect(config.usePreact).to.be.true;
+            expect(config.preactOptions.preactCompat).to.be.true;
+        });
+
+        it('With an invalid option', () => {
+            const config = createConfig();
+            expect(() => {
+                config.enablePreactPreset({
+                    foo: true
+                });
+            }).to.throw('Invalid option "foo"');
+        });
+    });
+
     describe('enableTypeScriptLoader', () => {
         it('Calling method sets it', () => {
             const config = createConfig();

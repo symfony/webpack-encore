@@ -675,6 +675,40 @@ module.exports = {
             });
         });
 
+        it('When enabled, preact JSX is transformed without preact-compat!', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/CoolReactComponent.jsx');
+            config.enablePreactPreset();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the JSX
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'var hiGuys = h('
+                );
+
+                done();
+            });
+        });
+
+        it('When enabled, preact JSX is transformed with preact-compat!', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/CoolReactComponent.jsx');
+            config.enablePreactPreset({ preactCompat: true });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the JSX
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'React.createElement'
+                );
+
+                done();
+            });
+        });
+
         it('When configured, TypeScript is compiled!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
