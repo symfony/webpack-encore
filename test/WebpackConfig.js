@@ -15,6 +15,7 @@ const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
+const logger = require('../lib/logger');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -148,10 +149,10 @@ describe('WebpackConfig object', () => {
 
         it('You can set it!', () => {
             const config = createConfig();
-            config.setManifestKeyPrefix('/foo');
+            config.setManifestKeyPrefix('foo');
 
             // trailing slash added
-            expect(config.manifestKeyPrefix).to.equal('/foo/');
+            expect(config.manifestKeyPrefix).to.equal('foo/');
         });
 
         it('You can set it blank', () => {
@@ -160,6 +161,15 @@ describe('WebpackConfig object', () => {
 
             // trailing slash not added
             expect(config.manifestKeyPrefix).to.equal('');
+        });
+
+        it('You can use an opening slash, but get a warning', () => {
+            const config = createConfig();
+
+            logger.reset();
+            logger.quiet();
+            config.setManifestKeyPrefix('/foo/');
+            expect(logger.getMessages().warning).to.have.lengthOf(1);
         });
     });
 
