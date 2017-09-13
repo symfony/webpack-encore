@@ -471,10 +471,10 @@ describe('WebpackConfig object', () => {
 
         it('Pass valid config', () => {
             const config = createConfig();
-            config.enableSassLoader(() => {}, { resolve_url_loader: false });
+            config.enableSassLoader(() => {}, { resolveUrlLoader: false });
 
             expect(config.useSassLoader).to.be.true;
-            expect(config.sassOptions.resolve_url_loader).to.be.false;
+            expect(config.sassOptions.resolveUrlLoader).to.be.false;
         });
 
         it('Pass invalid config', () => {

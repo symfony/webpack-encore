@@ -429,11 +429,11 @@ const publicApi = {
      *         // options.includePaths = [...]
      *     }, {
      *         // set optional Encore-specific options
-     *         // resolve_url_loader: true
+     *         // resolveUrlLoader: true
      *     });
      *
      * Supported options:
-     *      * {bool} resolve_url_loader (default=true)
+     *      * {bool} resolveUrlLoader (default=true)
      *              Whether or not to use the resolve-url-loader.
      *              Setting to false can increase performance in some
      *              cases, especially when using bootstrap_sass. But,
