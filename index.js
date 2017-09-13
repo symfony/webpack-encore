@@ -615,8 +615,7 @@ const publicApi = {
     },
 
     /**
-     * If enabled, the output directory is emptied between
-     * each build (to remove old files).
+     * If enabled, the output directory is emptied between each build (to remove old files).
      *
      * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin
      *
