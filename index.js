@@ -633,7 +633,9 @@ const publicApiProxy = new Proxy(publicApi, {
                     process.exit(1); // eslint-disable-line
                 }
             };
-        } else if (typeof target[prop] === 'undefined') {
+        }
+
+        if (typeof target[prop] === 'undefined') {
             // Find the property with the closest Levenshtein distance
             let similarProperty;
             let minDistance = Number.MAX_VALUE;
@@ -645,7 +647,12 @@ const publicApiProxy = new Proxy(publicApi, {
                 }
             }
 
-            const error = new Error(`${chalk.red(`Encore.${prop}`)} is not a recognized property or method, did you mean ${chalk.green(`Encore.${similarProperty}`)}?`);
+            let errorMessage = `${chalk.red(`Encore.${prop}`)} is not a recognized property or method.`;
+            if (minDistance < 3) {
+                errorMessage += ` Did you mean ${chalk.green(`Encore.${similarProperty}`)}?`;
+            }
+
+            const error = new Error(errorMessage);
             console.log(new PrettyError().render(error));
             process.exit(1); // eslint-disable-line
         }
