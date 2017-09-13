@@ -187,7 +187,7 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.cleanupOutputBeforeBuild('foo', () => {});
-            }).to.throw('Argument 1 to cleanupOutputBeforeBuild() must be an Array');
+            }).to.throw('Argument 1 to cleanupOutputBeforeBuild() must be an Array of paths');
         });
 
         it('Setting invalid callback argument', () => {
