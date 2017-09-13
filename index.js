@@ -407,6 +407,26 @@ const publicApi = {
     },
 
     /**
+     * If enabled, a Preact preset will be applied to
+     * the generated Webpack configuration.
+     *
+     *     Encore.enablePreactPreset()
+     *
+     * If you wish to also use preact-compat (https://github.com/developit/preact-compat)
+     * you can enable it by setting the "preactCompat" option to true:
+     *
+     *     Encore.enablePreactPreset({ preactCompat: true })
+     *
+     * @param {object} options
+     * @returns {exports}
+     */
+    enablePreactPreset(options = {}) {
+        webpackConfig.enablePreactPreset(options);
+
+        return this;
+    },
+
+    /**
      * Call this if you plan on loading TypeScript files.
      *
      * Encore.enableTypeScriptLoader()

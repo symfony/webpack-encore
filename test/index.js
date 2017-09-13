@@ -179,6 +179,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enablePreactPreset', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enablePreactPreset();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enableTypeScriptLoader', () => {
 
         it('must return the API object', () => {
