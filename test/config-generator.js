@@ -428,7 +428,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(function() {
-                findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+                findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             }).to.not.throw();
         });
 
@@ -442,7 +442,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(function() {
-                findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+                findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             }).to.throw();
         });
     });
@@ -496,7 +496,7 @@ describe('The config-generator function', () => {
             const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
             expect(extractTextPlugin.filename).to.equal('[name].foo.css');
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
@@ -522,7 +522,7 @@ describe('The config-generator function', () => {
             const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
             expect(extractTextPlugin.filename).to.equal('[name].foo.css');
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg)$/, actualConfig.module.rules);
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
