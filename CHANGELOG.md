@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 0.15.0
+
+ * Add support for [Preact](https://preactjs.com/) - #144 via @Lyrkan
+ 
+ * Added `Encore.configureManifestPlugin()` method - #142 via @Seikyo
+
+ * Added 5 new methods to configure plugins! #152 via @Lyrkan
+   * `Encore.configureDefinePlugin()`
+   * `Encore.configureExtractTextPlugin()`
+   * `Encore.configureFriendlyErrorsPlugin()`
+   * `Encore.configureLoaderOptionsPlugin()`
+   * `Encore.configureUglifyJsPlugin()`
+
 ## 0.14.0
 
  * Added `Encore.configureFilenames()` so that you can fully control
