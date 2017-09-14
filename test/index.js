@@ -260,6 +260,60 @@ describe('Public API', () => {
 
     });
 
+    describe('configureDefinePlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureDefinePlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureExtractTextPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureExtractTextPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureFriendlyErrorsPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureFriendlyErrorsPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureLoaderOptionsPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureLoaderOptionsPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureManifestPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureManifestPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureUglifyJsPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureUglifyJsPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('Runtime environment proxy', () => {
         beforeEach(() => {
             api.clearRuntimeEnvironment();

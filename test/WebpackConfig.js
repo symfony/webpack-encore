@@ -173,23 +173,148 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('cleanupOutputBeforeBuild', () => {
+        it('Enabling it with default settings', () => {
+            const config = createConfig();
+            config.cleanupOutputBeforeBuild();
+
+            expect(config.cleanupOutput).to.be.true;
+            expect(config.cleanWebpackPluginPaths).to.deep.equal(['**/*']);
+        });
+
+        it('Setting paths and callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.cleanupOutputBeforeBuild(['**/*.js', '**/*.css'], callback);
+
+            expect(config.cleanupOutput).to.be.true;
+            expect(config.cleanWebpackPluginPaths).to.deep.equal(['**/*.js', '**/*.css']);
+            expect(config.cleanWebpackPluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Setting invalid paths argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.cleanupOutputBeforeBuild('foo', () => {});
+            }).to.throw('Argument 1 to cleanupOutputBeforeBuild() must be an Array of paths');
+        });
+
+        it('Setting invalid callback argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.cleanupOutputBeforeBuild(['**/*'], 'foo');
+            }).to.throw('Argument 2 to cleanupOutputBeforeBuild() must be a callback function');
+        });
+    });
+
+    describe('configureDefinePlugin', () => {
+        it('Setting callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.configureDefinePlugin(callback);
+
+            expect(config.definePluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Setting invalid callback argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureDefinePlugin('foo');
+            }).to.throw('Argument 1 to configureDefinePlugin() must be a callback function');
+        });
+    });
+
+    describe('configureExtractTextPlugin', () => {
+        it('Setting callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.configureExtractTextPlugin(callback);
+
+            expect(config.extractTextPluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Setting invalid callback argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureExtractTextPlugin('foo');
+            }).to.throw('Argument 1 to configureExtractTextPlugin() must be a callback function');
+        });
+    });
+
+    describe('configureFriendlyErrorsPlugin', () => {
+        it('Setting callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.configureFriendlyErrorsPlugin(callback);
+
+            expect(config.friendlyErrorsPluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Setting invalid callback argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureFriendlyErrorsPlugin('foo');
+            }).to.throw('Argument 1 to configureFriendlyErrorsPlugin() must be a callback function');
+        });
+    });
+
+    describe('configureLoaderOptionsPlugin', () => {
+        it('Setting callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.configureLoaderOptionsPlugin(callback);
+
+            expect(config.loaderOptionsPluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Setting invalid callback argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureLoaderOptionsPlugin('foo');
+            }).to.throw('Argument 1 to configureLoaderOptionsPlugin() must be a callback function');
+        });
+    });
+
     describe('configureManifestPlugin', () => {
-        it('Setting custom options', () => {
+        it('Setting callback', () => {
             const config = createConfig();
             const callback = () => {};
             config.configureManifestPlugin(callback);
 
-            // fileName option overridden
             expect(config.manifestPluginOptionsCallback).to.equal(callback);
         });
 
-        it('Setting invalid custom options argument', () => {
+        it('Setting invalid callback argument', () => {
             const config = createConfig();
             const callback = 'invalid';
 
             expect(() => {
                 config.configureManifestPlugin(callback);
             }).to.throw('Argument 1 to configureManifestPlugin() must be a callback function');
+        });
+    });
+
+    describe('configureUglifyJsPlugin', () => {
+        it('Setting callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.configureUglifyJsPlugin(callback);
+
+            expect(config.uglifyJsPluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Setting invalid callback argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureUglifyJsPlugin('foo');
+            }).to.throw('Argument 1 to configureUglifyJsPlugin() must be a callback function');
         });
     });
 
