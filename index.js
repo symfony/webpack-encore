@@ -804,7 +804,7 @@ const publicApiProxy = new Proxy(publicApi, {
             }
 
             let errorMessage = `${chalk.red(`Encore.${prop}`)} is not a recognized property or method.`;
-            if (minDistance < 3) {
+            if (minDistance < (prop.length / 3)) {
                 errorMessage += ` Did you mean ${chalk.green(`Encore.${similarProperty}`)}?`;
             }
 
