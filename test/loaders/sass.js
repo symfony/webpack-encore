@@ -67,7 +67,7 @@ describe('loaders/sass', () => {
     it('getLoaders() without resolve-url-loader', () => {
         const config = createConfig();
         config.enableSassLoader(() => {}, {
-            resolve_url_loader: false,
+            resolveUrlLoader: false,
         });
         config.enableSourceMaps(false);
 
