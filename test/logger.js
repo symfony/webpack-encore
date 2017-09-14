@@ -28,12 +28,14 @@ describe('logger', () => {
             'debug',
             'recommendation',
             'warning',
+            'deprecation',
         ];
         const testString = 'TEST MESSAGE';
         const expectedMessages = {
             debug: [testString],
             recommendation: [testString],
             warning: [testString],
+            deprecation: [testString],
         };
 
         logger.quiet();
