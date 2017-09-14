@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2017-09-12T20:22:15Z
+
+Just realized that maybe I should remove `configureCleanWebpackPlugin` and move the `paths` and `callback` arguments to `cleanupOutputBeforeBuild` instead...
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-09-13T19:05:30Z
+
+> Not directly related but while doing all of that I noticed that sassOptions uses snake-case whereas I used camel-case in #144 for enablePreactPreset() and in #115 for configureRuntimeEnvironment(), should we do something about that?
+
+Hmm, yea, good catch. We should probably "get this right" now. I'm leaning towards using camelCase... so we would "fix" `sassOptions` (I'm leaning towards this in part because the options in #115 are camelCase just because that's how the CLI options are normalized internally.
