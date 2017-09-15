@@ -243,30 +243,94 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('addStyleEntry .js files are removed', (done) => {
-            const config = createWebpackConfig('web', 'dev');
-            config.addEntry('main', './js/no_require');
-            config.setPublicPath('/');
-            config.addStyleEntry('styles', './css/h1_style.css');
+        describe('addStyleEntry .js files are removed', () => {
+            it('Without versioning', (done) => {
+                const config = createWebpackConfig('web', 'dev');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/');
+                config.addStyleEntry('styles', './css/h1_style.css');
 
-            testSetup.runWebpack(config, (webpackAssert) => {
-                expect(config.outputPath).to.be.a.directory()
-                    // public.js should not exist
-                    .with.files(['main.js', 'styles.css', 'manifest.json']);
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        // public.js should not exist
+                        .with.files(['main.js', 'styles.css', 'manifest.json']);
 
-                webpackAssert.assertOutputFileContains(
-                    'styles.css',
-                    'font-size: 50px;'
-                );
-                webpackAssert.assertManifestPathDoesNotExist(
-                    'styles.js'
-                );
-                webpackAssert.assertManifestPath(
-                    'styles.css',
-                    '/styles.css'
-                );
+                    webpackAssert.assertOutputFileContains(
+                        'styles.css',
+                        'font-size: 50px;'
+                    );
+                    webpackAssert.assertManifestPathDoesNotExist(
+                        'styles.js'
+                    );
+                    webpackAssert.assertManifestPath(
+                        'styles.css',
+                        '/styles.css'
+                    );
 
-                done();
+                    done();
+                });
+            });
+
+            it('With default versioning', (done) => {
+                const config = createWebpackConfig('web', 'dev');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/');
+                config.addStyleEntry('styles', './css/h1_style.css');
+                config.enableVersioning(true);
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'main.f1e0a9350e13fe3a597e.js',
+                            'styles.c84caea6dd12bba7955dee9fedd5fd03.css',
+                            'manifest.json'
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'styles.c84caea6dd12bba7955dee9fedd5fd03.css',
+                        'font-size: 50px;'
+                    );
+                    webpackAssert.assertManifestPathDoesNotExist(
+                        'styles.js'
+                    );
+                    webpackAssert.assertManifestPath(
+                        'styles.css',
+                        '/styles.c84caea6dd12bba7955dee9fedd5fd03.css'
+                    );
+
+                    done();
+                });
+            });
+
+            it('With query string versioning', (done) => {
+                const config = createWebpackConfig('web', 'dev');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/');
+                config.addStyleEntry('styles', './css/h1_style.css');
+                config.enableVersioning(true);
+                config.configureFilenames({
+                    js: '[name].js?[chunkhash:16]',
+                    css: '[name].css?[contenthash:16]'
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files(['main.js', 'styles.css', 'manifest.json']);
+
+                    webpackAssert.assertOutputFileContains(
+                        'styles.css',
+                        'font-size: 50px;'
+                    );
+                    webpackAssert.assertManifestPathDoesNotExist(
+                        'styles.js'
+                    );
+                    webpackAssert.assertManifestPath(
+                        'styles.css',
+                        '/styles.css?c84caea6dd12bba7'
+                    );
+
+                    done();
+                });
             });
         });
 
