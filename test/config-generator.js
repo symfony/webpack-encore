@@ -61,6 +61,35 @@ function findRule(regex, rules) {
     throw new Error(`No rule found for regex ${regex}`);
 }
 
+/**
+ * Test if all the plugins respect the expected order.
+ *
+ * @param {Array} plugins
+ * @param {Array} expectedOrder
+ * @returns {void}
+ */
+function assertPluginsOrder(plugins, expectedOrder) {
+    let expectedIndex = 0;
+    let previousPlugin = null;
+
+    for (let plugin of plugins) {
+        if (previousPlugin && (plugin instanceof previousPlugin.constructor)) {
+            continue;
+        }
+
+        const actualIndex = expectedOrder.findIndex((type) => plugin instanceof type);
+        if (actualIndex !== -1) {
+            if (actualIndex !== expectedIndex) {
+                throw new Error(`Expected plugin ${plugin.constructor.name} to be at index ${expectedIndex}, got ${actualIndex}`);
+            } else {
+                expectedIndex++;
+            }
+        }
+
+        previousPlugin = plugin;
+    }
+}
+
 describe('The config-generator function', () => {
 
     describe('Test basic output properties', () => {
@@ -555,6 +584,103 @@ describe('The config-generator function', () => {
                 expect(actualConfig.resolve.alias['react']).to.equal('preact-compat');
                 expect(actualConfig.resolve.alias['react-dom']).to.equal('preact-compat');
             });
+        });
+    });
+
+    describe('Test plugins sorting', () => {
+        function CustomPlugin1() {}
+        function CustomPlugin2() {}
+        function CustomPlugin3() {}
+
+        it('Without calling sortPlugins', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.cleanupOutputBeforeBuild();
+            config.addPlugin(new CustomPlugin1());
+            config.addPlugin(new CustomPlugin2());
+
+            const actualConfig = configGenerator(config);
+            assertPluginsOrder(
+                actualConfig.plugins,
+                [
+                    ExtractTextPlugin,
+                    CleanWebpackPlugin,
+                    CustomPlugin1,
+                    CustomPlugin2,
+                    ManifestPlugin
+                ]
+            );
+        });
+
+        it('When calling sortPlugins without custom plugins', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.cleanupOutputBeforeBuild();
+
+            config.sortPlugins([
+                CleanWebpackPlugin,
+                ManifestPlugin,
+                ExtractTextPlugin
+            ]);
+
+            const actualConfig = configGenerator(config);
+            assertPluginsOrder(
+                actualConfig.plugins,
+                [
+                    CleanWebpackPlugin,
+                    ManifestPlugin,
+                    ExtractTextPlugin
+                ]
+            );
+        });
+
+        it('When calling sortPlugins with custom plugins', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.cleanupOutputBeforeBuild();
+
+            config.addPlugin(new CustomPlugin1());
+            config.addPlugin(new CustomPlugin2());
+            config.addPlugin(new CustomPlugin3());
+
+            // It should work with multiple instances of the same plugin
+            config.addPlugin(new CustomPlugin3());
+            config.addPlugin(new CustomPlugin2());
+            config.addPlugin(new CustomPlugin1());
+            config.addPlugin(new CustomPlugin3());
+
+            config.sortPlugins([
+                CustomPlugin1,
+                CleanWebpackPlugin,
+                CustomPlugin2,
+                CustomPlugin3,
+                ManifestPlugin,
+                ExtractTextPlugin
+            ]);
+
+            const actualConfig = configGenerator(config);
+            assertPluginsOrder(
+                actualConfig.plugins,
+                [
+                    CustomPlugin1,
+                    CleanWebpackPlugin,
+                    CustomPlugin2,
+                    CustomPlugin3,
+                    ManifestPlugin,
+                    ExtractTextPlugin
+                ]
+            );
+
+            // It shouldn't remove any plugin
+            expect(actualConfig.plugins.filter((plugin) => plugin instanceof CleanWebpackPlugin).length).to.equal(1);
+            expect(actualConfig.plugins.filter((plugin) => plugin instanceof ManifestPlugin).length).to.equal(1);
+            expect(actualConfig.plugins.filter((plugin) => plugin instanceof ExtractTextPlugin).length).to.equal(1);
+            expect(actualConfig.plugins.filter((plugin) => plugin instanceof CustomPlugin1).length).to.equal(2);
+            expect(actualConfig.plugins.filter((plugin) => plugin instanceof CustomPlugin2).length).to.equal(2);
+            expect(actualConfig.plugins.filter((plugin) => plugin instanceof CustomPlugin3).length).to.equal(3);
         });
     });
 });

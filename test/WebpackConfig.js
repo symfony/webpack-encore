@@ -617,6 +617,29 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('sortPlugins', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+
+            expect(config.sortPluginsOrder.length).to.equal(0);
+
+            config.sortPlugins([
+                new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+                new webpack.optimize.UglifyJsPlugin()
+            ]);
+
+            expect(config.sortPluginsOrder.length).to.equal(2);
+        });
+
+        it('Calling with non-array throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.sortPlugins('foo');
+            }).to.throw('must be an Array');
+        });
+    });
+
     describe('addLoader', () => {
         it('Adds a new loader', () => {
             const config = createConfig();

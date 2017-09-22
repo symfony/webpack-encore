@@ -71,6 +71,15 @@ describe('Public API', () => {
 
     });
 
+    describe('sortPlugins', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.sortPlugins([]);
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('addLoader', () => {
 
         it('must return the API object', () => {
