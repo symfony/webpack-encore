@@ -47,4 +47,45 @@ module.exports = Encore.getWebpackConfig();
             done();
         });
     });
+
+    it('Smoke test using webpack.config.babel.js', (done) => {
+        testSetup.emptyTmpDir();
+        const testDir = testSetup.createTestAppDir();
+
+        fs.writeFileSync(
+            path.join(testDir, '.babelrc'),
+            `
+{
+    "presets": [
+        ["es2015", { "modules": "commonjs"}]
+    ]
+}
+            `
+        );
+
+        fs.writeFileSync(
+            path.join(testDir, 'webpack.config.babel.js'),
+            `
+import Encore from '../../index.js';
+
+Encore
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .addEntry('main', './js/no_require')
+;
+
+const config = Encore.getWebpackConfig();
+export default config;
+            `
+        );
+
+        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
+            if (err) {
+                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
+            }
+
+            done();
+        });
+    });
 });
