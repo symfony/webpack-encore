@@ -763,6 +763,14 @@ const publicApi = {
 // if the webpackConfig object hasn't been initialized yet.
 const publicApiProxy = new Proxy(publicApi, {
     get: (target, prop) => {
+        if (prop === '__esModule') {
+            // When using Babel to preprocess a webpack.config.babel.js file
+            // (for instance if we want to use ES6 syntax) the __esModule
+            // property needs to be whitelisted to avoid an "Unknown property"
+            // error.
+            return target[prop];
+        }
+
         if (typeof target[prop] === 'function') {
             // These methods of the public API can be called even if the
             // webpackConfig object hasn't been initialized yet.
