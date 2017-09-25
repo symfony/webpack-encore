@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.15.1
+
+ * Fixed bug with using `?` in your versioning strategy with
+   `addStyleEntry` - #161 via @Lyrkan
+
+ * Fixed bug when using `webpack.config.babel.js` with ES6
+   imports - #167 via @Lyrkan
+
 ## 0.15.0
 
  * Add support for [Preact](https://preactjs.com/) - #144 via @Lyrkan
