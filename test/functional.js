@@ -332,6 +332,37 @@ describe('Functional tests using webpack', function() {
                     done();
                 });
             });
+
+            it('With source maps in production mode', (done) => {
+                const config = createWebpackConfig('web', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/');
+                config.addStyleEntry('styles', './css/h1_style.css');
+                config.enableSourceMaps(true);
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'main.js',
+                            'main.js.map',
+                            'styles.css',
+                            'styles.css.map',
+                            'manifest.json'
+                            // no styles.js
+                            // no styles.js.map
+                        ]);
+
+                    webpackAssert.assertManifestPathDoesNotExist(
+                        'styles.js'
+                    );
+
+                    webpackAssert.assertManifestPathDoesNotExist(
+                        'styles.js.map'
+                    );
+
+                    done();
+                });
+            });
         });
 
         it('enableVersioning applies to js, css & manifest', (done) => {
