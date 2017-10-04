@@ -30,7 +30,9 @@ describe('plugins/define', () => {
         const plugins = [];
 
         definePluginUtil(plugins, config);
-        expect(plugins.length).to.equal(0);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0]).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins[0].definitions['process.env'].NODE_ENV).to.equal(JSON.stringify('development'));
     });
 
     it('production environment with default settings', () => {
@@ -40,6 +42,7 @@ describe('plugins/define', () => {
         definePluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0]).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins[0].definitions['process.env'].NODE_ENV).to.equal(JSON.stringify('production'));
     });
 
     it('production environment with options callback', () => {
