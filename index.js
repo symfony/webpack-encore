@@ -279,6 +279,37 @@ const publicApi = {
     },
 
     /**
+     * Sorts plugins so they are added to Webpack in the given order.
+     *
+     * This method takes an array of the constructor functions used to
+     * initialize the plugins you want to sort.
+     *
+     * You only need to provide the plugins that need to be sorted:
+     * the other ones will keep their default position or respect
+     * the order in which the Encore.addPlugin() method has been called.
+     *
+     * For example:
+     *
+     *      const webpack = require('webpack');
+     *      const Plugin1 = require('plugin1');
+     *      const Plugin2 = require('plugin2');
+     *
+     *      Encore.sortPlugins([
+     *          Plugin2,
+     *          webpack.optimize.UglifyJsPlugin,
+     *          Plugin1
+     *      ])
+     *
+     * @param {Array} sortOrder
+     * @return {exports}
+     */
+    sortPlugins(sortOrder) {
+        webpackConfig.sortPlugins(sortOrder);
+
+        return this;
+    },
+
+    /**
      * Adds a custom loader config
      *
      * @param {object} loader The loader config object
