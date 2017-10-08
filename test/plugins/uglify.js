@@ -39,8 +39,8 @@ describe('plugins/uglify', () => {
 
         uglifyPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
-        expect(plugins[0].options.sourceMap).to.equal(false);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
+        expect(plugins[0].plugin.options.sourceMap).to.equal(false);
     });
 
     it('with options callback', () => {
@@ -53,12 +53,12 @@ describe('plugins/uglify', () => {
 
         uglifyPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
 
         // Allows to override default options
-        expect(plugins[0].options.beautify).to.equal(true);
+        expect(plugins[0].plugin.options.beautify).to.equal(true);
 
         // Doesn't remove default options
-        expect(plugins[0].options.sourceMap).to.equal(false);
+        expect(plugins[0].plugin.options.sourceMap).to.equal(false);
     });
 });

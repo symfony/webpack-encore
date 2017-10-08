@@ -404,6 +404,10 @@ describe('The config-generator function', () => {
     });
 
     describe('test for addPlugin config', () => {
+        function CustomPlugin1() {}
+        function CustomPlugin2() {}
+        function CustomPlugin3() {}
+
         it('extra plugin is set correctly', () => {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
@@ -414,6 +418,38 @@ describe('The config-generator function', () => {
 
             const ignorePlugin = findPlugin(webpack.IgnorePlugin, actualConfig.plugins);
             expect(ignorePlugin).to.not.be.undefined;
+        });
+
+        it('by default custom plugins are added at the end and are kept in order', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.addPlugin(new CustomPlugin1());
+            config.addPlugin(new CustomPlugin2());
+            config.addPlugin(new CustomPlugin3());
+
+            const actualConfig = configGenerator(config);
+            const plugins = actualConfig.plugins;
+
+            expect(plugins[plugins.length - 3]).to.be.instanceof(CustomPlugin1);
+            expect(plugins[plugins.length - 2]).to.be.instanceof(CustomPlugin2);
+            expect(plugins[plugins.length - 1]).to.be.instanceof(CustomPlugin3);
+        });
+
+        it('plugins can be sorted relatively to each other', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.addPlugin(new CustomPlugin1(), 2000);
+            config.addPlugin(new CustomPlugin2(), -1000);
+            config.addPlugin(new CustomPlugin3(), 1000);
+
+            const actualConfig = configGenerator(config);
+            const plugins = actualConfig.plugins;
+
+            expect(plugins[0]).to.be.instanceof(CustomPlugin1);
+            expect(plugins[1]).to.be.instanceof(CustomPlugin3);
+            expect(plugins[plugins.length - 1]).to.be.instanceof(CustomPlugin2);
         });
     });
 

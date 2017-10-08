@@ -614,6 +614,32 @@ describe('WebpackConfig object', () => {
             config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
 
             expect(config.plugins.length).to.equal(1);
+            expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
+            expect(config.plugins[0].priority).to.equal(0);
+        });
+
+        it('Calling it with a priority', () => {
+            const config = createConfig();
+            const nbOfPlugins = config.plugins.length;
+
+            expect(nbOfPlugins).to.equal(0);
+
+            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), 10);
+
+            expect(config.plugins.length).to.equal(1);
+            expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
+            expect(config.plugins[0].priority).to.equal(10);
+        });
+
+        it('Calling it with an invalid priority', () => {
+            const config = createConfig();
+            const nbOfPlugins = config.plugins.length;
+
+            expect(nbOfPlugins).to.equal(0);
+
+            expect(() => {
+                config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), 'foo');
+            }).to.throw('must be a number');
         });
     });
 

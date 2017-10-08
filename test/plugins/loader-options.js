@@ -31,8 +31,8 @@ describe('plugins/loader-options', () => {
 
         loaderOptionsPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(webpack.LoaderOptionsPlugin);
-        expect(plugins[0].options.debug).to.equal(true);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.LoaderOptionsPlugin);
+        expect(plugins[0].plugin.options.debug).to.equal(true);
     });
 
     it('production environment with default settings', () => {
@@ -41,8 +41,8 @@ describe('plugins/loader-options', () => {
 
         loaderOptionsPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(webpack.LoaderOptionsPlugin);
-        expect(plugins[0].options.debug).to.equal(false);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.LoaderOptionsPlugin);
+        expect(plugins[0].plugin.options.debug).to.equal(false);
     });
 
     it('production environment with options callback', () => {
@@ -55,12 +55,12 @@ describe('plugins/loader-options', () => {
 
         loaderOptionsPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(webpack.LoaderOptionsPlugin);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.LoaderOptionsPlugin);
 
         // Allows to override default options
-        expect(plugins[0].options.debug).to.equal(true);
+        expect(plugins[0].plugin.options.debug).to.equal(true);
 
         // Doesn't remove default options
-        expect(plugins[0].options.options.context).to.equal(config.getContext());
+        expect(plugins[0].plugin.options.options.context).to.equal(config.getContext());
     });
 });
