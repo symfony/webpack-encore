@@ -115,13 +115,109 @@ const publicApi = {
     },
 
     /**
+     * Allows you to configure the paths and the options passed to the clean-webpack-plugin.
+     * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin
+     *
+     * For example:
+     *
+     *      Encore.configureCleanWebpackPlugin(['*.js'], (options) => {
+     *          options.dry = true;
+     *      })
+     *
+     * @param {Array} paths Paths that should be cleaned, relative to the "root" option
+     * @param {function} cleanWebpackPluginOptionsCallback
+     * @returns {exports}
+     */
+    configureCleanWebpackPlugin(paths = ['**/*'], cleanWebpackPluginOptionsCallback = () => {}) {
+        webpackConfig.configureCleanWebpackPlugin(paths, cleanWebpackPluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
+     * Allows you to configure the options passed to the DefinePlugin.
+     * A list of available options can be found at https://webpack.js.org/plugins/define-plugin/
+     *
+     * For example:
+     *
+     *      Encore.configureDefinePlugin((options) => {
+     *          options.VERSION = JSON.stringify('1.0.0');
+     *      })
+     *
+     * @param {function} definePluginOptionsCallback
+     * @returns {exports}
+     */
+    configureDefinePlugin(definePluginOptionsCallback = () => {}) {
+        webpackConfig.configureDefinePlugin(definePluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
+     * Allows you to configure the options passed to the extract-text-webpack-plugin.
+     * A list of available options can be found at https://github.com/webpack-contrib/extract-text-webpack-plugin
+     *
+     * For example:
+     *
+     *      Encore.configureExtractTextPlugin((options) => {
+     *          options.ignoreOrder = true;
+     *      })
+     *
+     * @param {function} extractTextPluginOptionsCallback
+     * @returns {exports}
+     */
+    configureExtractTextPlugin(extractTextPluginOptionsCallback = () => {}) {
+        webpackConfig.configureExtractTextPlugin(extractTextPluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
+     * Allows you to configure the options passed to the friendly-errors-webpack-plugin.
+     * A list of available options can be found at https://github.com/geowarin/friendly-errors-webpack-plugin
+     *
+     * For example:
+     *
+     *      Encore.configureFriendlyErrorsPlugin((options) => {
+     *          options.clearConsole = true;
+     *      })
+     *
+     * @param {function} friendlyErrorsPluginOptionsCallback
+     * @returns {exports}
+     */
+    configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
+        webpackConfig.configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
+     * Allows you to configure the options passed to the LoaderOptionsPlugins.
+     * A list of available options can be found at https://webpack.js.org/plugins/loader-options-plugin/
+     *
+     * For example:
+     *
+     *      Encore.configureLoaderOptionsPlugin((options) => {
+     *          options.minimize = true;
+     *      })
+     *
+     * @param {function} loaderOptionsPluginOptionsCallback
+     * @returns {exports}
+     */
+    configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback = () => {}) {
+        webpackConfig.configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
      * Allows you to configure the options passed to webpack-manifest-plugin.
      * A list of available options can be found at https://github.com/danethurber/webpack-manifest-plugin
      *
      * For example:
      *
-     *      Encore.configureManifestPlugin(function(options){
-     *          options.fileName: '../../var/assets/manifest.json'
+     *      Encore.configureManifestPlugin((options) => {
+     *          options.fileName = '../../var/assets/manifest.json';
      *      })
      *
      * @param {function} manifestPluginOptionsCallback
@@ -129,6 +225,26 @@ const publicApi = {
      */
     configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
         webpackConfig.configureManifestPlugin(manifestPluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
+     * Allows you to configure the options passed to the uglifyjs-webpack-plugin.
+     * A list of available options can be found at https://github.com/webpack-contrib/uglifyjs-webpack-plugin/tree/v0.4.6
+     *
+     * For example:
+     *
+     *      Encore.configureUglifyJsPlugin((options) => {
+     *          options.compress = false;
+     *          options.beautify = true;
+     *      })
+     *
+     * @param {function} uglifyJsPluginOptionsCallback
+     * @returns {exports}
+     */
+    configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = () => {}) {
+        webpackConfig.configureUglifyJsPlugin(uglifyJsPluginOptionsCallback);
 
         return this;
     },
