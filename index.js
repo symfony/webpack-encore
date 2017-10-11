@@ -75,6 +75,18 @@ const publicApi = {
         return this;
     },
 
+    setFontsPublicPath(publicPath) {
+        webpackConfig.setFontsPublicPath(publicPath);
+
+        return this;
+    },
+
+    setImagesPublicPath(publicPath) {
+        webpackConfig.setImagesPublicPath(publicPath);
+
+        return this;
+    },
+
     /**
      * Used as a prefix to the *keys* in manifest.json. Not usually needed.
      *
