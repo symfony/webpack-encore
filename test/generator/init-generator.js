@@ -13,20 +13,29 @@ const chai = require('chai');
 chai.use(require('chai-fs'));
 const expect = chai.expect;
 const testSetup = require('../../lib/test/setup');
+const InitConfig = require('../../lib/generator/InitConfig');
+const generator = require('../../lib/generator/init-generator');
 
-describe('Functional tests the init generator', function() {
-    // being functional tests, these can take quite long
-    this.timeout(8000);
+describe.only('Functional tests the init generator', function() {
+    // these tests are VERY slow
+    this.timeout(30000);
 
     before(() => {
         testSetup.emptyTmpDir();
     });
 
-    describe('init', () => {
-        it('init, SPA, vanilla', (done) => {
-            const testDir = testSetup.createTestAppDir();
+    it('init, SPA, CSS, Vanilla', (done) => {
+        const testDir = testSetup.createEmptyTestAppDir();
+        console.log(testDir);
+        const initConfig = new InitConfig(testDir);
+        initConfig.isSpa = true;
+        initConfig.cssType = InitConfig.cssTypeCss;
+        initConfig.jsType = InitConfig.jsTypeVanilla;
 
-            // todo
+        generator(initConfig).then(() => {
+            // todo assertions on what lives there!
+            // AND todo, in the code, generate the project skeleton
+            done();
         });
     });
 });
