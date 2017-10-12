@@ -32,9 +32,9 @@ describe('plugins/manifest', () => {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(ManifestPlugin);
-        expect(plugins[0].opts.fileName).to.equal('manifest.json');
-        expect(plugins[0].opts.publicPath).to.equal('/foo/');
+        expect(plugins[0].plugin).to.be.instanceof(ManifestPlugin);
+        expect(plugins[0].plugin.opts.fileName).to.equal('manifest.json');
+        expect(plugins[0].plugin.opts.publicPath).to.equal('/foo/');
     });
 
     it('with options callback', () => {
@@ -47,12 +47,12 @@ describe('plugins/manifest', () => {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(ManifestPlugin);
+        expect(plugins[0].plugin).to.be.instanceof(ManifestPlugin);
 
         // Allows to override default options
-        expect(plugins[0].opts.fileName).to.equal('bar');
+        expect(plugins[0].plugin.opts.fileName).to.equal('bar');
 
         // Doesn't remove default options
-        expect(plugins[0].opts.publicPath).to.equal('/foo/');
+        expect(plugins[0].plugin.opts.publicPath).to.equal('/foo/');
     });
 });

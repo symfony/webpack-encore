@@ -33,7 +33,7 @@ describe('plugins/forkedtypecheck', () => {
         const tsTypeChecker = require('../../lib/plugins/forked-ts-types');
         tsTypeChecker(config);
         expect(config.plugins).to.have.lengthOf(1);
-        expect(config.plugins[0]).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
+        expect(config.plugins[0].plugin).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
         // after enabling plugin, check typescript loader has right config
         const actualLoaders = tsLoader.getLoaders(config);
         expect(actualLoaders[1].options.transpileOnly).to.be.true;

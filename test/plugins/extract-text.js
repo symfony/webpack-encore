@@ -30,9 +30,9 @@ describe('plugins/extract-text', () => {
 
         extractTextPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(ExtractTextPlugin);
-        expect(plugins[0].filename).to.equal('[name].css');
-        expect(plugins[0].options.allChunks).to.equal(false);
+        expect(plugins[0].plugin).to.be.instanceof(ExtractTextPlugin);
+        expect(plugins[0].plugin.filename).to.equal('[name].css');
+        expect(plugins[0].plugin.options.allChunks).to.equal(false);
     });
 
     it('with default settings and versioning enabled', () => {
@@ -43,9 +43,9 @@ describe('plugins/extract-text', () => {
 
         extractTextPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(ExtractTextPlugin);
-        expect(plugins[0].filename).to.equal('[name].[contenthash].css');
-        expect(plugins[0].options.allChunks).to.equal(false);
+        expect(plugins[0].plugin).to.be.instanceof(ExtractTextPlugin);
+        expect(plugins[0].plugin.filename).to.equal('[name].[contenthash].css');
+        expect(plugins[0].plugin.options.allChunks).to.equal(false);
     });
 
     it('with options callback', () => {
@@ -59,15 +59,15 @@ describe('plugins/extract-text', () => {
 
         extractTextPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(ExtractTextPlugin);
+        expect(plugins[0].plugin).to.be.instanceof(ExtractTextPlugin);
 
         // Allows to add new options
-        expect(plugins[0].options.disable).to.equal(true);
+        expect(plugins[0].plugin.options.disable).to.equal(true);
 
         // Allows to override default options
-        expect(plugins[0].filename).to.equal('bar');
+        expect(plugins[0].plugin.filename).to.equal('bar');
 
         // Doesn't remove default options
-        expect(plugins[0].options.allChunks).to.equal(false);
+        expect(plugins[0].plugin.options.allChunks).to.equal(false);
     });
 });

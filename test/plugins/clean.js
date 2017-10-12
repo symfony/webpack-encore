@@ -40,9 +40,9 @@ describe('plugins/clean', () => {
 
         cleanPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(CleanWebpackPlugin);
-        expect(plugins[0].paths).to.deep.equal(['**/*']);
-        expect(plugins[0].options.dry).to.equal(false);
+        expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
+        expect(plugins[0].plugin.paths).to.deep.equal(['**/*']);
+        expect(plugins[0].plugin.options.dry).to.equal(false);
     });
 
     it('enabled with custom paths and options callback', () => {
@@ -55,8 +55,8 @@ describe('plugins/clean', () => {
 
         cleanPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0]).to.be.instanceof(CleanWebpackPlugin);
-        expect(plugins[0].paths).to.deep.equal(['**/*.js', '**/*.css']);
-        expect(plugins[0].options.dry).to.equal(true);
+        expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
+        expect(plugins[0].plugin.paths).to.deep.equal(['**/*.js', '**/*.css']);
+        expect(plugins[0].plugin.options.dry).to.equal(true);
     });
 });

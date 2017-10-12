@@ -269,11 +269,35 @@ const publicApi = {
      * For example, if you want to add the "webpack.IgnorePlugin()", then:
      *      .addPlugin(new webpack.IgnorePlugin(requestRegExp, contextRegExp))
      *
+     * By default custom plugins are added after the ones managed by Encore
+     * but you can also set a priority to define where your plugin will be
+     * added in the generated Webpack config.
+     *
+     * For example, if a plugin has a priority of 0 and you want to add
+     * another plugin after it, then:
+     *
+     *      .addPlugin(new MyWebpackPlugin(), -10)
+     *
+     * The priority of each plugin added by Encore can be found in the
+     * "lib/plugins/plugin-priorities.js" file. It is recommended to use
+     * these constants if you want to add a plugin using the same priority
+     * as one managed by Encore in order to avoid backward compatibility
+     * breaks.
+     *
+     * For example, if you want one of your plugins to have the same priority
+     * than the DefinePlugin:
+     *
+     *      const Encore = require('@symfony/webpack-encore');
+     *      const PluginPriorities = require('@symfony/webpack-encore/lib/plugins/plugin-priorities.js');
+     *
+     *      Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
+     *
      * @param {string} plugin
+     * @param {number} priority
      * @return {exports}
      */
-    addPlugin(plugin) {
-        webpackConfig.addPlugin(plugin);
+    addPlugin(plugin, priority = 0) {
+        webpackConfig.addPlugin(plugin, priority);
 
         return this;
     },
