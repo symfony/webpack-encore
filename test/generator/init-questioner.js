@@ -32,6 +32,7 @@ describe('generator/init-questioner', function() {
     it('Use all defaults', () => {
         return run([inq.ENTER, inq.ENTER, inq.ENTER]).then(initConfig => {
             expect(initConfig).to.deep.equal({
+                _projectPath: 'fake_path',
                 _isSpa: true,
                 _cssType: 'CSS_TYPE_SASS',
                 _jsType: 'JS_TYPE_VANILLA'
@@ -43,6 +44,7 @@ describe('generator/init-questioner', function() {
         // down for multi-page, down for LESS
         return run([inq.DOWN, inq.ENTER, inq.DOWN, inq.ENTER]).then(initConfig => {
             expect(initConfig).to.deep.equal({
+                _projectPath: 'fake_path',
                 _isSpa: false,
                 _cssType: 'CSS_TYPE_LESS',
                 // JS type defaults to Vanilla

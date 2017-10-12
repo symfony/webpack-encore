@@ -21,7 +21,7 @@ inquirer.prompt({
     message: 'tmp file name',
     name: 'tmpPath'
 }).then(response => {
-    initQuestioner().then(initConfig => {
+    initQuestioner('fake_path').then(initConfig => {
         fs.writeFileSync(response.tmpPath, JSON.stringify(initConfig));
     });
 });
