@@ -35,6 +35,10 @@ describe.only('Functional tests the init generator', function() {
         generator(initConfig).then(() => {
             // todo assertions on what lives there!
             // AND todo, in the code, generate the project skeleton
+
+            // todo - run webpack using *that* webpack.config.js
+            // file (similar to what we do in functional.js)
+            // and verify that a basic page works
             done();
         });
     });
