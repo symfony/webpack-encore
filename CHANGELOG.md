@@ -1,5 +1,16 @@
 # CHANGELOG
 
+## 0.16.0
+
+ * Added a priority argument to the `addPlugin()` method so that we
+    can (mostly in the future) allow plugins to be ordered, if/when
+    that becomes necessary - #177 via @Lyrkan
+
+ * Fixed several minor bugs related to extra `.map` files (#170),
+    always having a DefinePlugin enabled (#172), fixing extra
+    instances of the ts-loader (#181) and upgrading a dependency
+    to avoid a deprecation warning (#182) - all via @Lyrkan
+
 ## 0.15.1
 
  * Fixed bug with using `?` in your versioning strategy with
