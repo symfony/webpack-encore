@@ -215,6 +215,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableBuildNotifications', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableBuildNotifications();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('disableImagesLoader', () => {
 
         it('must return the API object', () => {
