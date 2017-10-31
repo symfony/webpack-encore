@@ -161,6 +161,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableStylusLoader', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableStylusLoader();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('setOutputPath', () => {
 
         it('must return the API object', () => {
