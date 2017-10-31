@@ -604,6 +604,38 @@ describe('WebpackConfig object', () => {
         });
     });
 
+
+    describe('enableBuildNotifications', () => {
+        it('Calling method with default values', () => {
+            const config = createConfig();
+            config.enableBuildNotifications();
+
+            expect(config.useWebpackNotifier).to.be.true;
+        });
+
+        it('Calling method without enabling it', () => {
+            const config = createConfig();
+            config.enableBuildNotifications(false);
+
+            expect(config.useWebpackNotifier).to.be.false;
+        });
+
+        it('Calling method with options callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.enableBuildNotifications(true, callback);
+
+            expect(config.useWebpackNotifier).to.be.true;
+            expect(config.notifierPluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Calling method with invalid options callback', () => {
+            const config = createConfig();
+
+            expect(() => config.enableBuildNotifications(true, 'FOO')).to.throw('must be a callback function');
+        });
+    });
+
     describe('addPlugin', () => {
         it('extends the current registered plugins', () => {
             const config = createConfig();

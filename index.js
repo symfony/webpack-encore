@@ -609,6 +609,30 @@ const publicApi = {
     },
 
     /**
+     * If enabled, display build notifications using
+     * webpack-notifier.
+     *
+     * https://github.com/Turbo87/webpack-notifier
+     *
+     *     Encore.enableBuildNotifications();
+     *
+     *     // or configure the webpack-notifier options
+     *     // https://github.com/Turbo87/webpack-notifier#configuration
+     *     Encore.enableBuildNotifications(true, function(options) {
+     *         options.title = 'Webpack build';
+     *     });
+     *
+     * @param {boolean} enabled
+     * @param {function} notifierPluginOptionsCallback
+     * @returns {exports}
+     */
+    enableBuildNotifications(enabled = true, notifierPluginOptionsCallback = () => {}) {
+        webpackConfig.enableBuildNotifications(enabled, notifierPluginOptionsCallback);
+
+        return this;
+    },
+
+    /**
      * Call this if you wish to disable the default
      * images loader.
      *
