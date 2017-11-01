@@ -508,7 +508,7 @@ const publicApi = {
      *         // https://github.com/shama/stylus-loader
      *     });
      *
-     * @param {function} StylusLoaderOptionsCallback
+     * @param {function} stylusLoaderOptionsCallback
      * @return {exports}
      */
     enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
