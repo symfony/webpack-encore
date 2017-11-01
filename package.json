@@ -69,6 +69,7 @@
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
     "sass-loader": "^6.0.3",
+    "stylus-loader": "^3.0.1",
     "sinon": "^2.3.4",
     "ts-loader": "^2.1.0",
     "typescript": "^2.3.4",
