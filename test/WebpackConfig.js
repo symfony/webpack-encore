@@ -519,6 +519,31 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableStylusLoader', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            config.enableStylusLoader();
+
+            expect(config.useStylusLoader).to.be.true;
+        });
+
+        it('Calling with callback', () => {
+            const config = createConfig();
+            const callback = (stylusOptions) => {};
+            config.enableStylusLoader(callback);
+
+            expect(config.stylusLoaderOptionsCallback).to.equal(callback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableStylusLoader('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('enablePreactPreset', () => {
         it('Without preact-compat', () => {
             const config = createConfig();
