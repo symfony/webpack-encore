@@ -506,6 +506,7 @@ const publicApi = {
      *
      *     Encore.enableStylusLoader(function(options) {
      *         // https://github.com/shama/stylus-loader
+     *         // options.import = ['~library/index.styl'];
      *     });
      *
      * @param {function} stylusLoaderOptionsCallback
