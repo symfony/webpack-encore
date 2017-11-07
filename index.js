@@ -498,6 +498,27 @@ const publicApi = {
     },
 
     /**
+     * Call this if you plan on loading stylus files.
+     *
+     *     Encore.enableStylusLoader();
+     *
+     * Or pass options to the loader
+     *
+     *     Encore.enableStylusLoader(function(options) {
+     *         // https://github.com/shama/stylus-loader
+     *         // options.import = ['~library/index.styl'];
+     *     });
+     *
+     * @param {function} stylusLoaderOptionsCallback
+     * @return {exports}
+     */
+    enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
+        webpackConfig.enableStylusLoader(stylusLoaderOptionsCallback);
+
+        return this;
+    },
+
+    /**
      * Configure babel, without needing a .babelrc file.
      *
      * https://babeljs.io/docs/usage/babelrc/
