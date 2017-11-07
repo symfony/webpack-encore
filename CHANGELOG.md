@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.17.0
+
+ * Added build notifications by calling `Encore.enableBuildNotifications()` -
+   #190 via @Lyrkan
+
+ * Added Stylus support via `Encore.enableStylusLoader()` - #195
+   via @mneuhaus
+
 ## 0.16.0
 
  * Added a priority argument to the `addPlugin()` method so that we
