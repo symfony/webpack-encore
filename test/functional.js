@@ -657,6 +657,24 @@ module.exports = {
             });
         });
 
+        it('stylus processes when enabled', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addStyleEntry('styles', ['./css/h2_styles.styl']);
+            config.enableStylusLoader();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that stylus did its work!
+                webpackAssert.assertOutputFileContains(
+                    'styles.css',
+                    // stylus logic inside will resolve to tis
+                    'color: #9e9399;'
+                );
+
+                done();
+            });
+        });
+
         it('Babel is executed on .js files', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');

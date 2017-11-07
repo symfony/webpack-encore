@@ -307,6 +307,32 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('enableStylusLoader() adds the stylus-loader', () => {
+        it('without enableStylusLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            // do not enable the stylus loader
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('stylus-loader');
+        });
+
+        it('enableStylusLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableStylusLoader();
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('stylus-loader');
+        });
+    });
+
     describe('addLoader() adds a custom loader', () => {
         it('addLoader()', () => {
             const config = createConfig();
