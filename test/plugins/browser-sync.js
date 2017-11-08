@@ -1,9 +1,5 @@
 /*
-<<<<<<< HEAD
  * This file is part of the Symfony Webpack Encore package.
-=======
- * This file is part of the Symfony package.
->>>>>>> Add plugin tests
  *
  * (c) Fabien Potencier <fabien@symfony.com>
  *
@@ -37,6 +33,8 @@ describe('plugins/browser-sync', () => {
         expect(config.plugins).to.have.lengthOf(1);
         const pluginInstance = config.plugins[0];
         expect(pluginInstance.plugin).to.be.an.instanceof(BrowserSyncPlugin);
+        expect(pluginInstance.plugin.browserSyncOptions. port).to.equal('8080');
+        expect(pluginInstance.plugin.browserSyncOptions. proxy).to.equal('http://localhost:8080');
 
         expect(pluginInstance.plugin.options.reload).to.equal(false);
         expect(pluginInstance.plugin.options.name).to.equal('bs-webpack-plugin');
@@ -52,6 +50,8 @@ describe('plugins/browser-sync', () => {
         expect(config.plugins).to.have.lengthOf(1);
         const pluginInstance = config.plugins[0];
         expect(pluginInstance.plugin).to.be.an.instanceof(BrowserSyncPlugin);
+        expect(pluginInstance.plugin.browserSyncOptions. port).to.equal('80');
+        expect(pluginInstance.plugin.browserSyncOptions. proxy).to.equal('http://local.dev');
 
         expect(pluginInstance.plugin.options.reload).to.equal(false);
         expect(pluginInstance.plugin.options.name).to.equal('bs-webpack-plugin');
