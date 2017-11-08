@@ -100,10 +100,9 @@ describe('WebpackConfig object', () => {
 
         it('foo/ throws an exception', () => {
             const config = createConfig();
+            config.setPublicPath('foo');
 
-            expect(() => {
-                config.setPublicPath('foo/');
-            }).to.throw('The value passed to setPublicPath() must start with "/"');
+            expect(logger.getMessages().warning).to.have.lengthOf(1);
         });
     });
 
