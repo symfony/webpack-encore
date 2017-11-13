@@ -206,6 +206,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableCoffeeScriptLoader', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableCoffeeScriptLoader();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enableForkedTypeScriptTypesChecking', () => {
 
         it('must return the API object', () => {

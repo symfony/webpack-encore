@@ -609,6 +609,31 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableCoffeeScriptLoader', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            config.enableCoffeeScriptLoader();
+
+            expect(config.useCoffeeScriptLoader).to.be.true;
+        });
+
+        it('Calling with callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.enableCoffeeScriptLoader(callback);
+
+            expect(config.coffeeScriptConfigurationCallback).to.equal(callback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableCoffeeScriptLoader('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('enableVueLoader', () => {
         it('Call with no config', () => {
             const config = createConfig();
