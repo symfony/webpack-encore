@@ -22,7 +22,7 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/typescript', () => {
+describe('loaders/coffee-script', () => {
     it('getLoaders() with callback', () => {
         const config = createConfig();
         config.enableSourceMaps(true);
