@@ -11,6 +11,7 @@
 
 const chai = require('chai');
 chai.use(require('chai-fs'));
+const expect = chai.expect;
 const path = require('path');
 const testSetup = require('../../lib/test/setup');
 const fs = require('fs-extra');
@@ -84,6 +85,40 @@ export default config;
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
+
+            done();
+        });
+    });
+
+    it('Smoke test using the --json option', (done) => {
+        testSetup.emptyTmpDir();
+        const testDir = testSetup.createTestAppDir();
+
+        fs.writeFileSync(
+            path.join(testDir, 'webpack.config.js'),
+            `
+const Encore = require('../../index.js');
+Encore
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .addEntry('main', './js/no_require')
+;
+
+module.exports = Encore.getWebpackConfig();
+            `
+        );
+
+        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        exec(`node ${binPath} dev --json --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
+            if (err) {
+                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
+            }
+
+            const parsedOutput = JSON.parse(stdout);
+
+            expect(parsedOutput).to.be.an('object');
+            expect(parsedOutput.modules).to.be.an('array');
+            expect(parsedOutput.modules.length).to.equal(1);
 
             done();
         });

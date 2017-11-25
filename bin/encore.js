@@ -45,8 +45,10 @@ if (runtimeConfig.useDevServer) {
 
     return require('webpack-dev-server/bin/webpack-dev-server');
 } else {
-    console.log('Running webpack ...');
-    console.log();
+    if (!runtimeConfig.outputJson) {
+        console.log('Running webpack ...');
+        console.log();
+    }
 
     return require('webpack/bin/webpack');
 }
