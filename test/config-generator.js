@@ -201,11 +201,11 @@ describe('The config-generator function', () => {
             config.useVersioning = true;
 
             const actualConfig = configGenerator(config);
-            expect(actualConfig.output.filename).to.equal('[name].[chunkhash].js');
+            expect(actualConfig.output.filename).to.equal('[name].[chunkhash:8].js');
 
             const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
 
-            expect(extractTextPlugin.filename).to.equal('[name].[contenthash].css');
+            expect(extractTextPlugin.filename).to.equal('[name].[contenthash:8].css');
         });
     });
 
