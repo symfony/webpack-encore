@@ -89,6 +89,24 @@ describe('Public API', () => {
 
     });
 
+    describe('addAliases', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.addAliases({});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('addExternals', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.addExternals({});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enableVersioning', () => {
 
         it('must return the API object', () => {
