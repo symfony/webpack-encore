@@ -580,6 +580,69 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('copyFiles() allow to copy files to the build directory', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require']);
+
+            // Copy a single file
+            config.copyFiles(['./images/symfony_logo.png']);
+
+            // Copy multiple files
+            config.copyFiles([
+                { from: 'images/symfony_logo.png', to: 'symfony_logo2.png' },
+                { from: 'images/symfony_logo.png', to: 'symfony_logo3.[hash:8].png' },
+            ]);
+
+            // Copy files using an options callback
+            config.copyFiles([
+                { from: 'symfony_logo.png', to: 'symfony_logo4.[hash:8].png' },
+            ], (options) => {
+                options.context = path.join(__dirname, '../fixtures/images');
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // Check that the files have been created
+                expect(config.outputPath).to.be.a.directory()
+                .with.files([
+                    'main.js',
+                    'manifest.json',
+                    'symfony_logo.png',
+                    'symfony_logo2.png',
+                    'symfony_logo3.ea1ca6f7.png',
+                    'symfony_logo4.ea1ca6f7.png'
+                ]);
+
+                webpackAssert.assertManifestPath(
+                    'build/main.js',
+                    '/build/main.js'
+                );
+
+                webpackAssert.assertManifestPath(
+                    'build/symfony_logo.png',
+                    '/build/symfony_logo.png'
+                );
+
+                webpackAssert.assertManifestPath(
+                    'build/symfony_logo2.png',
+                    '/build/symfony_logo2.png'
+                );
+
+                webpackAssert.assertManifestPath(
+                    'build/symfony_logo3.png',
+                    '/build/symfony_logo3.ea1ca6f7.png'
+                );
+
+                webpackAssert.assertManifestPath(
+                    'build/symfony_logo4.png',
+                    '/build/symfony_logo4.ea1ca6f7.png'
+                );
+
+                done();
+            });
+
+        });
+
         it('in production mode, code is uglified', (done) => {
             const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');

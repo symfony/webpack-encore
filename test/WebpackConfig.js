@@ -871,4 +871,38 @@ describe('WebpackConfig object', () => {
             }).to.throw('"foo" is not a valid key');
         });
     });
+
+    describe('copyFiles', () => {
+        it('Calling method add files to be copied', () => {
+            const config = createConfig();
+
+            // Without a callback
+            config.copyFiles(['foo.txt']);
+
+            // With a callback
+            const callback = () => {};
+            config.copyFiles(['bar.txt', { from: 'baz.txt' }], callback);
+
+            expect(config.copyWebpackPluginConfigs.length).to.equal(2);
+            expect(config.copyWebpackPluginConfigs[0].patterns.length).to.equal(1);
+            expect(config.copyWebpackPluginConfigs[1].patterns.length).to.equal(2);
+            expect(config.copyWebpackPluginConfigs[1].optionsCallback).to.equal(callback);
+        });
+
+        it('Calling with invalid patterns parameter', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.copyFiles('FOO');
+            }).to.throw('must be an Array');
+        });
+
+        it('Calling method with invalid options callback', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.copyFiles(['foo.txt'], 'foo');
+            }).to.throw('must be a callback');
+        });
+    });
 });

@@ -291,6 +291,13 @@ describe('Public API', () => {
 
         it('must return the API object', () => {
             const returnedValue = api.configureUrlLoader({});
+        });
+    });
+
+    describe('copyFiles', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.copyFiles(['file.txt']);
             expect(returnedValue).to.equal(api);
         });
 

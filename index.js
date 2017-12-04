@@ -799,6 +799,32 @@ class Encore {
     }
 
     /**
+     * Add files or directories to be copied to the build directory.
+     *
+     * A list of valid pattern properties and available options can be
+     * found at https://github.com/webpack-contrib/copy-webpack-plugin#usage
+     *
+     *     Encore.copyFiles([
+     *       'file.txt'
+     *       { from: 'from/file.txt' },
+     *       { from: 'from/file.txt', to: 'to/file.txt' },
+     *       { from: 'from/file.txt', to: 'to/directory' },
+     *       { from: 'from/directory' },
+     *     ], (options) => {
+     *       options.ignore = ['*.txt']
+     *     });
+     *
+     * @param {object} patterns
+     * @param {function} copyWebpackPluginOptionsCallback
+     * @returns {Encore}
+     */
+    copyFiles(patterns, copyWebpackPluginOptionsCallback) {
+        webpackConfig.copyFiles(patterns, copyWebpackPluginOptionsCallback);
+
+        return this;
+    }
+
+    /**
      * If enabled, the output directory is emptied between each build (to remove old files).
      *
      * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin
