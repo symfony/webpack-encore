@@ -377,7 +377,72 @@ describe('The config-generator function', () => {
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('handlebars-loader');
         });
+    });
 
+    describe('enableEslintLoader() adds the eslint-loader', () => {
+        it('without enableEslintLoader()', () => {
+            const config = createConfig();
+            config.addEntry('main', './main');
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('eslint-loader');
+        });
+
+        it('enableEslintLoader()', () => {
+            const config = createConfig();
+            config.addEntry('main', './main');
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.enableEslintLoader();
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
+        });
+
+        it('enableEslintLoader("extends-name")', () => {
+            const config = createConfig();
+            config.addEntry('main', './main');
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.enableEslintLoader('extends-name');
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
+        });
+
+        it('enableEslintLoader({extends: "extends-name"})', () => {
+            const config = createConfig();
+            config.addEntry('main', './main');
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.enableEslintLoader({ extends: 'extends-name' });
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
+        });
+
+        it('enableEslintLoader((options) => ...)', () => {
+            const config = createConfig();
+            config.addEntry('main', './main');
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.enableEslintLoader((options) => {
+                options.extends = 'extends-name';
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
+        });
     });
 
     describe('addLoader() adds a custom loader', () => {
