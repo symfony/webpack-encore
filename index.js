@@ -288,11 +288,9 @@ class Encore {
      * than the DefinePlugin:
      *
      *      const Encore = require('@symfony/webpack-encore');
-     *      const PluginPriorities =
-     * require('@symfony/webpack-encore/lib/plugins/plugin-priorities.js');
+     *      const PluginPriorities = require('@symfony/webpack-encore/lib/plugins/plugin-priorities.js');
      *
-     *      Encore.addPlugin(new MyWebpackPlugin(),
-     * PluginPriorities.DefinePlugin);
+     *      Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
      *
      * @param {object} plugin
      * @param {number} priority
@@ -703,23 +701,23 @@ class Encore {
      * https://github.com/MoOx/eslint-loader
      *
      *     // enables the eslint loaded using the default eslint configuration.
-     *     Encore.enableEslint();
+     *     Encore.enableEslintLoader();
      *
      *     // Optionally, you can pass in the configuration eslint should extend.
-     *     Encore.enableEslint('airbnb');
+     *     Encore.enableEslintLoader('airbnb');
      *
      *     // You can also pass in an object of options
      *     // that will be passed on to the eslint-loader
-     *     Encore.enableEslint({
+     *     Encore.enableEslintLoader({
      *         extends: 'airbnb',
                emitWarning: false
      *     });
      *
      *     // For a more advanced usage you can pass in a callback
      *     // https://github.com/MoOx/eslint-loader#options
-     *     Encore.enableEslint((options) => {
+     *     Encore.enableEslintLoader((options) => {
      *          options.extends = 'airbnb';
-     *          options.emitWarning = fasle;
+     *          options.emitWarning = false;
      *     });
      *
      * @param {string|object|function} eslintLoaderOptionsOrCallback
