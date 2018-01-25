@@ -630,6 +630,18 @@ const publicApi = {
     },
 
     /**
+     * If enabled, the Aurelia plugin is enabled
+     *
+     * @param {function} aureliaLoaderOptionsCallback
+     * @returns {exports}
+     */
+    enableAurelia(aureliaLoaderOptionsCallback = () => {}) {
+        webpackConfig.enableAurelia(aureliaLoaderOptionsCallback);
+
+        return this;
+    },
+
+    /**
      * If enabled, display build notifications using
      * webpack-notifier.
      *
@@ -701,6 +713,12 @@ const publicApi = {
      */
     configureFilenames(filenames) {
         webpackConfig.configureFilenames(filenames);
+
+        return this;
+    },
+
+    configureResolveModules(directories) {
+        webpackConfig.configureResolveModules(directories);
 
         return this;
     },
