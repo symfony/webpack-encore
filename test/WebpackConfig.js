@@ -98,12 +98,11 @@ describe('WebpackConfig object', () => {
             expect(config.publicPath).to.equal('https://example.com/');
         });
 
-        it('foo/ throws an exception', () => {
+        it('You can omit the opening slash, but get a warning', () => {
             const config = createConfig();
+            config.setPublicPath('foo');
 
-            expect(() => {
-                config.setPublicPath('foo/');
-            }).to.throw('The value passed to setPublicPath() must start with "/"');
+            expect(logger.getMessages().warning).to.have.lengthOf(1);
         });
     });
 
