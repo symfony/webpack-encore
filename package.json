@@ -26,8 +26,6 @@
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
-    "aurelia-loader-webpack": "^2.1.0",
-    "aurelia-webpack-plugin": "^2.0.0-rc.5",
     "babel-core": "^6.24.0",
     "babel-loader": "^7.1.0",
     "babel-preset-env": "^1.2.2",
@@ -51,6 +49,7 @@
     "yargs": "^8.0.1"
   },
   "devDependencies": {
+    "aurelia-webpack-plugin": "^2.0.0-rc.5",
     "autoprefixer": "^6.7.7",
     "babel-plugin-transform-react-jsx": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",

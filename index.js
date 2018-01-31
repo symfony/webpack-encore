@@ -632,11 +632,26 @@ const publicApi = {
     /**
      * If enabled, the Aurelia plugin is enabled
      *
+     * https://github.com/aurelia/webpack-plugin
+     *
+     * Encore.enableAureliaPlugin();
+     *
+     * or with configuration options:
+     *
+     * Encore.enableAureliaPlugin(function(options) {
+     *      // Set the startup module to hint webpack to module tracing
+     *      options.aureliaApp = "main";
+     * });
+     *
+     * Read about more configuration options that are available:
+     *
+     * https://github.com/aurelia/webpack-plugin/wiki
+     *
      * @param {function} aureliaLoaderOptionsCallback
      * @returns {exports}
      */
-    enableAurelia(aureliaLoaderOptionsCallback = () => {}) {
-        webpackConfig.enableAurelia(aureliaLoaderOptionsCallback);
+    enableAureliaPlugin(aureliaLoaderOptionsCallback = () => {}) {
+        webpackConfig.enableAureliaPlugin(aureliaLoaderOptionsCallback);
 
         return this;
     },

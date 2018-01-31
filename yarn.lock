@@ -351,8 +351,8 @@ aurelia-metadata@^1.0.0, aurelia-metadata@^1.0.2:
     aurelia-pal "^1.0.0"
 
 aurelia-pal@^1.0.0, aurelia-pal@^1.1.1:
-  version "1.4.0"
-  resolved "https://registry.yarnpkg.com/aurelia-pal/-/aurelia-pal-1.4.0.tgz#1148f256c854c0e020a0a8f465cbf4a6eeaf9188"
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/aurelia-pal/-/aurelia-pal-1.5.0.tgz#26607538d60a973f73824d75b0bfa91384ce9dd3"
 
 aurelia-path@^1.0.0:
   version "1.1.1"
@@ -5871,8 +5871,8 @@ ua-parser-js@^0.7.9:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.14.tgz#110d53fa4c3f326c121292bbeac904d2e03387ca"
 
 uglify-js@3.3.x:
-  version "3.3.8"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.3.8.tgz#51e9a5db73afb53ac98603d08224edcd0be45fd8"
+  version "3.3.9"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-3.3.9.tgz#33869666c8ab7f7658ce3d22f0f1ced40097d33a"
   dependencies:
     commander "~2.13.0"
     source-map "~0.6.1"
