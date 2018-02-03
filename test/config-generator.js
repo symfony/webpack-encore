@@ -619,4 +619,43 @@ describe('The config-generator function', () => {
             });
         });
     });
+
+    describe('Test resolveModules option', () => {
+        it('should not appear in config if not set', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve).not.to.include.keys('modules');
+        });
+
+        it('should have node_modules set as default if called without arguments', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.configureResolveModules();
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve.modules.length).to.equal(1);
+            expect(actualConfig.resolve.modules[0]).to.equal('node_modules');
+        });
+
+        it('should set the module paths used as arguments', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+
+            const modulePath = '/foo/bar';
+
+            config.configureResolveModules([modulePath]);
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve.modules.length).to.equal(1);
+            expect(actualConfig.resolve.modules[0]).to.equal(modulePath);
+        });
+    });
 });
