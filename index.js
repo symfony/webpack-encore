@@ -647,11 +647,11 @@ const publicApi = {
      *
      * https://github.com/aurelia/webpack-plugin/wiki
      *
-     * @param {function} aureliaLoaderOptionsCallback
+     * @param {function} aureliaPluginOptionsCallback
      * @returns {exports}
      */
-    enableAureliaPlugin(aureliaLoaderOptionsCallback = () => {}) {
-        webpackConfig.enableAureliaPlugin(aureliaLoaderOptionsCallback);
+    enableAureliaPlugin(aureliaPluginOptionsCallback = () => {}) {
+        webpackConfig.enableAureliaPlugin(aureliaPluginOptionsCallback);
 
         return this;
     },
