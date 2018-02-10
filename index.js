@@ -39,7 +39,7 @@ const publicApi = {
     /**
      * The directory where your files should be output.
      *
-     * If relative (e.g. /web/build), it will be set relative
+     * If relative (e.g. web/build), it will be set relative
      * to the directory where your package.json lives.
      *
      * @param {string} outputPath
@@ -55,13 +55,13 @@ const publicApi = {
      * The public version of outputPath: the public path to outputPath.
      *
      * For example, if "web" is your document root, then:
-     *      .setOutputPath('/web/build')
+     *      .setOutputPath('web/build')
      *      .setPublicPath('/build')
      *
      * This can also be set to an absolute URL if you're using
      * a CDN: publicPath is used as the prefix to all asset paths
      * in the manifest.json file and internally in webpack:
-     *      .setOutputPath('/web/build')
+     *      .setOutputPath('web/build')
      *      .setPublicPath('https://coolcdn.com')
      *      // needed when public path is absolute
      *      .setManifestKeyPrefix('/build')
@@ -85,14 +85,14 @@ const publicApi = {
      * But if publicPath is absolute, then we require you to set this.
      * For example:
      *
-     *      .setOutputPath('/web/build')
+     *      .setOutputPath('web/build')
      *      .setPublicPath('https://coolcdn.com/FOO')
-     *      .setManifestKeyPrefix('/build')
+     *      .setManifestKeyPrefix('build/')
      *
      * The manifest.json file would look something like this:
      *
      *      {
-     *          "/build/main.js": "https://coolcdn.com/FOO/main.a54f3ccd2.js"
+     *          "build/main.js": "https://coolcdn.com/FOO/main.a54f3ccd2.js"
      *      }
      *
      * @param {string} manifestKeyPrefix
