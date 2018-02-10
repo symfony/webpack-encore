@@ -10,7 +10,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const ManifestPlugin = require('../../lib/webpack/webpack-manifest-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const manifestPluginUtil = require('../../lib/plugins/manifest');
@@ -34,7 +34,6 @@ describe('plugins/manifest', () => {
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(ManifestPlugin);
         expect(plugins[0].plugin.opts.fileName).to.equal('manifest.json');
-        expect(plugins[0].plugin.opts.publicPath).to.equal('/foo/');
     });
 
     it('with options callback', () => {
@@ -51,9 +50,6 @@ describe('plugins/manifest', () => {
 
         // Allows to override default options
         expect(plugins[0].plugin.opts.fileName).to.equal('bar');
-
-        // Doesn't remove default options
-        expect(plugins[0].plugin.opts.publicPath).to.equal('/foo/');
     });
 
     it('with options callback that returns an object', () => {

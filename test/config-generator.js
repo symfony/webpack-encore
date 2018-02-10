@@ -14,7 +14,7 @@ const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ManifestPlugin = require('./../lib/webpack/webpack-manifest-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
@@ -153,7 +153,6 @@ describe('The config-generator function', () => {
 
             expect(actualConfig.output.publicPath).to.equal('/build/');
             const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
-            expect(manifestPlugin.opts.publicPath).to.equal('/build/');
             // basePath matches publicPath, *without* the opening slash
             // we do that by convention: keys do not start with /
             expect(manifestPlugin.opts.basePath).to.equal('build/');
@@ -171,7 +170,6 @@ describe('The config-generator function', () => {
 
             expect(actualConfig.output.publicPath).to.equal('/subdirectory/build/');
             const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
-            expect(manifestPlugin.opts.publicPath).to.equal('/subdirectory/build/');
             // base path matches manifestKeyPrefix + trailing slash
             // the opening slash is kept, since the user is overriding this setting
             expect(manifestPlugin.opts.basePath).to.equal('/build/');
@@ -187,7 +185,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
-            expect(manifestPlugin.opts.publicPath).to.equal('/build/');
             expect(manifestPlugin.opts.basePath).to.equal('');
         });
     });
