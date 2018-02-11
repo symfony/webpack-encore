@@ -346,6 +346,64 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('addAliases() adds new aliases', () => {
+        it('without addAliases()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve.alias).to.deep.equals({});
+        });
+
+        it('with addAliases()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addAliases({
+                'testA': 'src/testA',
+                'testB': 'src/testB'
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve.alias).to.deep.equals({
+                'testA': 'src/testA',
+                'testB': 'src/testB'
+            });
+        });
+    });
+
+    describe('addExternals() adds new externals', () => {
+        it('without addExternals()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.externals).to.deep.equals({});
+        });
+
+        it('with addExternals()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addExternals({
+                'jquery': 'jQuery',
+                'react': 'react'
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.externals).to.deep.equals({
+                'jquery': 'jQuery',
+                'react': 'react'
+            });
+        });
+    });
+
     describe('.js rule receives different configuration', () => {
         it('Use default config', () => {
             const config = createConfig();

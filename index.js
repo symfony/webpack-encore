@@ -329,6 +329,51 @@ const publicApi = {
     },
 
     /**
+     * Allow you to add aliases that will be used by
+     * Webpack when trying to resolve modules.
+     *
+     * See https://webpack.js.org/configuration/resolve/#resolve-alias
+     *
+     * For example:
+     *
+     *      Encore.addAliases({
+     *          Utilities: path.resolve(__dirname, 'src/utilities/'),
+     *          Templates: path.resolve(__dirname, 'src/templates/')
+     *      })
+     *
+     * @param {object} aliases
+     *
+     * @returns {exports}
+     */
+    addAliases(aliases) {
+        webpackConfig.addAliases(aliases);
+
+        return this;
+    },
+
+    /**
+     * Allow you to exclude some dependencies from the output bundles.
+     *
+     * See https://webpack.js.org/configuration/externals/
+     *
+     * For example:
+     *
+     *      Encore.addExternals({
+     *          jquery: 'jQuery',
+     *          react: 'react'
+     *      })
+     *
+     * @param {object} externals
+     *
+     * @returns {exports}
+     */
+    addExternals(externals) {
+        webpackConfig.addExternals(externals);
+
+        return this;
+    },
+
+    /**
      * When enabled, files are rendered with a hash based
      * on their contents (e.g. main.a2b61cc.js)
      *

@@ -709,6 +709,56 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('addAliases', () => {
+        it('Adds new aliases', () => {
+            const config = createConfig();
+
+            expect(config.aliases).to.deep.equals({});
+
+            config.addAliases({ 'testA': 'src/testA', 'testB': 'src/testB' });
+            config.addAliases({ 'testC': 'src/testC' });
+
+            expect(config.aliases).to.deep.equals({
+                'testA': 'src/testA',
+                'testB': 'src/testB',
+                'testC': 'src/testC'
+            });
+        });
+
+        it('Calling it with an invalid argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.addAliases('foo');
+            }).to.throw('must be an object');
+        });
+    });
+
+    describe('addExternals', () => {
+        it('Adds new externals', () => {
+            const config = createConfig();
+
+            expect(config.externals).to.deep.equals({});
+
+            config.addExternals({ 'jquery': 'jQuery', 'react': 'react' });
+            config.addExternals({ 'lodash': 'lodash' });
+
+            expect(config.externals).to.deep.equals({
+                'jquery': 'jQuery',
+                'react': 'react',
+                'lodash': 'lodash'
+            });
+        });
+
+        it('Calling it with an invalid argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.addExternals('foo');
+            }).to.throw('must be an object');
+        });
+    });
+
     describe('disableImagesLoader', () => {
         it('Disable default images loader', () => {
             const config = createConfig();
