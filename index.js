@@ -636,6 +636,27 @@ const publicApi = {
     },
 
     /**
+     * Call this if you plan on loading CoffeeScript files.
+     *
+     * Encore.enableCoffeeScriptLoader()
+     *
+     * Or, configure the coffee-loader options:
+     *
+     * Encore.enableCoffeeScriptLoader(function(coffeeScriptOptions) {
+     *      // http://coffeescript.org/#nodejs-usage
+     *      // coffeeScriptOptions.header = true;
+     * });
+     *
+     * @param {function} callback
+     * @return {exports}
+     */
+    enableCoffeeScriptLoader(callback = () => {}) {
+        webpackConfig.enableCoffeeScriptLoader(callback);
+
+        return this;
+    },
+
+    /**
      * Call this to enable forked type checking for TypeScript loader
      * https://github.com/TypeStrong/ts-loader/blob/v2.3.0/README.md#faster-builds
      *
