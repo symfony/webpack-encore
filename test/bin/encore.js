@@ -13,7 +13,7 @@ const chai = require('chai');
 chai.use(require('chai-fs'));
 const expect = chai.expect;
 const path = require('path');
-const testSetup = require('../../lib/test/setup');
+const testSetup = require('../helpers/setup');
 const fs = require('fs-extra');
 const exec = require('child_process').exec;
 

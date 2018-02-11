@@ -10,14 +10,14 @@
 'use strict';
 
 const path = require('path');
-const WebpackConfig = require('../WebpackConfig');
-const parseRuntime = require('../config/parse-runtime');
+const WebpackConfig = require('../../lib/WebpackConfig');
+const parseRuntime = require('../../lib/config/parse-runtime');
 const webpack = require('webpack');
 const fs = require('fs-extra');
 const Browser = require('zombie');
 const httpServer = require('http-server');
-const configGenerator = require('../config-generator');
-const validator = require('../config/validator');
+const configGenerator = require('../../lib/config-generator');
+const validator = require('../../lib/config/validator');
 const assertUtil = require('./assert');
 
 const tmpDir = path.join(__dirname, '../', '../', 'test_tmp');
