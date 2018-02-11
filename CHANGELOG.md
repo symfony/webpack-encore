@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.18.0
+
+ * Added `Encore.addAliases()` and `Encore.addExternal()` shortcut methods
+   #217 via @Lyrkan
+
+ * Fixed hash lengths - normalized all to 8 - #216 via @Lyrkan
+
+ * Added CoffeeScript loader - #201 via @harentius
+
 ## 0.17.0
 
  * Added build notifications by calling `Encore.enableBuildNotifications()` -
