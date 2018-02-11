@@ -940,9 +940,9 @@ module.exports = {
             config.enableVueLoader();
 
             testSetup.runWebpack(config, (webpackAssert, stats) => {
-                expect(stats.toJson().errors[0]).to.contain('Cannot process lang="scss" inside');
+                expect(stats.toJson().errors[0]).to.contain('Cannot process lang="less" inside');
                 expect(stats.toJson().errors[1]).to.contain('Cannot process lang="sass" inside');
-                expect(stats.toJson().errors[2]).to.contain('Cannot process lang="less" inside');
+                expect(stats.toJson().errors[2]).to.contain('Cannot process lang="scss" inside');
                 done();
             }, true);
         });
