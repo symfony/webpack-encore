@@ -11,7 +11,7 @@
 
 const expect = require('chai').expect;
 const parseArgv = require('../../lib/config/parse-runtime');
-const testSetup = require('../../lib/test/setup');
+const testSetup = require('../helpers/setup');
 const fs = require('fs-extra');
 const path = require('path');
 
