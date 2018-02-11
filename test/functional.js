@@ -281,13 +281,13 @@ describe('Functional tests using webpack', function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
-                            'main.f1e0a9350e13fe3a597e.js',
-                            'styles.c84caea6dd12bba7955dee9fedd5fd03.css',
+                            'main.f1e0a935.js',
+                            'styles.c84caea6.css',
                             'manifest.json'
                         ]);
 
                     webpackAssert.assertOutputFileContains(
-                        'styles.c84caea6dd12bba7955dee9fedd5fd03.css',
+                        'styles.c84caea6.css',
                         'font-size: 50px;'
                     );
                     webpackAssert.assertManifestPathDoesNotExist(
@@ -295,7 +295,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.c84caea6dd12bba7955dee9fedd5fd03.css'
+                        '/styles.c84caea6.css'
                     );
 
                     done();
@@ -377,10 +377,10 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.d002be21e9bcf76057e9.js', // chunks are also versioned
-                        'main.292c0347ed1240663cb1.js',
-                        'h1.c84caea6dd12bba7955dee9fedd5fd03.css',
-                        'bg.483832e48e67e6a3b7f0ae064eadca51.css',
+                        '0.d002be21.js', // chunks are also versioned
+                        'main.292c0347.js',
+                        'h1.c84caea6.css',
+                        'bg.483832e4.css',
                         'manifest.json'
                     ]);
 
@@ -390,7 +390,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.483832e48e67e6a3b7f0ae064eadca51.css',
+                    'bg.483832e4.css',
                     '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 

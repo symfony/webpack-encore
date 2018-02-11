@@ -44,7 +44,7 @@ describe('plugins/extract-text', () => {
         extractTextPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(ExtractTextPlugin);
-        expect(plugins[0].plugin.filename).to.equal('[name].[contenthash].css');
+        expect(plugins[0].plugin.filename).to.equal('[name].[contenthash:8].css');
         expect(plugins[0].plugin.options.allChunks).to.equal(false);
     });
 
