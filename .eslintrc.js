@@ -57,4 +57,3 @@ module.exports = {
         "header/header": [2, "block", {"pattern": "This file is part of the Symfony Webpack Encore package"}]
     }
 };
-
