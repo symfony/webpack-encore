@@ -35,7 +35,7 @@ if (runtimeConfig) {
     initializeWebpackConfig();
 }
 
-const publicApi = {
+class Encore {
     /**
      * The directory where your files should be output.
      *
@@ -43,13 +43,13 @@ const publicApi = {
      * to the directory where your package.json lives.
      *
      * @param {string} outputPath
-     * @return {exports}
+     * @returns {Encore}
      */
     setOutputPath(outputPath) {
         webpackConfig.setOutputPath(outputPath);
 
         return this;
-    },
+    }
 
     /**
      * The public version of outputPath: the public path to outputPath.
@@ -67,13 +67,13 @@ const publicApi = {
      *      .setManifestKeyPrefix('/build')
      *
      * @param {string} publicPath
-     * @return {exports}
+     * @returns {Encore}
      */
     setPublicPath(publicPath) {
         webpackConfig.setPublicPath(publicPath);
 
         return this;
-    },
+    }
 
     /**
      * Used as a prefix to the *keys* in manifest.json. Not usually needed.
@@ -96,13 +96,13 @@ const publicApi = {
      *      }
      *
      * @param {string} manifestKeyPrefix
-     * @return {exports}
+     * @returns {Encore}
      */
     setManifestKeyPrefix(manifestKeyPrefix) {
         webpackConfig.setManifestKeyPrefix(manifestKeyPrefix);
 
         return this;
-    },
+    }
 
     /**
      * Allows you to configure the options passed to the DefinePlugin.
@@ -115,13 +115,13 @@ const publicApi = {
      *      })
      *
      * @param {function} definePluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureDefinePlugin(definePluginOptionsCallback = () => {}) {
         webpackConfig.configureDefinePlugin(definePluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Allows you to configure the options passed to the extract-text-webpack-plugin.
@@ -134,13 +134,13 @@ const publicApi = {
      *      })
      *
      * @param {function} extractTextPluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureExtractTextPlugin(extractTextPluginOptionsCallback = () => {}) {
         webpackConfig.configureExtractTextPlugin(extractTextPluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Allows you to configure the options passed to the friendly-errors-webpack-plugin.
@@ -153,13 +153,13 @@ const publicApi = {
      *      })
      *
      * @param {function} friendlyErrorsPluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
         webpackConfig.configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Allows you to configure the options passed to the LoaderOptionsPlugins.
@@ -172,13 +172,13 @@ const publicApi = {
      *      })
      *
      * @param {function} loaderOptionsPluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback = () => {}) {
         webpackConfig.configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Allows you to configure the options passed to webpack-manifest-plugin.
@@ -191,13 +191,13 @@ const publicApi = {
      *      })
      *
      * @param {function} manifestPluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
         webpackConfig.configureManifestPlugin(manifestPluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Allows you to configure the options passed to the uglifyjs-webpack-plugin.
@@ -211,13 +211,13 @@ const publicApi = {
      *      })
      *
      * @param {function} uglifyJsPluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = () => {}) {
         webpackConfig.configureUglifyJsPlugin(uglifyJsPluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Adds a JavaScript file that should be webpacked:
@@ -232,13 +232,13 @@ const publicApi = {
      *                            as the output filename (e.g. app will become app.js)
      *                            in the output directory.
      * @param {string|Array} src  The path to the source file (or files)
-     * @returns {exports}
+     * @returns {Encore}
      */
     addEntry(name, src) {
         webpackConfig.addEntry(name, src);
 
         return this;
-    },
+    }
 
     /**
      * Adds a CSS/SASS/LESS file that should be webpacked:
@@ -255,13 +255,13 @@ const publicApi = {
      *                            as the output filename (e.g. app will become app.css)
      *                            in the output directory.
      * @param {string|Array} src  The path to the source file (or files)
-     * @returns {exports}
+     * @returns {Encore}
      */
     addStyleEntry(name, src) {
         webpackConfig.addStyleEntry(name, src);
 
         return this;
-    },
+    }
 
     /**
      * Add a plugin to the sets of plugins already registered by Encore
@@ -294,39 +294,39 @@ const publicApi = {
      *
      * @param {string} plugin
      * @param {number} priority
-     * @return {exports}
+     * @returns {Encore}
      */
     addPlugin(plugin, priority = 0) {
         webpackConfig.addPlugin(plugin, priority);
 
         return this;
-    },
+    }
 
     /**
      * Adds a custom loader config
      *
      * @param {object} loader The loader config object
      *
-     * @returns {exports}
+     * @returns {Encore}
      */
     addLoader(loader) {
         webpackConfig.addLoader(loader);
 
         return this;
-    },
+    }
 
     /**
      * Alias to addLoader
      *
      * @param {object} rule
      *
-     * @returns {exports}
+     * @returns {Encore}
      */
     addRule(rule) {
         this.addLoader(rule);
 
         return this;
-    },
+    }
 
     /**
      * Allow you to add aliases that will be used by
@@ -343,13 +343,13 @@ const publicApi = {
      *
      * @param {object} aliases
      *
-     * @returns {exports}
+     * @returns {Encore}
      */
     addAliases(aliases) {
         webpackConfig.addAliases(aliases);
 
         return this;
-    },
+    }
 
     /**
      * Allow you to exclude some dependencies from the output bundles.
@@ -365,13 +365,13 @@ const publicApi = {
      *
      * @param {object} externals
      *
-     * @returns {exports}
+     * @returns {Encore}
      */
     addExternals(externals) {
         webpackConfig.addExternals(externals);
 
         return this;
-    },
+    }
 
     /**
      * When enabled, files are rendered with a hash based
@@ -382,13 +382,13 @@ const publicApi = {
      * the versioned path (e.g. `builds/main.js` => `builds/main.a2b61cc.js`)
      *
      * @param {boolean} enabled
-     * @returns {exports}
+     * @returns {Encore}
      */
     enableVersioning(enabled = true) {
         webpackConfig.enableVersioning(enabled);
 
         return this;
-    },
+    }
 
     /**
      * When enabled, all final CSS and JS files will be rendered
@@ -398,26 +398,26 @@ const publicApi = {
      * or production build.
      *
      * @param {boolean} enabled
-     * @returns {exports}
+     * @returns {Encore}
      */
     enableSourceMaps(enabled = true) {
         webpackConfig.enableSourceMaps(enabled);
 
         return this;
-    },
+    }
 
     /**
      * Add a "commons" file that holds JS shared by multiple chunks.
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
      * @param {Array}  files Array of files to put in the vendor entry
-     * @return {exports}
+     * @returns {Encore}
      */
     createSharedEntry(name, files) {
         webpackConfig.createSharedEntry(name, files);
 
         return this;
-    },
+    }
 
     /**
      * Automatically make some variables available everywhere!
@@ -437,13 +437,13 @@ const publicApi = {
      *  expect jQuery (or something else) to be a global variable.
      *
      * @param {Array} variables
-     * @return {exports}
+     * @returns {Encore}
      */
     autoProvideVariables(variables) {
         webpackConfig.autoProvideVariables(variables);
 
         return this;
-    },
+    }
 
     /**
      * Makes jQuery available everywhere. Equivalent to
@@ -453,13 +453,13 @@ const publicApi = {
      *      jQuery: 'jquery'
      *  });
      *
-     * @return {exports}
+     * @returns {Encore}
      */
     autoProvidejQuery() {
         webpackConfig.autoProvidejQuery();
 
         return this;
-    },
+    }
 
     /**
      * Enables the postcss-loader
@@ -478,13 +478,13 @@ const publicApi = {
      *     })
      *
      * @param {function} postCssLoaderOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
         webpackConfig.enablePostCssLoader(postCssLoaderOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Call this if you plan on loading SASS files.
@@ -512,13 +512,13 @@ const publicApi = {
      *
      * @param {function} sassLoaderOptionsCallback
      * @param {object} encoreOptions
-     * @return {exports}
+     * @returns {Encore}
      */
     enableSassLoader(sassLoaderOptionsCallback = () => {}, encoreOptions = {}) {
         webpackConfig.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
 
         return this;
-    },
+    }
 
     /**
      * Call this if you plan on loading less files.
@@ -534,13 +534,13 @@ const publicApi = {
      *     });
      *
      * @param {function} lessLoaderOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableLessLoader(lessLoaderOptionsCallback = () => {}) {
         webpackConfig.enableLessLoader(lessLoaderOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Call this if you plan on loading stylus files.
@@ -555,13 +555,13 @@ const publicApi = {
      *     });
      *
      * @param {function} stylusLoaderOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
         webpackConfig.enableStylusLoader(stylusLoaderOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Configure babel, without needing a .babelrc file.
@@ -573,26 +573,26 @@ const publicApi = {
      * });
      *
      * @param {function} callback
-     * @return {exports}
+     * @returns {Encore}
      */
     configureBabel(callback) {
         webpackConfig.configureBabel(callback);
 
         return this;
-    },
+    }
 
     /**
      * If enabled, the react preset is added to Babel.
      *
      * https://babeljs.io/docs/plugins/preset-react/
      *
-     * @returns {exports}
+     * @returns {Encore}
      */
     enableReactPreset() {
         webpackConfig.enableReactPreset();
 
         return this;
-    },
+    }
 
     /**
      * If enabled, a Preact preset will be applied to
@@ -606,13 +606,13 @@ const publicApi = {
      *     Encore.enablePreactPreset({ preactCompat: true })
      *
      * @param {object} options
-     * @returns {exports}
+     * @returns {Encore}
      */
     enablePreactPreset(options = {}) {
         webpackConfig.enablePreactPreset(options);
 
         return this;
-    },
+    }
 
     /**
      * Call this if you plan on loading TypeScript files.
@@ -627,13 +627,13 @@ const publicApi = {
      * });
      *
      * @param {function} callback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableTypeScriptLoader(callback = () => {}) {
         webpackConfig.enableTypeScriptLoader(callback);
 
         return this;
-    },
+    }
 
     /**
      * Call this if you plan on loading CoffeeScript files.
@@ -648,13 +648,13 @@ const publicApi = {
      * });
      *
      * @param {function} callback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableCoffeeScriptLoader(callback = () => {}) {
         webpackConfig.enableCoffeeScriptLoader(callback);
 
         return this;
-    },
+    }
 
     /**
      * Call this to enable forked type checking for TypeScript loader
@@ -663,7 +663,7 @@ const publicApi = {
      * This is a build optimization API to reduce build times.
      *
      * @param {function} forkedTypeScriptTypesCheckOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
         webpackConfig.enableForkedTypeScriptTypesChecking(
@@ -671,7 +671,7 @@ const publicApi = {
         );
 
         return this;
-    },
+    }
 
     /**
      * If enabled, the Vue.js loader is enabled.
@@ -687,13 +687,13 @@ const publicApi = {
      *     });
      *
      * @param {function} vueLoaderOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     enableVueLoader(vueLoaderOptionsCallback = () => {}) {
         webpackConfig.enableVueLoader(vueLoaderOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * If enabled, display build notifications using
@@ -711,37 +711,37 @@ const publicApi = {
      *
      * @param {boolean} enabled
      * @param {function} notifierPluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     enableBuildNotifications(enabled = true, notifierPluginOptionsCallback = () => {}) {
         webpackConfig.enableBuildNotifications(enabled, notifierPluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Call this if you wish to disable the default
      * images loader.
      *
-     * @returns {exports}
+     * @returns {Encore}
      */
     disableImagesLoader() {
         webpackConfig.disableImagesLoader();
 
         return this;
-    },
+    }
 
     /**
      * Call this if you wish to disable the default
      * fonts loader.
      *
-     * @returns {exports}
+     * @returns {Encore}
      */
     disableFontsLoader() {
         webpackConfig.disableFontsLoader();
 
         return this;
-    },
+    }
 
     /**
      * Call this to change how the name of each output
@@ -763,13 +763,13 @@ const publicApi = {
      * "[contenthash]".
      *
      * @param {object} filenames
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureFilenames(filenames) {
         webpackConfig.configureFilenames(filenames);
 
         return this;
-    },
+    }
 
     /**
      * If enabled, the output directory is emptied between each build (to remove old files).
@@ -784,13 +784,13 @@ const publicApi = {
      *
      * @param {Array} paths Paths that should be cleaned, relative to the "root" option
      * @param {function} cleanWebpackPluginOptionsCallback
-     * @returns {exports}
+     * @returns {Encore}
      */
     cleanupOutputBeforeBuild(paths = ['**/*'], cleanWebpackPluginOptionsCallback = () => {}) {
         webpackConfig.cleanupOutputBeforeBuild(paths, cleanWebpackPluginOptionsCallback);
 
         return this;
-    },
+    }
 
     /**
      * Is this currently a "production" build?
@@ -799,7 +799,7 @@ const publicApi = {
      */
     isProduction() {
         return webpackConfig.isProduction();
-    },
+    }
 
     /**
      * Use this at the bottom of your webpack.config.js file:
@@ -812,7 +812,7 @@ const publicApi = {
         validator(webpackConfig);
 
         return configGenerator(webpackConfig);
-    },
+    }
 
     /**
      * Resets the Encore state to allow building a new config.
@@ -824,7 +824,7 @@ const publicApi = {
      */
     reset() {
         webpackConfig = new WebpackConfig(runtimeConfig);
-    },
+    }
 
     /**
      * Initialize the runtime environment.
@@ -851,7 +851,7 @@ const publicApi = {
      *
      * @param {string} environment
      * @param {object} options
-     * @returns {exports}
+     * @returns {Encore}
      */
     configureRuntimeEnvironment(environment, options = {}) {
         runtimeConfig = parseRuntime(
@@ -866,7 +866,7 @@ const publicApi = {
         initializeWebpackConfig();
 
         return this;
-    },
+    }
 
     /**
      * Clear the runtime environment.
@@ -879,12 +879,12 @@ const publicApi = {
     clearRuntimeEnvironment() {
         runtimeConfig = null;
         webpackConfig = null;
-    },
-};
+    }
+}
 
 // Proxy the API in order to prevent calls to most of its methods
 // if the webpackConfig object hasn't been initialized yet.
-const publicApiProxy = new Proxy(publicApi, {
+const EncoreProxy = new Proxy(new Encore(), {
     get: (target, prop) => {
         if (prop === '__esModule') {
             // When using Babel to preprocess a webpack.config.babel.js file
@@ -911,7 +911,7 @@ const publicApiProxy = new Proxy(publicApi, {
             return (...parameters) => {
                 try {
                     const res = target[prop](...parameters);
-                    return (res === target) ? publicApiProxy : res;
+                    return (res === target) ? EncoreProxy : res;
                 } catch (error) {
                     // prettifies errors thrown by our library
                     const pe = new PrettyError();
@@ -948,4 +948,7 @@ const publicApiProxy = new Proxy(publicApi, {
     }
 });
 
-module.exports = publicApiProxy;
+/**
+ * @type {Encore}
+ */
+module.exports = EncoreProxy;
