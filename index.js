@@ -436,7 +436,7 @@ class Encore {
      *  This is useful for older packages, that might
      *  expect jQuery (or something else) to be a global variable.
      *
-     * @param {Array} variables
+     * @param {object} variables
      * @returns {Encore}
      */
     autoProvideVariables(variables) {
