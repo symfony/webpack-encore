@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.19.0
+
+ * Updated how Encore is exported to support better IDE auto-completion
+   #263 via @florentdestremau
+
 ## 0.18.0
 
  * Added `Encore.addAliases()` and `Encore.addExternal()` shortcut methods
