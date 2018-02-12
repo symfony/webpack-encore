@@ -43,7 +43,7 @@ class Encore {
      * to the directory where your package.json lives.
      *
      * @param {string} outputPath
-     * @return {Encore}
+     * @returns {Encore}
      */
     setOutputPath(outputPath) {
         webpackConfig.setOutputPath(outputPath);
@@ -67,7 +67,7 @@ class Encore {
      *      .setManifestKeyPrefix('/build')
      *
      * @param {string} publicPath
-     * @return {Encore}
+     * @returns {Encore}
      */
     setPublicPath(publicPath) {
         webpackConfig.setPublicPath(publicPath);
@@ -96,7 +96,7 @@ class Encore {
      *      }
      *
      * @param {string} manifestKeyPrefix
-     * @return {Encore}
+     * @returns {Encore}
      */
     setManifestKeyPrefix(manifestKeyPrefix) {
         webpackConfig.setManifestKeyPrefix(manifestKeyPrefix);
@@ -294,7 +294,7 @@ class Encore {
      *
      * @param {string} plugin
      * @param {number} priority
-     * @return {exports}
+     * @returns {Encore}
      */
     addPlugin(plugin, priority = 0) {
         webpackConfig.addPlugin(plugin, priority);
@@ -411,7 +411,7 @@ class Encore {
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
      * @param {Array}  files Array of files to put in the vendor entry
-     * @return {exports}
+     * @returns {Encore}
      */
     createSharedEntry(name, files) {
         webpackConfig.createSharedEntry(name, files);
@@ -437,7 +437,7 @@ class Encore {
      *  expect jQuery (or something else) to be a global variable.
      *
      * @param {Array} variables
-     * @return {exports}
+     * @returns {Encore}
      */
     autoProvideVariables(variables) {
         webpackConfig.autoProvideVariables(variables);
@@ -453,7 +453,7 @@ class Encore {
      *      jQuery: 'jquery'
      *  });
      *
-     * @return {exports}
+     * @returns {Encore}
      */
     autoProvidejQuery() {
         webpackConfig.autoProvidejQuery();
@@ -478,7 +478,7 @@ class Encore {
      *     })
      *
      * @param {function} postCssLoaderOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
         webpackConfig.enablePostCssLoader(postCssLoaderOptionsCallback);
@@ -512,7 +512,7 @@ class Encore {
      *
      * @param {function} sassLoaderOptionsCallback
      * @param {object} encoreOptions
-     * @return {exports}
+     * @returns {Encore}
      */
     enableSassLoader(sassLoaderOptionsCallback = () => {}, encoreOptions = {}) {
         webpackConfig.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
@@ -534,7 +534,7 @@ class Encore {
      *     });
      *
      * @param {function} lessLoaderOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableLessLoader(lessLoaderOptionsCallback = () => {}) {
         webpackConfig.enableLessLoader(lessLoaderOptionsCallback);
@@ -555,7 +555,7 @@ class Encore {
      *     });
      *
      * @param {function} stylusLoaderOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
         webpackConfig.enableStylusLoader(stylusLoaderOptionsCallback);
@@ -573,7 +573,7 @@ class Encore {
      * });
      *
      * @param {function} callback
-     * @return {exports}
+     * @returns {Encore}
      */
     configureBabel(callback) {
         webpackConfig.configureBabel(callback);
@@ -627,7 +627,7 @@ class Encore {
      * });
      *
      * @param {function} callback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableTypeScriptLoader(callback = () => {}) {
         webpackConfig.enableTypeScriptLoader(callback);
@@ -648,7 +648,7 @@ class Encore {
      * });
      *
      * @param {function} callback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableCoffeeScriptLoader(callback = () => {}) {
         webpackConfig.enableCoffeeScriptLoader(callback);
@@ -663,7 +663,7 @@ class Encore {
      * This is a build optimization API to reduce build times.
      *
      * @param {function} forkedTypeScriptTypesCheckOptionsCallback
-     * @return {exports}
+     * @returns {Encore}
      */
     enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
         webpackConfig.enableForkedTypeScriptTypesChecking(
@@ -884,7 +884,7 @@ class Encore {
 
 // Proxy the API in order to prevent calls to most of its methods
 // if the webpackConfig object hasn't been initialized yet.
-const EncoreProxy = new Proxy(Encore, {
+const EncoreProxy = new Proxy(new Encore(), {
     get: (target, prop) => {
         if (prop === '__esModule') {
             // When using Babel to preprocess a webpack.config.babel.js file
