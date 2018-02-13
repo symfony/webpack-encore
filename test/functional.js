@@ -246,8 +246,8 @@ describe('Functional tests using webpack', function() {
                     ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
-                            'http://127.0.0.1:8080/public/build/0.js',
-                            'http://127.0.0.1:8080/public/build/main.js'
+                            'http://127.0.0.1:8080/build/0.js',
+                            'http://127.0.0.1:8080/build/main.js'
                         ]);
 
                         done();
