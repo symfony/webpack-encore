@@ -240,8 +240,7 @@ describe('Functional tests using webpack', function() {
                 );
 
                 testSetup.requestTestPage(
-                    // the webroot will not include the public/build part
-                    path.join(config.getContext(), ''),
+                    path.join(config.getContext(), 'public'),
                     [
                         convertToManifestPath('build/main.js', config)
                     ],
