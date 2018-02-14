@@ -410,7 +410,7 @@ class Encore {
      * Add a "commons" file that holds JS shared by multiple chunks.
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
-     * @param {Array}  files Array of files to put in the vendor entry
+     * @param {string|Array}  files Array of files to put in the vendor entry
      * @returns {Encore}
      */
     createSharedEntry(name, files) {
