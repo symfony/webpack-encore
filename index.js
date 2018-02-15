@@ -292,7 +292,7 @@ class Encore {
      *
      *      Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
      *
-     * @param {string} plugin
+     * @param {object} plugin
      * @param {number} priority
      * @returns {Encore}
      */
