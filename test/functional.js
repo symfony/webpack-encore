@@ -486,6 +486,51 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('setFontsPublicPath() generates relativePath for fonts', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addStyleEntry('css/style', './css/style_with_fonts.scss');
+            config.setFontsPublicPath('../');
+            config.enableSassLoader();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertManifestPath(
+                    'build/css/style.css',
+                    '/build/css/style.css'
+                );
+
+                webpackAssert.assertOutputFileContains(
+                    'css/style.css',
+                    'src: url(../fonts/Roboto.woff2) format("woff2"), url(/build/images/Roboto.svg) format("svg");'
+                );
+
+                done();
+            });
+        });
+
+        it('setImagesPublicPath() generates relativePath for images', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addStyleEntry('css/style', './css/style_with_fonts.scss');
+            config.setFontsPublicPath('../');
+            config.setImagesPublicPath('../');
+            config.enableSassLoader();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertManifestPath(
+                    'build/css/style.css',
+                    '/build/css/style.css'
+                );
+
+                webpackAssert.assertOutputFileContains(
+                    'css/style.css',
+                    'src: url(../fonts/Roboto.woff2) format("woff2"), url(../images/Roboto.svg) format("svg");'
+                );
+
+                done();
+            });
+        });
+
         it('enableSourceMaps() adds to .js, css & scss', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
