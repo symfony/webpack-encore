@@ -772,6 +772,33 @@ class Encore {
     }
 
     /**
+     * Allows to configure the URL loader.
+     *
+     * https://github.com/webpack-contrib/url-loader
+     *
+     *     Encore.configureUrlLoader({
+     *         images: {
+     *             limit: 8192,
+     *             mimetype: 'image/png'
+     *         },
+     *         fonts: {
+     *             limit: 4096
+     *         }
+     *     });
+     *
+     * If a key (e.g. fonts) doesn't exists or contains a
+     * falsy value the file-loader will be used instead.
+     *
+     * @param {object} urlLoaderOptions
+     * @return {Encore}
+     */
+    configureUrlLoader(urlLoaderOptions = {}) {
+        webpackConfig.configureUrlLoader(urlLoaderOptions);
+
+        return this;
+    }
+
+    /**
      * If enabled, the output directory is emptied between each build (to remove old files).
      *
      * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin

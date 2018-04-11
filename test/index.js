@@ -287,6 +287,15 @@ describe('Public API', () => {
 
     });
 
+    describe('configureUrlLoader', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.configureUrlLoader({});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('cleanupOutputBeforeBuild', () => {
 
         it('must return the API object', () => {

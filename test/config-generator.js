@@ -674,6 +674,60 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('configureUrlLoader() allows to use the URL loader for fonts/images', () => {
+        it('without configureUrlLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+
+            const actualConfig = configGenerator(config);
+
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            expect(imagesRule.loader).to.equal('file-loader');
+
+            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            expect(fontsRule.loader).to.equal('file-loader');
+        });
+
+        it('with configureUrlLoader() and missing keys', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureUrlLoader({});
+
+            const actualConfig = configGenerator(config);
+
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            expect(imagesRule.loader).to.equal('file-loader');
+
+            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            expect(fontsRule.loader).to.equal('file-loader');
+        });
+
+        it('with configureUrlLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureUrlLoader({
+                images: { limit: 8192 },
+                fonts: { limit: 4096 }
+            });
+
+            const actualConfig = configGenerator(config);
+
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            expect(imagesRule.loader).to.equal('url-loader');
+            expect(imagesRule.options.limit).to.equal(8192);
+
+            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            expect(fontsRule.loader).to.equal('url-loader');
+            expect(fontsRule.options.limit).to.equal(4096);
+        });
+    });
+
     describe('Test preact preset', () => {
         describe('Without preact-compat', () => {
             it('enablePreactPreset() does not add aliases to use preact-compat', () => {
