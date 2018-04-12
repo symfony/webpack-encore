@@ -59,4 +59,22 @@ describe('plugins/clean', () => {
         expect(plugins[0].plugin.paths).to.deep.equal(['**/*.js', '**/*.css']);
         expect(plugins[0].plugin.options.dry).to.equal(true);
     });
+
+    it('enabled with an options callback that returns an object', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.cleanupOutputBeforeBuild(['**/*.js', '**/*.css'], (options) => {
+            options.dry = true;
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        cleanPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
+        expect(plugins[0].plugin.options.dry).to.equal(false);
+        expect(plugins[0].plugin.options.foo).to.equal(true);
+    });
 });

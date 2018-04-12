@@ -61,4 +61,22 @@ describe('plugins/uglify', () => {
         // Doesn't remove default options
         expect(plugins[0].plugin.options.sourceMap).to.equal(false);
     });
+
+    it('with options callback that returns an object', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.configureUglifyJsPlugin((options) => {
+            options.beautify = true;
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        uglifyPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
+        expect(plugins[0].plugin.options.beautify).to.be.undefined;
+        expect(plugins[0].plugin.options.foo).to.equal(true);
+    });
 });

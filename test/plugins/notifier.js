@@ -67,4 +67,22 @@ describe('plugins/notifier', () => {
         expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
         expect(plugins[0].plugin.options.title).to.equal('foo');
     });
+
+    it('enabled with options callback that returns an object', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.enableBuildNotifications(true, (options) => {
+            options.title = 'foo';
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        notifierPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
+        expect(plugins[0].plugin.options.title).to.be.undefined;
+        expect(plugins[0].plugin.options.foo).to.equal(true);
+    });
 });

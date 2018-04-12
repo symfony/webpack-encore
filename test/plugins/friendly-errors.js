@@ -48,4 +48,21 @@ describe('plugins/friendly-errors', () => {
         expect(plugin.formatters.length).to.equal(3);
         expect(plugin.transformers.length).to.equal(6);
     });
+
+    it('with options callback that returns an object', () => {
+        const config = createConfig();
+
+        config.configureFriendlyErrorsPlugin((options) => {
+            options.clearConsole = false;
+
+            // This should override the original config
+            return { additionalFormatters: [] };
+        });
+
+        const plugin = friendlyErrorsPluginUtil(config);
+        expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
+        expect(plugin.shouldClearConsole).to.equal(true);
+        expect(plugin.formatters.length).to.equal(3);
+        expect(plugin.transformers.length).to.equal(3);
+    });
 });

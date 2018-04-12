@@ -101,4 +101,19 @@ describe('loaders/babel', () => {
             'foo'
         ]);
     });
+
+    it('getLoaders() with a callback that returns an object', () => {
+        const config = createConfig();
+        config.enablePreactPreset({ preactCompat: true });
+
+        config.configureBabel(function(babelConfig) {
+            babelConfig.plugins.push('foo');
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        const actualLoaders = babelLoader.getLoaders(config);
+        expect(actualLoaders[0].options).to.deep.equal({ 'foo': true });
+    });
 });

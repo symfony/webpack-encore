@@ -36,4 +36,18 @@ describe('loaders/coffee-script', () => {
             header: true,
         });
     });
+
+    it('getLoaders() with a callback that returns an object', () => {
+        const config = createConfig();
+        config.enableSourceMaps(true);
+        config.enableCoffeeScriptLoader(function(options) {
+            options.header = true;
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        const loaders = coffeeScriptLoader.getLoaders(config);
+        expect(loaders[0].options).to.deep.equal({ foo: true });
+    });
 });

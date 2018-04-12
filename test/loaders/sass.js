@@ -127,4 +127,25 @@ describe('loaders/sass', () => {
         });
         cssLoader.getLoaders.restore();
     });
+
+    it('getLoaders() with a callback that returns an object', () => {
+        const config = createConfig();
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        config.enableSassLoader(function(sassOptions) {
+            sassOptions.custom_option = 'baz';
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+
+        const actualLoaders = sassLoader.getLoaders(config, {});
+        expect(actualLoaders[1].options).to.deep.equals({ foo: true });
+
+        cssLoader.getLoaders.restore();
+    });
 });

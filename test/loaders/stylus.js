@@ -61,4 +61,24 @@ describe('loaders/stylus', () => {
         });
         cssLoader.getLoaders.restore();
     });
+
+    it('getLoaders() with a callback that returns an object', () => {
+        const config = createConfig();
+        config.enableSourceMaps(true);
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        config.enableStylusLoader(function(stylusOptions) {
+            stylusOptions.custom_option = 'foo';
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        const actualLoaders = stylusLoader.getLoaders(config);
+        expect(actualLoaders[0].options).to.deep.equals({ foo: true });
+        cssLoader.getLoaders.restore();
+    });
 });
