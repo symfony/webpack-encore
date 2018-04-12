@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-04-03T15:17:42Z
+
+AFAICT, it is not possible to disable core formatters in the plugin. So I suggest contributing to the plugin instead (there is already an issue discussing this in the plugin repo, and this is actually where I took the idea of checking lock files to perform the detection, but no PR is opened yet)
