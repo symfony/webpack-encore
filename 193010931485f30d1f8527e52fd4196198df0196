@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-09-21T15:55:43Z
+
+Failures are due to: https://github.com/salesforce/tough-cookie/issues/92... which is unrelated to us, and will hopefully get resolved shortly.
+
+---------------------------------------------------------------------------
+
+by stof at 2017-09-21T16:48:18Z
+
+yeah, too bad that JS regexp does not have possessive quantifiers. In PHP, they would allow fixing the issue very easily (we did such fixes in Symfony).
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2017-10-06T21:00:04Z
+
+> Remove the old webpack-manifest-plugin.js file entirely and update paths to require the actual library instead of this
+
+I'd keep the file for now with only the export of the real plugin and a `logger.deprecation(...)` in it in case someone currently uses it to do something like:
+
+```js
+const Encore = require('@symfony/webpack-encore');
+const ManifestPlugin = require('@symfony/webpack-encore/lib/webpack/webpack-manifest-plugin.js');
+
+// (...)
+
+const config = Encore.getWebpackConfig();
+
+for (const plugin of config.plugins) {
+    if (plugin instanceof ManifestPlugin) {
+        // Do something with its config
+    }
+}
+
+module.exports = config;
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2017-10-12T16:44:50Z
+
+Hmm, interesting point - I'm cool with that :). In general, however, we should discourage people from requiring specific files from the lib - these shouldn't be considered part of our public API, unless we advertise using them (like the new PluginPriorities module).
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-04-11T08:43:58Z
+
+@weaverryan  It looks like Webpack Manifest Plugin 2.0.0 is out :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-04-12T14:39:48Z
+
+Yeeeeea! @Lyrkan I just fixed conflicts, let's wait for the tests. Can you review the PR one last time to give it a 👍 ? Then we can merge and finish `copyFiles()` :)
