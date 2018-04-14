@@ -1,0 +1,78 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-04-12T14:59:03Z
+
+> I'm not sure. It makes it a lot longer, and most users don't need this.
+
+Yeah, that's why I didn't do it, but I don't mind adding it if you think that's needed.
+However in this case maybe we should also warn the user that returning a brand new object can remove some default options that are set by Encore.
+
+> Another idea would be to start requiring returning as the ONLY way (and deprecate returning nothing). It would simplify the example, and it would be obvious for expert users that they could, of course, return a totally different/custom object.
+
+I'm not sure about that, you'll still have to use the "options" param since in many cases it contains some values that are set by Encore. Doing `return { ...options, ignoreOrder: true }` (and that's if you use a Node version that supports object spread...) may be less easy to understand than just `options.ignoreOrder = true`.
+
+---------------------------------------------------------------------------
+
+by stof at 2018-04-12T15:10:44Z
+
+I suggest creating a small utility instead of duplicating the same logic everywhere:
+
+```js
+
+const processOptions = require('./util/process_options');
+
+const options =  { ... };
+
+loaders.push({
+    loader: 'postcss-loader',
+    options: processOptions(webpackConfig.postCssLoaderOptionsCallback, options)
+};
+```
+
+```js
+module.exports = function (configurationCallback, options) {
+    const result = configurationCallback.apply(options, [options]); // could even use .call to avoid creating a temporary array)
+
+    if (typeof result === 'object') {
+        return result;
+    }
+
+    return options;
+}
+```
+
+> > Another idea would be to start requiring returning as the ONLY way (and deprecate returning nothing). It would simplify the example, and it would be obvious for expert users that they could, of course, return a totally different/custom object.
+>
+> I'm not sure about that, you'll still have to use the "options" param since in many cases it contains some values that are set by Encore. Doing return `{ ...options, ignoreOrder: true }` (and that's if you use a Node version that supports object spread...) may be less easy to understand than just `options.ignoreOrder = true`.
+
+Thus, it becomes even harder in the case of nested options.
+
+---------------------------------------------------------------------------
+
+by stof at 2018-04-12T15:12:49Z
+
+The great thing is that we have the same signature for all our configuration callbacks (and centralizing the feature would ensure it stays true in the future). So the doc could have one section describing the different supported ways, and have all other sections showing one of them (with a link to the full doc about config callbacks).
+
+---------------------------------------------------------------------------
+
+by stof at 2018-04-12T15:14:42Z
+
+btw, returning the options could still be done with simple editions:
+
+```js
+Encore.configureExtractTextPlugin((options) => {
+    options.ignoreOrder = true;
+
+    return options;
+});
+```
+
+this could allow dropping support for not returning in the future (and throwing an exception if the callback does not return anything), but this would require a deprecation period first anyway.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-04-12T16:30:15Z
+
+@stof I changed it in order to use your method (+ tweaked the vue-loader part a bit).
+
+You're also right about the fact that you could still do `options.ignoreOrder = true` followed by a `return options` but I still think that's a bit more error-prone. We'll throw an error if the method doesn't return anything but won't notice if the user inadvertently creates a new object that doesn't contain the default options.
