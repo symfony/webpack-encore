@@ -260,6 +260,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableHandlebarsLoader', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableHandlebarsLoader();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('disableImagesLoader', () => {
 
         it('must return the API object', () => {

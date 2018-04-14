@@ -862,6 +862,32 @@ module.exports = {
             });
         });
 
+        it('When configured, Handlebars is compiled', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/handlebars.js']);
+            const testCallback = () => {};
+            config.enableHandlebarsLoader(testCallback);
+
+            testSetup.runWebpack(config, () => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'manifest.json'
+                ]);
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        browser.assert.text('#app h1', 'Welcome to Your Handlebars App');
+                        done();
+                    }
+                );
+            });
+        });
+
         it('The output directory is cleaned between builds', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');

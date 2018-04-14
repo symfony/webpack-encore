@@ -354,6 +354,32 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('enableHandlebarsLoader() adds the handlebars-loader', () => {
+
+        it('without enableHandlebarsLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('handlebars-loader');
+        });
+
+        it('enableHandlebarsLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableHandlebarsLoader();
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('handlebars-loader');
+        });
+
+    });
+
     describe('addLoader() adds a custom loader', () => {
         it('addLoader()', () => {
             const config = createConfig();
