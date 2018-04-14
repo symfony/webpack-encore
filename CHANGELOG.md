@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 0.20.0
+
+ * Added `Encore.configureUrlLoader()` method that allows you
+   to inline smaller images/file assets for better performance
+   #296 via @Lyrkan
+
+ * Improved error messages that recommend using yarn vs npm
+   #291 via @Lyrkan
+
+ * Fixed bug with using --stats option #299 via @Lyrkan
+
+ * Allow configuration callbacks to return their value
+   #300 via @Lyrkan
+
+ * Updated to use the new v2 of webpack-manifest-plugin
+   #164 via @weaverryan
+
 ## 0.19.0
 
  * Updated how Encore is exported to support better IDE auto-completion
