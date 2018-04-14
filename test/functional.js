@@ -977,5 +977,35 @@ module.exports = {
                 done();
             }, true);
         });
+
+        it('configureUrlLoader() allows to use the URL loader for images/fonts', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.setPublicPath('/build');
+            config.addStyleEntry('url-loader', './css/url-loader.css');
+            config.configureUrlLoader({
+                images: { limit: 102400 },
+                fonts: { limit: 102400 }
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory()
+                    .with.files([
+                        'url-loader.css',
+                        'manifest.json'
+                    ]);
+
+                webpackAssert.assertOutputFileContains(
+                    'url-loader.css',
+                    'url(data:font/woff2;base64,'
+                );
+
+                webpackAssert.assertOutputFileContains(
+                    'url-loader.css',
+                    'url(data:image/png;base64,'
+                );
+
+                done();
+            });
+        });
     });
 });

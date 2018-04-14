@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('./../fonts/Roboto.woff2') format('woff2');
+}
+
+.foo {
+  background: url('./../images/symfony_logo.png');
+}

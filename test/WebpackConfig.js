@@ -838,4 +838,37 @@ describe('WebpackConfig object', () => {
             }).to.throw('"foo" is not a valid key');
         });
     });
+
+    describe('configureUrlLoader', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            config.configureUrlLoader({
+                images: { limit: 8192 },
+                fonts: { limit: 4096 }
+            });
+
+            expect(config.urlLoaderOptions).to.deep.equals({
+                images: { limit: 8192 },
+                fonts: { limit: 4096 }
+            });
+        });
+
+        it('Calling with non-object throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureUrlLoader('FOO');
+            }).to.throw('must be an object');
+        });
+
+        it('Calling with an unknown key throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureUrlLoader({
+                    foo: 'bar'
+                });
+            }).to.throw('"foo" is not a valid key');
+        });
+    });
 });
