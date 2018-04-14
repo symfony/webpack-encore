@@ -63,4 +63,22 @@ describe('plugins/loader-options', () => {
         // Doesn't remove default options
         expect(plugins[0].plugin.options.options.context).to.equal(config.getContext());
     });
+
+    it('production environment with options callback that returns an object', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.configureLoaderOptionsPlugin((options) => {
+            options.debug = true;
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        loaderOptionsPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.LoaderOptionsPlugin);
+        expect(plugins[0].plugin.options.debug).to.be.undefined;
+        expect(plugins[0].plugin.options.foo).to.equal(true);
+    });
 });

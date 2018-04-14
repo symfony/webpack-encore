@@ -65,4 +65,22 @@ describe('plugins/define', () => {
         // Doesn't remove default definitions
         expect(plugins[0].plugin.definitions['process.env'].NODE_ENV).to.equal(JSON.stringify('production'));
     });
+
+    it('production environment with options callback that returns an object', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.configureDefinePlugin((options) => {
+            options['bar'] = true;
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        definePluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins[0].plugin.definitions.bar).to.be.undefined;
+        expect(plugins[0].plugin.definitions.foo).to.equal(true);
+    });
 });

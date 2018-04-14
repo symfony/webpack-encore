@@ -48,4 +48,16 @@ describe('loaders/typescript', () => {
         expect(actualLoaders[1].options.silent).to.be.true;
     });
 
+    it('getLoaders() with a callback that returns an object', () => {
+        const config = createConfig();
+        config.enableTypeScriptLoader(function(config) {
+            config.foo = false;
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        const actualLoaders = tsLoader.getLoaders(config);
+        expect(actualLoaders[1].options).to.deep.equal({ foo: true });
+    });
 });

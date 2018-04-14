@@ -55,4 +55,22 @@ describe('plugins/manifest', () => {
         // Doesn't remove default options
         expect(plugins[0].plugin.opts.publicPath).to.equal('/foo/');
     });
+
+    it('with options callback that returns an object', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.configureManifestPlugin((options) => {
+            options.fileName = 'bar';
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        manifestPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(ManifestPlugin);
+        expect(plugins[0].plugin.opts.fileName).to.equal('manifest.json');
+        expect(plugins[0].plugin.opts.foo).to.equal(true);
+    });
 });

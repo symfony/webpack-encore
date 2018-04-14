@@ -71,5 +71,23 @@ describe('loaders/css', () => {
             expect(actualLoaders[1].options.sourceMap).to.be.true;
             expect(actualLoaders[1].options.config.path).to.equal('config/postcss.config.js');
         });
+
+        it('with options callback that returns an object', () => {
+            const config = createConfig();
+            config.enableSourceMaps(true);
+            config.enablePostCssLoader((options) => {
+                options.config = {
+                    path: 'config/postcss.config.js'
+                };
+
+                // This should override the original config
+                return { foo: true };
+            });
+
+            const actualLoaders = cssLoader.getLoaders(config);
+            // css-loader & postcss-loader
+            expect(actualLoaders).to.have.lengthOf(2);
+            expect(actualLoaders[1].options).to.deep.equal({ foo: true });
+        });
     });
 });

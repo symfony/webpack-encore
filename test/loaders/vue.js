@@ -43,15 +43,28 @@ describe('loaders/vue', () => {
 
     it('getLoaders() with extra options', () => {
         const config = createConfig();
+        config.enableVueLoader((options) => {
+            options.postLoaders = { foo: 'foo-loader' };
+        });
 
-        const actualLoaders = vueLoader.getLoaders(
-            config,
-            (options) => {
-                options.postLoaders = { foo: 'foo-loader' };
-            }
-        );
+        const actualLoaders = vueLoader.getLoaders(config);
 
         expect(actualLoaders).to.have.lengthOf(1);
         expect(actualLoaders[0].options.postLoaders.foo).to.equal('foo-loader');
+    });
+
+    it('getLoaders() with a callback that returns an object', () => {
+        const config = createConfig();
+        config.enableVueLoader((options) => {
+            options.postLoaders = { foo: 'foo-loader' };
+
+            // This should override the original config
+            return { foo: true };
+        });
+
+        const actualLoaders = vueLoader.getLoaders(config);
+
+        expect(actualLoaders).to.have.lengthOf(1);
+        expect(actualLoaders[0].options).to.deep.equal({ foo: true });
     });
 });

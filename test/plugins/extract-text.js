@@ -70,4 +70,22 @@ describe('plugins/extract-text', () => {
         // Doesn't remove default options
         expect(plugins[0].plugin.options.allChunks).to.equal(false);
     });
+
+    it('with options callback that returns an object', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.configureExtractTextPlugin((options) => {
+            options.disable = true;
+
+            // This should override the original config
+            return { filename: 'foo' };
+        });
+
+        extractTextPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(ExtractTextPlugin);
+        expect(plugins[0].plugin.options.disable).to.be.undefined;
+        expect(plugins[0].plugin.filename).to.equal('foo');
+    });
 });
