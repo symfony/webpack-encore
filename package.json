@@ -46,7 +46,7 @@
     "webpack": ">=2.2.0 <4",
     "webpack-chunk-hash": "^0.5.0",
     "webpack-dev-server": "^2.4.5",
-    "webpack-manifest-plugin": "v2.0.0-rc.1",
+    "webpack-manifest-plugin": "^2.0.0",
     "yargs": "^8.0.1"
   },
   "devDependencies": {
