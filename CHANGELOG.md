@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.20.1
+
+ * Upgraded webpack-manifest-plugin from 2.0.0 RC1 to ^2.0.0.
+   The original RC version was not meant to be used in a release.
+   #306 via @weaverryan
+
 ## 0.20.0
 
  * Added `Encore.configureUrlLoader()` method that allows you
