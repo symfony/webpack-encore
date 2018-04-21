@@ -685,6 +685,28 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableHandlebarsLoader', () => {
+
+        it('Call with no config', () => {
+            const config = createConfig();
+            config.enableHandlebarsLoader();
+
+            expect(config.useHandlebarsLoader).to.be.true;
+        });
+
+        it('Pass config', () => {
+            const config = createConfig();
+            const callback = (options) => {
+                options.debug = true;
+            };
+            config.enableHandlebarsLoader(callback);
+
+            expect(config.useHandlebarsLoader).to.be.true;
+            expect(config.handlebarsConfigurationCallback).to.equal(callback);
+        });
+
+    });
+
     describe('addPlugin', () => {
         it('extends the current registered plugins', () => {
             const config = createConfig();

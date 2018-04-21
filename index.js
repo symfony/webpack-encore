@@ -720,6 +720,27 @@ class Encore {
     }
 
     /**
+     * Call this if you plan on loading Handlebars files.
+     *
+     *     Encore.enableHandlebarsLoader();
+     *
+     * Or pass options to the loader
+     *
+     *     Encore.enableHandlebarsLoader(function(options) {
+     *         // https://github.com/pcardune/handlebars-loader
+     *         // options.debug = true;
+     *     });
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    enableHandlebarsLoader(callback = () => {}) {
+        webpackConfig.enableHandlebarsLoader(callback);
+
+        return this;
+    }
+
+    /**
      * Call this if you wish to disable the default
      * images loader.
      *
