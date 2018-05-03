@@ -41,6 +41,7 @@
     "inquirer": "^3.2.1",
     "loader-utils": "^1.1.0",
     "lodash": ">=3.5 <5",
+    "mkdirp": "^0.5.1",
     "ncp": "^2.0.0",
     "pkg-up": "^1.0.0",
     "pretty-error": "^2.1.1",
