@@ -34,6 +34,14 @@ function createTestAppDir() {
     return testAppDir;
 }
 
+function createEmptyTestAppDir() {
+    const testAppDir = path.join(tmpDir, Math.random().toString(36).substring(7));
+
+    fs.mkdirSync(testAppDir);
+
+    return testAppDir;
+}
+
 /**
  * @param {string} testAppDir The dir from calling createTestAppDir()
  * @param {string} outputDirName
@@ -194,6 +202,7 @@ function requestTestPage(webRootDir, scriptSrcs, callback) {
 module.exports = {
     createWebpackConfig,
     createTestAppDir,
+    createEmptyTestAppDir,
     runWebpack,
     emptyTmpDir,
     requestTestPage,
