@@ -36,6 +36,8 @@ describe.only('Functional tests the init generator', function() {
         initConfig.entryName = 'app';
 
         generator(initConfig).then(() => {
+            // let's execute webpack as an external process
+
             // todo assertions on what lives there!
 
             // todo - run webpack using *that* webpack.config.js
