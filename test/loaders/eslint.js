@@ -28,7 +28,7 @@ describe('loaders/eslint', () => {
         config.enableEslintLoader();
         const actualOptions = eslintLoader.getOptions(config);
 
-        expect(Object.keys(actualOptions)).to.have.lengthOf(3);
+        expect(Object.keys(actualOptions)).to.have.lengthOf(4);
     });
 
     it('getOptions() with extra options', () => {
@@ -39,7 +39,7 @@ describe('loaders/eslint', () => {
 
         const actualOptions = eslintLoader.getOptions(config);
 
-        expect(Object.keys(actualOptions)).to.have.lengthOf(4);
+        expect(Object.keys(actualOptions)).to.have.lengthOf(5);
         expect(actualOptions.extends).to.equal('airbnb');
     });
 
@@ -51,7 +51,7 @@ describe('loaders/eslint', () => {
 
         const actualOptions = eslintLoader.getOptions(config);
 
-        expect(Object.keys(actualOptions)).to.have.lengthOf(3);
+        expect(Object.keys(actualOptions)).to.have.lengthOf(4);
         expect(actualOptions.emitWarning).to.equal(false);
     });
 
