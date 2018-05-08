@@ -54,4 +54,16 @@ describe('loaders/eslint', () => {
         expect(Object.keys(actualOptions)).to.have.lengthOf(3);
         expect(actualOptions.emitWarning).to.equal(false);
     });
+
+    it('getOptions() with a callback that returns an object', () => {
+        const config = createConfig();
+        config.enableEslintLoader((options) => {
+            options.custom_option = 'foo';
+
+            return { foo: true };
+        });
+
+        const actualOptions = eslintLoader.getOptions(config);
+        expect(actualOptions).to.deep.equals({ foo: true });
+    });
 });
