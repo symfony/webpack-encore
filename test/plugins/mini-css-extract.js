@@ -23,7 +23,7 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/extract-text', () => {
+describe('plugins/mini-css-extract', () => {
     it('with default settings and versioning disabled', () => {
         const config = createConfig();
         const plugins = [];
@@ -31,7 +31,7 @@ describe('plugins/extract-text', () => {
         miniCssExtractPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
-        expect(plugins[0].plugin.filename).to.equal('[name].css');
+        expect(plugins[0].plugin.options.filename).to.equal('[name].css');
     });
 
     it('with default settings and versioning enabled', () => {
@@ -43,6 +43,6 @@ describe('plugins/extract-text', () => {
         miniCssExtractPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
-        expect(plugins[0].plugin.filename).to.equal('[name].[contenthash:8].css');
+        expect(plugins[0].plugin.options.filename).to.equal('[name].[contenthash:8].css');
     });
 });
