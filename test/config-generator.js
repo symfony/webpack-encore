@@ -330,30 +330,6 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enableCoffeeScriptLoader() adds the coffee-loader', () => {
-        it('without enableCoffeeScriptLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('coffee-loader');
-        });
-
-        it('enableCoffeeScriptLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enableCoffeeScriptLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('coffee-loader');
-        });
-    });
-
     describe('enableHandlebarsLoader() adds the handlebars-loader', () => {
 
         it('without enableHandlebarsLoader()', () => {

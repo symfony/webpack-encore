@@ -832,37 +832,6 @@ module.exports = {
             }).to.throw('wrong `tsconfig` path in fork plugin configuration (should be a relative or absolute path)');
         });
 
-        it('When configured, CoffeeScript is compiled', (done) => {
-            const config = createWebpackConfig('www/build', 'dev');
-            config.setPublicPath('/build');
-            config.addEntry('main', ['./js/index.coffee']);
-            const testCallback = () => {};
-            config.enableCoffeeScriptLoader(testCallback);
-
-            testSetup.runWebpack(config, (webpackAssert) => {
-                webpackAssert.assertOutputFileContains(
-                    'main.js',
-                    'return document.getElementById("app").innerHTML = "<h1>Welcome to Your Coffee App</h1>"'
-                );
-
-                expect(config.outputPath).to.be.a.directory().with.deep.files([
-                    'main.js',
-                    'manifest.json'
-                ]);
-
-                testSetup.requestTestPage(
-                    path.join(config.getContext(), 'www'),
-                    [
-                        'build/main.js'
-                    ],
-                    (browser) => {
-                        browser.assert.text('#app h1', 'Welcome to Your Coffee App');
-                        done();
-                    }
-                );
-            });
-        });
-
         it('When configured, Handlebars is compiled', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
