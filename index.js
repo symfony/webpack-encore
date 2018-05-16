@@ -124,25 +124,6 @@ class Encore {
     }
 
     /**
-     * Allows you to configure the options passed to the extract-text-webpack-plugin.
-     * A list of available options can be found at https://github.com/webpack-contrib/extract-text-webpack-plugin
-     *
-     * For example:
-     *
-     *      Encore.configureExtractTextPlugin((options) => {
-     *          options.ignoreOrder = true;
-     *      })
-     *
-     * @param {function} extractTextPluginOptionsCallback
-     * @returns {Encore}
-     */
-    configureExtractTextPlugin(extractTextPluginOptionsCallback = () => {}) {
-        webpackConfig.configureExtractTextPlugin(extractTextPluginOptionsCallback);
-
-        return this;
-    }
-
-    /**
      * Allows you to configure the options passed to the friendly-errors-webpack-plugin.
      * A list of available options can be found at https://github.com/geowarin/friendly-errors-webpack-plugin
      *

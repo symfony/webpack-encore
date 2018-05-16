@@ -13,7 +13,7 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
@@ -200,7 +200,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].[chunkhash:8].js');
 
-            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
+            const extractTextPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
 
             expect(extractTextPlugin.filename).to.equal('[name].[contenthash:8].css');
         });
@@ -725,7 +725,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
-            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
+            const extractTextPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
             expect(extractTextPlugin.filename).to.equal('[name].foo.css');
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
@@ -751,7 +751,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
-            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
+            const extractTextPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
             expect(extractTextPlugin.filename).to.equal('[name].foo.css');
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
