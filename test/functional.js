@@ -545,12 +545,12 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 // make sure sass is parsed
                 webpackAssert.assertOutputFileContains(
-                    '0.js',
+                    '0.css',
                     'color: #333'
                 );
                 // and imported files are loaded correctly
                 webpackAssert.assertOutputFileContains(
-                    '0.js',
+                    '0.css',
                     'background: top left'
                 );
 
