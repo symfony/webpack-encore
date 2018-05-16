@@ -781,7 +781,7 @@ module.exports = {
         it('When configured, TypeScript is compiled!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
-            config.addEntry('main', ['./js/render.ts', './js/index.ts']);
+            config.addEntry('main', ['./js/index.ts']);
             const testCallback = () => {};
             config.enableTypeScriptLoader(testCallback);
 
@@ -789,7 +789,7 @@ module.exports = {
                 // check that ts-loader transformed the ts file
                 webpackAssert.assertOutputFileContains(
                     'main.js',
-                    'document.getElementById(\'app\').innerHTML = "<h1>Welcome to Your TypeScript App</h1>";'
+                    'document.getElementById(\'app\').innerHTML ='
                 );
 
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
