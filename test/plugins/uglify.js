@@ -10,7 +10,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const uglifyPluginUtil = require('../../lib/plugins/uglify');
@@ -25,58 +25,46 @@ function createConfig(environment = 'production') {
 }
 
 describe('plugins/uglify', () => {
-    it('dev environment default settings', () => {
-        const config = createConfig('dev');
-        const plugins = [];
-
-        uglifyPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(0);
-    });
-
     it('production environment default settings', () => {
         const config = createConfig();
-        const plugins = [];
 
-        uglifyPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
-        expect(plugins[0].plugin.options.sourceMap).to.equal(false);
+        const plugin = uglifyPluginUtil(config);
+        expect(plugin).to.be.instanceof(UglifyJsPlugin);
+        expect(plugin.options.sourceMap).to.equal(false);
     });
 
     it('with options callback', () => {
         const config = createConfig();
-        const plugins = [];
 
         config.configureUglifyJsPlugin((options) => {
-            options.beautify = true;
+            options.uglifyOptions = {
+                output: { beautify: true }
+            };
         });
 
-        uglifyPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
+        const plugin = uglifyPluginUtil(config);
 
         // Allows to override default options
-        expect(plugins[0].plugin.options.beautify).to.equal(true);
+        expect(plugin.options.uglifyOptions.output.beautify).to.equal(true);
 
         // Doesn't remove default options
-        expect(plugins[0].plugin.options.sourceMap).to.equal(false);
+        expect(plugin.options.sourceMap).to.equal(false);
     });
 
     it('with options callback that returns an object', () => {
         const config = createConfig();
-        const plugins = [];
 
         config.configureUglifyJsPlugin((options) => {
-            options.beautify = true;
+            options.uglifyOptions = {
+                output: { beautify: true }
+            };
 
             // This should override the original config
-            return { foo: true };
+            return { cache: true };
         });
 
-        uglifyPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.optimize.UglifyJsPlugin);
-        expect(plugins[0].plugin.options.beautify).to.be.undefined;
-        expect(plugins[0].plugin.options.foo).to.equal(true);
+        const plugin = uglifyPluginUtil(config);
+        expect(plugin.options.uglifyOptions.output.beautify).to.be.undefined;
+        expect(plugin.options.cache).to.equal(true);
     });
 });

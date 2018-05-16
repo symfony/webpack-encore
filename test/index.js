@@ -323,15 +323,6 @@ describe('Public API', () => {
 
     });
 
-    describe('configureExtractTextPlugin', () => {
-
-        it('should return the API object', () => {
-            const returnedValue = api.configureExtractTextPlugin(() => {});
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
     describe('configureFriendlyErrorsPlugin', () => {
 
         it('should return the API object', () => {
