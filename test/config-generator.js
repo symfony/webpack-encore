@@ -504,7 +504,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use[0].options.presets)).contains('env');
+            expect(JSON.stringify(jsRule.use[0].options.presets)).contains('@babel/preset-env');
         });
     });
 
