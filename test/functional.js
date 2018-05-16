@@ -916,7 +916,7 @@ module.exports = {
             config.enableLessLoader();
             config.configureBabel(function(config) {
                 config.presets = [
-                    ['env', {
+                    ['@babel/preset-env', {
                         'targets': {
                             'chrome': 52
                         }
