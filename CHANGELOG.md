@@ -2,6 +2,14 @@
 
 ## 0.21.0 Webpack 4 Upgrade
 
+ * Webpack was upgraded to version 4. This includes a number of major
+   and minor changes. The changes are listed below.
+
+ * The NamedModulesPlugin was removed.
+
+ * The `babel-preset-env` package (which was at version ^1.2.2) was
+   removed in favor of `@babel/preset-env`.
+
  * ExtractTextPlugin was removed and replaced with
    mini-css-extract-plugin. Accordingly, `extractTextPluginOptionsCallback()`
    was removed.
