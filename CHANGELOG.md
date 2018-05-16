@@ -16,6 +16,9 @@
 
  * Support for CoffeeScript was entirely removed.
 
+ * Actual lang="sass" no longer works for Vue. However, lang="scss"
+   continues to work fine.
+
 ## 0.20.1
 
  * Upgraded webpack-manifest-plugin from 2.0.0 RC1 to ^2.0.0.
