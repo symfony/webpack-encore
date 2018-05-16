@@ -53,7 +53,7 @@
     "autoprefixer": "^8.5.0",
     "babel-eslint": "^8.2.1",
     "babel-plugin-transform-react-jsx": "^6.24.1",
-    "babel-preset-react": "^6.24.0",
+    "@babel/preset-react": "^7.0.0-beta.47",
     "chai": "^3.5.0",
     "chai-fs": "^1.0.0",
     "coffee-loader": "^0.9.0",
