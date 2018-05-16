@@ -23,24 +23,6 @@ function createConfig() {
 }
 
 describe('loaders/vue', () => {
-    it('getLoaders() full usage', () => {
-        const config = createConfig();
-        config.enableLessLoader();
-        config.enableSassLoader();
-        config.enableSourceMaps();
-        // enable postcss, then really prove that its loader does not show up below
-        config.enablePostCssLoader();
-
-        const actualLoaders = vueLoader.getLoaders(config, () => {});
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(Object.keys(actualLoaders[0].options.loaders)).to.have.lengthOf(5);
-
-        // postcss should not be added
-        expect(JSON.stringify(actualLoaders[0].options.loaders)).to.not.contain('postcss');
-        // check for sourcemaps
-        expect(JSON.stringify(actualLoaders[0].options.loaders)).to.contain('sourceMap');
-    });
-
     it('getLoaders() with extra options', () => {
         const config = createConfig();
         config.enableVueLoader((options) => {
