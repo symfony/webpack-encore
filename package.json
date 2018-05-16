@@ -27,8 +27,8 @@
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
     "@babel/core": "^7.0.0-beta.47",
-    "babel-loader": "^8.0.0-beta.2",
     "@babel/preset-env": "^7.0.0-beta.47",
+    "babel-loader": "^8.0.0-beta.2",
     "chalk": "^2.4.1",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.10",
@@ -43,6 +43,7 @@
     "pretty-error": "^2.1.1",
     "resolve-url-loader": "^2.3.0",
     "style-loader": "^0.21.0",
+    "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.0.0",
     "webpack-chunk-hash": "^0.6.0",
     "webpack-manifest-plugin": "^2.0.2",
