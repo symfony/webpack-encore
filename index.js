@@ -182,13 +182,17 @@ class Encore {
 
     /**
      * Allows you to configure the options passed to the uglifyjs-webpack-plugin.
-     * A list of available options can be found at https://github.com/webpack-contrib/uglifyjs-webpack-plugin/tree/v0.4.6
+     * A list of available options can be found at https://github.com/webpack-contrib/uglifyjs-webpack-plugin
      *
      * For example:
      *
      *      Encore.configureUglifyJsPlugin((options) => {
-     *          options.compress = false;
-     *          options.beautify = true;
+     *          options.cache = true;
+     *          options.uglifyOptions = {
+     *              output: {
+     *                  comments: false
+     *              }
+     *          }
      *      })
      *
      * @param {function} uglifyJsPluginOptionsCallback

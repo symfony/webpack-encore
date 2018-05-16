@@ -247,8 +247,7 @@ describe('The config-generator function', () => {
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
             expect(definePlugin.definitions['process.env'].NODE_ENV).to.equal('"production"');
 
-            const uglifyPlugin = findPlugin(webpack.optimize.UglifyJsPlugin, actualConfig.plugins);
-            expect(uglifyPlugin).to.not.be.undefined;
+            expect(actualConfig.optimize.minimizer[0]).to.not.be.undefined;
         });
     });
 

@@ -19,6 +19,10 @@
  * Actual lang="sass" no longer works for Vue. However, lang="scss"
    continues to work fine.
 
+ * uglifyjs-webpack-plugin was upgraded from 0.4.6 to 1.2.5, which
+   includes using `uglify-es`. If you're using `configureUglifyJsPlugin`(),
+   the options have changed.
+
 ## 0.20.1
 
  * Upgraded webpack-manifest-plugin from 2.0.0 RC1 to ^2.0.0.
