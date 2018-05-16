@@ -938,11 +938,6 @@ module.exports = {
                     'class TestClassSyntax'
                 );
 
-                webpackAssert.assertOutputFileContains(
-                    'main.css',
-                    '-ms-flexbox'
-                );
-
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
