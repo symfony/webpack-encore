@@ -282,12 +282,12 @@ describe('Functional tests using webpack', function() {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
                             'main.f1e0a935.js',
-                            'styles.c84caea6.css',
+                            'styles.8ec31654.css',
                             'manifest.json'
                         ]);
 
                     webpackAssert.assertOutputFileContains(
-                        'styles.c84caea6.css',
+                        'styles.8ec31654.css',
                         'font-size: 50px;'
                     );
                     webpackAssert.assertManifestPathDoesNotExist(
@@ -295,7 +295,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.c84caea6.css'
+                        '/styles.8ec31654.css'
                     );
 
                     done();
@@ -326,7 +326,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?c84caea6dd12bba7'
+                        '/styles.css?8ec316547cc77b39'
                     );
 
                     done();
