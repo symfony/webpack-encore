@@ -28,7 +28,11 @@ describe('loaders/eslint', () => {
         config.enableEslintLoader();
         const actualOptions = eslintLoader.getOptions(config);
 
-        expect(Object.keys(actualOptions)).to.have.lengthOf(4);
+        expect(actualOptions).to.deep.equal({
+            cache: true,
+            parser: 'babel-eslint',
+            emitWarning: true
+        });
     });
 
     it('getOptions() with extra options', () => {
@@ -39,8 +43,12 @@ describe('loaders/eslint', () => {
 
         const actualOptions = eslintLoader.getOptions(config);
 
-        expect(Object.keys(actualOptions)).to.have.lengthOf(5);
-        expect(actualOptions.extends).to.equal('airbnb');
+        expect(actualOptions).to.deep.equal({
+            cache: true,
+            parser: 'babel-eslint',
+            emitWarning: true,
+            extends: 'airbnb'
+        });
     });
 
     it('getOptions() with an overridden option', () => {
@@ -51,8 +59,11 @@ describe('loaders/eslint', () => {
 
         const actualOptions = eslintLoader.getOptions(config);
 
-        expect(Object.keys(actualOptions)).to.have.lengthOf(4);
-        expect(actualOptions.emitWarning).to.equal(false);
+        expect(actualOptions).to.deep.equal({
+            cache: true,
+            parser: 'babel-eslint',
+            emitWarning: false
+        });
     });
 
     it('getOptions() with a callback that returns an object', () => {
