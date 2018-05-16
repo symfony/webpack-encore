@@ -138,7 +138,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.devtool).to.equal('inline-source-map');
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('?sourceMap');
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":true');
         });
     });
 
@@ -200,9 +200,9 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].[chunkhash:8].js');
 
-            const extractTextPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
+            const miniCssPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
 
-            expect(extractTextPlugin.filename).to.equal('[name].[contenthash:8].css');
+            expect(miniCssPlugin.options.filename).to.equal('[name].[contenthash:8].css');
         });
     });
 
@@ -224,8 +224,7 @@ describe('The config-generator function', () => {
             expect(loaderOptionsPlugin.options.options.context).to.equal('/tmp/context');
             expect(loaderOptionsPlugin.options.options.output.path).to.equal('/tmp/output/public-path');
 
-            const moduleNamePlugin = findPlugin(webpack.NamedModulesPlugin, actualConfig.plugins);
-            expect(moduleNamePlugin).to.not.be.undefined;
+            expect(actualConfig.optimization.namedModules).to.be.true;
         });
 
         it('YES to production', () => {
@@ -243,11 +242,12 @@ describe('The config-generator function', () => {
 
             const moduleHashedIdsPlugin = findPlugin(webpack.HashedModuleIdsPlugin, actualConfig.plugins);
             expect(moduleHashedIdsPlugin).to.not.be.undefined;
+            expect(actualConfig.optimization.namedModules).to.be.undefined;
 
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
             expect(definePlugin.definitions['process.env'].NODE_ENV).to.equal('"production"');
 
-            expect(actualConfig.optimize.minimizer[0]).to.not.be.undefined;
+            expect(actualConfig.optimization.minimizer[0]).to.not.be.undefined;
         });
     });
 
@@ -700,8 +700,8 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
-            const extractTextPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
-            expect(extractTextPlugin.filename).to.equal('[name].foo.css');
+            const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
+            expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
@@ -726,8 +726,8 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
-            const extractTextPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
-            expect(extractTextPlugin.filename).to.equal('[name].foo.css');
+            const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
+            expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             expect(imagesRule.options.name).to.equal('[name].foo.[ext]');

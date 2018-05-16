@@ -61,7 +61,7 @@ describe('loaders/babel', () => {
 
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
-        expect(actualLoaders[0].options.presets).to.include('react');
+        expect(actualLoaders[0].options.presets).to.include('@babel/react');
         // foo is also still there, not overridden
         expect(actualLoaders[0].options.presets).to.include('foo');
     });
