@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.21.0 Webpack 4 Upgrade
+
+ * ExtractTextPlugin was removed and replaced with
+   mini-css-extract-plugin. Accordingly, `extractTextPluginOptionsCallback()`
+   was removed.
+
 ## 0.20.1
 
  * Upgraded webpack-manifest-plugin from 2.0.0 RC1 to ^2.0.0.
