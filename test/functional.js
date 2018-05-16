@@ -109,7 +109,7 @@ describe('Functional tests using webpack', function() {
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
-                    .with.files(['0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json']);
+                    .with.files(['0.css', '0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json']);
 
                 // check that the publicPath is set correctly
                 webpackAssert.assertOutputFileContains(
