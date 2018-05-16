@@ -226,24 +226,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureExtractTextPlugin', () => {
-        it('Setting callback', () => {
-            const config = createConfig();
-            const callback = () => {};
-            config.configureExtractTextPlugin(callback);
-
-            expect(config.extractTextPluginOptionsCallback).to.equal(callback);
-        });
-
-        it('Setting invalid callback argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.configureExtractTextPlugin('foo');
-            }).to.throw('Argument 1 to configureExtractTextPlugin() must be a callback function');
-        });
-    });
-
     describe('configureFriendlyErrorsPlugin', () => {
         it('Setting callback', () => {
             const config = createConfig();
