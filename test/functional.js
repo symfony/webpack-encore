@@ -377,10 +377,11 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.d002be21.js', // chunks are also versioned
-                        'main.292c0347.js',
-                        'h1.c84caea6.css',
-                        'bg.483832e4.css',
+                        '0.8256b1ad.js', // chunks are also versioned
+                        '0.8ec31654.css',
+                        'main.ba427376.js',
+                        'h1.8ec31654.css',
+                        'bg.0ec2735b.css',
                         'manifest.json'
                     ]);
 
@@ -390,7 +391,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.483832e4.css',
+                    'bg.0ec2735b.css',
                     '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
