@@ -14,6 +14,8 @@
    mini-css-extract-plugin. Accordingly, `extractTextPluginOptionsCallback()`
    was removed.
 
+ * Support for CoffeeScript was entirely removed.
+
 ## 0.20.1
 
  * Upgraded webpack-manifest-plugin from 2.0.0 RC1 to ^2.0.0.

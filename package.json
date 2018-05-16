@@ -56,8 +56,6 @@
     "@babel/preset-react": "^7.0.0-beta.47",
     "chai": "^3.5.0",
     "chai-fs": "^1.0.0",
-    "coffee-loader": "^0.9.0",
-    "coffeescript": "^2.0.2",
     "eslint": "^4.15.0",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-header": "^1.0.0",
