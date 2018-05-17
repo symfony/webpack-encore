@@ -2,8 +2,12 @@
 
 ## 0.21.0 Webpack 4 Upgrade
 
- * Webpack was upgraded to version 4. This includes a number of major
+ * [BC BREAK] Webpack was upgraded to version 4. This includes a number of major
    and minor changes. The changes are listed below.
+
+ * [BC BREAK] If you're using `createSharedEntry()`, the name of the
+   `manifest.js` file is now `runtime.js`. You will need to update
+   your `<script>` tag to point to the new `runtime.js`.
 
  * The NamedModulesPlugin was removed.
 
