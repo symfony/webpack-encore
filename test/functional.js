@@ -561,9 +561,9 @@ describe('Functional tests using webpack', function() {
         it('createdSharedEntry() creates commons files', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
-            config.addEntry('main', ['./js/no_require', './js/code_splitting']);
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
             config.addEntry('other', ['./js/no_require']);
-            config.createSharedEntry('vendor', './js/no_require');
+            config.createSharedEntry('vendor', ['./js/no_require', './js/requires_arrow_function']);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check the file is extracted correctly
@@ -571,13 +571,40 @@ describe('Functional tests using webpack', function() {
                     'vendor.js',
                     'i am the no_require.js file'
                 );
-                // we should also have a manifest file with the webpack bootstrap code
                 webpackAssert.assertOutputFileContains(
-                    'manifest.js',
+                    'vendor.js',
+                    'arrow_function.js is ready for action'
+                );
+
+                // check that there is NOT duplication
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    'i am the no_require.js file'
+                );
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    'arrow_function.js is ready for action'
+                );
+
+                // we should also have a runtime file with the webpack bootstrap code
+                webpackAssert.assertOutputFileContains(
+                    'runtime.js',
                     'function __webpack_require__'
                 );
 
-                done();
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/vendor.js',
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        // assert that the javascript executed
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
             });
         });
 
