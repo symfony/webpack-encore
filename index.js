@@ -210,7 +210,7 @@ class Encore {
      *      // final output file will be main.js in the output directory
      *      Encore.addEntry('main', './path/to/some_file.js');
      *
-     * If the JavaScript file imports/requires CSS/SASS/LESS files,
+     * If the JavaScript file imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
      *
      * @param {string} name       The name (without extension) that will be used

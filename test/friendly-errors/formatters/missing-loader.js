@@ -39,7 +39,7 @@ describe('formatters/missing-loader', () => {
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).to.contain('To load SASS files');
+            expect(JSON.stringify(actualErrors)).to.contain('To load Sass files');
             expect(JSON.stringify(actualErrors)).to.contain('Encore.enableSassLoader()');
             // all needed packages will be present when running tests
             expect(JSON.stringify(actualErrors)).to.not.contain('yarn add');
@@ -54,6 +54,22 @@ describe('formatters/missing-loader', () => {
             const actualErrors = formatter([error]);
             expect(JSON.stringify(actualErrors)).to.contain('To load /some/file.jpg');
             expect(JSON.stringify(actualErrors)).to.contain('You may need to install and configure a special loader');
+        });
+
+        it('vue loader error includes original message & origin', () => {
+            const error = {
+                message: 'I am a message from vue-loader',
+                isVueLoader: true,
+                loaderName: 'sass',
+                origin: 'Some stacktrace info from origin',
+                type: 'loader-not-enabled',
+                file: '/path/to/project/node_modules/vue-loader/lib??vue-loader-options!./vuejs/App.vue?vue&type=style&index=1&lang=scss'
+            };
+
+            const actualErrors = formatter([error]);
+            expect(JSON.stringify(actualErrors)).to.contain('I am a message from vue-loader');
+            expect(JSON.stringify(actualErrors)).to.contain('Some stacktrace info from origin');
+            expect(JSON.stringify(actualErrors)).to.not.contain('/path/to/project/node_modules/vue-loader');
         });
     });
 });
