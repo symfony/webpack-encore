@@ -61,10 +61,13 @@ function createWebpackConfig(testAppDir, outputDirName = '', command, argv = {})
 
 function runWebpack(webpackConfig, callback, allowCompilationError = false) {
     const stdoutWrite = process.stdout.write;
+    const stdOutContents = [];
 
     try {
         // Mute stdout
-        process.stdout.write = () => {};
+        process.stdout.write = (message) => {
+            stdOutContents.push(message);
+        };
 
         validator(webpackConfig);
 
@@ -94,7 +97,7 @@ function runWebpack(webpackConfig, callback, allowCompilationError = false) {
 
             // Restore stdout and then call the callback
             process.stdout.write = stdoutWrite;
-            callback(assertUtil(webpackConfig), stats);
+            callback(assertUtil(webpackConfig), stats, stdOutContents.join("\n"));
         });
     } catch (e) {
         // Restore stdout and then re-throw the exception

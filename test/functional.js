@@ -961,10 +961,10 @@ module.exports = {
             config.addEntry('main', './vuejs/main');
             config.enableVueLoader();
 
-            testSetup.runWebpack(config, (webpackAssert, stats) => {
-                expect(stats.toJson().errors[0]).to.contain('Cannot process lang="less" inside');
-                expect(stats.toJson().errors[1]).to.contain('Cannot process lang="sass" inside');
-                expect(stats.toJson().errors[2]).to.contain('Cannot process lang="scss" inside');
+            testSetup.runWebpack(config, (webpackAssert, stats, output) => {
+                expect(output).to.contain('To load LESS files');
+                expect(output).to.contain('To load Sass files');
+
                 done();
             }, true);
         });
