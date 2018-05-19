@@ -559,11 +559,12 @@ describe('Functional tests using webpack', function() {
         });
 
         it('createdSharedEntry() creates commons files', (done) => {
+            // TODO - test for CSS splitting
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
-            config.addEntry('other', ['./js/no_require']);
-            config.createSharedEntry('vendor', ['./js/no_require', './js/requires_arrow_function']);
+            config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
+            config.createSharedEntry('vendor', ['./js/no_require', './js/requires_arrow_function', './css/h1_style.css']);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check the file is extracted correctly
@@ -575,6 +576,10 @@ describe('Functional tests using webpack', function() {
                     'vendor.js',
                     'arrow_function.js is ready for action'
                 );
+                webpackAssert.assertOutputFileContains(
+                    'vendor.css',
+                    'font-size: 50px;'
+                );
 
                 // check that there is NOT duplication
                 webpackAssert.assertOutputFileDoesNotContain(
@@ -585,6 +590,8 @@ describe('Functional tests using webpack', function() {
                     'main.js',
                     'arrow_function.js is ready for action'
                 );
+                // this file has no contents remaining, so should not be output
+                webpackAssert.assertOutputFileDoesNotExist('other.css');
 
                 // we should also have a runtime file with the webpack bootstrap code
                 webpackAssert.assertOutputFileContains(
