@@ -559,25 +559,24 @@ describe('Functional tests using webpack', function() {
         });
 
         it('createdSharedEntry() creates commons files', (done) => {
-            // TODO - test for CSS splitting
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
             config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
-            config.createSharedEntry('vendor', ['./js/no_require', './js/requires_arrow_function', './css/h1_style.css']);
+            config.createSharedEntry('shared', ['./js/no_require', './js/requires_arrow_function', './css/h1_style.css']);
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check the file is extracted correctly
                 webpackAssert.assertOutputFileContains(
-                    'vendor.js',
+                    'shared.js',
                     'i am the no_require.js file'
                 );
                 webpackAssert.assertOutputFileContains(
-                    'vendor.js',
+                    'shared.js',
                     'arrow_function.js is ready for action'
                 );
                 webpackAssert.assertOutputFileContains(
-                    'vendor.css',
+                    'shared.css',
                     'font-size: 50px;'
                 );
 
@@ -603,7 +602,7 @@ describe('Functional tests using webpack', function() {
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
-                        'build/vendor.js',
+                        'build/shared.js',
                         'build/main.js'
                     ],
                     (browser) => {
