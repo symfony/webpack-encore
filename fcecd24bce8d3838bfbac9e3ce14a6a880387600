@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2018-05-16T14:55:24Z
+
+Next question is whether we should rename the output file from manifest.js to runtime.js (matching the default name used by Webpack 4 when enabling such feature).
+
+This would reduce the confusion between manifest.js (the runtime file) and manifest.json (the manifest). But that would be a BC break (as projects have to load this runtime file in their HTML).
+
+---------------------------------------------------------------------------
+
+by stof at 2018-05-16T15:51:51Z
+
+yeah, delaying this until the Webpack 4 migration might be fine.
