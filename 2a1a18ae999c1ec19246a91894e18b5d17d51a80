@@ -1,0 +1,97 @@
+---------------------------------------------------------------------------
+
+by pinoniq at 2018-01-18T13:24:02Z
+
+@Lyrkan I think it's probably good to have a follow up ticket to have a common interface for all enableXXX() methods. This would allow us to abstract a part away into a helper method that "automaigcally" transforms the passed in parameter(s) into a optionsCallback.
+
+---------------------------------------------------------------------------
+
+by pinoniq at 2018-01-18T15:14:08Z
+
+Hey, concerning the functional test. Not sure how to continue here since I would not be testing creation of files, but console output. If you point into the right direction I'm more than willing to look into it
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-01-18T16:13:56Z
+
+@pinoniq You could do something like that: https://gist.github.com/Lyrkan/94aa818b11b35715857a52471d43e6de
+
+The idea being to check the `stats` object returned by Webpack (we already do that in the "Vue.js error when using non-activated loader" test).
+
+Some things you have to be careful though:
+
+* you need to force eslint-loader to emit errors instead of warning (you could technically use `stats.toJson().warnings` but warnings would pollute the tests results since we display them [here](https://github.com/symfony/webpack-encore/blob/00e4051eb0ef18786a9d6abe2f9f2e73c887e8fa/lib/test/setup.js#L91-L93))
+* be aware that the `.eslintrc.js` file at the root of Encore will be used and that if we change something in it later your test may break. To avoid that you can force the rules you'll use in your checks when calling `enableEslintLoader`
+
+Another way to test that would be to emit a report (using the `outputReport` option) and check it once webpack is done processing everything.
+
+---------------------------------------------------------------------------
+
+by pinoniq at 2018-01-25T10:18:41Z
+
+@Lyrkan I added the test (by using your gist). Concerning the warnings/errors kind of complicates a "proper" functional test. This because eslint allows you to define errors and warnings.
+
+It is possible to easy test this, but it pollutes the test output (due to the warnings being displayed during test results like you pointed out). What do you prefer here? Only testing for the errors output, or also adding the test for warnings and errors? If the later, maybe look into adding a flag to runWebpack to not output warnings?
+e.g.
+`function runWebpack(webpackConfig, callback, allowCompilationError = false, logWarnings = true) {`
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-01-25T13:09:21Z
+
+👍
+
+@pinoniq I think the test using errors should be enough... we only need to check if ESlint is enabled and takes our conf into account, not how it behaves if we use other settings ([that's already part of the ESlint test suite](https://github.com/eslint/eslint/blob/9cbb487e8e84ff3268c05ab47b3b72c51b5f766e/tests/lib/cli.js#L410-L420))
+
+---------------------------------------------------------------------------
+
+by pinoniq at 2018-01-25T13:16:50Z
+
+Ok. valid point. You want me to squash the commits into a single one? Or how do you guys do this here?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-02-02T15:04:34Z
+
+No need to squash - we can handle that. But thanks!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-03-31T17:39:42Z
+
+ping @pinoniq! This is basically done (or maybe completely done), but I had a few pending questions/concerns that I need your help answering :)
+
+---------------------------------------------------------------------------
+
+by pinoniq at 2018-05-07T14:14:45Z
+
+@Lyrkan  @weaverryan I believe all issues have been corrected in the meantime. Are there still some blocking issues left?
+
+you want me to resolve the conflicts for you? or will you be doing that doing the merge?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-05-08T07:59:37Z
+
+@pinoniq Sorry for the delay, I just rebased it and:
+
+* fixed a line-endings issue in your last commit (it looks like your IDE switched to CRLF for that one)
+* used the `apply-options-callback` method added in #300
+* changed the `index.js` file a bit since we're now using a `class` (see #263)
+* fixed the `cache: true` that wasn't added at the right place and caused the tests to fail
+
+However I think [that comment](https://github.com/symfony/webpack-encore/pull/243/files#r181560041) from @weaverryan hasn't been taken into account yet (since there still is a reference to the `webpack.config.js` file), could you take a look at it?
+
+---------------------------------------------------------------------------
+
+by pinoniq at 2018-05-11T11:43:58Z
+
+@Lyrkan Thx for the rebase. I also removed that reference of the import/resolver default config. Completly forgot about it. It should be ok now.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-05-16T16:54:59Z
+
+I fixed some test cases that were broken due to the removal of the `import/resolver` conf and changed the packages check related to `enableEslintLoader()` so it doesn't include `eslint-plugin-import` anymore.
+
+LGTM now (ping @weaverryan)
