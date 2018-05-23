@@ -1033,5 +1033,33 @@ module.exports = {
                 done();
             });
         });
+
+        it('When enabled, eslint checks for linting errors', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/eslint');
+            config.enableEslintLoader({
+                // Force eslint-loader to output errors instead of sometimes
+                // using warnings (see: https://github.com/MoOx/eslint-loader#errors-and-warning)
+                emitError: true,
+                rules: {
+                    // That is not really needed since it'll use the
+                    // .eslintrc.js file at the root of the project, but
+                    // it'll avoid breaking this test if we change these
+                    // rules later on.
+                    'indent': ['error', 2],
+                    'no-unused-vars': ['error', { 'args': 'all' }]
+                }
+            });
+
+            testSetup.runWebpack(config, (webpackAssert, stats) => {
+                const eslintErrors = stats.toJson().errors[0];
+
+                expect(eslintErrors).to.contain('Expected indentation of 0 spaces but found 2');
+                expect(eslintErrors).to.contain('\'a\' is assigned a value but never used');
+
+                done();
+            }, true);
+        });
     });
 });
