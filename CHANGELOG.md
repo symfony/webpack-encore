@@ -9,6 +9,26 @@
    `manifest.js` file is now `runtime.js`. You will need to update
    your `<script>` tag to point to the new `runtime.js`.
 
+ * [BEHAVIOR CHANGE] Previously, without any config, Babel was
+   configured to "transpile" (i.e. re-write) your JavaScript so
+   that it was compatible with all browsers that currently have
+   more than 1% of the market share. The new default behavior
+   is a bit more aggressive, and may rewrite even more code to
+   be compatible with even older browsers. The *recommendation*
+   is to add a new `browserslist` key to your `package.json` file
+   that specifies exactly what browsers you need to support. For
+   example, to get the old configuration, add the following to
+   `package.json`:
+
+```json
+{
+    "browserslist": "> 1%"
+}
+```
+
+See the [browserslist](https://github.com/browserslist/browserslist) library
+for a full description of all of the valid browser descriptions.
+
  * The NamedModulesPlugin was removed.
 
  * The `babel-preset-env` package (which was at version ^1.2.2) was

@@ -760,6 +760,51 @@ module.exports = {
             });
         });
 
+        it('Babel can be configured via package.json browserlist', (done) => {
+            const cwd = process.cwd();
+            after(() => {
+                process.chdir(cwd);
+            });
+
+            const appDir = testSetup.createTestAppDir();
+            /*
+             * Most of the time, we don't explicitly use chdir
+             * in order to set the cwd() to the test directory.
+             * That's because, in theory, you should be able to
+             * run Encore from other directories, give you set
+             * the context. However, in this case, babel/presest-env
+             * uses process.cwd() to find the configPath, instead of the
+             * context. So, in this case, we *must* set the cwd()
+             * to be the temp test directory.
+             */
+            process.chdir(appDir);
+
+            // create the package.json file first, so we see it
+            fs.writeFileSync(
+                path.join(appDir, 'package.json'),
+                `
+{
+  "browserslist": "Chrome 52"
+}
+`
+            );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/class-syntax');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the arrow function
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    // chrome 45 supports class, so it's not transpiled
+                    'class A {}'
+                );
+
+                done();
+            });
+        });
+
         it('When enabled, react JSX is transformed!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -913,24 +958,8 @@ module.exports = {
         });
 
         it('Vue.js is compiled correctly', (done) => {
-            const cwd = process.cwd();
-            after(() => {
-                process.chdir(cwd);
-            });
-
             const appDir = testSetup.createTestAppDir();
-            /*
-             * Most of the time, we don't explicitly use chdir
-             * in order to set the cwd() to the test directory.
-             * That's because, in theory, you should be able to
-             * run Encore from other directories, give you set
-             * the context. However, in this case, the vue-loader
-             * uses load-postcss-config to load the postcss config,
-             * but it uses process.cwd() to find it, instead of the
-             * context. So, in this case, we *must* set the cwd()
-             * to be the temp test directory.
-             */
-            process.chdir(appDir);
+
             fs.writeFileSync(
                 path.join(appDir, 'postcss.config.js'),
                 `
