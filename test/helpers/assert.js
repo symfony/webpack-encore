@@ -149,6 +149,14 @@ class Assert {
 
         expect(actualResources).to.have.all.members(expectedResources);
     }
+
+    assertOutputJsonFileMatches(sourcePath, expectedData) {
+        const actualContents = readOutputFile(this.webpackConfig, sourcePath);
+
+        const actualData = JSON.parse(actualContents);
+
+        expect(JSON.stringify(actualData, null, 2)).to.equal(JSON.stringify(expectedData, null, 2));
+    }
 }
 
 module.exports = function(webpackConfig) {

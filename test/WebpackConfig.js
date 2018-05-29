@@ -424,6 +424,7 @@ describe('WebpackConfig object', () => {
             const testCallback = () => {};
             config.configureCssLoader(testCallback);
             expect(config.cssLoaderConfigurationCallback).to.equal(testCallback);
+
         });
 
         it('Calling with non-callback throws an error', () => {
@@ -431,6 +432,23 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.configureCssLoader('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
+    describe('configureSplitChunks', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureSplitChunks(testCallback);
+            expect(config.splitChunksConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureSplitChunks('FOO');
             }).to.throw('must be a callback function');
         });
     });

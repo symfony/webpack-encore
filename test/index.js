@@ -134,6 +134,15 @@ describe('Public API', () => {
 
     });
 
+    describe('configureSplitChunks', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.configureSplitChunks(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('autoProvideVariables', () => {
 
         it('must return the API object', () => {
@@ -188,7 +197,7 @@ describe('Public API', () => {
 
     });
 
-    describe('setOutputPath', () => {
+    describe('configureBabel', () => {
 
         it('must return the API object', () => {
             const returnedValue = api.configureBabel(() => {});
