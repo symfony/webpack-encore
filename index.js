@@ -405,6 +405,24 @@ class Encore {
     }
 
     /**
+     * Configure the optimization.splitChunks configuration.
+     *
+     * https://webpack.js.org/plugins/split-chunks-plugin/
+     *
+     * Encore.configureSplitChunks(function(splitChunks) {
+     *      // change the configuration
+     * });
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureSplitChunks(callback) {
+        webpackConfig.configureSplitChunks(callback);
+
+        return this;
+    }
+
+    /**
      * Automatically make some variables available everywhere!
      *
      * Usage:

@@ -64,7 +64,8 @@ describe('Functional tests using webpack', function() {
                     'bg.css',
                     'fonts/Roboto.9896f773.woff2',
                     'images/symfony_logo.ea1ca6f7.png',
-                    'manifest.json'
+                    'manifest.json',
+                    'entrypoints.json'
                 ]);
 
                 // check that main.js has the correct contents
@@ -94,6 +95,46 @@ describe('Functional tests using webpack', function() {
                     '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
+                webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                    main: {
+                        js: ['main.js'],
+                        css: []
+                    },
+                    font: {
+                        js: [],
+                        css: ['font.css']
+                    },
+                    bg: {
+                        js: [],
+                        css: ['bg.css']
+                    },
+                });
+
+                done();
+            });
+        });
+
+        it('Use "all" splitChunks & look at entrypoints.json', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', ['./js/no_require', 'vue']);
+            config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+            config.setPublicPath('/build');
+            config.configureSplitChunks((splitChunks) => {
+                splitChunks.chunks = 'all';
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                    main: {
+                        js: ['vendors~main~other.js', 'main.js'],
+                        css: []
+                    },
+                    other: {
+                        js: ['vendors~main~other.js', 'other.js'],
+                        css: ['other.css']
+                    },
+                });
+
                 done();
             });
         });
@@ -109,7 +150,7 @@ describe('Functional tests using webpack', function() {
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
-                    .with.files(['0.css', '0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json']);
+                    .with.files(['0.css', '0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json', 'entrypoints.json']);
 
                 // check that the publicPath is set correctly
                 webpackAssert.assertOutputFileContains(
@@ -253,7 +294,7 @@ describe('Functional tests using webpack', function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
                         // public.js should not exist
-                        .with.files(['main.js', 'styles.css', 'manifest.json']);
+                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json']);
 
                     webpackAssert.assertOutputFileContains(
                         'styles.css',
@@ -283,7 +324,8 @@ describe('Functional tests using webpack', function() {
                         .with.files([
                             'main.f1e0a935.js',
                             'styles.8ec31654.css',
-                            'manifest.json'
+                            'manifest.json',
+                            'entrypoints.json'
                         ]);
 
                     webpackAssert.assertOutputFileContains(
@@ -315,7 +357,7 @@ describe('Functional tests using webpack', function() {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
-                        .with.files(['main.js', 'styles.css', 'manifest.json']);
+                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json']);
 
                     webpackAssert.assertOutputFileContains(
                         'styles.css',
@@ -347,7 +389,8 @@ describe('Functional tests using webpack', function() {
                             'main.js.map',
                             'styles.css',
                             'styles.css.map',
-                            'manifest.json'
+                            'manifest.json',
+                            'entrypoints.json'
                             // no styles.js
                             // no styles.js.map
                         ]);
@@ -382,7 +425,8 @@ describe('Functional tests using webpack', function() {
                         'main.ba427376.js',
                         'h1.8ec31654.css',
                         'bg.0ec2735b.css',
-                        'manifest.json'
+                        'manifest.json',
+                        'entrypoints.json'
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -411,7 +455,8 @@ describe('Functional tests using webpack', function() {
                     .with.files([
                         'bg.css',
                         'font.css',
-                        'manifest.json'
+                        'manifest.json',
+                        'entrypoints.json'
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -448,7 +493,8 @@ describe('Functional tests using webpack', function() {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         'styles.css',
-                        'manifest.json'
+                        'manifest.json',
+                        'entrypoints.json'
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -872,7 +918,8 @@ module.exports = {
 
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
-                    'manifest.json'
+                    'manifest.json',
+                    'entrypoints.json'
                 ]);
 
                 testSetup.requestTestPage(
@@ -920,7 +967,8 @@ module.exports = {
             testSetup.runWebpack(config, () => {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
-                    'manifest.json'
+                    'manifest.json',
+                    'entrypoints.json'
                 ]);
 
                 testSetup.requestTestPage(
@@ -991,7 +1039,8 @@ module.exports = {
                     'main.js',
                     'main.css',
                     'images/logo.82b9c7a5.png',
-                    'manifest.json'
+                    'manifest.json',
+                    'entrypoints.json'
                 ]);
 
                 // test that our custom babel config is used
@@ -1044,7 +1093,8 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         'url-loader.css',
-                        'manifest.json'
+                        'manifest.json',
+                        'entrypoints.json'
                     ]);
 
                 webpackAssert.assertOutputFileContains(

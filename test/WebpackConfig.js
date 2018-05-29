@@ -418,6 +418,23 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('configureSplitChunks', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureSplitChunks(testCallback);
+            expect(config.splitChunksConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureSplitChunks('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('enablePostCssLoader', () => {
         it('Call with no config', () => {
             const config = createConfig();

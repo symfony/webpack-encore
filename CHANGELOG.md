@@ -29,6 +29,16 @@
 See the [browserslist](https://github.com/browserslist/browserslist) library
 for a full description of all of the valid browser descriptions.
 
+ * Introduced a new `configureSplitChunks()` method that can be
+   used to further configure the `optimizations.splitChunks` configuration.
+
+ * A new `entrypoints.js` file is now always output. For expert
+   use-cases, the `optimizations.splitChunks.chunks` configuration
+   can be set via `configureSplitChunks()` to `all`. Then, you
+   can write some custom server-side code to parse the `entrypoints.js`
+   so that you know which `script` and `link` tags are needed for
+   each entry.
+
  * The NamedModulesPlugin was removed.
 
  * The `babel-preset-env` package (which was at version ^1.2.2) was
