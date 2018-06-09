@@ -24,25 +24,33 @@ describe('package-helper', () => {
 
         it('missing packages without any lock file', () => {
             process.chdir(path.join(__dirname , '../fixtures/package-helper/empty'));
-            const packageRecommendations = packageHelper.getPackageRecommendations(['foo', 'webpack', 'bar']);
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
+            ]);
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
         });
 
         it('missing packages with package-lock.json only', () => {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/npm'));
-            const packageRecommendations = packageHelper.getPackageRecommendations(['foo', 'webpack', 'bar']);
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
+            ]);
             expect(packageRecommendations.installCommand).to.contain('npm install foo bar');
         });
 
         it('missing packages with yarn.lock only', () => {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn'));
-            const packageRecommendations = packageHelper.getPackageRecommendations(['foo', 'webpack', 'bar']);
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
+            ]);
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
         });
 
         it('missing packages with both package-lock.json and yarn.lock', () => {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn-npm'));
-            const packageRecommendations = packageHelper.getPackageRecommendations(['foo', 'webpack', 'bar']);
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
+            ]);
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
         });
     });
