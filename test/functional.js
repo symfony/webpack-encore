@@ -1139,5 +1139,32 @@ module.exports = {
                 done();
             }, true);
         });
+
+        it('Code splitting with dynamic import', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/code_splitting_dynamic_import');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check for the code-split file
+                webpackAssert.assertOutputFileContains(
+                    '0.js',
+                    'document.getElementById(\'app\').innerHTML ='
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/main.js'
+                    ],
+                    (browser) => {
+
+                        // assert the async module was loaded and works
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
     });
 });
