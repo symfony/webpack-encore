@@ -44,6 +44,9 @@ for a full description of all of the valid browser descriptions.
    is always enabled. This allows you to do "Dynamic Imports"
    as described here: https://webpack.js.org/guides/code-splitting/#dynamic-imports
 
+ * For Preact, the necessary plugin the user needs to install
+   changed from `babel-plugin-transform-react-jsx` to `@babel/plugin-transform-react-jsx`.
+
  * The NamedModulesPlugin was removed.
 
  * The `babel-preset-env` package (which was at version ^1.2.2) was
