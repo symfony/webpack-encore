@@ -40,7 +40,7 @@ for a full description of all of the valid browser descriptions.
    each entry.
 
  * The "dynamic import" syntax is now supported out of the box
-   because the `@babel/plugin-transform-react-jsx` babel plugin
+   because the `babel-plugin-syntax-dynamic-import` babel plugin
    is always enabled. This allows you to do "Dynamic Imports"
    as described here: https://webpack.js.org/guides/code-splitting/#dynamic-imports
 
