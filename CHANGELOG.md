@@ -58,6 +58,13 @@ for a full description of all of the valid browser descriptions.
 
  * Support for CoffeeScript was entirely removed.
 
+ * A new "version check" system was added for optional dependencies.
+   Now, when you install optional plugins to support a feature, if
+   you are using an unsupported version, you will see a warning.
+   "Package recommendation" errors (i.e. when you enable a feature
+   but you are missing some packages) will also contain the version
+   in the install string when necessary (e.g. `yarn add foo@^2.0`).
+
  * Actual lang="sass" no longer works for Vue. However, lang="scss"
    continues to work fine.
 
