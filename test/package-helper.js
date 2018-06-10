@@ -55,6 +55,18 @@ describe('package-helper', () => {
         });
     });
 
+    describe('check messaging on install commands', () => {
+        it('Make sure the major version is included in the install command', () => {
+            process.chdir(path.join(__dirname , '../fixtures/package-helper/empty'));
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' }, { name: 'bar', version: 3 }
+            ]);
+
+            expect(packageRecommendations.installCommand).to.contain('yarn add foo bar@^3.0');
+        });
+
+    });
+
     describe('The getInvalidPackageVersionRecommendations correctly checks installed versions', () => {
         it('Check package that *is* the correct version', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
