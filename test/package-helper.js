@@ -54,4 +54,45 @@ describe('package-helper', () => {
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
         });
     });
+
+    describe('The getInvalidPackageVersionRecommendations correctly checks installed versions', () => {
+        it('Check package that *is* the correct version', () => {
+            const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
+                { name: 'sass-loader', version: 7 },
+                { name: 'preact', version: 8 }
+            ]);
+
+            expect(versionProblems).to.be.empty;
+        });
+
+        it('Check package with a version too low', () => {
+            const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
+                { name: 'sass-loader', version: 8 },
+                { name: 'preact', version: 9 }
+            ]);
+
+            expect(versionProblems).to.have.length(2);
+            expect(versionProblems[0]).to.contain('is too old');
+        });
+
+        it('Check package with a version too low', () => {
+            const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
+                { name: 'sass-loader', version: 6 },
+                { name: 'preact', version: 7 }
+            ]);
+
+            expect(versionProblems).to.have.length(2);
+            expect(versionProblems[0]).to.contain('is too new');
+        });
+
+        it('Missing "version" key is ok', () => {
+            const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
+                { name: 'sass-loader', version: 6 },
+                { name: 'preact' }
+            ]);
+
+            // just sass-loader
+            expect(versionProblems).to.have.length(1);
+        });
+    });
 });
