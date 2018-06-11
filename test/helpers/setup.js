@@ -97,7 +97,7 @@ function runWebpack(webpackConfig, callback, allowCompilationError = false) {
 
             // Restore stdout and then call the callback
             process.stdout.write = stdoutWrite;
-            callback(assertUtil(webpackConfig), stats, stdOutContents.join("\n"));
+            callback(assertUtil(webpackConfig), stats, stdOutContents.join('\n'));
         });
     } catch (e) {
         // Restore stdout and then re-throw the exception
