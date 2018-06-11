@@ -436,6 +436,23 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('configureCssLoader', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureCssLoader(testCallback);
+            expect(config.cssLoaderConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureCssLoader('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('enablePostCssLoader', () => {
         it('Call with no config', () => {
             const config = createConfig();
