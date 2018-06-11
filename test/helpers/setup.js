@@ -46,7 +46,7 @@ function createWebpackConfig(testAppDir, outputDirName = '', command, argv = {})
     argv.context = testAppDir;
     const runtimeConfig = parseRuntime(
         argv,
-        __dirname
+        testAppDir
     );
 
     const config = new WebpackConfig(runtimeConfig);
