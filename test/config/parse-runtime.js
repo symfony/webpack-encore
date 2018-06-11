@@ -100,7 +100,7 @@ describe('parse-runtime', () => {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, '.babelrc'),
-            ''
+            '{}'
         );
 
         const config = parseArgv(createArgv(['dev']), projectDir);
