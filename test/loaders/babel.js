@@ -76,10 +76,9 @@ describe('loaders/babel', () => {
 
         const actualLoaders = babelLoader.getLoaders(config);
 
-        // transform-react-jsx & foo
-        expect(actualLoaders[0].options.plugins).to.have.lengthOf(2);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            ['transform-react-jsx', { pragma: 'h' }],
+            '@babel/plugin-syntax-dynamic-import',
+            ['@babel/plugin-transform-react-jsx', { pragma: 'h' }],
             'foo'
         ]);
     });
@@ -94,10 +93,9 @@ describe('loaders/babel', () => {
 
         const actualLoaders = babelLoader.getLoaders(config);
 
-        // transform-react-jsx & foo
-        expect(actualLoaders[0].options.plugins).to.have.lengthOf(2);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            ['transform-react-jsx'],
+            '@babel/plugin-syntax-dynamic-import',
+            ['@babel/plugin-transform-react-jsx'],
             'foo'
         ]);
     });
