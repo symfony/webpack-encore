@@ -610,7 +610,7 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
             config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
-            config.createSharedEntry('shared', ['./js/no_require', './js/requires_arrow_function', './css/h1_style.css']);
+            config.createSharedEntry('shared', './js/shared_example');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check the file is extracted correctly
@@ -650,10 +650,9 @@ describe('Functional tests using webpack', function() {
                     [
                         'build/runtime.js',
                         'build/shared.js',
-                        'build/main.js'
                     ],
                     (browser) => {
-                        // assert that the javascript executed
+                        // assert that the javascript brought into shared is executed
                         browser.assert.text('#app', 'Welcome to Encore!');
                         done();
                     }

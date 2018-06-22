@@ -392,14 +392,14 @@ class Encore {
     }
 
     /**
-     * Add a "commons" file that holds JS shared by multiple chunks.
+     * Add a "commons" file that holds JS shared by multiple chunks/files.
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
-     * @param {string|Array}  files Array of files to put in the vendor entry
+     * @param {string} file A file whose code & imports should be put into the shared file.
      * @returns {Encore}
      */
-    createSharedEntry(name, files) {
-        webpackConfig.createSharedEntry(name, files);
+    createSharedEntry(name, file) {
+        webpackConfig.createSharedEntry(name, file);
 
         return this;
     }
