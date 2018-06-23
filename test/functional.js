@@ -15,6 +15,7 @@ const expect = chai.expect;
 const path = require('path');
 const testSetup = require('./helpers/setup');
 const fs = require('fs-extra');
+const sharedEntryTmpName = require('../lib/utils/sharedEntryTmpName');
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     return testSetup.createWebpackConfig(
@@ -644,6 +645,12 @@ describe('Functional tests using webpack', function() {
                     'runtime.js',
                     'function __webpack_require__'
                 );
+
+                // make sure the _tmp_shared entry does not live in the manifest
+                webpackAssert.assertManifestPathDoesNotExist(
+                    sharedEntryTmpName + '.js'
+                );
+                webpackAssert.assertOutputFileDoesNotContain('entrypoints.json', sharedEntryTmpName);
 
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
