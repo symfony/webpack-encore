@@ -660,6 +660,37 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('createdSharedEntry() does not run shared code twice', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
+            // in this situation, we create a shared entry that contains zero shared code
+            // in practice (for some reason) this causes SplitChunksPlugin to NOT
+            // remove the "shared" entry, which, in theory, our hack would cause
+            // the code to be executed twice. However, in practice, thanks to our
+            // hack (the addition of the fake entry file), suddenly the shared
+            // entry DOES have chunks that should be split, and the "shared" entry
+            // is removed, like in all other situations. This test proves that this
+            // guarantees the code is not executed twice.
+            config.createSharedEntry('shared', './js/append_to_app');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/shared.js',
+                    ],
+                    (browser) => {
+                        // assert JS code is executed, ONLY once
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
         it('in production mode, code is uglified', (done) => {
             const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');
