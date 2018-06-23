@@ -698,6 +698,30 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('createdSharedEntry() works with versioning', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
+            config.createSharedEntry('shared', './js/shared_example');
+            config.enableVersioning();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        convertToManifestPath('build/runtime.js', config),
+                        convertToManifestPath('build/shared.js', config),
+                    ],
+                    (browser) => {
+                        // assert that the javascript brought into shared is executed
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
         it('in production mode, code is uglified', (done) => {
             const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');
