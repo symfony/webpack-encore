@@ -652,6 +652,19 @@ describe('Functional tests using webpack', function() {
                 );
                 webpackAssert.assertOutputFileDoesNotContain('entrypoints.json', sharedEntryTmpName);
 
+                // make sure runtime.js is here
+                // but the _tmp_shared entry is NOT here
+                webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                    main: {
+                        js: ['runtime.js', 'shared.js', 'main.js'],
+                        css: ['shared.css']
+                    },
+                    other: {
+                        js: ['runtime.js', 'shared.js', 'other.js'],
+                        css: ['shared.css']
+                    },
+                });
+
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
