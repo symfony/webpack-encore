@@ -43,6 +43,7 @@
     "pkg-up": "^1.0.0",
     "pretty-error": "^2.1.1",
     "resolve-url-loader": "^2.3.0",
+    "semver": "^5.5.0",
     "style-loader": "^0.21.0",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.0.0",
