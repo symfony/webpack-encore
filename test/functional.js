@@ -1240,5 +1240,33 @@ module.exports = {
                 );
             });
         });
+
+        describe('entrypoints.json', () => {
+            it('Use "all" splitChunks & look at entrypoints.json', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('/build');
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.chunks = 'all';
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['vendors~main~other.js', 'main~other.js', 'main.js'],
+                            css: ['main~other.css']
+                        },
+                        other: {
+                            js: ['vendors~main~other.js', 'main~other.js', 'other.js'],
+                            css: ['main~other.css']
+                        },
+                    });
+
+                    done();
+                });
+            });
+        });
     });
 });
