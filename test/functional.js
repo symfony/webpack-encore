@@ -1247,6 +1247,8 @@ module.exports = {
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
                 config.setPublicPath('/build');
+                // enable versioning to make sure entrypoints.json is not affected
+                config.enableVersioning();
                 config.configureSplitChunks((splitChunks) => {
                     splitChunks.chunks = 'all';
                     splitChunks.minSize = 0;
@@ -1263,6 +1265,39 @@ module.exports = {
                             css: ['main~other.css']
                         },
                     });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('build/vendors~main~other.js');
+
+                    done();
+                });
+            });
+
+            it('Custom public path does not affect entrypoints.json or manifest.json', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('http://localhost:8080/build');
+                config.setManifestKeyPrefix('custom_prefix');
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.chunks = 'all';
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['vendors~main~other.js', 'main~other.js', 'main.js'],
+                            css: ['main~other.css']
+                        },
+                        other: {
+                            js: ['vendors~main~other.js', 'main~other.js', 'other.js'],
+                            css: ['main~other.css']
+                        },
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('custom_prefix/vendors~main~other.js');
 
                     done();
                 });

@@ -73,7 +73,7 @@ describe('package-helper', () => {
             expect(packageRecommendations.installCommand).to.contain('yarn add foo@^0.1.0 bar');
         });
 
-        it.only('Recommends correct install with a more complex constraint', () => {
+        it('Recommends correct install with a more complex constraint', () => {
             // e.g. ^7.0|^8.0
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo', version: '^7.0|^8.0' },
