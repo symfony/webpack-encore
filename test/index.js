@@ -134,6 +134,15 @@ describe('Public API', () => {
 
     });
 
+    describe('splitEntryChunks', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.splitEntryChunks();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('configureSplitChunks', () => {
 
         it('must return the API object', () => {

@@ -405,12 +405,34 @@ class Encore {
     }
 
     /**
+     * Tell Webpack to "split" your entry chunks.
+     *
+     * This will mean that, instead of adding 1 script tag
+     * to your page, your server-side code will need to read
+     * the entrypoints.json file in the build directory to
+     * determine the *multiple* .js (and .css) files that
+     * should be included for each entry.
+     *
+     * This is a performance optimization, but requires extra
+     * work (described above) to support this.
+     *
+     * @returns {Encore}
+     */
+    splitEntryChunks() {
+        webpackConfig.splitEntryChunks();
+
+        return this;
+    }
+
+    /**
      * Configure the optimization.splitChunks configuration.
      *
      * https://webpack.js.org/plugins/split-chunks-plugin/
      *
      * Encore.configureSplitChunks(function(splitChunks) {
      *      // change the configuration
+     *
+     *      splitChunks.minSize = 0;
      * });
      *
      * @param {function} callback

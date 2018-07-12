@@ -1249,8 +1249,8 @@ module.exports = {
                 config.setPublicPath('/build');
                 // enable versioning to make sure entrypoints.json is not affected
                 config.enableVersioning();
+                config.splitEntryChunks();
                 config.configureSplitChunks((splitChunks) => {
-                    splitChunks.chunks = 'all';
                     splitChunks.minSize = 0;
                 });
 
