@@ -6,8 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha --reporter spec test --recursive",
     "lint": "./node_modules/.bin/eslint lib test index.js",
-    "travis:lint": "npm run lint && npm run nsp",
-    "nsp": "./node_modules/.bin/nsp check --output summary"
+    "travis:lint": "npm run lint"
   },
   "bin": {
     "encore": "bin/encore.js"
@@ -45,6 +44,7 @@
     "resolve-url-loader": "^2.3.0",
     "semver": "^5.5.0",
     "style-loader": "^0.21.0",
+    "tmp": "^0.0.33",
     "uglifyjs-webpack-plugin": "^1.2.5",
     "webpack": "^4.0.0",
     "webpack-chunk-hash": "^0.6.0",
@@ -72,7 +72,6 @@
     "less-loader": "^4.1.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.3",
-    "nsp": "^2.6.3",
     "postcss-loader": "^2.1.5",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
@@ -80,7 +79,6 @@
     "sinon": "^2.3.4",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "tmp": "^0.0.33",
     "ts-loader": "^4.3.0",
     "typescript": "^2.3.4",
     "url-loader": "^1.0.1",

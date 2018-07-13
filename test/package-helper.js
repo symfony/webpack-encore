@@ -136,7 +136,8 @@ describe('package-helper', () => {
             const expectedPackages = [
                 { name: 'sass-loader', version: '^7.0.1' },
                 { name: 'node-sass' }
-            ]
+            ];
+
             const actualPackages = packageHelper.addPackagesVersionConstraint(inputPackages);
             expect(JSON.stringify(actualPackages)).to.equal(JSON.stringify(expectedPackages));
         });
