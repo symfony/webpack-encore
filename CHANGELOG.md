@@ -29,6 +29,10 @@
 See the [browserslist](https://github.com/browserslist/browserslist) library
 for a full description of all of the valid browser descriptions.
 
+ * Node 7 is no longer supported. This is because the new
+   `mini-css-extract-plugin` does not support it (and neither)
+   does Yarn.
+
  * Introduced a new `configureSplitChunks()` method that can be
    used to further configure the `optimizations.splitChunks` configuration.
 
