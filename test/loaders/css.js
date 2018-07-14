@@ -44,6 +44,20 @@ describe('loaders/css', () => {
         expect(actualLoaders[0].options.minimize).to.be.true;
     });
 
+    it('getLoaders() with options callback', () => {
+        const config = createConfig();
+
+        config.configureCssLoader(function(options) {
+            options.minimize = true;
+            options.url = false;
+        });
+
+        const actualLoaders = cssLoader.getLoaders(config);
+        expect(actualLoaders).to.have.lengthOf(1);
+        expect(actualLoaders[0].options.minimize).to.be.true;
+        expect(actualLoaders[0].options.url).to.be.false;
+    });
+
     describe('getLoaders() with PostCSS', () => {
         it('without options callback', () => {
             const config = createConfig();

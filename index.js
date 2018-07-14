@@ -582,6 +582,25 @@ class Encore {
     }
 
     /**
+     * Configure the css-loader.
+     *
+     * https://github.com/webpack-contrib/css-loader#options
+     *
+     * Encore.configureCssLoader(function(config) {
+     *      // change the config
+     *      // config.minimize = true;
+     * });
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureCssLoader(callback) {
+        webpackConfig.configureCssLoader(callback);
+
+        return this;
+    }
+
+    /**
      * If enabled, the react preset is added to Babel.
      *
      * https://babeljs.io/docs/plugins/preset-react/
