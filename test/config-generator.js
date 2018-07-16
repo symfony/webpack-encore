@@ -824,4 +824,30 @@ describe('The config-generator function', () => {
             });
         });
     });
+
+    describe('Test shouldSplitEntryChunks', () => {
+        it('Not production', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.splitEntryChunks();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
+            expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
+        });
+
+        it('Yes production', () => {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.environment = 'production';
+            const config = createConfig(runtimeConfig);
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.splitEntryChunks();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
+            expect(actualConfig.optimization.splitChunks.name).to.be.a('function');
+        });
+    });
 });
