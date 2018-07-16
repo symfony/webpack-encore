@@ -74,9 +74,17 @@ describe('package-helper', () => {
         });
 
         it('Recommends correct install with a more complex constraint', () => {
-            // e.g. ^7.0|^8.0
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
-                { name: 'foo', version: '^7.0|^8.0' },
+                { name: 'foo', version: '^7.0||^8.0' },
+                { name: 'bar' }
+            ]);
+
+            expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar');
+        });
+
+        it('Recommends correct install with a more complex constraint', () => {
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo', version: '^7.0 || ^8.0' },
                 { name: 'bar' }
             ]);
 
