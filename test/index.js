@@ -134,6 +134,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableSingleRuntimeChunk', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableSingleRuntimeChunk();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('disableSingleRuntimeChunk', () => {
 
         it('must return the API object', () => {

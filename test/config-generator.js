@@ -17,6 +17,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const logger = require('../lib/logger');
 
 const isWindows = (process.platform === 'win32');
 
@@ -848,6 +849,60 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
             expect(actualConfig.optimization.splitChunks.name).to.be.a('function');
+        });
+    });
+
+    describe('Test shouldUseSingleRuntimeChunk', () => {
+        before(() => {
+            logger.reset();
+            logger.quiet();
+        });
+
+        after(() => {
+            logger.quiet(false);
+        });
+
+        it('Set to true', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.enableSingleRuntimeChunk();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk).to.equal('single');
+            expect(logger.getMessages().deprecation).to.be.empty;
+        });
+
+        it('Set to false', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.disableSingleRuntimeChunk();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
+            expect(logger.getMessages().deprecation).to.be.empty;
+        });
+
+        it('Not set + createSharedEntry()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.createSharedEntry('foo', 'bar.js');
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk.name).to.equal('manifest');
+            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
+        });
+
+        it('Not set without createSharedEntry()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
+            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
         });
     });
 });

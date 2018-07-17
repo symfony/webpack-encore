@@ -405,13 +405,16 @@ class Encore {
     }
 
     /**
-     * Tell Webpack to *not* output a separate runtime.js file.
+     * Tell Webpack to output a separate runtime.js file.
+     *
+     * This file must be included via a script tag before all
+     * other JavaScript files output by Encore.
      *
      * The runtime.js file is useful when you plan to include
      * multiple entry files on the same page (e.g. a layout.js entry
      * and a page-specific entry). If you are *not* including
      * multiple entries on the same page, you can safely disable
-     * this and remove the extra script tags.
+     * this - disableSingleRuntimeChunk() - and remove the extra script tags.
      *
      * If you *do* include multiple entry files on the same page,
      * disabling the runtime.js file has two important consequences:
@@ -423,6 +426,19 @@ class Encore {
      *     to be able to "initialize" some jQuery plugins, because the
      *     jQuery required by the other entry will be a different instance,
      *     and so won't have the plugins initialized on it.
+     *
+     * @returns {Encore}
+     */
+    enableSingleRuntimeChunk() {
+        webpackConfig.enableSingleRuntimeChunk();
+
+        return this;
+    }
+
+    /**
+     * Tell Webpack to *not* output a separate runtime.js file.
+     *
+     * See enableSingleRuntimeChunk() for more details.
      *
      * @returns {Encore}
      */

@@ -18,12 +18,16 @@ const fs = require('fs-extra');
 const sharedEntryTmpName = require('../lib/utils/sharedEntryTmpName');
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
-    return testSetup.createWebpackConfig(
+    const webpackConfig = testSetup.createWebpackConfig(
         testSetup.createTestAppDir(),
         outputDirName,
         command,
         argv
     );
+
+    webpackConfig.enableSingleRuntimeChunk();
+
+    return webpackConfig;
 }
 
 function convertToManifestPath(assetSrc, webpackConfig) {
@@ -701,6 +705,36 @@ describe('Functional tests using webpack', function() {
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
+                        'build/shared.js',
+                    ],
+                    (browser) => {
+                        // assert that the javascript brought into shared is executed
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('createdSharedEntry() with shouldUseSingleRuntimeChunk not set', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            // set back to the "not set" value
+            config.shouldUseSingleRuntimeChunk = null;
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.createSharedEntry('shared', './js/shared_example');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // should be called manifest.js
+                webpackAssert.assertOutputFileContains(
+                    'manifest.js',
+                    'function __webpack_require__'
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/manifest.js',
                         'build/shared.js',
                     ],
                     (browser) => {
