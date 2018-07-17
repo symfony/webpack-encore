@@ -1150,6 +1150,7 @@ module.exports = {
             );
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
             config.addEntry('main', './vuejs/main');
             config.enableVueLoader();
