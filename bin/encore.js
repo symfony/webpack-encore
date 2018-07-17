@@ -20,7 +20,7 @@ const runtimeConfig = parseRuntime(
 );
 context.runtimeConfig = runtimeConfig;
 
-// remove the command from the output
+// remove the command from the input
 process.argv.splice(2, 1);
 
 if (!runtimeConfig.isValidCommand) {
