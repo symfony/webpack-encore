@@ -986,13 +986,18 @@ class Encore {
         webpackConfig = null;
     }
 
-    /*
-     * Removed Public Methods
+    /**
+     * @deprecated
+     * @return {void}
      */
     configureExtractTextPlugin() {
         throw new Error('The configureExtractTextPlugin() method was removed from Encore. The underlying plugin was removed from Webpack 4.');
     }
 
+    /**
+     * @deprecated
+     * @return {void}
+     */
     enableCoffeeScriptLoader() {
         throw new Error('The enableCoffeeScriptLoader() method and CoffeeScript support was removed from Encore due to support problems with Webpack 4. If you are interested in this feature, please submit a pull request!');
     }
