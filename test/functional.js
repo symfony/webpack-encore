@@ -1302,6 +1302,36 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Use splitChunks in production mode', (done) => {
+                const config = createWebpackConfig('web/build', 'production');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('/build');
+                config.splitEntryChunks();
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // in production, we hash the chunk names to avoid exposing any extra details
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['vendors~cc515e6e.js', 'default~cc515e6e.js', 'main.js'],
+                            css: ['default~cc515e6e.css']
+                        },
+                        other: {
+                            js: ['vendors~cc515e6e.js', 'default~cc515e6e.js', 'other.js'],
+                            css: ['default~cc515e6e.css']
+                        },
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('build/vendors~cc515e6e.js');
+
+                    done();
+                });
+            });
         });
     });
 });
