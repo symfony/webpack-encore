@@ -348,6 +348,15 @@ describe('WebpackConfig object', () => {
                 config.createSharedEntry('vendor2', './main');
             }).to.throw('cannot be called multiple');
         });
+
+        it('Calling with splitEntryChunks() is not supported', () => {
+            const config = createConfig();
+            config.splitEntryChunks();
+
+            expect(() => {
+                config.createSharedEntry('vendor', './main');
+            }).to.throw('together is not supported');
+        });
     });
 
     describe('autoProvideVariables', () => {
@@ -450,6 +459,15 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureSplitChunks('FOO');
             }).to.throw('must be a callback function');
+        });
+
+        it('Calling with createdSharedEntry() is not supported', () => {
+            const config = createConfig();
+            config.createSharedEntry('vendor', './main');
+
+            expect(() => {
+                config.splitEntryChunks();
+            }).to.throw('together is not supported');
         });
     });
 
