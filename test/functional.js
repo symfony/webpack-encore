@@ -1393,6 +1393,40 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Use splitEntryChunks() with code splitting', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./js/code_splitting', 'vue']);
+                config.addEntry('other', ['./js/no_require', 'vue']);
+                config.setPublicPath('/build');
+                // enable versioning to make sure entrypoints.json is not affected
+                config.enableVersioning();
+                config.splitEntryChunks();
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['runtime.js', 'vendors~main~other.js', 'main.js'],
+                            css: []
+                        },
+                        other: {
+                            // the 0.[hash].js is because the "no_require" module was already split to this
+                            // so, it has that filename, instead of following the normal pattern
+                            js: ['runtime.js', 'vendors~main~other.js', '0.f1e0a935.js', 'other.js'],
+                            css: []
+                        },
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('build/vendors~main~other.js');
+                    webpackAssert.assertManifestKeyExists('build/0.f1e0a935.js');
+
+                    done();
+                });
+            });
         });
     });
 });
