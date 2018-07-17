@@ -60,6 +60,7 @@ describe('Functional tests using webpack', function() {
                 // should have a manifest.json with public/main.js
 
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'runtime.js',
                     'main.js',
                     'font.css',
                     'bg.css',
@@ -76,7 +77,7 @@ describe('Functional tests using webpack', function() {
                 );
                 // check that main.js has the webpack bootstrap
                 webpackAssert.assertOutputFileContains(
-                    'main.js',
+                    'runtime.js',
                     '__webpack_require__'
                 );
                 webpackAssert.assertManifestPath(
@@ -98,10 +99,11 @@ describe('Functional tests using webpack', function() {
 
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     main: {
-                        js: ['main.js'],
+                        js: ['runtime.js', 'main.js'],
                         css: []
                     },
                     font: {
+                        // no runtime for style entries
                         js: [],
                         css: ['font.css']
                     },
@@ -128,14 +130,32 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     main: {
-                        js: ['vendors~main~other.js', 'main~other.js', 'main.js'],
+                        js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'main.js'],
                         css: ['main~other.css']
                     },
                     other: {
-                        js: ['vendors~main~other.js', 'main~other.js', 'other.js'],
+                        js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'other.js'],
                         css: ['main~other.css']
                     },
                 });
+
+                done();
+            });
+        });
+
+        it('Disable the runtime chunk', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', './js/no_require');
+            config.disableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // no runtime.js
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'manifest.json',
+                    'entrypoints.json'
+                ]);
 
                 done();
             });
@@ -152,11 +172,11 @@ describe('Functional tests using webpack', function() {
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
-                    .with.files(['0.css', '0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json', 'entrypoints.json']);
+                    .with.files(['0.css', '0.js', 'main.js', 'runtime.js', 'font.css', 'bg.css', 'manifest.json', 'entrypoints.json']);
 
                 // check that the publicPath is set correctly
                 webpackAssert.assertOutputFileContains(
-                    'main.js',
+                    'runtime.js',
                     '__webpack_require__.p = "http://localhost:8090/assets/";'
                 );
 
@@ -178,6 +198,7 @@ describe('Functional tests using webpack', function() {
                     path.join(config.getContext(), 'public'),
                     [
                         // purposely load this NOT from the CDN
+                        'assets/runtime.js',
                         'assets/main.js'
                     ],
                     (browser) => {
@@ -187,6 +208,7 @@ describe('Functional tests using webpack', function() {
                             // main server, as it's simply a script tag to main.js on the page
                             // we did this to check that the internally-loaded assets
                             // use the CDN, even if the entry point does not
+                            'http://127.0.0.1:8080/assets/runtime.js',
                             'http://127.0.0.1:8080/assets/main.js'
                         ]);
 
@@ -209,7 +231,7 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that the publicPath is set correctly
                 webpackAssert.assertOutputFileContains(
-                    'main.js',
+                    'runtime.js',
                     '__webpack_require__.p = "http://localhost:8090/assets/";'
                 );
 
@@ -226,12 +248,14 @@ describe('Functional tests using webpack', function() {
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'public'),
                     [
+                        convertToManifestPath('assets/runtime.js', config),
                         convertToManifestPath('assets/main.js', config)
                     ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                            'runtime.js',
+                            'main.js',
                             '0.js',
-                            'main.js'
                         ]);
 
                         done();
@@ -256,12 +280,14 @@ describe('Functional tests using webpack', function() {
                     // the webroot will not include the /subdirectory/build part
                     path.join(config.getContext(), ''),
                     [
+                        convertToManifestPath('build/runtime.js', config),
                         convertToManifestPath('build/main.js', config)
                     ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
                             'http://127.0.0.1:8080/subdirectory/build/0.js',
-                            'http://127.0.0.1:8080/subdirectory/build/main.js'
+                            'http://127.0.0.1:8080/subdirectory/build/main.js',
+                            'http://127.0.0.1:8080/subdirectory/build/runtime.js',
                         ]);
 
                         done();
@@ -296,7 +322,7 @@ describe('Functional tests using webpack', function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
                         // public.js should not exist
-                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json']);
+                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json', 'runtime.js']);
 
                     webpackAssert.assertOutputFileContains(
                         'styles.css',
@@ -327,7 +353,8 @@ describe('Functional tests using webpack', function() {
                             'main.f1e0a935.js',
                             'styles.8ec31654.css',
                             'manifest.json',
-                            'entrypoints.json'
+                            'entrypoints.json',
+                            'runtime.d41d8cd9.js',
                         ]);
 
                     webpackAssert.assertOutputFileContains(
@@ -359,7 +386,7 @@ describe('Functional tests using webpack', function() {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
-                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json']);
+                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json', 'runtime.js']);
 
                     webpackAssert.assertOutputFileContains(
                         'styles.css',
@@ -392,7 +419,9 @@ describe('Functional tests using webpack', function() {
                             'styles.css',
                             'styles.css.map',
                             'manifest.json',
-                            'entrypoints.json'
+                            'entrypoints.json',
+                            'runtime.js',
+                            'runtime.js.map',
                             // no styles.js
                             // no styles.js.map
                         ]);
@@ -428,7 +457,8 @@ describe('Functional tests using webpack', function() {
                         'h1.8ec31654.css',
                         'bg.0ec2735b.css',
                         'manifest.json',
-                        'entrypoints.json'
+                        'entrypoints.json',
+                        'runtime.d41d8cd9.js',
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -458,7 +488,8 @@ describe('Functional tests using webpack', function() {
                         'bg.css',
                         'font.css',
                         'manifest.json',
-                        'entrypoints.json'
+                        'entrypoints.json',
+                        'runtime.js',
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -496,7 +527,8 @@ describe('Functional tests using webpack', function() {
                     .with.files([
                         'styles.css',
                         'manifest.json',
-                        'entrypoints.json'
+                        'entrypoints.json',
+                        'runtime.js',
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -991,15 +1023,10 @@ module.exports = {
                     'document.getElementById(\'app\').innerHTML ='
                 );
 
-                expect(config.outputPath).to.be.a.directory().with.deep.files([
-                    'main.js',
-                    'manifest.json',
-                    'entrypoints.json'
-                ]);
-
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
+                        'build/runtime.js',
                         'build/main.js'
                     ],
                     (browser) => {
@@ -1040,15 +1067,10 @@ module.exports = {
             config.enableHandlebarsLoader(testCallback);
 
             testSetup.runWebpack(config, () => {
-                expect(config.outputPath).to.be.a.directory().with.deep.files([
-                    'main.js',
-                    'manifest.json',
-                    'entrypoints.json'
-                ]);
-
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
+                        'build/runtime.js',
                         'build/main.js'
                     ],
                     (browser) => {
@@ -1115,7 +1137,8 @@ module.exports = {
                     'main.css',
                     'images/logo.82b9c7a5.png',
                     'manifest.json',
-                    'entrypoints.json'
+                    'entrypoints.json',
+                    'runtime.js',
                 ]);
 
                 // test that our custom babel config is used
@@ -1127,6 +1150,7 @@ module.exports = {
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
+                        'build/runtime.js',
                         'build/main.js'
                     ],
                     (browser) => {
@@ -1169,7 +1193,8 @@ module.exports = {
                     .with.files([
                         'url-loader.css',
                         'manifest.json',
-                        'entrypoints.json'
+                        'entrypoints.json',
+                        'runtime.js'
                     ]);
 
                 webpackAssert.assertOutputFileContains(
@@ -1229,6 +1254,7 @@ module.exports = {
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
+                        'build/runtime.js',
                         'build/main.js'
                     ],
                     (browser) => {
@@ -1257,11 +1283,11 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['vendors~main~other.js', 'main~other.js', 'main.js'],
+                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'main.js'],
                             css: ['main~other.css']
                         },
                         other: {
-                            js: ['vendors~main~other.js', 'main~other.js', 'other.js'],
+                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'other.js'],
                             css: ['main~other.css']
                         },
                     });
@@ -1287,11 +1313,11 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['vendors~main~other.js', 'main~other.js', 'main.js'],
+                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'main.js'],
                             css: ['main~other.css']
                         },
                         other: {
-                            js: ['vendors~main~other.js', 'main~other.js', 'other.js'],
+                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'other.js'],
                             css: ['main~other.css']
                         },
                     });
@@ -1317,11 +1343,11 @@ module.exports = {
                     // in production, we hash the chunk names to avoid exposing any extra details
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['vendors~cc515e6e.js', 'default~cc515e6e.js', 'main.js'],
+                            js: ['runtime.js', 'vendors~cc515e6e.js', 'default~cc515e6e.js', 'main.js'],
                             css: ['default~cc515e6e.css']
                         },
                         other: {
-                            js: ['vendors~cc515e6e.js', 'default~cc515e6e.js', 'other.js'],
+                            js: ['runtime.js', 'vendors~cc515e6e.js', 'default~cc515e6e.js', 'other.js'],
                             css: ['default~cc515e6e.css']
                         },
                     });

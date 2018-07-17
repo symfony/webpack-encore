@@ -5,6 +5,13 @@
  * [BC BREAK] Webpack was upgraded to version 4. This includes a number of major
    and minor changes. The changes are listed below.
 
+ * [BC BREAK] A new `runtime.js` file is now *always* output and must be
+   included in your layout (before all other script tags for files output
+   by Encore). You can disable this by calling `Encore.disableSingleRuntimeChunk()`.
+   But note: if you include multiple entries on the same page, when the
+   runtime is disabled, each entry will *not* share modules (e.g. if they
+   both require `jquery`, they will receive 2 separate objects).
+
  * [BC BREAK] If you're using `createSharedEntry()`, the name of the
    `manifest.js` file is now `runtime.js`. You will need to update
    your `<script>` tag to point to the new `runtime.js`.
