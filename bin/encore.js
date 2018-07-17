@@ -13,12 +13,18 @@
 const parseRuntime = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
 const chalk = require('chalk');
+const logger = require('../lib/logger');
 
 const runtimeConfig = parseRuntime(
     require('yargs/yargs')(process.argv.slice(2)).argv,
     process.cwd()
 );
 context.runtimeConfig = runtimeConfig;
+
+// prevent logs from being dumped
+if (runtimeConfig.outputJson) {
+    logger.quiet();
+}
 
 // remove the command from the input
 process.argv.splice(2, 1);
