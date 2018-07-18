@@ -1,5 +1,85 @@
 # CHANGELOG
 
+## 0.21.0 Webpack 4 Upgrade
+
+ * [BC BREAK] Webpack was upgraded to version 4. This includes a number of major
+   and minor changes. The changes are listed below.
+
+ * [DEPRECATION] You must now call either `Encore.enableSingleRuntimeChunk()`
+   or `Encore.disableSingleRuntimeChunk()`: not calling either method is
+   deprecated. The recommended setting is `Encore.enableSingleRuntimeChunk()`.
+   This will cause a new `runtime.js` file to be created, which must be included
+   on your page with a script tag (before any other script tags for Encore
+   JavaScript files). See the documentation above `enableSingleRuntimeChunk()` in
+   `index.js` for more details.
+
+ * [BEHAVIOR CHANGE] Previously, without any config, Babel was
+   configured to "transpile" (i.e. re-write) your JavaScript so
+   that it was compatible with all browsers that currently have
+   more than 1% of the market share. The new default behavior
+   is a bit more aggressive, and may rewrite even more code to
+   be compatible with even older browsers. The *recommendation*
+   is to add a new `browserslist` key to your `package.json` file
+   that specifies exactly what browsers you need to support. For
+   example, to get the old configuration, add the following to
+   `package.json`:
+
+```json
+{
+    "browserslist": "> 1%"
+}
+```
+
+See the [browserslist](https://github.com/browserslist/browserslist) library
+for a full description of all of the valid browser descriptions.
+
+ * Node 7 is no longer supported. This is because the new
+   `mini-css-extract-plugin` does not support it (and neither)
+   does Yarn.
+
+ * Introduced a new `configureSplitChunks()` method that can be
+   used to further configure the `optimizations.splitChunks` configuration.
+
+ * A new `entrypoints.json` file is now always output. For expert
+   use-cases, the `optimizations.splitChunks.chunks` configuration
+   can be set via `configureSplitChunks()` to `all`. Then, you
+   can write some custom server-side code to parse the `entrypoints.js`
+   so that you know which `script` and `link` tags are needed for
+   each entry.
+
+ * The "dynamic import" syntax is now supported out of the box
+   because the `@babel/plugin-syntax-dynamic-import` babel plugin
+   is always enabled. This allows you to do "Dynamic Imports"
+   as described here: https://webpack.js.org/guides/code-splitting/#dynamic-imports
+
+ * For Preact, the necessary plugin the user needs to install
+   changed from `babel-plugin-transform-react-jsx` to `@babel/plugin-transform-react-jsx`.
+
+ * The NamedModulesPlugin was removed.
+
+ * The `babel-preset-env` package (which was at version ^1.2.2) was
+   removed in favor of `@babel/preset-env`.
+
+ * ExtractTextPlugin was removed and replaced with
+   mini-css-extract-plugin. Accordingly, `extractTextPluginOptionsCallback()`
+   was removed.
+
+ * Support for CoffeeScript was entirely removed.
+
+ * A new "version check" system was added for optional dependencies.
+   Now, when you install optional plugins to support a feature, if
+   you are using an unsupported version, you will see a warning.
+   "Package recommendation" errors (i.e. when you enable a feature
+   but you are missing some packages) will also contain the version
+   in the install string when necessary (e.g. `yarn add foo@^2.0`).
+
+ * Actual lang="sass" no longer works for Vue. However, lang="scss"
+   continues to work fine.
+
+ * uglifyjs-webpack-plugin was upgraded from 0.4.6 to 1.2.5, which
+   includes using `uglify-es`. If you're using `configureUglifyJsPlugin`(),
+   the options have changed.
+
 ## 0.20.1
 
  * Upgraded webpack-manifest-plugin from 2.0.0 RC1 to ^2.0.0.

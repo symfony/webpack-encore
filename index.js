@@ -124,25 +124,6 @@ class Encore {
     }
 
     /**
-     * Allows you to configure the options passed to the extract-text-webpack-plugin.
-     * A list of available options can be found at https://github.com/webpack-contrib/extract-text-webpack-plugin
-     *
-     * For example:
-     *
-     *      Encore.configureExtractTextPlugin((options) => {
-     *          options.ignoreOrder = true;
-     *      })
-     *
-     * @param {function} extractTextPluginOptionsCallback
-     * @returns {Encore}
-     */
-    configureExtractTextPlugin(extractTextPluginOptionsCallback = () => {}) {
-        webpackConfig.configureExtractTextPlugin(extractTextPluginOptionsCallback);
-
-        return this;
-    }
-
-    /**
      * Allows you to configure the options passed to the friendly-errors-webpack-plugin.
      * A list of available options can be found at https://github.com/geowarin/friendly-errors-webpack-plugin
      *
@@ -201,13 +182,17 @@ class Encore {
 
     /**
      * Allows you to configure the options passed to the uglifyjs-webpack-plugin.
-     * A list of available options can be found at https://github.com/webpack-contrib/uglifyjs-webpack-plugin/tree/v0.4.6
+     * A list of available options can be found at https://github.com/webpack-contrib/uglifyjs-webpack-plugin
      *
      * For example:
      *
      *      Encore.configureUglifyJsPlugin((options) => {
-     *          options.compress = false;
-     *          options.beautify = true;
+     *          options.cache = true;
+     *          options.uglifyOptions = {
+     *              output: {
+     *                  comments: false
+     *              }
+     *          }
      *      })
      *
      * @param {function} uglifyJsPluginOptionsCallback
@@ -225,7 +210,7 @@ class Encore {
      *      // final output file will be main.js in the output directory
      *      Encore.addEntry('main', './path/to/some_file.js');
      *
-     * If the JavaScript file imports/requires CSS/SASS/LESS files,
+     * If the JavaScript file imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
      *
      * @param {string} name       The name (without extension) that will be used
@@ -407,14 +392,98 @@ class Encore {
     }
 
     /**
-     * Add a "commons" file that holds JS shared by multiple chunks.
+     * Add a "commons" file that holds JS shared by multiple chunks/files.
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
-     * @param {string|Array}  files Array of files to put in the vendor entry
+     * @param {string} file A file whose code & imports should be put into the shared file.
      * @returns {Encore}
      */
-    createSharedEntry(name, files) {
-        webpackConfig.createSharedEntry(name, files);
+    createSharedEntry(name, file) {
+        webpackConfig.createSharedEntry(name, file);
+
+        return this;
+    }
+
+    /**
+     * Tell Webpack to output a separate runtime.js file.
+     *
+     * This file must be included via a script tag before all
+     * other JavaScript files output by Encore.
+     *
+     * The runtime.js file is useful when you plan to include
+     * multiple entry files on the same page (e.g. a layout.js entry
+     * and a page-specific entry). If you are *not* including
+     * multiple entries on the same page, you can safely disable
+     * this - disableSingleRuntimeChunk() - and remove the extra script tags.
+     *
+     * If you *do* include multiple entry files on the same page,
+     * disabling the runtime.js file has two important consequences:
+     *  A) Each entry file will contain the Webpack runtime, which
+     *     means each contains some code that is duplicated in the other.
+     *  B) If two entry files require the same module (e.g. jquery),
+     *     they will receive *different* objects - not the *same* object.
+     *     This can cause some confusion if you expect a "layout.js" entry
+     *     to be able to "initialize" some jQuery plugins, because the
+     *     jQuery required by the other entry will be a different instance,
+     *     and so won't have the plugins initialized on it.
+     *
+     * @returns {Encore}
+     */
+    enableSingleRuntimeChunk() {
+        webpackConfig.enableSingleRuntimeChunk();
+
+        return this;
+    }
+
+    /**
+     * Tell Webpack to *not* output a separate runtime.js file.
+     *
+     * See enableSingleRuntimeChunk() for more details.
+     *
+     * @returns {Encore}
+     */
+    disableSingleRuntimeChunk() {
+        webpackConfig.disableSingleRuntimeChunk();
+
+        return this;
+    }
+
+    /**
+     * Tell Webpack to "split" your entry chunks.
+     *
+     * This will mean that, instead of adding 1 script tag
+     * to your page, your server-side code will need to read
+     * the entrypoints.json file in the build directory to
+     * determine the *multiple* .js (and .css) files that
+     * should be included for each entry.
+     *
+     * This is a performance optimization, but requires extra
+     * work (described above) to support this.
+     *
+     * @returns {Encore}
+     */
+    splitEntryChunks() {
+        webpackConfig.splitEntryChunks();
+
+        return this;
+    }
+
+    /**
+     * Configure the optimization.splitChunks configuration.
+     *
+     * https://webpack.js.org/plugins/split-chunks-plugin/
+     *
+     * Encore.configureSplitChunks(function(splitChunks) {
+     *      // change the configuration
+     *
+     *      splitChunks.minSize = 0;
+     * });
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureSplitChunks(callback) {
+        webpackConfig.configureSplitChunks(callback);
 
         return this;
     }
@@ -650,27 +719,6 @@ class Encore {
      */
     enableTypeScriptLoader(callback = () => {}) {
         webpackConfig.enableTypeScriptLoader(callback);
-
-        return this;
-    }
-
-    /**
-     * Call this if you plan on loading CoffeeScript files.
-     *
-     * Encore.enableCoffeeScriptLoader()
-     *
-     * Or, configure the coffee-loader options:
-     *
-     * Encore.enableCoffeeScriptLoader(function(coffeeScriptOptions) {
-     *      // http://coffeescript.org/#nodejs-usage
-     *      // coffeeScriptOptions.header = true;
-     * });
-     *
-     * @param {function} callback
-     * @returns {Encore}
-     */
-    enableCoffeeScriptLoader(callback = () => {}) {
-        webpackConfig.enableCoffeeScriptLoader(callback);
 
         return this;
     }
@@ -980,6 +1028,22 @@ class Encore {
     clearRuntimeEnvironment() {
         runtimeConfig = null;
         webpackConfig = null;
+    }
+
+    /**
+     * @deprecated
+     * @return {void}
+     */
+    configureExtractTextPlugin() {
+        throw new Error('The configureExtractTextPlugin() method was removed from Encore. The underlying plugin was removed from Webpack 4.');
+    }
+
+    /**
+     * @deprecated
+     * @return {void}
+     */
+    enableCoffeeScriptLoader() {
+        throw new Error('The enableCoffeeScriptLoader() method and CoffeeScript support was removed from Encore due to support problems with Webpack 4. If you are interested in this feature, please submit a pull request!');
     }
 }
 

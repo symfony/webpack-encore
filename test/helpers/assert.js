@@ -100,12 +100,18 @@ class Assert {
     assertManifestPath(sourcePath, expectedDestinationPath) {
         const manifestData = loadManifest(this.webpackConfig);
 
-        if (!manifestData[sourcePath]) {
-            throw new Error(`No ${sourcePath} key found in manifest ${JSON.stringify(manifestData)}`);
-        }
+        this.assertManifestKeyExists(sourcePath);
 
         if (manifestData[sourcePath] !== expectedDestinationPath) {
             throw new Error(`source path ${sourcePath} expected to be set to ${expectedDestinationPath}, was actually ${manifestData[sourcePath]}`);
+        }
+    }
+
+    assertManifestKeyExists(key) {
+        const manifestData = loadManifest(this.webpackConfig);
+
+        if (!manifestData[key]) {
+            throw new Error(`No ${key} key found in manifest ${JSON.stringify(manifestData)}`);
         }
     }
 
@@ -148,6 +154,14 @@ class Assert {
         });
 
         expect(actualResources).to.have.all.members(expectedResources);
+    }
+
+    assertOutputJsonFileMatches(sourcePath, expectedData) {
+        const actualContents = readOutputFile(this.webpackConfig, sourcePath);
+
+        const actualData = JSON.parse(actualContents);
+
+        expect(JSON.stringify(actualData, null, 2)).to.equal(JSON.stringify(expectedData, null, 2));
     }
 }
 

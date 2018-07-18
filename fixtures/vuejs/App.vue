@@ -38,11 +38,6 @@ export default {
 }
 </style>
 
-<style lang="sass">
-#app
-  color: #2c3e90
-</style>
-
 <style lang="less">
 #app {
   margin-top: 40px;

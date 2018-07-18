@@ -13,10 +13,11 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const logger = require('../lib/logger');
 
 const isWindows = (process.platform === 'win32');
 
@@ -138,7 +139,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.devtool).to.equal('inline-source-map');
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('?sourceMap');
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":true');
         });
     });
 
@@ -200,9 +201,9 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].[chunkhash:8].js');
 
-            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
+            const miniCssPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
 
-            expect(extractTextPlugin.filename).to.equal('[name].[contenthash:8].css');
+            expect(miniCssPlugin.options.filename).to.equal('[name].[contenthash:8].css');
         });
     });
 
@@ -224,8 +225,7 @@ describe('The config-generator function', () => {
             expect(loaderOptionsPlugin.options.options.context).to.equal('/tmp/context');
             expect(loaderOptionsPlugin.options.options.output.path).to.equal('/tmp/output/public-path');
 
-            const moduleNamePlugin = findPlugin(webpack.NamedModulesPlugin, actualConfig.plugins);
-            expect(moduleNamePlugin).to.not.be.undefined;
+            expect(actualConfig.optimization.namedModules).to.be.true;
         });
 
         it('YES to production', () => {
@@ -243,12 +243,12 @@ describe('The config-generator function', () => {
 
             const moduleHashedIdsPlugin = findPlugin(webpack.HashedModuleIdsPlugin, actualConfig.plugins);
             expect(moduleHashedIdsPlugin).to.not.be.undefined;
+            expect(actualConfig.optimization.namedModules).to.be.undefined;
 
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
             expect(definePlugin.definitions['process.env'].NODE_ENV).to.equal('"production"');
 
-            const uglifyPlugin = findPlugin(webpack.optimize.UglifyJsPlugin, actualConfig.plugins);
-            expect(uglifyPlugin).to.not.be.undefined;
+            expect(actualConfig.optimization.minimizer[0]).to.not.be.undefined;
         });
     });
 
@@ -327,30 +327,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('stylus-loader');
-        });
-    });
-
-    describe('enableCoffeeScriptLoader() adds the coffee-loader', () => {
-        it('without enableCoffeeScriptLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('coffee-loader');
-        });
-
-        it('enableCoffeeScriptLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.enableCoffeeScriptLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('coffee-loader');
         });
     });
 
@@ -528,7 +504,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use[0].options.presets)).contains('env');
+            expect(JSON.stringify(jsRule.use[0].options.presets)).contains('@babel/preset-env');
         });
     });
 
@@ -725,8 +701,8 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
-            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
-            expect(extractTextPlugin.filename).to.equal('[name].foo.css');
+            const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
+            expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
@@ -751,8 +727,8 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
-            const extractTextPlugin = findPlugin(ExtractTextPlugin, actualConfig.plugins);
-            expect(extractTextPlugin.filename).to.equal('[name].foo.css');
+            const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
+            expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
             expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
@@ -847,6 +823,86 @@ describe('The config-generator function', () => {
                 expect(actualConfig.resolve.alias['react']).to.equal('preact-compat');
                 expect(actualConfig.resolve.alias['react-dom']).to.equal('preact-compat');
             });
+        });
+    });
+
+    describe('Test shouldSplitEntryChunks', () => {
+        it('Not production', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.splitEntryChunks();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
+            expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
+        });
+
+        it('Yes production', () => {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.environment = 'production';
+            const config = createConfig(runtimeConfig);
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.splitEntryChunks();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
+            expect(actualConfig.optimization.splitChunks.name).to.be.a('function');
+        });
+    });
+
+    describe('Test shouldUseSingleRuntimeChunk', () => {
+        before(() => {
+            logger.reset();
+            logger.quiet();
+        });
+
+        after(() => {
+            logger.quiet(false);
+        });
+
+        it('Set to true', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.enableSingleRuntimeChunk();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk).to.equal('single');
+            expect(logger.getMessages().deprecation).to.be.empty;
+        });
+
+        it('Set to false', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.disableSingleRuntimeChunk();
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
+            expect(logger.getMessages().deprecation).to.be.empty;
+        });
+
+        it('Not set + createSharedEntry()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.createSharedEntry('foo', 'bar.js');
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk.name).to.equal('manifest');
+            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
+        });
+
+        it('Not set without createSharedEntry()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
+            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
         });
     });
 });

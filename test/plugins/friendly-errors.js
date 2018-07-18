@@ -30,8 +30,8 @@ describe('plugins/friendly-errors', () => {
         const plugin = friendlyErrorsPluginUtil(config);
         expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
         expect(plugin.shouldClearConsole).to.equal(false);
-        expect(plugin.formatters.length).to.equal(6);
-        expect(plugin.transformers.length).to.equal(6);
+        expect(plugin.formatters.length).to.equal(5);
+        expect(plugin.transformers.length).to.equal(5);
     });
 
     it('with options callback', () => {
@@ -46,7 +46,7 @@ describe('plugins/friendly-errors', () => {
         expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
         expect(plugin.shouldClearConsole).to.equal(true);
         expect(plugin.formatters.length).to.equal(3);
-        expect(plugin.transformers.length).to.equal(6);
+        expect(plugin.transformers.length).to.equal(5);
     });
 
     it('with options callback that returns an object', () => {

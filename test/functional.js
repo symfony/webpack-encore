@@ -15,14 +15,19 @@ const expect = chai.expect;
 const path = require('path');
 const testSetup = require('./helpers/setup');
 const fs = require('fs-extra');
+const sharedEntryTmpName = require('../lib/utils/sharedEntryTmpName');
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
-    return testSetup.createWebpackConfig(
+    const webpackConfig = testSetup.createWebpackConfig(
         testSetup.createTestAppDir(),
         outputDirName,
         command,
         argv
     );
+
+    webpackConfig.enableSingleRuntimeChunk();
+
+    return webpackConfig;
 }
 
 function convertToManifestPath(assetSrc, webpackConfig) {
@@ -59,12 +64,14 @@ describe('Functional tests using webpack', function() {
                 // should have a manifest.json with public/main.js
 
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'runtime.js',
                     'main.js',
                     'font.css',
                     'bg.css',
                     'fonts/Roboto.9896f773.woff2',
                     'images/symfony_logo.ea1ca6f7.png',
-                    'manifest.json'
+                    'manifest.json',
+                    'entrypoints.json'
                 ]);
 
                 // check that main.js has the correct contents
@@ -74,7 +81,7 @@ describe('Functional tests using webpack', function() {
                 );
                 // check that main.js has the webpack bootstrap
                 webpackAssert.assertOutputFileContains(
-                    'main.js',
+                    'runtime.js',
                     '__webpack_require__'
                 );
                 webpackAssert.assertManifestPath(
@@ -94,6 +101,66 @@ describe('Functional tests using webpack', function() {
                     '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
+                webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                    main: {
+                        js: ['build/runtime.js', 'build/main.js'],
+                        css: []
+                    },
+                    font: {
+                        // no runtime for style entries
+                        js: [],
+                        css: ['build/font.css']
+                    },
+                    bg: {
+                        js: [],
+                        css: ['build/bg.css']
+                    },
+                });
+
+                done();
+            });
+        });
+
+        it('Use "all" splitChunks & look at entrypoints.json', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+            config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+            config.setPublicPath('/build');
+            config.configureSplitChunks((splitChunks) => {
+                splitChunks.chunks = 'all';
+                splitChunks.minSize = 0;
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                    main: {
+                        js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
+                        css: ['build/main~other.css']
+                    },
+                    other: {
+                        js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
+                        css: ['build/main~other.css']
+                    },
+                });
+
+                done();
+            });
+        });
+
+        it('Disable the runtime chunk', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', './js/no_require');
+            config.disableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // no runtime.js
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'manifest.json',
+                    'entrypoints.json'
+                ]);
+
                 done();
             });
         });
@@ -109,11 +176,11 @@ describe('Functional tests using webpack', function() {
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
-                    .with.files(['0.js', 'main.js', 'font.css', 'bg.css', 'manifest.json']);
+                    .with.files(['0.css', '0.js', 'main.js', 'runtime.js', 'font.css', 'bg.css', 'manifest.json', 'entrypoints.json']);
 
                 // check that the publicPath is set correctly
                 webpackAssert.assertOutputFileContains(
-                    'main.js',
+                    'runtime.js',
                     '__webpack_require__.p = "http://localhost:8090/assets/";'
                 );
 
@@ -135,6 +202,7 @@ describe('Functional tests using webpack', function() {
                     path.join(config.getContext(), 'public'),
                     [
                         // purposely load this NOT from the CDN
+                        'assets/runtime.js',
                         'assets/main.js'
                     ],
                     (browser) => {
@@ -144,6 +212,7 @@ describe('Functional tests using webpack', function() {
                             // main server, as it's simply a script tag to main.js on the page
                             // we did this to check that the internally-loaded assets
                             // use the CDN, even if the entry point does not
+                            'http://127.0.0.1:8080/assets/runtime.js',
                             'http://127.0.0.1:8080/assets/main.js'
                         ]);
 
@@ -166,7 +235,7 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that the publicPath is set correctly
                 webpackAssert.assertOutputFileContains(
-                    'main.js',
+                    'runtime.js',
                     '__webpack_require__.p = "http://localhost:8090/assets/";'
                 );
 
@@ -183,12 +252,14 @@ describe('Functional tests using webpack', function() {
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'public'),
                     [
+                        convertToManifestPath('assets/runtime.js', config),
                         convertToManifestPath('assets/main.js', config)
                     ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                            'runtime.js',
+                            'main.js',
                             '0.js',
-                            'main.js'
                         ]);
 
                         done();
@@ -213,12 +284,14 @@ describe('Functional tests using webpack', function() {
                     // the webroot will not include the /subdirectory/build part
                     path.join(config.getContext(), ''),
                     [
+                        convertToManifestPath('build/runtime.js', config),
                         convertToManifestPath('build/main.js', config)
                     ],
                     (browser) => {
                         webpackAssert.assertResourcesLoadedCorrectly(browser, [
                             'http://127.0.0.1:8080/subdirectory/build/0.js',
-                            'http://127.0.0.1:8080/subdirectory/build/main.js'
+                            'http://127.0.0.1:8080/subdirectory/build/main.js',
+                            'http://127.0.0.1:8080/subdirectory/build/runtime.js',
                         ]);
 
                         done();
@@ -253,7 +326,7 @@ describe('Functional tests using webpack', function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
                         // public.js should not exist
-                        .with.files(['main.js', 'styles.css', 'manifest.json']);
+                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json', 'runtime.js']);
 
                     webpackAssert.assertOutputFileContains(
                         'styles.css',
@@ -282,12 +355,14 @@ describe('Functional tests using webpack', function() {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
                             'main.f1e0a935.js',
-                            'styles.c84caea6.css',
-                            'manifest.json'
+                            'styles.8ec31654.css',
+                            'manifest.json',
+                            'entrypoints.json',
+                            'runtime.d41d8cd9.js',
                         ]);
 
                     webpackAssert.assertOutputFileContains(
-                        'styles.c84caea6.css',
+                        'styles.8ec31654.css',
                         'font-size: 50px;'
                     );
                     webpackAssert.assertManifestPathDoesNotExist(
@@ -295,7 +370,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.c84caea6.css'
+                        '/styles.8ec31654.css'
                     );
 
                     done();
@@ -315,7 +390,7 @@ describe('Functional tests using webpack', function() {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
-                        .with.files(['main.js', 'styles.css', 'manifest.json']);
+                        .with.files(['main.js', 'styles.css', 'manifest.json', 'entrypoints.json', 'runtime.js']);
 
                     webpackAssert.assertOutputFileContains(
                         'styles.css',
@@ -326,7 +401,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?c84caea6dd12bba7'
+                        '/styles.css?8ec316547cc77b39'
                     );
 
                     done();
@@ -347,7 +422,10 @@ describe('Functional tests using webpack', function() {
                             'main.js.map',
                             'styles.css',
                             'styles.css.map',
-                            'manifest.json'
+                            'manifest.json',
+                            'entrypoints.json',
+                            'runtime.js',
+                            'runtime.js.map',
                             // no styles.js
                             // no styles.js.map
                         ]);
@@ -377,11 +455,14 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.d002be21.js', // chunks are also versioned
-                        'main.292c0347.js',
-                        'h1.c84caea6.css',
-                        'bg.483832e4.css',
-                        'manifest.json'
+                        '0.8256b1ad.js', // chunks are also versioned
+                        '0.8ec31654.css',
+                        'main.ba427376.js',
+                        'h1.8ec31654.css',
+                        'bg.0ec2735b.css',
+                        'manifest.json',
+                        'entrypoints.json',
+                        'runtime.d41d8cd9.js',
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -390,7 +471,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.483832e4.css',
+                    'bg.0ec2735b.css',
                     '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
@@ -410,7 +491,9 @@ describe('Functional tests using webpack', function() {
                     .with.files([
                         'bg.css',
                         'font.css',
-                        'manifest.json'
+                        'manifest.json',
+                        'entrypoints.json',
+                        'runtime.js',
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -447,7 +530,9 @@ describe('Functional tests using webpack', function() {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         'styles.css',
-                        'manifest.json'
+                        'manifest.json',
+                        'entrypoints.json',
+                        'runtime.js',
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -544,12 +629,12 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 // make sure sass is parsed
                 webpackAssert.assertOutputFileContains(
-                    '0.js',
+                    '0.css',
                     'color: #333'
                 );
                 // and imported files are loaded correctly
                 webpackAssert.assertOutputFileContains(
-                    '0.js',
+                    '0.css',
                     'background: top left'
                 );
 
@@ -560,23 +645,159 @@ describe('Functional tests using webpack', function() {
         it('createdSharedEntry() creates commons files', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
-            config.addEntry('main', ['./js/no_require', './js/code_splitting']);
-            config.addEntry('other', ['./js/no_require']);
-            config.createSharedEntry('vendor', './js/no_require');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
+            config.createSharedEntry('shared', './js/shared_example');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check the file is extracted correctly
                 webpackAssert.assertOutputFileContains(
-                    'vendor.js',
+                    'shared.js',
                     'i am the no_require.js file'
                 );
-                // we should also have a manifest file with the webpack bootstrap code
+                webpackAssert.assertOutputFileContains(
+                    'shared.js',
+                    'arrow_function.js is ready for action'
+                );
+                webpackAssert.assertOutputFileContains(
+                    'shared.css',
+                    'font-size: 50px;'
+                );
+
+                // check that there is NOT duplication
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    'i am the no_require.js file'
+                );
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    'arrow_function.js is ready for action'
+                );
+                // this file has no contents remaining, so should not be output
+                webpackAssert.assertOutputFileDoesNotExist('other.css');
+
+                // we should also have a runtime file with the webpack bootstrap code
+                webpackAssert.assertOutputFileContains(
+                    'runtime.js',
+                    'function __webpack_require__'
+                );
+
+                // make sure the _tmp_shared entry does not live in the manifest
+                webpackAssert.assertManifestPathDoesNotExist(
+                    sharedEntryTmpName + '.js'
+                );
+                webpackAssert.assertOutputFileDoesNotContain('entrypoints.json', sharedEntryTmpName);
+
+                // make sure runtime.js is here
+                // but the _tmp_shared entry is NOT here
+                webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                    main: {
+                        js: ['build/runtime.js', 'build/shared.js', 'build/main.js'],
+                        css: ['build/shared.css']
+                    },
+                    other: {
+                        js: ['build/runtime.js', 'build/shared.js', 'build/other.js'],
+                        css: ['build/shared.css']
+                    },
+                });
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/shared.js',
+                    ],
+                    (browser) => {
+                        // assert that the javascript brought into shared is executed
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('createdSharedEntry() with shouldUseSingleRuntimeChunk not set', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            // set back to the "not set" value
+            config.shouldUseSingleRuntimeChunk = null;
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.createSharedEntry('shared', './js/shared_example');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // should be called manifest.js
                 webpackAssert.assertOutputFileContains(
                     'manifest.js',
                     'function __webpack_require__'
                 );
 
-                done();
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/manifest.js',
+                        'build/shared.js',
+                    ],
+                    (browser) => {
+                        // assert that the javascript brought into shared is executed
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('createdSharedEntry() does not run shared code twice', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
+            // in this situation, we create a shared entry that contains zero shared code
+            // in practice (for some reason) this causes SplitChunksPlugin to NOT
+            // remove the "shared" entry, which, in theory, our hack would cause
+            // the code to be executed twice. However, in practice, thanks to our
+            // hack (the addition of the fake entry file), suddenly the shared
+            // entry DOES have chunks that should be split, and the "shared" entry
+            // is removed, like in all other situations. This test proves that this
+            // guarantees the code is not executed twice.
+            config.createSharedEntry('shared', './js/append_to_app');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/shared.js',
+                    ],
+                    (browser) => {
+                        // assert JS code is executed, ONLY once
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('createdSharedEntry() works with versioning', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
+            config.createSharedEntry('shared', './js/shared_example');
+            config.enableVersioning();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        convertToManifestPath('build/runtime.js', config),
+                        convertToManifestPath('build/shared.js', config),
+                    ],
+                    (browser) => {
+                        // assert that the javascript brought into shared is executed
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
             });
         });
 
@@ -700,12 +921,57 @@ module.exports = {
                 `
 {
   "presets": [
-    ["env", {
+    ["@babel/preset-env", {
       "targets": {
         "chrome": 52
       }
     }]
   ]
+}
+`
+            );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/class-syntax');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the arrow function
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    // chrome 45 supports class, so it's not transpiled
+                    'class A {}'
+                );
+
+                done();
+            });
+        });
+
+        it('Babel can be configured via package.json browserlist', (done) => {
+            const cwd = process.cwd();
+            after(() => {
+                process.chdir(cwd);
+            });
+
+            const appDir = testSetup.createTestAppDir();
+            /*
+             * Most of the time, we don't explicitly use chdir
+             * in order to set the cwd() to the test directory.
+             * That's because, in theory, you should be able to
+             * run Encore from other directories, give you set
+             * the context. However, in this case, babel/presest-env
+             * uses process.cwd() to find the configPath, instead of the
+             * context. So, in this case, we *must* set the cwd()
+             * to be the temp test directory.
+             */
+            process.chdir(appDir);
+
+            // create the package.json file first, so we see it
+            fs.writeFileSync(
+                path.join(appDir, 'package.json'),
+                `
+{
+  "browserslist": "Chrome 52"
 }
 `
             );
@@ -780,7 +1046,7 @@ module.exports = {
         it('When configured, TypeScript is compiled!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
-            config.addEntry('main', ['./js/render.ts', './js/index.ts']);
+            config.addEntry('main', ['./js/index.ts']);
             const testCallback = () => {};
             config.enableTypeScriptLoader(testCallback);
 
@@ -788,17 +1054,13 @@ module.exports = {
                 // check that ts-loader transformed the ts file
                 webpackAssert.assertOutputFileContains(
                     'main.js',
-                    'document.getElementById(\'app\').innerHTML = "<h1>Welcome to Your TypeScript App</h1>";'
+                    'document.getElementById(\'app\').innerHTML ='
                 );
-
-                expect(config.outputPath).to.be.a.directory().with.deep.files([
-                    'main.js',
-                    'manifest.json'
-                ]);
 
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
+                        'build/runtime.js',
                         'build/main.js'
                     ],
                     (browser) => {
@@ -831,37 +1093,6 @@ module.exports = {
             }).to.throw('wrong `tsconfig` path in fork plugin configuration (should be a relative or absolute path)');
         });
 
-        it('When configured, CoffeeScript is compiled', (done) => {
-            const config = createWebpackConfig('www/build', 'dev');
-            config.setPublicPath('/build');
-            config.addEntry('main', ['./js/index.coffee']);
-            const testCallback = () => {};
-            config.enableCoffeeScriptLoader(testCallback);
-
-            testSetup.runWebpack(config, (webpackAssert) => {
-                webpackAssert.assertOutputFileContains(
-                    'main.js',
-                    'return document.getElementById("app").innerHTML = "<h1>Welcome to Your Coffee App</h1>"'
-                );
-
-                expect(config.outputPath).to.be.a.directory().with.deep.files([
-                    'main.js',
-                    'manifest.json'
-                ]);
-
-                testSetup.requestTestPage(
-                    path.join(config.getContext(), 'www'),
-                    [
-                        'build/main.js'
-                    ],
-                    (browser) => {
-                        browser.assert.text('#app h1', 'Welcome to Your Coffee App');
-                        done();
-                    }
-                );
-            });
-        });
-
         it('When configured, Handlebars is compiled', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -870,14 +1101,10 @@ module.exports = {
             config.enableHandlebarsLoader(testCallback);
 
             testSetup.runWebpack(config, () => {
-                expect(config.outputPath).to.be.a.directory().with.deep.files([
-                    'main.js',
-                    'manifest.json'
-                ]);
-
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
+                        'build/runtime.js',
                         'build/main.js'
                     ],
                     (browser) => {
@@ -910,24 +1137,8 @@ module.exports = {
         });
 
         it('Vue.js is compiled correctly', (done) => {
-            const cwd = process.cwd();
-            after(() => {
-                process.chdir(cwd);
-            });
-
             const appDir = testSetup.createTestAppDir();
-            /*
-             * Most of the time, we don't explicitly use chdir
-             * in order to set the cwd() to the test directory.
-             * That's because, in theory, you should be able to
-             * run Encore from other directories, give you set
-             * the context. However, in this case, the vue-loader
-             * uses load-postcss-config to load the postcss config,
-             * but it uses process.cwd() to find it, instead of the
-             * context. So, in this case, we *must* set the cwd()
-             * to be the temp test directory.
-             */
-            process.chdir(appDir);
+
             fs.writeFileSync(
                 path.join(appDir, 'postcss.config.js'),
                 `
@@ -939,6 +1150,7 @@ module.exports = {
             );
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
             config.addEntry('main', './vuejs/main');
             config.enableVueLoader();
@@ -946,7 +1158,7 @@ module.exports = {
             config.enableLessLoader();
             config.configureBabel(function(config) {
                 config.presets = [
-                    ['env', {
+                    ['@babel/preset-env', {
                         'targets': {
                             'chrome': 52
                         }
@@ -959,7 +1171,9 @@ module.exports = {
                     'main.js',
                     'main.css',
                     'images/logo.82b9c7a5.png',
-                    'manifest.json'
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
                 ]);
 
                 // test that our custom babel config is used
@@ -968,14 +1182,10 @@ module.exports = {
                     'class TestClassSyntax'
                 );
 
-                webpackAssert.assertOutputFileContains(
-                    'main.css',
-                    '-ms-flexbox'
-                );
-
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
+                        'build/runtime.js',
                         'build/main.js'
                     ],
                     (browser) => {
@@ -996,10 +1206,10 @@ module.exports = {
             config.addEntry('main', './vuejs/main');
             config.enableVueLoader();
 
-            testSetup.runWebpack(config, (webpackAssert, stats) => {
-                expect(stats.toJson().errors[0]).to.contain('Cannot process lang="less" inside');
-                expect(stats.toJson().errors[1]).to.contain('Cannot process lang="sass" inside');
-                expect(stats.toJson().errors[2]).to.contain('Cannot process lang="scss" inside');
+            testSetup.runWebpack(config, (webpackAssert, stats, output) => {
+                expect(output).to.contain('To load LESS files');
+                expect(output).to.contain('To load Sass files');
+
                 done();
             }, true);
         });
@@ -1017,7 +1227,9 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
                         'url-loader.css',
-                        'manifest.json'
+                        'manifest.json',
+                        'entrypoints.json',
+                        'runtime.js'
                     ]);
 
                 webpackAssert.assertOutputFileContains(
@@ -1060,6 +1272,161 @@ module.exports = {
 
                 done();
             }, true);
+        });
+
+        it('Code splitting with dynamic import', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/code_splitting_dynamic_import');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check for the code-split file
+                webpackAssert.assertOutputFileContains(
+                    '0.js',
+                    'document.getElementById(\'app\').innerHTML ='
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    (browser) => {
+
+                        // assert the async module was loaded and works
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
+        describe('entrypoints.json', () => {
+            it('Use "all" splitChunks & look at entrypoints.json', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('/build');
+                // enable versioning to make sure entrypoints.json is not affected
+                config.enableVersioning();
+                config.splitEntryChunks();
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
+                            css: ['build/main~other.css']
+                        },
+                        other: {
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
+                            css: ['build/main~other.css']
+                        },
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('build/vendors~main~other.js');
+
+                    done();
+                });
+            });
+
+            it('Custom public path does affect entrypoints.json or manifest.json', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('http://localhost:8080/build');
+                config.setManifestKeyPrefix('custom_prefix');
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.chunks = 'all';
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['custom_prefix/runtime.js', 'custom_prefix/vendors~main~other.js', 'custom_prefix/main~other.js', 'custom_prefix/main.js'],
+                            css: ['custom_prefix/main~other.css']
+                        },
+                        other: {
+                            js: ['custom_prefix/runtime.js', 'custom_prefix/vendors~main~other.js', 'custom_prefix/main~other.js', 'custom_prefix/other.js'],
+                            css: ['custom_prefix/main~other.css']
+                        },
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('custom_prefix/vendors~main~other.js');
+
+                    done();
+                });
+            });
+
+            it('Use splitChunks in production mode', (done) => {
+                const config = createWebpackConfig('web/build', 'production');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('/build');
+                config.splitEntryChunks();
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // in production, we hash the chunk names to avoid exposing any extra details
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/main.js'],
+                            css: ['build/default~cc515e6e.css']
+                        },
+                        other: {
+                            js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/other.js'],
+                            css: ['build/default~cc515e6e.css']
+                        },
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('build/vendors~cc515e6e.js');
+
+                    done();
+                });
+            });
+
+            it('Use splitEntryChunks() with code splitting', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./js/code_splitting', 'vue']);
+                config.addEntry('other', ['./js/no_require', 'vue']);
+                config.setPublicPath('/build');
+                // enable versioning to make sure entrypoints.json is not affected
+                config.enableVersioning();
+                config.splitEntryChunks();
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        main: {
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main.js'],
+                            css: []
+                        },
+                        other: {
+                            // the 0.[hash].js is because the "no_require" module was already split to this
+                            // so, it has that filename, instead of following the normal pattern
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/0.f1e0a935.js', 'build/other.js'],
+                            css: []
+                        },
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('build/vendors~main~other.js');
+                    webpackAssert.assertManifestKeyExists('build/0.f1e0a935.js');
+
+                    done();
+                });
+            });
         });
     });
 });

@@ -134,6 +134,43 @@ describe('Public API', () => {
 
     });
 
+    describe('enableSingleRuntimeChunk', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableSingleRuntimeChunk();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('disableSingleRuntimeChunk', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableSingleRuntimeChunk();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+
+    describe('splitEntryChunks', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.splitEntryChunks();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureSplitChunks', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.configureSplitChunks(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('autoProvideVariables', () => {
 
         it('must return the API object', () => {
@@ -188,7 +225,7 @@ describe('Public API', () => {
 
     });
 
-    describe('setOutputPath', () => {
+    describe('configureBabel', () => {
 
         it('must return the API object', () => {
             const returnedValue = api.configureBabel(() => {});
@@ -219,15 +256,6 @@ describe('Public API', () => {
 
         it('must return the API object', () => {
             const returnedValue = api.enableTypeScriptLoader();
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
-    describe('enableCoffeeScriptLoader', () => {
-
-        it('must return the API object', () => {
-            const returnedValue = api.enableCoffeeScriptLoader();
             expect(returnedValue).to.equal(api);
         });
 
@@ -327,15 +355,6 @@ describe('Public API', () => {
 
         it('should return the API object', () => {
             const returnedValue = api.configureDefinePlugin(() => {});
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
-    describe('configureExtractTextPlugin', () => {
-
-        it('should return the API object', () => {
-            const returnedValue = api.configureExtractTextPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 

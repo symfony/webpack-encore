@@ -1,0 +1,1 @@
+document.getElementById('app').innerHTML = document.getElementById('app').innerHTML + 'Welcome to Encore!';

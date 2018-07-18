@@ -61,7 +61,7 @@ describe('loaders/babel', () => {
 
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
-        expect(actualLoaders[0].options.presets).to.include('react');
+        expect(actualLoaders[0].options.presets).to.include('@babel/react');
         // foo is also still there, not overridden
         expect(actualLoaders[0].options.presets).to.include('foo');
     });
@@ -76,10 +76,9 @@ describe('loaders/babel', () => {
 
         const actualLoaders = babelLoader.getLoaders(config);
 
-        // transform-react-jsx & foo
-        expect(actualLoaders[0].options.plugins).to.have.lengthOf(2);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            ['transform-react-jsx', { pragma: 'h' }],
+            '@babel/plugin-syntax-dynamic-import',
+            ['@babel/plugin-transform-react-jsx', { pragma: 'h' }],
             'foo'
         ]);
     });
@@ -94,10 +93,9 @@ describe('loaders/babel', () => {
 
         const actualLoaders = babelLoader.getLoaders(config);
 
-        // transform-react-jsx & foo
-        expect(actualLoaders[0].options.plugins).to.have.lengthOf(2);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            ['transform-react-jsx'],
+            '@babel/plugin-syntax-dynamic-import',
+            ['@babel/plugin-transform-react-jsx'],
             'foo'
         ]);
     });

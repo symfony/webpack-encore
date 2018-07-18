@@ -226,24 +226,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureExtractTextPlugin', () => {
-        it('Setting callback', () => {
-            const config = createConfig();
-            const callback = () => {};
-            config.configureExtractTextPlugin(callback);
-
-            expect(config.extractTextPluginOptionsCallback).to.equal(callback);
-        });
-
-        it('Setting invalid callback argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.configureExtractTextPlugin('foo');
-            }).to.throw('Argument 1 to configureExtractTextPlugin() must be a callback function');
-        });
-    });
-
     describe('configureFriendlyErrorsPlugin', () => {
         it('Setting callback', () => {
             const config = createConfig();
@@ -366,6 +348,15 @@ describe('WebpackConfig object', () => {
                 config.createSharedEntry('vendor2', './main');
             }).to.throw('cannot be called multiple');
         });
+
+        it('Calling with splitEntryChunks() is not supported', () => {
+            const config = createConfig();
+            config.splitEntryChunks();
+
+            expect(() => {
+                config.createSharedEntry('vendor', './main');
+            }).to.throw('together is not supported');
+        });
     });
 
     describe('autoProvideVariables', () => {
@@ -442,6 +433,7 @@ describe('WebpackConfig object', () => {
             const testCallback = () => {};
             config.configureCssLoader(testCallback);
             expect(config.cssLoaderConfigurationCallback).to.equal(testCallback);
+
         });
 
         it('Calling with non-callback throws an error', () => {
@@ -450,6 +442,32 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureCssLoader('FOO');
             }).to.throw('must be a callback function');
+        });
+    });
+
+    describe('configureSplitChunks', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureSplitChunks(testCallback);
+            expect(config.splitChunksConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureSplitChunks('FOO');
+            }).to.throw('must be a callback function');
+        });
+
+        it('Calling with createdSharedEntry() is not supported', () => {
+            const config = createConfig();
+            config.createSharedEntry('vendor', './main');
+
+            expect(() => {
+                config.splitEntryChunks();
+            }).to.throw('together is not supported');
         });
     });
 
@@ -621,31 +639,6 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.enableForkedTypeScriptTypesChecking('FOO');
-            }).to.throw('must be a callback function');
-        });
-    });
-
-    describe('enableCoffeeScriptLoader', () => {
-        it('Calling method sets it', () => {
-            const config = createConfig();
-            config.enableCoffeeScriptLoader();
-
-            expect(config.useCoffeeScriptLoader).to.be.true;
-        });
-
-        it('Calling with callback', () => {
-            const config = createConfig();
-            const callback = () => {};
-            config.enableCoffeeScriptLoader(callback);
-
-            expect(config.coffeeScriptConfigurationCallback).to.equal(callback);
-        });
-
-        it('Calling with non-callback throws an error', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.enableCoffeeScriptLoader('FOO');
             }).to.throw('must be a callback function');
         });
     });
