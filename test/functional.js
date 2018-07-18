@@ -103,17 +103,17 @@ describe('Functional tests using webpack', function() {
 
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     main: {
-                        js: ['runtime.js', 'main.js'],
+                        js: ['build/runtime.js', 'build/main.js'],
                         css: []
                     },
                     font: {
                         // no runtime for style entries
                         js: [],
-                        css: ['font.css']
+                        css: ['build/font.css']
                     },
                     bg: {
                         js: [],
-                        css: ['bg.css']
+                        css: ['build/bg.css']
                     },
                 });
 
@@ -134,12 +134,12 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     main: {
-                        js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'main.js'],
-                        css: ['main~other.css']
+                        js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
+                        css: ['build/main~other.css']
                     },
                     other: {
-                        js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'other.js'],
-                        css: ['main~other.css']
+                        js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
+                        css: ['build/main~other.css']
                     },
                 });
 
@@ -692,12 +692,12 @@ describe('Functional tests using webpack', function() {
                 // but the _tmp_shared entry is NOT here
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     main: {
-                        js: ['runtime.js', 'shared.js', 'main.js'],
-                        css: ['shared.css']
+                        js: ['build/runtime.js', 'build/shared.js', 'build/main.js'],
+                        css: ['build/shared.css']
                     },
                     other: {
-                        js: ['runtime.js', 'shared.js', 'other.js'],
-                        css: ['shared.css']
+                        js: ['build/runtime.js', 'build/shared.js', 'build/other.js'],
+                        css: ['build/shared.css']
                     },
                 });
 
@@ -1318,12 +1318,12 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'main.js'],
-                            css: ['main~other.css']
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
+                            css: ['build/main~other.css']
                         },
                         other: {
-                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'other.js'],
-                            css: ['main~other.css']
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
+                            css: ['build/main~other.css']
                         },
                     });
 
@@ -1334,7 +1334,7 @@ module.exports = {
                 });
             });
 
-            it('Custom public path does not affect entrypoints.json or manifest.json', (done) => {
+            it('Custom public path does affect entrypoints.json or manifest.json', (done) => {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -1348,12 +1348,12 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'main.js'],
-                            css: ['main~other.css']
+                            js: ['custom_prefix/runtime.js', 'custom_prefix/vendors~main~other.js', 'custom_prefix/main~other.js', 'custom_prefix/main.js'],
+                            css: ['custom_prefix/main~other.css']
                         },
                         other: {
-                            js: ['runtime.js', 'vendors~main~other.js', 'main~other.js', 'other.js'],
-                            css: ['main~other.css']
+                            js: ['custom_prefix/runtime.js', 'custom_prefix/vendors~main~other.js', 'custom_prefix/main~other.js', 'custom_prefix/other.js'],
+                            css: ['custom_prefix/main~other.css']
                         },
                     });
 
@@ -1378,12 +1378,12 @@ module.exports = {
                     // in production, we hash the chunk names to avoid exposing any extra details
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['runtime.js', 'vendors~cc515e6e.js', 'default~cc515e6e.js', 'main.js'],
-                            css: ['default~cc515e6e.css']
+                            js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/main.js'],
+                            css: ['build/default~cc515e6e.css']
                         },
                         other: {
-                            js: ['runtime.js', 'vendors~cc515e6e.js', 'default~cc515e6e.js', 'other.js'],
-                            css: ['default~cc515e6e.css']
+                            js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/other.js'],
+                            css: ['build/default~cc515e6e.css']
                         },
                     });
 
@@ -1409,13 +1409,13 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['runtime.js', 'vendors~main~other.js', 'main.js'],
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main.js'],
                             css: []
                         },
                         other: {
                             // the 0.[hash].js is because the "no_require" module was already split to this
                             // so, it has that filename, instead of following the normal pattern
-                            js: ['runtime.js', 'vendors~main~other.js', '0.f1e0a935.js', 'other.js'],
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/0.f1e0a935.js', 'build/other.js'],
                             css: []
                         },
                     });
