@@ -19,4 +19,4 @@ feel. It aims to solve the most common Webpack use cases.
 ## Documentation
 
 [Read the Documentation on symfony.com](http://symfony.com/doc/current/frontend.html)
-or view a demo application: [symfony/symfony-demo](https://github.com/symfony/symfony-demo).
+or view a demo application: [symfony/demo](https://github.com/symfony/demo).
