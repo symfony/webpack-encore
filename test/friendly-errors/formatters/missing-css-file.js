@@ -12,7 +12,7 @@
 const expect = require('chai').expect;
 const formatter = require('../../../lib/friendly-errors/formatters/missing-css-file');
 
-describe('formatters/missing-loader', () => {
+describe('formatters/missing-css-file', () => {
 
     describe('test format()', () => {
         it('works with no errors', () => {

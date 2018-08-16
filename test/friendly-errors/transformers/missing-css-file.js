@@ -12,7 +12,7 @@
 const expect = require('chai').expect;
 const transform = require('../../../lib/friendly-errors/transformers/missing-css-file');
 
-describe('transform/missing-loader', () => {
+describe('transform/missing-css-file', () => {
 
     describe('test transform', () => {
         it('Error not with "ModuleNotFoundError" name is ignored', () => {
