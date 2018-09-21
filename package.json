@@ -74,7 +74,7 @@
     "less-loader": "^4.1.0",
     "mocha": "^3.2.0",
     "node-sass": "^4.5.3",
-    "postcss-loader": "^2.1.5",
+    "postcss-loader": "^3.0.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
     "sass-loader": "^7.0.1",
