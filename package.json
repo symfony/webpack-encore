@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha --reporter spec test --recursive",
-    "lint": "./node_modules/.bin/eslint lib test index.js",
+    "test": "mocha --reporter spec test --recursive",
+    "lint": "eslint lib test index.js",
     "travis:lint": "npm run lint"
   },
   "bin": {
@@ -25,10 +25,10 @@
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49",
-    "babel-loader": "^8.0.0-beta.2",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "babel-loader": "^8.0.0",
     "chalk": "^2.4.1",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.10",
@@ -54,8 +54,9 @@
     "yargs": "^8.0.1"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.0.0-beta.49",
-    "@babel/preset-react": "^7.0.0-beta.49",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-react-jsx": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^8.5.0",
     "babel-eslint": "^8.2.1",
     "chai": "^3.5.0",
