@@ -639,13 +639,23 @@ class Encore {
      *
      * Encore.configureBabel(function(babelConfig) {
      *      // change the babelConfig
+     * }, {
+     *      // set optional Encore-specific options
+     *      // exclude: /(node_modules|bower_components)/
      * });
      *
+     * Supported options:
+     *      * {Condition} exclude (default=/(node_modules|bower_components)/)
+     *              A Webpack Condition passed to the JS/JSX rule that
+     *              determines which files and folders should not be
+     *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
+     *
      * @param {function} callback
+     * @param {object} encoreOptions
      * @returns {Encore}
      */
-    configureBabel(callback) {
-        webpackConfig.configureBabel(callback);
+    configureBabel(callback, encoreOptions = {}) {
+        webpackConfig.configureBabel(callback, encoreOptions);
 
         return this;
     }

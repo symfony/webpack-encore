@@ -407,6 +407,7 @@ describe('WebpackConfig object', () => {
             const testCallback = () => {};
             config.configureBabel(testCallback);
             expect(config.babelConfigurationCallback).to.equal(testCallback);
+            expect(String(config.babelOptions.exclude)).to.equal(String(/(node_modules|bower_components)/));
         });
 
         it('Calling with non-callback throws an error', () => {
@@ -424,6 +425,21 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureBabel(() => {});
             }).to.throw('configureBabel() cannot be called because your app already has Babel configuration');
+        });
+
+        it('Pass valid config', () => {
+            const config = createConfig();
+            config.configureBabel(() => {}, { exclude: 'foo' });
+
+            expect(config.babelOptions.exclude).to.equal('foo');
+        });
+
+        it('Pass invalid config', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureBabel(() => {}, { fake_option: 'foo' });
+            }).to.throw('Invalid option "fake_option" passed to configureBabel()');
         });
     });
 

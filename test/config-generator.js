@@ -826,6 +826,35 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('Test configureBabel()', () => {
+        it('without configureBabel()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+
+            const actualConfig = configGenerator(config);
+
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
+        });
+
+        it('with configureBabel() and a different exclude rule', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureBabel(() => {}, {
+                exclude: /foo/
+            });
+
+            const actualConfig = configGenerator(config);
+
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            expect(String(jsRule.exclude)).to.equal(String(/foo/));
+        });
+    });
+
     describe('Test shouldSplitEntryChunks', () => {
         it('Not production', () => {
             const config = createConfig();
