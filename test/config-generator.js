@@ -592,7 +592,7 @@ describe('The config-generator function', () => {
             expect(ignorePlugin).to.not.be.undefined;
         });
 
-        it('by default custom plugins are added at the end and are kept in order', () => {
+        it('by default custom plugins are added after the last plugin with a priority of 0 and are kept in order', () => {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
@@ -603,9 +603,9 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             const plugins = actualConfig.plugins;
 
-            expect(plugins[plugins.length - 3]).to.be.instanceof(CustomPlugin1);
-            expect(plugins[plugins.length - 2]).to.be.instanceof(CustomPlugin2);
-            expect(plugins[plugins.length - 1]).to.be.instanceof(CustomPlugin3);
+            expect(plugins[plugins.length - 4]).to.be.instanceof(CustomPlugin1);
+            expect(plugins[plugins.length - 3]).to.be.instanceof(CustomPlugin2);
+            expect(plugins[plugins.length - 2]).to.be.instanceof(CustomPlugin3);
         });
 
         it('plugins can be sorted relatively to each other', () => {
