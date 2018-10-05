@@ -17,6 +17,8 @@ const logger = require('./lib/logger');
 const parseRuntime = require('./lib/config/parse-runtime');
 const chalk = require('chalk');
 const levenshtein = require('fast-levenshtein');
+const fs = require('fs');
+const path = require('path');
 
 let webpackConfig = null;
 let runtimeConfig = require('./lib/context').runtimeConfig;
@@ -24,6 +26,26 @@ let runtimeConfig = require('./lib/context').runtimeConfig;
 function initializeWebpackConfig() {
     if (runtimeConfig.verbose) {
         logger.verbose();
+    }
+
+    // Display a warning if webpack is listed as a [dev-]dependency
+    try {
+        const packageInfo = JSON.parse(
+            fs.readFileSync(path.resolve(runtimeConfig.context, 'package.json'))
+        );
+
+        if (packageInfo) {
+            const dependencies = new Set([
+                ...(packageInfo.dependencies ? Object.keys(packageInfo.dependencies) : []),
+                ...(packageInfo.devDependencies ? Object.keys(packageInfo.devDependencies) : []),
+            ]);
+
+            if (dependencies.has('webpack')) {
+                logger.warning('Webpack is already provided by Webpack Encore, also adding it to your package.json file may cause issues.');
+            }
+        }
+    } catch (e) {
+        logger.warning('Could not read package.json file.');
     }
 
     webpackConfig = new WebpackConfig(runtimeConfig);

@@ -26,6 +26,15 @@ describe('bin/encore.js', function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
+            path.join(testDir, 'package.json'),
+            `{
+                "devDependencies": {
+                    "@symfony/webpack-encore": "*"
+                }
+            }`
+        );
+
+        fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
 const Encore = require('../../index.js');
@@ -44,6 +53,8 @@ module.exports = Encore.getWebpackConfig();
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
+
+            expect(stdout).to.not.contain('Webpack is already provided by Webpack Encore');
 
             done();
         });
@@ -138,6 +149,46 @@ module.exports = Encore.getWebpackConfig();
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
+
+            done();
+        });
+    });
+
+    it('Display a warning message when webpack is also added to the package.json file', (done) => {
+        testSetup.emptyTmpDir();
+        const testDir = testSetup.createTestAppDir();
+
+        fs.writeFileSync(
+            path.join(testDir, 'package.json'),
+            `{
+                "devDependencies": {
+                    "@symfony/webpack-encore": "*",
+                    "webpack": "*"
+                }
+            }`
+        );
+
+        fs.writeFileSync(
+            path.join(testDir, 'webpack.config.js'),
+            `
+const Encore = require('../../index.js');
+Encore
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .addEntry('main', './js/no_require')
+;
+
+module.exports = Encore.getWebpackConfig();
+            `
+        );
+
+        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
+            if (err) {
+                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
+            }
+
+            expect(stdout).to.contain('Webpack is already provided by Webpack Encore');
 
             done();
         });
