@@ -24,8 +24,8 @@ context.runtimeConfig = runtimeConfig;
 process.argv.splice(2, 1);
 
 // remove arguments not supported by webpack/-dev-server
-const EncoreOnlyArguments = new Set(['--keep-public-path']);
-process.argv = process.argv.filter(arg => !EncoreOnlyArguments.has(arg));
+const encoreOnlyArguments = new Set(['--keep-public-path']);
+process.argv = process.argv.filter(arg => !encoreOnlyArguments.has(arg));
 
 if (!runtimeConfig.isValidCommand) {
     if (runtimeConfig.command) {
