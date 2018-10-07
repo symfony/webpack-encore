@@ -8,6 +8,21 @@ cache:
 
 matrix:
   include:
+    - name: 'Lowest versions of the dependencies'
+      os: linux
+      node_js: "10"
+      env: JOB_PART=test
+      install:
+        - rm yarn.lock
+        - node ./scripts/force-lowest-dependencies
+        - yarn
+    - name: 'Highest versions of the dependencies'
+      os: linux
+      node_js: "10"
+      env: JOB_PART=test
+      install:
+        - rm yarn.lock
+        - yarn
     - os: linux
       node_js: "10"
       env: JOB_PART=travis:lint
