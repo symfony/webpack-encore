@@ -13,6 +13,7 @@ const expect = require('chai').expect;
 const packageHelper = require('../lib/package-helper');
 const path = require('path');
 const process = require('process');
+const fs = require('fs');
 
 describe('package-helper', () => {
     const baseCwd = process.cwd();
@@ -135,14 +136,17 @@ describe('package-helper', () => {
 
     describe('addPackagesVersionConstraint', () => {
         it('Lookup a version constraint', () => {
-            // hardcoding sass-loader: test WILL break when this changes
-
             const inputPackages = [
                 { name: 'sass-loader', enforce_version: 7 },
                 { name: 'node-sass' }
             ];
+
+            const packageInfo = JSON.parse(
+                fs.readFileSync(path.join(__dirname, '../package.json'))
+            );
+
             const expectedPackages = [
-                { name: 'sass-loader', version: '^7.0.1' },
+                { name: 'sass-loader', version: packageInfo.devDependencies['sass-loader'] },
                 { name: 'node-sass' }
             ];
 
