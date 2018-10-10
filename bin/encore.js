@@ -29,6 +29,10 @@ if (runtimeConfig.outputJson) {
 // remove the command from the input
 process.argv.splice(2, 1);
 
+// remove arguments not supported by webpack/-dev-server
+const encoreOnlyArguments = new Set(['--keep-public-path']);
+process.argv = process.argv.filter(arg => !encoreOnlyArguments.has(arg));
+
 if (!runtimeConfig.isValidCommand) {
     if (runtimeConfig.command) {
         console.log(chalk.bgRed.white(`Invalid command "${runtimeConfig.command}"`));

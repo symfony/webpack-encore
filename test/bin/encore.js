@@ -114,4 +114,32 @@ module.exports = Encore.getWebpackConfig();
             done();
         });
     });
+
+    it('Smoke test using the --keep-public-path option', (done) => {
+        testSetup.emptyTmpDir();
+        const testDir = testSetup.createTestAppDir();
+
+        fs.writeFileSync(
+            path.join(testDir, 'webpack.config.js'),
+            `
+const Encore = require('../../index.js');
+Encore
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .addEntry('main', './js/no_require')
+;
+
+module.exports = Encore.getWebpackConfig();
+            `
+        );
+
+        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        exec(`node ${binPath} dev --keep-public-path --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
+            if (err) {
+                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
+            }
+
+            done();
+        });
+    });
 });
