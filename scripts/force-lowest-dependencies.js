@@ -20,6 +20,7 @@ function getLowestVersion(dependency, range) {
             (error, stdout) => {
                 if (error) {
                     reject(`Could not retrieve versions list for "${dependency}@${range}"`);
+                    return;
                 }
 
                 const versions = stdout
@@ -28,6 +29,7 @@ function getLowestVersion(dependency, range) {
 
                 if (versions.length === 0) {
                     reject(`Could not find a lowest version for "${dependency}@${range}"`);
+                    return;
                 }
 
                 const parts = versions[0].split(' ');
@@ -36,6 +38,7 @@ function getLowestVersion(dependency, range) {
                 // is directly printed as the output of npm view.
                 if (parts.length === 1) {
                     resolve([dependency, parts[0]]);
+                    return;
                 }
 
                 // If multiple versions are available then it outputs
@@ -43,6 +46,7 @@ function getLowestVersion(dependency, range) {
                 // <package>@<version> '<version>'
                 if (parts.length === 2) {
                     resolve([dependency, parts[1].replace(/'/g, '')]);
+                    return;
                 }
 
                 reject(`Unexpected response for "${dependency}@${range}": ${versions[0]}`);
@@ -98,6 +102,7 @@ fs.readFile('package.json', (error, data) => {
             fs.writeFile('package.json', JSON.stringify(packageInfo, null, 2), (error) => {
                 if (error) {
                     reject(error);
+                    return;
                 }
 
                 resolve();
