@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-10-10T20:48:25Z
+
+By the way, once we update `mini-css-extract-plugin` to 0.4.4+ we'll also have to change some of the tests related to versioning due to [this commit](https://github.com/webpack-contrib/mini-css-extract-plugin/commit/d7946d0abb777a86a8e0b1a70245550a4f170aa1) (hashes not being the same anymore).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-10-17T02:28:52Z
+
+Looks like a bit of a mess with mini-css-extract. 0.4.4 is now out. Does it fix the issue, or does the issue remain? Another way of asking this is: will the issue be fixed in mini-css, or is their opinion that this is not a bug, and it should be fixed elsewhere?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-10-17T06:42:39Z
+
+> Does it fix the issue, or does the issue remain?
+
+That's still an issue when using 0.4.4: https://travis-ci.org/symfony/webpack-encore/jobs/439825872#L1055
+
+The only different thing with 0.4.4 is that more tests are failing because it changes how some hashes are generated.
+
+> will the issue be fixed in mini-css, or is their opinion that this is not a bug, and it should be fixed elsewhere?
+
+Based on the last comments [here](https://github.com/webpack-contrib/mini-css-extract-plugin/pull/177#issuecomment-422571408) I'm not sure that there is an issue with `mini-css-extract-plugin`.
