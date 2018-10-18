@@ -410,6 +410,44 @@ describe('WebpackConfig object', () => {
             expect(String(config.babelOptions.exclude)).to.equal(String(/(node_modules|bower_components)/));
         });
 
+        it('Calling with "exclude" option', () => {
+            const config = createConfig();
+            config.configureBabel(() => {}, { exclude: 'foo' });
+
+            expect(config.babelOptions.exclude).to.equal('foo');
+        });
+
+        it('Calling with "include_node_modules" option', () => {
+            const config = createConfig();
+            config.configureBabel(() => {}, { include_node_modules: ['foo', 'bar'] });
+
+            expect(config.babelOptions.exclude).to.be.a('Function');
+
+            const includedPaths = [
+                path.join('test', 'lib', 'index.js'),
+                path.join('test', 'node_modules', 'foo', 'index.js'),
+                path.join('test', 'node_modules', 'foo', 'lib', 'index.js'),
+                path.join('test', 'node_modules', 'bar', 'lib', 'index.js'),
+                path.join('test', 'node_modules', 'baz', 'node_modules', 'foo', 'index.js'),
+            ];
+
+            const excludedPaths = [
+                path.join('test', 'bower_components', 'foo', 'index.js'),
+                path.join('test', 'bower_components', 'bar', 'index.js'),
+                path.join('test', 'bower_components', 'baz', 'index.js'),
+                path.join('test', 'node_modules', 'baz', 'lib', 'index.js'),
+                path.join('test', 'node_modules', 'baz', 'lib', 'foo', 'index.js')
+            ];
+
+            for (const filePath of includedPaths) {
+                expect(config.babelOptions.exclude(filePath)).to.equal(false);
+            }
+
+            for (const filePath of excludedPaths) {
+                expect(config.babelOptions.exclude(filePath)).to.equal(true);
+            }
+        });
+
         it('Calling with non-callback throws an error', () => {
             const config = createConfig();
 
@@ -427,19 +465,28 @@ describe('WebpackConfig object', () => {
             }).to.throw('configureBabel() cannot be called because your app already has Babel configuration');
         });
 
-        it('Pass valid config', () => {
-            const config = createConfig();
-            config.configureBabel(() => {}, { exclude: 'foo' });
-
-            expect(config.babelOptions.exclude).to.equal('foo');
-        });
-
         it('Pass invalid config', () => {
             const config = createConfig();
 
             expect(() => {
                 config.configureBabel(() => {}, { fake_option: 'foo' });
             }).to.throw('Invalid option "fake_option" passed to configureBabel()');
+        });
+
+        it('Calling with both "include_node_modules" and "exclude" options', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureBabel(() => {}, { exclude: 'foo', include_node_modules: ['bar', 'baz'] });
+            }).to.throw('can\'t be used together');
+        });
+
+        it('Calling with an invalid "include_node_modules" option value', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureBabel(() => {}, { include_node_modules: 'foo' });
+            }).to.throw('must be an Array');
         });
     });
 

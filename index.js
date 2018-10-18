@@ -649,6 +649,12 @@ class Encore {
      *              A Webpack Condition passed to the JS/JSX rule that
      *              determines which files and folders should not be
      *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
+     *              Cannot be used if the "include_node_modules" option is
+     *              also set.
+     *      * {string[]} include_node_modules
+     *              If set that option will include the given Node modules to
+     *              the files that are processed by Babel. Cannot be used if
+     *              the "exclude" option is also set.
      *
      * @param {function} callback
      * @param {object} encoreOptions
