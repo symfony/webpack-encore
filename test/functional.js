@@ -1326,6 +1326,281 @@ module.exports = {
             });
         });
 
+        describe('copyFiles() allows to copy files and folders', () => {
+            it('Single file copy', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({
+                    from: './images',
+                    pattern: /symfony_logo\.png/,
+                    includeSubdirectories: false
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                            'symfony_logo.png'
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo.png',
+                        '/build/symfony_logo.png'
+                    );
+
+                    done();
+                });
+            });
+
+            it('Folder copy without subdirectories', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({
+                    from: './images',
+                    includeSubdirectories: false
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                            'symfony_logo.png',
+                            'symfony_logo_alt.png',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo.png',
+                        '/build/symfony_logo.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo_alt.png',
+                        '/build/symfony_logo_alt.png'
+                    );
+
+                    done();
+                });
+            });
+
+            it('Multiple copies', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles([{
+                    from: './images',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }, {
+                    from: './fonts',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }]);
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json'
+                        ]);
+
+                    expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
+                        .with.files([
+                            'symfony_logo.png',
+                            'symfony_logo_alt.png',
+                            'Roboto.woff2',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/assets/symfony_logo.png',
+                        '/build/assets/symfony_logo.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/assets/symfony_logo_alt.png',
+                        '/build/assets/symfony_logo_alt.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/assets/Roboto.woff2',
+                        '/build/assets/Roboto.woff2'
+                    );
+
+                    done();
+                });
+            });
+
+            it('Copy folder and subdirectories with versioning enabled to the specified location', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({
+                    from: './images',
+                    to: 'images/[path][name].[hash:8].[ext]',
+                    includeSubdirectories: true
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'images')).to.be.a.directory()
+                        .with.files([
+                            'symfony_logo.ea1ca6f7.png',
+                            'symfony_logo_alt.f27119c2.png',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'images', 'same_filename')).to.be.a.directory()
+                        .with.files([
+                            'symfony_logo.f27119c2.png',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony_logo.png',
+                        '/build/images/symfony_logo.ea1ca6f7.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony_logo_alt.png',
+                        '/build/images/symfony_logo_alt.f27119c2.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/same_filename/symfony_logo.png',
+                        '/build/images/same_filename/symfony_logo.f27119c2.png'
+                    );
+
+                    done();
+                });
+            });
+
+            it('Filter files using the given pattern', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({
+                    from: './images',
+                    pattern: /_alt/,
+                    includeSubdirectories: false
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                            'symfony_logo_alt.png',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo_alt.png',
+                        '/build/symfony_logo_alt.png'
+                    );
+
+                    webpackAssert.assertManifestPathDoesNotExist(
+                        'build/symfony_logo.png'
+                    );
+
+                    done();
+                });
+            });
+
+            it('Copy with versioning enabled', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.enableVersioning(true);
+                config.copyFiles([{
+                    from: './images',
+                    includeSubdirectories: false
+                }, {
+                    from: './fonts',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }]);
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.d41d8cd9.js',
+                            'main.1172d977.js',
+                            'manifest.json',
+                            'symfony_logo.ea1ca6f7.png',
+                            'symfony_logo_alt.f27119c2.png',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
+                        .with.files([
+                            'Roboto.woff2',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.1172d977.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo.png',
+                        '/build/symfony_logo.ea1ca6f7.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo_alt.png',
+                        '/build/symfony_logo_alt.f27119c2.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/assets/Roboto.woff2',
+                        '/build/assets/Roboto.woff2'
+                    );
+
+                    done();
+                });
+            });
+        });
+
         describe('entrypoints.json', () => {
             it('Use "all" splitChunks & look at entrypoints.json', (done) => {
                 const config = createWebpackConfig('web/build', 'dev');

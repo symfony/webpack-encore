@@ -359,6 +359,70 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('copyFiles', () => {
+        it('Calling it adds files to be copied', () => {
+            const config = createConfig();
+
+            // With multiple config objects
+            config.copyFiles([
+                { from: './foo', pattern: /.*/ },
+                { from: './bar', pattern: /abc/, to: 'bar', includeSubdirectories: false },
+            ]);
+
+            // With a single config object
+            config.copyFiles({ from: './baz' });
+
+            expect(config.copyFilesConfigs).to.deep.equal([{
+                from: './foo',
+                pattern: /.*/,
+                to: null,
+                includeSubdirectories: true
+            }, {
+                from: './bar',
+                pattern: /abc/,
+                to: 'bar',
+                includeSubdirectories: false
+            }, {
+                from: './baz',
+                pattern: /.*/,
+                to: null,
+                includeSubdirectories: true
+            }]);
+        });
+
+        it('Calling it with an invalid parameter', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.copyFiles('foo');
+            }).to.throw('must be called with either a config object or an array of config objects');
+
+            expect(() => {
+                config.copyFiles([{ from: 'foo' }, 'foo']);
+            }).to.throw('must be called with either a config object or an array of config objects');
+        });
+
+        it('Calling it with a missing from key', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.copyFiles({ to: 'foo' });
+            }).to.throw('must have a "from" property');
+
+            expect(() => {
+                config.copyFiles([{ from: 'foo' }, { to: 'foo' }]);
+            }).to.throw('must have a "from" property');
+        });
+
+        it('Calling it with an unknown config property', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.copyFiles({ from: 'images', foo: 'foo' });
+            }).to.throw('Invalid config option "foo"');
+        });
+    });
+
     describe('autoProvideVariables', () => {
         it('Calling multiple times merges', () => {
             const config = createConfig();

@@ -134,6 +134,15 @@ describe('Public API', () => {
 
     });
 
+    describe('copyFiles', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.copyFiles({ from: './foo' });
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enableSingleRuntimeChunk', () => {
 
         it('must return the API object', () => {

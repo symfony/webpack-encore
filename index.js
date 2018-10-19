@@ -405,6 +405,61 @@ class Encore {
     }
 
     /**
+     * Copy files or folders to the build directory.
+     *
+     * For example:
+     *
+     *      // Copy the content of a whole directory and its subdirectories
+     *      Encore.copyFiles({ from: './images' });
+     *
+     *      // Only copy files matching a given pattern
+     *      Encore.copyFiles({ from: './images', pattern: /\.(png|jpg|jpeg)$/ })
+     *
+     *      // Set the path the files are copied to
+     *      Encore.copyFiles({
+     *          from: './images',
+     *          pattern: /\.(png|jpg|jpeg)$/,
+     *          to: 'assets/images/[path][name].[ext]'
+     *      })
+     *
+     *      // Version files
+     *      Encore.copyFiles(
+     *          from: './images',
+     *          to: 'assets/images/[path][name].[hash:8].[ext]'
+     *      })
+     *
+     *      // Add multiple configs in a single call
+     *      Encore.copyFiles([
+     *          { from: './images' },
+     *          { from: './txt', pattern: /\.txt$/ },
+     *      ]);
+     *
+     * Notes:
+     *      * No transformation is applied to the copied files (for instance
+     *        copying a CSS file won't minify it)
+     *
+     * Supported options:
+     *      * {string} from (mandatory)
+     *              The path of the source directory (mandatory)
+     *      * {RegExp} pattern (default: all files)
+     *              A pattern that the filenames must match in order to be copied
+     *      * {string} to (default: [path][name].[ext])
+     *              Where the files must be copied to. You can add all the
+     *              placeholders supported by the file-loader.
+     *              https://github.com/webpack-contrib/file-loader#placeholders
+     *      * {boolean} includeSubdirectories (default: true)
+     *              Whether or not the copy should include subdirectories.
+     *
+     * @param {object|Array} configs
+     * @returns {Encore}
+     */
+    copyFiles(configs) {
+        webpackConfig.copyFiles(configs);
+
+        return this;
+    }
+
+    /**
      * Tell Webpack to output a separate runtime.js file.
      *
      * This file must be included via a script tag before all
