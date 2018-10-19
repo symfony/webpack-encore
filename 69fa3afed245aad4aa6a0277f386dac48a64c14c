@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-10-19T17:52:08Z
+
+@weaverryan There you go, it should now work as expected when the `to` option isn't set and versioning is enabled :)
