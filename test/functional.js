@@ -1545,6 +1545,60 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Copy with versioning enabled', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.enableVersioning(true);
+                config.copyFiles([{
+                    from: './images',
+                    includeSubdirectories: false
+                }, {
+                    from: './fonts',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }]);
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.d41d8cd9.js',
+                            'main.1172d977.js',
+                            'manifest.json',
+                            'symfony_logo.ea1ca6f7.png',
+                            'symfony_logo_alt.f27119c2.png',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
+                        .with.files([
+                            'Roboto.woff2',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.1172d977.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo.png',
+                        '/build/symfony_logo.ea1ca6f7.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo_alt.png',
+                        '/build/symfony_logo_alt.f27119c2.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/assets/Roboto.woff2',
+                        '/build/assets/Roboto.woff2'
+                    );
+
+                    done();
+                });
+            });
         });
 
         describe('entrypoints.json', () => {

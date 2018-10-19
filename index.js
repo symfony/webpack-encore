@@ -437,9 +437,6 @@ class Encore {
      * Notes:
      *      * No transformation is applied to the copied files (for instance
      *        copying a CSS file won't minify it)
-     *      * By default files won't be versioned even if enableVersioning()
-     *        has been called. In order to add a hash to your filenames you
-     *        must use the "[hash]" placeholder in the "to" option (see below)
      *
      * Supported options:
      *      * {string} from (mandatory)

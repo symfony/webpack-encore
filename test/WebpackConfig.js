@@ -360,7 +360,7 @@ describe('WebpackConfig object', () => {
     });
 
     describe('copyFiles', () => {
-        it('Calling it add files to be copied', () => {
+        it('Calling it adds files to be copied', () => {
             const config = createConfig();
 
             // With multiple config objects
@@ -375,7 +375,7 @@ describe('WebpackConfig object', () => {
             expect(config.copyFilesConfigs).to.deep.equal([{
                 from: './foo',
                 pattern: /.*/,
-                to: '[path][name].[ext]',
+                to: null,
                 includeSubdirectories: true
             }, {
                 from: './bar',
@@ -385,7 +385,7 @@ describe('WebpackConfig object', () => {
             }, {
                 from: './baz',
                 pattern: /.*/,
-                to: '[path][name].[ext]',
+                to: null,
                 includeSubdirectories: true
             }]);
         });
