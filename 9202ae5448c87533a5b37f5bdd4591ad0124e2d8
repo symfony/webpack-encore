@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-10-18T02:56:05Z
+
+Wow, another weird bug from a vendor lib and a good find!
+
+So, is this issue already fixed in the manifest plugin lib? Or just "planned" to be fixed?
+
+And I suppose there's no decent way to test this... (it would be ideal... but I don't want to go crazy to test it).
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-10-18T17:32:20Z
+
+@weaverryan I think it's just planned to be fixed.
+
+I also wondered how it could be tested but found no "clean" way to do it...
