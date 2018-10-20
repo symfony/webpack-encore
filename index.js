@@ -640,8 +640,15 @@ class Encore {
      * Encore.configureBabel(function(babelConfig) {
      *      // change the babelConfig
      * }, {
-     *      // set optional Encore-specific options
-     *      // exclude: /(node_modules|bower_components)/
+     *      // set optional Encore-specific options, for instance:
+     *
+     *      // change the rule that determines which files
+     *      // won't be processed by Babel
+     *      exclude: /bower_components/
+     *
+     *      // ...or keep the default rule but only allow
+     *      // *some* Node modules to be processed by Babel
+     *      include_node_modules: ['foundation-sites']
      * });
      *
      * Supported options:
