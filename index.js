@@ -716,13 +716,36 @@ class Encore {
      *
      * Encore.configureBabel(function(babelConfig) {
      *      // change the babelConfig
+     * }, {
+     *      // set optional Encore-specific options, for instance:
+     *
+     *      // change the rule that determines which files
+     *      // won't be processed by Babel
+     *      exclude: /bower_components/
+     *
+     *      // ...or keep the default rule but only allow
+     *      // *some* Node modules to be processed by Babel
+     *      include_node_modules: ['foundation-sites']
      * });
      *
+     * Supported options:
+     *      * {Condition} exclude (default=/(node_modules|bower_components)/)
+     *              A Webpack Condition passed to the JS/JSX rule that
+     *              determines which files and folders should not be
+     *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
+     *              Cannot be used if the "include_node_modules" option is
+     *              also set.
+     *      * {string[]} include_node_modules
+     *              If set that option will include the given Node modules to
+     *              the files that are processed by Babel. Cannot be used if
+     *              the "exclude" option is also set.
+     *
      * @param {function} callback
+     * @param {object} encoreOptions
      * @returns {Encore}
      */
-    configureBabel(callback) {
-        webpackConfig.configureBabel(callback);
+    configureBabel(callback, encoreOptions = {}) {
+        webpackConfig.configureBabel(callback, encoreOptions);
 
         return this;
     }
