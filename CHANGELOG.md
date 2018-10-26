@@ -1,9 +1,10 @@
 # CHANGELOG
 
-## 0.21.0 Webpack 4 Upgrade
+## 0.21.0
 
  * [BC BREAK] Webpack was upgraded to version 4. This includes a number of major
-   and minor changes. The changes are listed below.
+   and minor changes. The changes are listed below under the
+   `Webpack 4 Upgrade` section.
 
  * [DEPRECATION] You must now call either `Encore.enableSingleRuntimeChunk()`
    or `Encore.disableSingleRuntimeChunk()`: not calling either method is
@@ -33,9 +34,9 @@
 See the [browserslist](https://github.com/browserslist/browserslist) library
 for a full description of all of the valid browser descriptions.
 
- * Node 7 is no longer supported. This is because the new
-   `mini-css-extract-plugin` does not support it (and neither)
-   does Yarn.
+ * Added a new `copyFiles()` method that is able to copy static files
+   into your build directory and allows them to be versioned. #409
+   thanks to @Lyrkan
 
  * Introduced a new `configureSplitChunks()` method that can be
    used to further configure the `optimizations.splitChunks` configuration.
@@ -52,6 +53,33 @@ for a full description of all of the valid browser descriptions.
    is always enabled. This allows you to do "Dynamic Imports"
    as described here: https://webpack.js.org/guides/code-splitting/#dynamic-imports
 
+ * A new "version check" system was added for optional dependencies.
+   Now, when you install optional plugins to support a feature, if
+   you are using an unsupported version, you will see a warning.
+   "Package recommendation" errors (i.e. when you enable a feature
+   but you are missing some packages) will also contain the version
+   in the install string when necessary (e.g. `yarn add foo@^2.0`).
+
+ * Support was added `handlebars-loader` by calling `enableHandlebarsLoader()`.
+   #301 thanks to @ogiammetta
+
+ * Support was added for `eslint-loader` by calling `enableEslintLoader()`.
+   #243 thanks to @pinoniq
+
+ * The `css-loader` can now be configured by calling `configureCssLoader()`.
+   #335 thanks to @XWB
+
+ * It's not possible to control the `exclude` for Babel so that you can
+   process certain node_modules packages  through Babel - use
+   the new second argument to `configureBabel()` - #401 thanks to
+   @Lyrkan.
+
+## Webpack 4 Upgrade Details
+
+ * Node 7 is no longer supported. This is because the new
+   `mini-css-extract-plugin` does not support it (and neither)
+   does Yarn.
+
  * For Preact, the necessary plugin the user needs to install
    changed from `babel-plugin-transform-react-jsx` to `@babel/plugin-transform-react-jsx`.
 
@@ -65,13 +93,6 @@ for a full description of all of the valid browser descriptions.
    was removed.
 
  * Support for CoffeeScript was entirely removed.
-
- * A new "version check" system was added for optional dependencies.
-   Now, when you install optional plugins to support a feature, if
-   you are using an unsupported version, you will see a warning.
-   "Package recommendation" errors (i.e. when you enable a feature
-   but you are missing some packages) will also contain the version
-   in the install string when necessary (e.g. `yarn add foo@^2.0`).
 
  * Actual lang="sass" no longer works for Vue. However, lang="scss"
    continues to work fine.
