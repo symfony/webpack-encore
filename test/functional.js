@@ -103,16 +103,14 @@ describe('Functional tests using webpack', function() {
 
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     main: {
-                        js: ['build/runtime.js', 'build/main.js'],
-                        css: []
+                        js: ['build/runtime.js', 'build/main.js']
                     },
                     font: {
-                        // no runtime for style entries
-                        js: [],
+                        js: ['build/runtime.js'],
                         css: ['build/font.css']
                     },
                     bg: {
-                        js: [],
+                        js: ['build/runtime.js'],
                         css: ['build/bg.css']
                     },
                 });
@@ -1608,7 +1606,6 @@ module.exports = {
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
                 config.setPublicPath('/build');
                 // enable versioning to make sure entrypoints.json is not affected
-                config.enableVersioning();
                 config.splitEntryChunks();
                 config.configureSplitChunks((splitChunks) => {
                     splitChunks.minSize = 0;
@@ -1633,7 +1630,7 @@ module.exports = {
                 });
             });
 
-            it('Custom public path does affect entrypoints.json or manifest.json', (done) => {
+            it('Custom public path does affect entrypoints.json but does not affect manifest.json', (done) => {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -1647,12 +1644,22 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['custom_prefix/runtime.js', 'custom_prefix/vendors~main~other.js', 'custom_prefix/main~other.js', 'custom_prefix/main.js'],
-                            css: ['custom_prefix/main~other.css']
+                            js: [
+                                'http://localhost:8080/build/runtime.js',
+                                'http://localhost:8080/build/vendors~main~other.js',
+                                'http://localhost:8080/build/main~other.js',
+                                'http://localhost:8080/build/main.js'
+                            ],
+                            css: ['http://localhost:8080/build/main~other.css']
                         },
                         other: {
-                            js: ['custom_prefix/runtime.js', 'custom_prefix/vendors~main~other.js', 'custom_prefix/main~other.js', 'custom_prefix/other.js'],
-                            css: ['custom_prefix/main~other.css']
+                            js: [
+                                'http://localhost:8080/build/runtime.js',
+                                'http://localhost:8080/build/vendors~main~other.js',
+                                'http://localhost:8080/build/main~other.js',
+                                'http://localhost:8080/build/other.js'
+                            ],
+                            css: ['http://localhost:8080/build/main~other.css']
                         },
                     });
 
@@ -1698,8 +1705,6 @@ module.exports = {
                 config.addEntry('main', ['./js/code_splitting', 'vue']);
                 config.addEntry('other', ['./js/no_require', 'vue']);
                 config.setPublicPath('/build');
-                // enable versioning to make sure entrypoints.json is not affected
-                config.enableVersioning();
                 config.splitEntryChunks();
                 config.configureSplitChunks((splitChunks) => {
                     splitChunks.minSize = 0;
@@ -1708,20 +1713,18 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         main: {
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main.js'],
-                            css: []
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main.js']
                         },
                         other: {
                             // the 0.[hash].js is because the "no_require" module was already split to this
                             // so, it has that filename, instead of following the normal pattern
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/0.f1e0a935.js', 'build/other.js'],
-                            css: []
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/0.js', 'build/other.js']
                         },
                     });
 
                     // make split chunks are correct in manifest
                     webpackAssert.assertManifestKeyExists('build/vendors~main~other.js');
-                    webpackAssert.assertManifestKeyExists('build/0.f1e0a935.js');
+                    webpackAssert.assertManifestKeyExists('build/0.js');
 
                     done();
                 });
