@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by codayblue at 2018-10-18T16:52:42Z
+
+@Lyrkan Is there anything else that needs to be taken care of in this PR?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-10-18T17:28:33Z
+
+@codayblue I think everything is fine now :)
+
+---------------------------------------------------------------------------
+
+by codayblue at 2018-10-18T19:43:45Z
+
+Is there an way to have appveyor run again? I dont understand why it failed. If it is a concern. If not we can just leave it with the 1 check failed.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2018-10-18T20:14:46Z
+
+Don't worry about AppVeyor, it happens to fail for no real reason sometimes (mostly because of timeouts during functional tests), which seems to be the case here.
