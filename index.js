@@ -203,25 +203,25 @@ class Encore {
     }
 
     /**
-     * Allows you to configure the options passed to the uglifyjs-webpack-plugin.
-     * A list of available options can be found at https://github.com/webpack-contrib/uglifyjs-webpack-plugin
+     * Allows you to configure the options passed to the terser-webpack-plugin.
+     * A list of available options can be found at https://github.com/webpack-contrib/terser-webpack-plugin
      *
      * For example:
      *
-     *      Encore.configureUglifyJsPlugin((options) => {
+     *      Encore.configureTerserPlugin((options) => {
      *          options.cache = true;
-     *          options.uglifyOptions = {
+     *          options.terserOptions = {
      *              output: {
      *                  comments: false
      *              }
      *          }
      *      })
      *
-     * @param {function} uglifyJsPluginOptionsCallback
+     * @param {function} terserPluginOptionsCallback
      * @returns {Encore}
      */
-    configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = () => {}) {
-        webpackConfig.configureUglifyJsPlugin(uglifyJsPluginOptionsCallback);
+    configureTerserPlugin(terserPluginOptionsCallback = () => {}) {
+        webpackConfig.configureTerserPlugin(terserPluginOptionsCallback);
 
         return this;
     }
@@ -1144,6 +1144,14 @@ class Encore {
      */
     enableCoffeeScriptLoader() {
         throw new Error('The enableCoffeeScriptLoader() method and CoffeeScript support was removed from Encore due to support problems with Webpack 4. If you are interested in this feature, please submit a pull request!');
+    }
+
+    /**
+     * @deprecated
+     * @return {void}
+     */
+    configureUglifyJsPlugin() {
+        throw new Error('The configureUglifyJsPlugin() method was removed from Encore due to uglify-js dropping ES6+ support in its latest version. Please use configureTerserPlugin() instead.');
     }
 }
 

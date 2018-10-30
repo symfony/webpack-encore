@@ -69,7 +69,7 @@ for a full description of all of the valid browser descriptions.
  * The `css-loader` can now be configured by calling `configureCssLoader()`.
    #335 thanks to @XWB
 
- * It's not possible to control the `exclude` for Babel so that you can
+ * It's now possible to control the `exclude` for Babel so that you can
    process certain node_modules packages  through Babel - use
    the new second argument to `configureBabel()` - #401 thanks to
    @Lyrkan.
@@ -97,9 +97,9 @@ for a full description of all of the valid browser descriptions.
  * Actual lang="sass" no longer works for Vue. However, lang="scss"
    continues to work fine.
 
- * uglifyjs-webpack-plugin was upgraded from 0.4.6 to 1.2.5, which
-   includes using `uglify-es`. If you're using `configureUglifyJsPlugin`(),
-   the options have changed.
+ * uglifyjs-webpack-plugin was replaced by terser-webpack-plugin.
+   If you're using `configureUglifyJsPlugin()`, please switch to
+   `configureTerserPlugin()` instead.
 
 ## 0.20.1
 

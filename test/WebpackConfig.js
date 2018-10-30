@@ -281,21 +281,21 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureUglifyJsPlugin', () => {
+    describe('configureTerserPlugin', () => {
         it('Setting callback', () => {
             const config = createConfig();
             const callback = () => {};
-            config.configureUglifyJsPlugin(callback);
+            config.configureTerserPlugin(callback);
 
-            expect(config.uglifyJsPluginOptionsCallback).to.equal(callback);
+            expect(config.terserPluginOptionsCallback).to.equal(callback);
         });
 
         it('Setting invalid callback argument', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureUglifyJsPlugin('foo');
-            }).to.throw('Argument 1 to configureUglifyJsPlugin() must be a callback function');
+                config.configureTerserPlugin('foo');
+            }).to.throw('Argument 1 to configureTerserPlugin() must be a callback function');
         });
     });
 
