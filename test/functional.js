@@ -102,17 +102,19 @@ describe('Functional tests using webpack', function() {
                 );
 
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                    main: {
-                        js: ['build/runtime.js', 'build/main.js']
-                    },
-                    font: {
-                        js: ['build/runtime.js'],
-                        css: ['build/font.css']
-                    },
-                    bg: {
-                        js: ['build/runtime.js'],
-                        css: ['build/bg.css']
-                    },
+                    entrypoints: {
+                        main: {
+                            js: ['build/runtime.js', 'build/main.js']
+                        },
+                        font: {
+                            js: ['build/runtime.js'],
+                            css: ['build/font.css']
+                        },
+                        bg: {
+                            js: ['build/runtime.js'],
+                            css: ['build/bg.css']
+                        }
+                    }
                 });
 
                 done();
@@ -131,14 +133,16 @@ describe('Functional tests using webpack', function() {
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                    main: {
-                        js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
-                        css: ['build/main~other.css']
-                    },
-                    other: {
-                        js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
-                        css: ['build/main~other.css']
-                    },
+                    entrypoints: {
+                        main: {
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
+                            css: ['build/main~other.css']
+                        },
+                        other: {
+                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
+                            css: ['build/main~other.css']
+                        }
+                    }
                 });
 
                 done();
@@ -689,14 +693,16 @@ describe('Functional tests using webpack', function() {
                 // make sure runtime.js is here
                 // but the _tmp_shared entry is NOT here
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                    main: {
-                        js: ['build/runtime.js', 'build/shared.js', 'build/main.js'],
-                        css: ['build/shared.css']
-                    },
-                    other: {
-                        js: ['build/runtime.js', 'build/shared.js', 'build/other.js'],
-                        css: ['build/shared.css']
-                    },
+                    entrypoints: {
+                        main: {
+                            js: ['build/runtime.js', 'build/shared.js', 'build/main.js'],
+                            css: ['build/shared.css']
+                        },
+                        other: {
+                            js: ['build/runtime.js', 'build/shared.js', 'build/other.js'],
+                            css: ['build/shared.css']
+                        }
+                    }
                 });
 
                 testSetup.requestTestPage(
@@ -1613,14 +1619,16 @@ module.exports = {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                        main: {
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
-                            css: ['build/main~other.css']
-                        },
-                        other: {
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
-                            css: ['build/main~other.css']
-                        },
+                        entrypoints: {
+                            main: {
+                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
+                                css: ['build/main~other.css']
+                            },
+                            other: {
+                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
+                                css: ['build/main~other.css']
+                            }
+                        }
                     });
 
                     // make split chunks are correct in manifest
@@ -1643,24 +1651,26 @@ module.exports = {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                        main: {
-                            js: [
-                                'http://localhost:8080/build/runtime.js',
-                                'http://localhost:8080/build/vendors~main~other.js',
-                                'http://localhost:8080/build/main~other.js',
-                                'http://localhost:8080/build/main.js'
-                            ],
-                            css: ['http://localhost:8080/build/main~other.css']
-                        },
-                        other: {
-                            js: [
-                                'http://localhost:8080/build/runtime.js',
-                                'http://localhost:8080/build/vendors~main~other.js',
-                                'http://localhost:8080/build/main~other.js',
-                                'http://localhost:8080/build/other.js'
-                            ],
-                            css: ['http://localhost:8080/build/main~other.css']
-                        },
+                        entrypoints: {
+                            main: {
+                                js: [
+                                    'http://localhost:8080/build/runtime.js',
+                                    'http://localhost:8080/build/vendors~main~other.js',
+                                    'http://localhost:8080/build/main~other.js',
+                                    'http://localhost:8080/build/main.js'
+                                ],
+                                css: ['http://localhost:8080/build/main~other.css']
+                            },
+                            other: {
+                                js: [
+                                    'http://localhost:8080/build/runtime.js',
+                                    'http://localhost:8080/build/vendors~main~other.js',
+                                    'http://localhost:8080/build/main~other.js',
+                                    'http://localhost:8080/build/other.js'
+                                ],
+                                css: ['http://localhost:8080/build/main~other.css']
+                            }
+                        }
                     });
 
                     // make split chunks are correct in manifest
@@ -1683,14 +1693,16 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     // in production, we hash the chunk names to avoid exposing any extra details
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                        main: {
-                            js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/main.js'],
-                            css: ['build/default~cc515e6e.css']
-                        },
-                        other: {
-                            js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/other.js'],
-                            css: ['build/default~cc515e6e.css']
-                        },
+                        entrypoints: {
+                            main: {
+                                js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/main.js'],
+                                css: ['build/default~cc515e6e.css']
+                            },
+                            other: {
+                                js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/other.js'],
+                                css: ['build/default~cc515e6e.css']
+                            }
+                        }
                     });
 
                     // make split chunks are correct in manifest
@@ -1712,14 +1724,16 @@ module.exports = {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                        main: {
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main.js']
-                        },
-                        other: {
-                            // the 0.[hash].js is because the "no_require" module was already split to this
-                            // so, it has that filename, instead of following the normal pattern
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/0.js', 'build/other.js']
-                        },
+                        entrypoints: {
+                            main: {
+                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main.js']
+                            },
+                            other: {
+                                // the 0.[hash].js is because the "no_require" module was already split to this
+                                // so, it has that filename, instead of following the normal pattern
+                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/0.js', 'build/other.js']
+                            }
+                        }
                     });
 
                     // make split chunks are correct in manifest
