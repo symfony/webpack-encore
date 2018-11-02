@@ -396,10 +396,10 @@ describe('Public API', () => {
 
     });
 
-    describe('configureUglifyJsPlugin', () => {
+    describe('configureTerserPlugin', () => {
 
         it('should return the API object', () => {
-            const returnedValue = api.configureUglifyJsPlugin(() => {});
+            const returnedValue = api.configureTerserPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 

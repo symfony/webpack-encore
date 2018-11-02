@@ -10,10 +10,10 @@
 'use strict';
 
 const expect = require('chai').expect;
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const uglifyPluginUtil = require('../../lib/plugins/uglify');
+const terserPluginUtil = require('../../lib/plugins/terser');
 
 function createConfig(environment = 'production') {
     const runtimeConfig = new RuntimeConfig();
@@ -24,28 +24,28 @@ function createConfig(environment = 'production') {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/uglify', () => {
+describe('plugins/terser', () => {
     it('production environment default settings', () => {
         const config = createConfig();
 
-        const plugin = uglifyPluginUtil(config);
-        expect(plugin).to.be.instanceof(UglifyJsPlugin);
+        const plugin = terserPluginUtil(config);
+        expect(plugin).to.be.instanceof(TerserPlugin);
         expect(plugin.options.sourceMap).to.equal(false);
     });
 
     it('with options callback', () => {
         const config = createConfig();
 
-        config.configureUglifyJsPlugin((options) => {
-            options.uglifyOptions = {
+        config.configureTerserPlugin((options) => {
+            options.terserOptions = {
                 output: { beautify: true }
             };
         });
 
-        const plugin = uglifyPluginUtil(config);
+        const plugin = terserPluginUtil(config);
 
         // Allows to override default options
-        expect(plugin.options.uglifyOptions.output.beautify).to.equal(true);
+        expect(plugin.options.terserOptions.output.beautify).to.equal(true);
 
         // Doesn't remove default options
         expect(plugin.options.sourceMap).to.equal(false);
@@ -54,8 +54,8 @@ describe('plugins/uglify', () => {
     it('with options callback that returns an object', () => {
         const config = createConfig();
 
-        config.configureUglifyJsPlugin((options) => {
-            options.uglifyOptions = {
+        config.configureTerserPlugin((options) => {
+            options.terserOptions = {
                 output: { beautify: true }
             };
 
@@ -63,8 +63,8 @@ describe('plugins/uglify', () => {
             return { cache: true };
         });
 
-        const plugin = uglifyPluginUtil(config);
-        expect(plugin.options.uglifyOptions.output.beautify).to.be.undefined;
+        const plugin = terserPluginUtil(config);
+        expect(plugin.options.terserOptions.output.beautify).to.be.undefined;
         expect(plugin.options.cache).to.equal(true);
     });
 });
