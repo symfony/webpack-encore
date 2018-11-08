@@ -6,6 +6,10 @@
    and minor changes. The changes are listed below under the
    `Webpack 4 Upgrade` section.
 
+ * [BC BREAK] The `createSharedEntry()` no longer can be passed an array of files.
+   Instead, set this to just one file, and require the other files from inside that
+   file.
+
  * [DEPRECATION] You must now call either `Encore.enableSingleRuntimeChunk()`
    or `Encore.disableSingleRuntimeChunk()`: not calling either method is
    deprecated. The recommended setting is `Encore.enableSingleRuntimeChunk()`.
