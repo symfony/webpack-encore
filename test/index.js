@@ -405,6 +405,15 @@ describe('Public API', () => {
 
     });
 
+    describe('configureOptimizeCssPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureOptimizeCssPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('Runtime environment proxy', () => {
         beforeEach(() => {
             api.clearRuntimeEnvironment();
