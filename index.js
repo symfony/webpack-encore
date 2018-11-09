@@ -441,13 +441,13 @@ class Encore {
      *      Encore.copyFiles({
      *          from: './assets/images',
      *          pattern: /\.(png|jpg|jpeg)$/,
-     *          to: 'assets/images/[path][name].[ext]'
+     *          to: 'images/[path][name].[ext]'
      *      })
      *
      *      // Version files
      *      Encore.copyFiles({
      *          from: './assets/images',
-     *          to: 'assets/images/[path][name].[hash:8].[ext]'
+     *          to: 'images/[path][name].[hash:8].[ext]'
      *      })
      *
      *      // Add multiple configs in a single call
