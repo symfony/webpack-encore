@@ -432,27 +432,27 @@ class Encore {
      * For example:
      *
      *      // Copy the content of a whole directory and its subdirectories
-     *      Encore.copyFiles({ from: './images' });
+     *      Encore.copyFiles({ from: './assets/images' });
      *
      *      // Only copy files matching a given pattern
-     *      Encore.copyFiles({ from: './images', pattern: /\.(png|jpg|jpeg)$/ })
+     *      Encore.copyFiles({ from: './assets/images', pattern: /\.(png|jpg|jpeg)$/ })
      *
      *      // Set the path the files are copied to
      *      Encore.copyFiles({
-     *          from: './images',
+     *          from: './assets/images',
      *          pattern: /\.(png|jpg|jpeg)$/,
      *          to: 'assets/images/[path][name].[ext]'
      *      })
      *
      *      // Version files
-     *      Encore.copyFiles(
-     *          from: './images',
+     *      Encore.copyFiles({
+     *          from: './assets/images',
      *          to: 'assets/images/[path][name].[hash:8].[ext]'
      *      })
      *
      *      // Add multiple configs in a single call
      *      Encore.copyFiles([
-     *          { from: './images' },
+     *          { from: './assets/images' },
      *          { from: './txt', pattern: /\.txt$/ },
      *      ]);
      *
