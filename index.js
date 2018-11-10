@@ -441,6 +441,7 @@ class Encore {
      *      Encore.copyFiles({
      *          from: './assets/images',
      *          pattern: /\.(png|jpg|jpeg)$/,
+     *          // to path is relative to the build directory
      *          to: 'images/[path][name].[ext]'
      *      })
      *
