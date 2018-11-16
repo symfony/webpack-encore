@@ -621,6 +621,29 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('Without enableSourceMaps(), there are no sourcemaps in production', (done) => {
+            const config = createWebpackConfig('www/build', 'production');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/no_require');
+            config.addStyleEntry('bg', './css/background_image.scss');
+            config.addStyleEntry('font', './css/roboto_font.css');
+            config.enableSassLoader();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertOutputFileDoesNotHaveSourcemap(
+                    'main.js'
+                );
+                webpackAssert.assertOutputFileDoesNotHaveSourcemap(
+                    'font.css'
+                );
+                webpackAssert.assertOutputFileDoesNotHaveSourcemap(
+                    'bg.css'
+                );
+
+                done();
+            });
+        });
+
         it('Code splitting a scss file works', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
