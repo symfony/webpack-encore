@@ -227,6 +227,28 @@ class Encore {
     }
 
     /**
+     * Allows you to configure the options passed to the optimize-css-assets-webpack-plugin.
+     * A list of available options can be found at https://github.com/NMFR/optimize-css-assets-webpack-plugin
+     *
+     * For example:
+     *
+     *      Encore.configureOptimizeCssPlugin((options) => {
+     *          options.cssProcessor = require('cssnano');
+     *          options.cssProcessorPluginOptions = {
+     *              preset: ['default', { discardComments: { removeAll: true } }],
+     *          }
+     *      })
+     *
+     * @param {function} optimizeCssPluginOptionsCallback
+     * @returns {Encore}
+     */
+    configureOptimizeCssPlugin(optimizeCssPluginOptionsCallback = () => {}) {
+        webpackConfig.configureOptimizeCssPlugin(optimizeCssPluginOptionsCallback);
+
+        return this;
+    }
+
+    /**
      * Adds a JavaScript file that should be webpacked:
      *
      *      // final output file will be main.js in the output directory

@@ -299,6 +299,24 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('configureOptimizeCssPlugin', () => {
+        it('Setting callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.configureOptimizeCssPlugin(callback);
+
+            expect(config.optimizeCssPluginOptionsCallback).to.equal(callback);
+        });
+
+        it('Setting invalid callback argument', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureOptimizeCssPlugin('foo');
+            }).to.throw('Argument 1 to configureOptimizeCssPlugin() must be a callback function');
+        });
+    });
+
     describe('addEntry', () => {
         it('Calling with a duplicate name throws an error', () => {
             const config = createConfig();
