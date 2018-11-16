@@ -1621,7 +1621,7 @@ module.exports = {
                     to: 'assets/[path][name].[ext]',
                     includeSubdirectories: false
                 }, {
-                    from: './bar/baz',
+                    from: './images/symfony_logo.png',
                     includeSubdirectories: true
                 }]);
 
@@ -1634,8 +1634,8 @@ module.exports = {
                             'manifest.json'
                         ]);
 
-                    expect(stdout).to.contain('should be set to an existing directory but "./foo" does not seem to be one');
-                    expect(stdout).to.contain('should be set to an existing directory but "./bar/baz" does not seem to be one');
+                    expect(stdout).to.contain('should be set to an existing directory but "./foo" does not seem to exist');
+                    expect(stdout).to.contain('should be set to an existing directory but "./images/symfony_logo.png" seems to be a file');
 
                     done();
                 });
