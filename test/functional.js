@@ -1603,6 +1603,43 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Do not try to copy files from an invalid path', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles([{
+                    from: './images',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }, {
+                    from: './foo',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }, {
+                    from: './fonts',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }, {
+                    from: './bar/baz',
+                    includeSubdirectories: true
+                }]);
+
+                testSetup.runWebpack(config, (webpackAssert, stats, stdout) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json'
+                        ]);
+
+                    expect(stdout).to.contain('should be set to an existing directory but "./foo" does not seem to be one');
+                    expect(stdout).to.contain('should be set to an existing directory but "./bar/baz" does not seem to be one');
+
+                    done();
+                });
+            });
         });
 
         describe('entrypoints.json', () => {
