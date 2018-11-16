@@ -1743,6 +1743,22 @@ module.exports = {
                     done();
                 });
             });
+
+            it('.mjs files are supported natively', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', './js/hello_world');
+                config.setPublicPath('/build');
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // check that main.js has the correct contents
+                    webpackAssert.assertOutputFileContains(
+                        'main.js',
+                        'Hello World!'
+                    );
+
+                    done();
+                });
+            });
         });
     });
 });
