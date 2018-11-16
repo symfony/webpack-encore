@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.22.0
+
+ * [BC BREAK] The values/paths in entrypoints.json were previously
+   stripped of their opening slash. That behavior has been changed:
+   the opening slash is now included: Before: `build/foo.js`, After: `/build/foo.js`.
+
 ## 0.21.0
 
  * [BC BREAK] Webpack was upgraded to version 4. This includes a number of major
