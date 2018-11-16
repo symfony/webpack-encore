@@ -104,15 +104,15 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     entrypoints: {
                         main: {
-                            js: ['build/runtime.js', 'build/main.js']
+                            js: ['/build/runtime.js', '/build/main.js']
                         },
                         font: {
-                            js: ['build/runtime.js'],
-                            css: ['build/font.css']
+                            js: ['/build/runtime.js'],
+                            css: ['/build/font.css']
                         },
                         bg: {
-                            js: ['build/runtime.js'],
-                            css: ['build/bg.css']
+                            js: ['/build/runtime.js'],
+                            css: ['/build/bg.css']
                         }
                     }
                 });
@@ -135,12 +135,12 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     entrypoints: {
                         main: {
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
-                            css: ['build/main~other.css']
+                            js: ['/build/runtime.js', '/build/vendors~main~other.js', '/build/main~other.js', '/build/main.js'],
+                            css: ['/build/main~other.css']
                         },
                         other: {
-                            js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
-                            css: ['build/main~other.css']
+                            js: ['/build/runtime.js', '/build/vendors~main~other.js', '/build/main~other.js', '/build/other.js'],
+                            css: ['/build/main~other.css']
                         }
                     }
                 });
@@ -695,12 +695,12 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                     entrypoints: {
                         main: {
-                            js: ['build/runtime.js', 'build/shared.js', 'build/main.js'],
-                            css: ['build/shared.css']
+                            js: ['/build/runtime.js', '/build/shared.js', '/build/main.js'],
+                            css: ['/build/shared.css']
                         },
                         other: {
-                            js: ['build/runtime.js', 'build/shared.js', 'build/other.js'],
-                            css: ['build/shared.css']
+                            js: ['/build/runtime.js', '/build/shared.js', '/build/other.js'],
+                            css: ['/build/shared.css']
                         }
                     }
                 });
@@ -1621,12 +1621,12 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/main.js'],
-                                css: ['build/main~other.css']
+                                js: ['/build/runtime.js', '/build/vendors~main~other.js', '/build/main~other.js', '/build/main.js'],
+                                css: ['/build/main~other.css']
                             },
                             other: {
-                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main~other.js', 'build/other.js'],
-                                css: ['build/main~other.css']
+                                js: ['/build/runtime.js', '/build/vendors~main~other.js', '/build/main~other.js', '/build/other.js'],
+                                css: ['/build/main~other.css']
                             }
                         }
                     });
@@ -1680,6 +1680,48 @@ module.exports = {
                 });
             });
 
+            it('Subdirectory public path affects entrypoints.json but does not affect manifest.json', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('/subdirectory/build');
+                config.setManifestKeyPrefix('custom_prefix');
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.chunks = 'all';
+                    splitChunks.minSize = 0;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        entrypoints: {
+                            main: {
+                                js: [
+                                    '/subdirectory/build/runtime.js',
+                                    '/subdirectory/build/vendors~main~other.js',
+                                    '/subdirectory/build/main~other.js',
+                                    '/subdirectory/build/main.js'
+                                ],
+                                css: ['/subdirectory/build/main~other.css']
+                            },
+                            other: {
+                                js: [
+                                    '/subdirectory/build/runtime.js',
+                                    '/subdirectory/build/vendors~main~other.js',
+                                    '/subdirectory/build/main~other.js',
+                                    '/subdirectory/build/other.js'
+                                ],
+                                css: ['/subdirectory/build/main~other.css']
+                            }
+                        }
+                    });
+
+                    // make split chunks are correct in manifest
+                    webpackAssert.assertManifestKeyExists('custom_prefix/vendors~main~other.js');
+
+                    done();
+                });
+            });
+
             it('Use splitChunks in production mode', (done) => {
                 const config = createWebpackConfig('web/build', 'production');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
@@ -1695,12 +1737,12 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/main.js'],
-                                css: ['build/default~cc515e6e.css']
+                                js: ['/build/runtime.js', '/build/vendors~cc515e6e.js', '/build/default~cc515e6e.js', '/build/main.js'],
+                                css: ['/build/default~cc515e6e.css']
                             },
                             other: {
-                                js: ['build/runtime.js', 'build/vendors~cc515e6e.js', 'build/default~cc515e6e.js', 'build/other.js'],
-                                css: ['build/default~cc515e6e.css']
+                                js: ['/build/runtime.js', '/build/vendors~cc515e6e.js', '/build/default~cc515e6e.js', '/build/other.js'],
+                                css: ['/build/default~cc515e6e.css']
                             }
                         }
                     });
@@ -1726,12 +1768,12 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/main.js']
+                                js: ['/build/runtime.js', '/build/vendors~main~other.js', '/build/main.js']
                             },
                             other: {
                                 // the 0.[hash].js is because the "no_require" module was already split to this
                                 // so, it has that filename, instead of following the normal pattern
-                                js: ['build/runtime.js', 'build/vendors~main~other.js', 'build/0.js', 'build/other.js']
+                                js: ['/build/runtime.js', '/build/vendors~main~other.js', '/build/0.js', '/build/other.js']
                             }
                         }
                     });
