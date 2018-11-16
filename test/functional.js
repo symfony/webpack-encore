@@ -1605,13 +1605,28 @@ module.exports = {
             });
         });
 
+        it('.mjs files are supported natively', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', './js/hello_world');
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that main.js has the correct contents
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'Hello World!'
+                );
+
+                done();
+            });
+        });
+
         describe('entrypoints.json', () => {
             it('Use "all" splitChunks & look at entrypoints.json', (done) => {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
                 config.setPublicPath('/build');
-                // enable versioning to make sure entrypoints.json is not affected
                 config.splitEntryChunks();
                 config.configureSplitChunks((splitChunks) => {
                     splitChunks.minSize = 0;
@@ -1633,6 +1648,53 @@ module.exports = {
 
                     // make split chunks are correct in manifest
                     webpackAssert.assertManifestKeyExists('build/vendors~main~other.js');
+
+                    done();
+                });
+            });
+
+            it.only('Contains metadata about preload, etc', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('entry1', ['./css/roboto_font.css', './js/no_require']);
+                config.addEntry('entry2', ['./css/roboto_font.css', './js/no_require'], {
+                    preload: true,
+                    async: true,
+                });
+                config.addEntry('entry3', ['./css/roboto_font.css', './js/no_require'], {
+                    prefetch: true
+                });
+                config.setPublicPath('/build');
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        entrypoints: {
+                            entry1: {
+                                js: ['build/runtime.js', 'build/entry1.js'],
+                                css: ['build/entry1.css']
+                            },
+                            entry2: {
+                                js: ['build/runtime.js', 'build/entry2.js'],
+                                css: ['build/entry2.css']
+                            },
+                            entry3: {
+                                js: ['build/runtime.js', 'build/entry3.js'],
+                                css: ['build/entry3.css']
+                            }
+                        },
+                        metadata: {
+                            entrypoints: {
+                                entry2: {
+                                    hint: 'preload',
+                                    attributes: {
+                                        async: true
+                                    }
+                                },
+                                entry3: {
+                                    hint: 'prefetch'
+                                },
+                            }
+                        }
+                    });
 
                     done();
                 });
@@ -1739,22 +1801,6 @@ module.exports = {
                     // make split chunks are correct in manifest
                     webpackAssert.assertManifestKeyExists('build/vendors~main~other.js');
                     webpackAssert.assertManifestKeyExists('build/0.js');
-
-                    done();
-                });
-            });
-
-            it('.mjs files are supported natively', (done) => {
-                const config = createWebpackConfig('web/build', 'dev');
-                config.addEntry('main', './js/hello_world');
-                config.setPublicPath('/build');
-
-                testSetup.runWebpack(config, (webpackAssert) => {
-                    // check that main.js has the correct contents
-                    webpackAssert.assertOutputFileContains(
-                        'main.js',
-                        'Hello World!'
-                    );
 
                     done();
                 });

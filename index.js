@@ -257,14 +257,30 @@ class Encore {
      * If the JavaScript file imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
      *
+     * To "hint" that you would like to use defer/ajax or preload/prefetch,
+     * use the options argument. This will output to your entrypoints.json file
+     * which can be used when rendering (WebpackEncoreBundle does this):
+     *
+     *      // final output file will be main.js in the output directory
+     *      Encore.addEntry('main', './path/to/some_file.js', {
+     *          // async or defer
+     *          //async: true
+     *          //defer: true
+     *
+     *          // preload or prefetch
+     *          //preload: true
+     *          //prefetch: true
+     *      });
+     *
      * @param {string} name       The name (without extension) that will be used
      *                            as the output filename (e.g. app will become app.js)
      *                            in the output directory.
      * @param {string|Array} src  The path to the source file (or files)
+     * @param {object} options    An object of options related to the entry
      * @returns {Encore}
      */
-    addEntry(name, src) {
-        webpackConfig.addEntry(name, src);
+    addEntry(name, src, options) {
+        webpackConfig.addEntry(name, src, options);
 
         return this;
     }
