@@ -64,7 +64,7 @@ if (runtimeConfig.useDevServer) {
 }
 
 function showUsageInstructions() {
-    const validCommands = ['dev', 'production', 'dev-server'];
+    const validCommands = ['dev', 'prod', 'production', 'dev-server'];
 
     console.log(`usage ${chalk.green('encore')} [${ validCommands.map(command => chalk.green(command)).join('|') }]`);
     console.log();
