@@ -318,6 +318,22 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('.mjs files are supported natively', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', './js/hello_world');
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that main.js has the correct contents
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'Hello World!'
+                );
+
+                done();
+            });
+        });
+
         describe('addStyleEntry .js files are removed', () => {
             it('Without versioning', (done) => {
                 const config = createWebpackConfig('web', 'dev');
@@ -1628,7 +1644,7 @@ module.exports = {
             });
         });
 
-        describe('entrypoints.json', () => {
+        describe('entrypoints.json & splitChunks()', () => {
             it('Use "all" splitChunks & look at entrypoints.json', (done) => {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
@@ -1809,19 +1825,45 @@ module.exports = {
                 });
             });
 
-            it('.mjs files are supported natively', (done) => {
-                const config = createWebpackConfig('web/build', 'dev');
-                config.addEntry('main', './js/hello_world');
-                config.setPublicPath('/build');
+            it('Make sure chunkIds do not change between builds', (done) => {
+                // https://github.com/symfony/webpack-encore/issues/461
+                const createSimilarConfig = function(includeExtraEntry) {
+                    const config = createWebpackConfig('web/build', 'production');
+                    config.addEntry('main1', './js/code_splitting');
+                    if (includeExtraEntry) {
+                        config.addEntry('main2', './js/eslint');
+                    }
+                    config.addEntry('main3', './js/no_require');
+                    config.setPublicPath('/build');
 
-                testSetup.runWebpack(config, (webpackAssert) => {
-                    // check that main.js has the correct contents
-                    webpackAssert.assertOutputFileContains(
-                        'main.js',
-                        'Hello World!'
-                    );
+                    return config;
+                };
 
-                    done();
+                const getMain3Contents = function(config) {
+                    const fullPath = path.join(config.outputPath, 'main3.js');
+
+                    if (!fs.existsSync(fullPath)) {
+                        throw new Error('Output file "main3.js" does not exist.');
+                    }
+
+                    return fs.readFileSync(fullPath, 'utf8');
+                };
+
+                const configA = createSimilarConfig(false);
+                const configB = createSimilarConfig(true);
+
+                testSetup.runWebpack(configA, () => {
+                    const main3Contents = getMain3Contents(configA);
+
+                    testSetup.runWebpack(configB, () => {
+                        const finalMain3Contents = getMain3Contents(configB);
+
+                        if (finalMain3Contents !== main3Contents) {
+                            throw new Error(`Contents after first compile do not match after second compile: \n\n ${main3Contents} \n\n versus \n\n ${finalMain3Contents} \n`);
+                        }
+
+                        done();
+                    });
                 });
             });
         });
