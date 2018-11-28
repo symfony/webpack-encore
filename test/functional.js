@@ -403,7 +403,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?8ec316547cc77b39'
+                        '/styles.css?91597a40238e0e66'
                     );
 
                     done();
