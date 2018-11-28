@@ -877,7 +877,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
-            expect(actualConfig.optimization.splitChunks.name).to.be.a('function');
+            expect(actualConfig.optimization.splitChunks.name).to.be.false;
         });
     });
 

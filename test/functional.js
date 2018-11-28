@@ -1794,18 +1794,18 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['/build/runtime.js', '/build/vendors~cc515e6e.js', '/build/default~cc515e6e.js', '/build/main.js'],
-                                css: ['/build/default~cc515e6e.css']
+                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/main.js'],
+                                css: ['/build/1.css']
                             },
                             other: {
-                                js: ['/build/runtime.js', '/build/vendors~cc515e6e.js', '/build/default~cc515e6e.js', '/build/other.js'],
-                                css: ['/build/default~cc515e6e.css']
+                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/other.js'],
+                                css: ['/build/1.css']
                             }
                         }
                     });
 
                     // make split chunks are correct in manifest
-                    webpackAssert.assertManifestKeyExists('build/vendors~cc515e6e.js');
+                    webpackAssert.assertManifestKeyExists('build/0.js');
 
                     done();
                 });
