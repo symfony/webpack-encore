@@ -993,7 +993,7 @@ class Encore {
      * file is generated.
      *
      *     Encore.configureFilenames({
-     *         js: '[name].[chunkhash].js',
+     *         js: '[name].[contenthash].js',
      *         css: '[name].[contenthash].css',
      *         images: 'images/[name].[hash:8].[ext]',
      *         fonts: 'fonts/[name].[hash:8].[ext]'
@@ -1003,8 +1003,7 @@ class Encore {
      * will be used for any file types not passed.
      *
      * If you are using Encore.enableVersioning()
-     * make sure that your "js" filenames contain
-     * "[chunkhash]" and your "css" filenames contain
+     * make sure that your "js" and "css" filenames contain
      * "[contenthash]".
      *
      * @param {object} filenames

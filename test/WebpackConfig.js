@@ -983,14 +983,14 @@ describe('WebpackConfig object', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
             config.configureFilenames({
-                js: '[name].[chunkhash].js',
+                js: '[name].[contenthash].js',
                 css: '[name].[contenthash].css',
                 images: 'images/[name].[hash:8].[ext]',
                 fonts: 'fonts/[name].[hash:8].[ext]'
             });
 
             expect(config.configuredFilenames).to.deep.equals({
-                js: '[name].[chunkhash].js',
+                js: '[name].[contenthash].js',
                 css: '[name].[contenthash].css',
                 images: 'images/[name].[hash:8].[ext]',
                 fonts: 'fonts/[name].[hash:8].[ext]'

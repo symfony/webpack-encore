@@ -387,7 +387,7 @@ describe('Functional tests using webpack', function() {
                 config.enableVersioning(true);
                 config.configureFilenames({
                     js: '[name].js?[chunkhash:16]',
-                    css: '[name].css?[contenthash:16]'
+                    css: '[name].css?[chunkhash:16]'
                 });
 
                 testSetup.runWebpack(config, (webpackAssert) => {
