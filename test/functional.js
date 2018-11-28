@@ -356,11 +356,11 @@ describe('Functional tests using webpack', function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
-                            'main.f1e0a935.js',
+                            'main.89eb104b.js',
                             'styles.8ec31654.css',
                             'manifest.json',
                             'entrypoints.json',
-                            'runtime.d41d8cd9.js',
+                            'runtime.3d179b24.js',
                         ]);
 
                     webpackAssert.assertOutputFileContains(
@@ -387,7 +387,7 @@ describe('Functional tests using webpack', function() {
                 config.enableVersioning(true);
                 config.configureFilenames({
                     js: '[name].js?[chunkhash:16]',
-                    css: '[name].css?[contenthash:16]'
+                    css: '[name].css?[chunkhash:16]'
                 });
 
                 testSetup.runWebpack(config, (webpackAssert) => {
@@ -403,7 +403,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?8ec316547cc77b39'
+                        '/styles.css?91597a40238e0e66'
                     );
 
                     done();
@@ -457,14 +457,14 @@ describe('Functional tests using webpack', function() {
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
                     .with.files([
-                        '0.8256b1ad.js', // chunks are also versioned
+                        '0.590a68c7.js', // chunks are also versioned
                         '0.8ec31654.css',
-                        'main.ba427376.js',
+                        'main.4a5effdb.js',
                         'h1.8ec31654.css',
                         'bg.0ec2735b.css',
                         'manifest.json',
                         'entrypoints.json',
-                        'runtime.d41d8cd9.js',
+                        'runtime.b84a9b43.js',
                     ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
@@ -1591,8 +1591,8 @@ module.exports = {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
                             'entrypoints.json',
-                            'runtime.d41d8cd9.js',
-                            'main.1172d977.js',
+                            'runtime.21aa1db9.js',
+                            'main.22bad391.js',
                             'manifest.json',
                             'symfony_logo.ea1ca6f7.png',
                             'symfony_logo_alt.f27119c2.png',
@@ -1605,7 +1605,7 @@ module.exports = {
 
                     webpackAssert.assertManifestPath(
                         'build/main.js',
-                        '/build/main.1172d977.js'
+                        '/build/main.22bad391.js'
                     );
 
                     webpackAssert.assertManifestPath(
