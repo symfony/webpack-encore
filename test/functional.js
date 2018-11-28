@@ -1884,6 +1884,10 @@ module.exports = {
                     }
                     config.setPublicPath('/build');
                     config.splitEntryChunks();
+                    config.configureSplitChunks((splitChunks) => {
+                        // will include preact, but prevent any other splitting
+                        splitChunks.minSize = 10000;
+                    });
 
                     return config;
                 };
