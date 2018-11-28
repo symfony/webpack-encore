@@ -31,15 +31,33 @@ function createWebpackConfig(outputDirName = '', command, argv = {}) {
 }
 
 function convertToManifestPath(assetSrc, webpackConfig) {
-    const manifestData = JSON.parse(
-        fs.readFileSync(path.join(webpackConfig.outputPath, 'manifest.json'), 'utf8')
-    );
+    const manifestData = JSON.parse(readOutputFileContents('manifest.json', webpackConfig));
 
     if (typeof manifestData[assetSrc] === 'undefined') {
         throw new Error(`Path ${assetSrc} not found in manifest!`);
     }
 
     return manifestData[assetSrc];
+}
+
+function readOutputFileContents(filename, config) {
+    const fullPath = path.join(config.outputPath, filename);
+
+    if (!fs.existsSync(fullPath)) {
+        throw new Error(`Output file "${filename}" does not exist.`);
+    }
+
+    return fs.readFileSync(fullPath, 'utf8');
+}
+
+function getEntrypointData(config, entryName) {
+    const entrypointsData = JSON.parse(readOutputFileContents('entrypoints.json', config));
+
+    if (typeof entrypointsData.entrypoints[entryName] === 'undefined') {
+        throw new Error(`The entry ${entryName} was not found!`);
+    }
+
+    return entrypointsData.entrypoints[entryName];
 }
 
 describe('Functional tests using webpack', function() {
@@ -1839,24 +1857,70 @@ module.exports = {
                     return config;
                 };
 
-                const getMain3Contents = function(config) {
-                    const fullPath = path.join(config.outputPath, 'main3.js');
+                const configA = createSimilarConfig(false);
+                const configB = createSimilarConfig(true);
 
-                    if (!fs.existsSync(fullPath)) {
-                        throw new Error('Output file "main3.js" does not exist.');
+                testSetup.runWebpack(configA, () => {
+                    testSetup.runWebpack(configB, () => {
+                        const main3Contents = readOutputFileContents('main3.js', configA);
+                        const finalMain3Contents = readOutputFileContents('main3.js', configB);
+
+                        if (finalMain3Contents !== main3Contents) {
+                            throw new Error(`Contents after first compile do not match after second compile: \n\n ${main3Contents} \n\n versus \n\n ${finalMain3Contents} \n`);
+                        }
+
+                        done();
+                    });
+                });
+            });
+
+            it('Do not change contents or filenames when more modules require the same split contents', (done) => {
+                const createSimilarConfig = function(includeExtraEntry) {
+                    const config = createWebpackConfig('web/build', 'production');
+                    config.addEntry('main1', ['./js/code_splitting', 'preact']);
+                    config.addEntry('main3', ['./js/no_require', 'preact']);
+                    if (includeExtraEntry) {
+                        config.addEntry('main4', ['./js/eslint', 'preact']);
+                    }
+                    config.setPublicPath('/build');
+                    config.splitEntryChunks();
+
+                    return config;
+                };
+
+                const getSplitVendorJsPath = function(config) {
+                    const entrypointData = getEntrypointData(config, 'main3');
+
+                    const splitFiles = entrypointData.js.filter(filename => {
+                        return filename !== '/build/runtime.js' && filename !== '/build/main3.js';
+                    });
+
+                    // sanity check
+                    if (splitFiles.length !== 1) {
+                        throw new Error(`Unexpected number (${splitFiles.length}) of split files for main3 entry`);
                     }
 
-                    return fs.readFileSync(fullPath, 'utf8');
+                    return splitFiles[0];
                 };
 
                 const configA = createSimilarConfig(false);
                 const configB = createSimilarConfig(true);
 
                 testSetup.runWebpack(configA, () => {
-                    const main3Contents = getMain3Contents(configA);
-
                     testSetup.runWebpack(configB, () => {
-                        const finalMain3Contents = getMain3Contents(configB);
+                        const vendorPath = getSplitVendorJsPath(configA);
+                        const finalVendorPath = getSplitVendorJsPath(configB);
+
+                        // make sure that the filename of the split vendor file didn't change,
+                        // even though an additional entry is now sharing its contents
+                        if (finalVendorPath !== vendorPath) {
+                            throw new Error(`Vendor filename changed! Before ${vendorPath} and after ${finalVendorPath}.`);
+                        }
+
+                        // make sure that, internally, the split chunk name did not change,
+                        // which would cause the contents of main3 to suddenly change
+                        const main3Contents = readOutputFileContents('main3.js', configA);
+                        const finalMain3Contents = readOutputFileContents('main3.js', configB);
 
                         if (finalMain3Contents !== main3Contents) {
                             throw new Error(`Contents after first compile do not match after second compile: \n\n ${main3Contents} \n\n versus \n\n ${finalMain3Contents} \n`);
