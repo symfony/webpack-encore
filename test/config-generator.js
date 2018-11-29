@@ -199,7 +199,7 @@ describe('The config-generator function', () => {
             config.useVersioning = true;
 
             const actualConfig = configGenerator(config);
-            expect(actualConfig.output.filename).to.equal('[name].[chunkhash:8].js');
+            expect(actualConfig.output.filename).to.equal('[name].[contenthash:8].js');
 
             const miniCssPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
 

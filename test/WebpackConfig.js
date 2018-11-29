@@ -983,14 +983,14 @@ describe('WebpackConfig object', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
             config.configureFilenames({
-                js: '[name].[chunkhash].js',
+                js: '[name].[contenthash].js',
                 css: '[name].[contenthash].css',
                 images: 'images/[name].[hash:8].[ext]',
                 fonts: 'fonts/[name].[hash:8].[ext]'
             });
 
             expect(config.configuredFilenames).to.deep.equals({
-                js: '[name].[chunkhash].js',
+                js: '[name].[contenthash].js',
                 css: '[name].[contenthash].css',
                 images: 'images/[name].[hash:8].[ext]',
                 fonts: 'fonts/[name].[hash:8].[ext]'
@@ -1013,6 +1013,23 @@ describe('WebpackConfig object', () => {
                     foo: 'bar'
                 });
             }).to.throw('"foo" is not a valid key');
+        });
+
+        it('Using chunkhash is deprecated', () => {
+            logger.reset();
+            logger.quiet();
+
+            after(() => {
+                logger.quiet(false);
+            });
+
+            const config = createConfig();
+
+            config.configureFilenames({
+                js: 'file.[chunkhash:16].js'
+            });
+
+            expect(logger.getMessages().deprecation).to.not.be.empty;
         });
     });
 
