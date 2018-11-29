@@ -31,15 +31,33 @@ function createWebpackConfig(outputDirName = '', command, argv = {}) {
 }
 
 function convertToManifestPath(assetSrc, webpackConfig) {
-    const manifestData = JSON.parse(
-        fs.readFileSync(path.join(webpackConfig.outputPath, 'manifest.json'), 'utf8')
-    );
+    const manifestData = JSON.parse(readOutputFileContents('manifest.json', webpackConfig));
 
     if (typeof manifestData[assetSrc] === 'undefined') {
         throw new Error(`Path ${assetSrc} not found in manifest!`);
     }
 
     return manifestData[assetSrc];
+}
+
+function readOutputFileContents(filename, config) {
+    const fullPath = path.join(config.outputPath, filename);
+
+    if (!fs.existsSync(fullPath)) {
+        throw new Error(`Output file "${filename}" does not exist.`);
+    }
+
+    return fs.readFileSync(fullPath, 'utf8');
+}
+
+function getEntrypointData(config, entryName) {
+    const entrypointsData = JSON.parse(readOutputFileContents('entrypoints.json', config));
+
+    if (typeof entrypointsData.entrypoints[entryName] === 'undefined') {
+        throw new Error(`The entry ${entryName} was not found!`);
+    }
+
+    return entrypointsData.entrypoints[entryName];
 }
 
 describe('Functional tests using webpack', function() {
@@ -312,6 +330,22 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertManifestPath(
                     'main.js',
                     '/build/main.js'
+                );
+
+                done();
+            });
+        });
+
+        it('.mjs files are supported natively', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', './js/hello_world');
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that main.js has the correct contents
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'Hello World!'
                 );
 
                 done();
@@ -1628,7 +1662,7 @@ module.exports = {
             });
         });
 
-        describe('entrypoints.json', () => {
+        describe('entrypoints.json & splitChunks()', () => {
             it('Use "all" splitChunks & look at entrypoints.json', (done) => {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
@@ -1760,18 +1794,18 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['/build/runtime.js', '/build/vendors~cc515e6e.js', '/build/default~cc515e6e.js', '/build/main.js'],
-                                css: ['/build/default~cc515e6e.css']
+                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/main.js'],
+                                css: ['/build/1.css']
                             },
                             other: {
-                                js: ['/build/runtime.js', '/build/vendors~cc515e6e.js', '/build/default~cc515e6e.js', '/build/other.js'],
-                                css: ['/build/default~cc515e6e.css']
+                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/other.js'],
+                                css: ['/build/1.css']
                             }
                         }
                     });
 
                     // make split chunks are correct in manifest
-                    webpackAssert.assertManifestKeyExists('build/vendors~cc515e6e.js');
+                    webpackAssert.assertManifestKeyExists('build/0.js');
 
                     done();
                 });
@@ -1809,19 +1843,95 @@ module.exports = {
                 });
             });
 
-            it('.mjs files are supported natively', (done) => {
-                const config = createWebpackConfig('web/build', 'dev');
-                config.addEntry('main', './js/hello_world');
-                config.setPublicPath('/build');
+            it('Make sure chunkIds do not change between builds', (done) => {
+                // https://github.com/symfony/webpack-encore/issues/461
+                const createSimilarConfig = function(includeExtraEntry) {
+                    const config = createWebpackConfig('web/build', 'production');
+                    config.addEntry('main1', './js/code_splitting');
+                    if (includeExtraEntry) {
+                        config.addEntry('main2', './js/eslint');
+                    }
+                    config.addEntry('main3', './js/no_require');
+                    config.setPublicPath('/build');
 
-                testSetup.runWebpack(config, (webpackAssert) => {
-                    // check that main.js has the correct contents
-                    webpackAssert.assertOutputFileContains(
-                        'main.js',
-                        'Hello World!'
-                    );
+                    return config;
+                };
 
-                    done();
+                const configA = createSimilarConfig(false);
+                const configB = createSimilarConfig(true);
+
+                testSetup.runWebpack(configA, () => {
+                    testSetup.runWebpack(configB, () => {
+                        const main3Contents = readOutputFileContents('main3.js', configA);
+                        const finalMain3Contents = readOutputFileContents('main3.js', configB);
+
+                        if (finalMain3Contents !== main3Contents) {
+                            throw new Error(`Contents after first compile do not match after second compile: \n\n ${main3Contents} \n\n versus \n\n ${finalMain3Contents} \n`);
+                        }
+
+                        done();
+                    });
+                });
+            });
+
+            it('Do not change contents or filenames when more modules require the same split contents', (done) => {
+                const createSimilarConfig = function(includeExtraEntry) {
+                    const config = createWebpackConfig('web/build', 'production');
+                    config.addEntry('main1', ['./js/code_splitting', 'preact']);
+                    config.addEntry('main3', ['./js/no_require', 'preact']);
+                    if (includeExtraEntry) {
+                        config.addEntry('main4', ['./js/eslint', 'preact']);
+                    }
+                    config.setPublicPath('/build');
+                    config.splitEntryChunks();
+                    config.configureSplitChunks((splitChunks) => {
+                        // will include preact, but prevent any other splitting
+                        splitChunks.minSize = 10000;
+                    });
+
+                    return config;
+                };
+
+                const getSplitVendorJsPath = function(config) {
+                    const entrypointData = getEntrypointData(config, 'main3');
+
+                    const splitFiles = entrypointData.js.filter(filename => {
+                        return filename !== '/build/runtime.js' && filename !== '/build/main3.js';
+                    });
+
+                    // sanity check
+                    if (splitFiles.length !== 1) {
+                        throw new Error(`Unexpected number (${splitFiles.length}) of split files for main3 entry`);
+                    }
+
+                    return splitFiles[0];
+                };
+
+                const configA = createSimilarConfig(false);
+                const configB = createSimilarConfig(true);
+
+                testSetup.runWebpack(configA, () => {
+                    testSetup.runWebpack(configB, () => {
+                        const vendorPath = getSplitVendorJsPath(configA);
+                        const finalVendorPath = getSplitVendorJsPath(configB);
+
+                        // make sure that the filename of the split vendor file didn't change,
+                        // even though an additional entry is now sharing its contents
+                        if (finalVendorPath !== vendorPath) {
+                            throw new Error(`Vendor filename changed! Before ${vendorPath} and after ${finalVendorPath}.`);
+                        }
+
+                        // make sure that, internally, the split chunk name did not change,
+                        // which would cause the contents of main3 to suddenly change
+                        const main3Contents = readOutputFileContents('main3.js', configA);
+                        const finalMain3Contents = readOutputFileContents('main3.js', configB);
+
+                        if (finalMain3Contents !== main3Contents) {
+                            throw new Error(`Contents after first compile do not match after second compile: \n\n ${main3Contents} \n\n versus \n\n ${finalMain3Contents} \n`);
+                        }
+
+                        done();
+                    });
                 });
             });
         });
