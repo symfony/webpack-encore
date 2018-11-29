@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-11-28T16:00:55Z
+
+I just added an unrelated, second bug fix to this, because it uses much of the same code.
+
+It is described here: https://github.com/webpack/webpack/issues/8426
+
+Basically, when using `splitEntryChunks()`, the split filenames would change whenever a new entry required that split content - even if NOTHING else changed. The fix is simple: to set `splitChunks.name = false`, which causes the split chunk names to look like ajax split chunk names - e.g. `0.js`.
