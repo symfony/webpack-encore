@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-11-28T16:02:05Z
+
+Good catch! I do need to change those!
+
+> Wouldn't it be a good idea to add a warning if we detect [chunkhash] to inform users that it would be better to use [contenthash]?
+
+Good idea... which means that, for now, we'll need to continue adding the plugin that makes this possible.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2018-11-28T19:14:28Z
+
+Test failure is due to a change to the hash calculation in Webpack 4.22.0. I'm going to ignore, so we can release these bug fixes as a patch release. Then, we can bump the minimum Webpack version from `^4.20.0` to `^4.22.0` in another PR for a minor release.
