@@ -940,24 +940,15 @@ describe('WebpackConfig object', () => {
         it('Adds new externals', () => {
             const config = createConfig();
 
-            expect(config.externals).to.deep.equals({});
+            expect(config.externals).to.deep.equals([]);
 
             config.addExternals({ 'jquery': 'jQuery', 'react': 'react' });
             config.addExternals({ 'lodash': 'lodash' });
 
-            expect(config.externals).to.deep.equals({
-                'jquery': 'jQuery',
-                'react': 'react',
-                'lodash': 'lodash'
-            });
-        });
-
-        it('Calling it with an invalid argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.addExternals('foo');
-            }).to.throw('must be an object');
+            expect(config.externals).to.deep.equals([
+                { 'jquery': 'jQuery', 'react': 'react'},
+                { 'lodash': 'lodash' }
+            ]);
         });
     });
 

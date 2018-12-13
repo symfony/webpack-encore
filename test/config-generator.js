@@ -471,7 +471,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(actualConfig.externals).to.deep.equals({});
+            expect(actualConfig.externals).to.deep.equals([]);
         });
 
         it('with addExternals()', () => {
@@ -485,10 +485,10 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(actualConfig.externals).to.deep.equals({
+            expect(actualConfig.externals).to.deep.equals([{
                 'jquery': 'jQuery',
                 'react': 'react'
-            });
+            }]);
         });
     });
 
