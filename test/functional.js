@@ -1660,6 +1660,43 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Do not try to copy files from an invalid path', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles([{
+                    from: './images',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }, {
+                    from: './foo',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }, {
+                    from: './fonts',
+                    to: 'assets/[path][name].[ext]',
+                    includeSubdirectories: false
+                }, {
+                    from: './images/symfony_logo.png',
+                    includeSubdirectories: true
+                }]);
+
+                testSetup.runWebpack(config, (webpackAssert, stats, stdout) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json'
+                        ]);
+
+                    expect(stdout).to.contain('should be set to an existing directory but "./foo" does not seem to exist');
+                    expect(stdout).to.contain('should be set to an existing directory but "./images/symfony_logo.png" seems to be a file');
+
+                    done();
+                });
+            });
         });
 
         describe('entrypoints.json & splitChunks()', () => {
