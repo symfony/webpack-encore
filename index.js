@@ -396,8 +396,8 @@ class Encore {
      *
      * @returns {Encore}
      */
-    addExternals(externals) {
-        webpackConfig.addExternals(externals);
+    addExternals(...externals) {
+        webpackConfig.addExternals.apply(webpackConfig, externals);
 
         return this;
     }
