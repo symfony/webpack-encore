@@ -387,12 +387,17 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.addExternals({
-     *          jquery: 'jQuery',
-     *          react: 'react'
-     *      })
+     *      const nodeExternals = require('webpack-node-externals');
      *
-     * @param {object} externals
+     *      Encore.addExternals(
+     *          {
+     *             jquery: 'jQuery',
+     *             react: 'react'
+     *          },
+     *          nodeExternals()
+     *      );
+     *
+     * @param {...*} externals
      *
      * @returns {Encore}
      */
