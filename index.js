@@ -1073,6 +1073,24 @@ class Encore {
     }
 
     /**
+     * Is this currently a "dev" build?
+     *
+     * @returns {boolean}
+     */
+    isDev() {
+        return webpackConfig.isDev();
+    }
+
+    /**
+     * Is this currently a "dev-server" build?
+     *
+     * @returns {boolean}
+     */
+    isDevServer() {
+        return webpackConfig.isDevServer();
+    }
+
+    /**
      * Use this at the bottom of your webpack.config.js file:
      *
      * module.exports = Encore.getWebpackConfig();
