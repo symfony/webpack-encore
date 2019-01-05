@@ -1,6 +1,6 @@
 {
   "name": "@symfony/webpack-encore",
-  "version": "0.22.3",
+  "version": "0.22.4",
   "description": "",
   "main": "index.js",
   "scripts": {
