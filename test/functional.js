@@ -1285,6 +1285,71 @@ module.exports = {
             });
         });
 
+        it('Vue.js is compiled correctly using TypeScript', (done) => {
+            const appDir = testSetup.createTestAppDir();
+
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}                            `
+            );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs-typescript/main');
+            config.enableVueLoader();
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.enableTypeScriptLoader();
+            config.configureBabel(function(config) {
+                config.presets = [
+                    ['@babel/preset-env', {
+                        'targets': {
+                            'chrome': 52
+                        }
+                    }]
+                ];
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'images/logo.82b9c7a5.png',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                // test that our custom babel config is used
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'class TestClassSyntax'
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        // assert that the vue.js app rendered
+                        browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
+                        // make sure the styles are not inlined
+                        browser.assert.elements('style', 0);
+
+                        done();
+                    }
+                );
+            });
+        });
+
         it('Vue.js error when using non-activated loaders', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
