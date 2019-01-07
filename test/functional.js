@@ -1972,5 +1972,22 @@ module.exports = {
                 });
             });
         });
+
+        describe('Package entrypoint imports', () => {
+            it('Import via "sass" package property', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+
+                config.setPublicPath('/build');
+                config.addAliases({
+                    lib:path.resolve('./lib')
+                });
+                config.enableSassLoader();
+                config.addStyleEntry('sass', './css/sass_package_import.scss');
+
+                testSetup.runWebpack(config, () => {
+                    done();
+                })
+            });
+        });
     });
 });

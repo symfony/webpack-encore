@@ -1,0 +1,7 @@
+// There seems to be an issue with the sass-loader and prefixing
+// aliased directories with a tilde. The following line is how
+// this import should look and works for node_modules.
+// @import '~lib/test-pkg';
+
+// Importing without the tilde seems to work for webpack aliases
+@import 'lib/test-pkg';
