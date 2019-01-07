@@ -589,12 +589,12 @@ class Encore {
     }
 
     /**
-     * Configure the devServer.watchOptions configuration, only when the dev server is running.
+     * Configure the watchOptions and devServer.watchOptions configuration.
      *
-     * https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
      * https://webpack.js.org/configuration/watch/
+     * https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
      *
-     * Encore.configureDevServerWatchOptions(function(watchOptions) {
+     * Encore.configureWatchOptions(function(watchOptions) {
      *      // change the configuration
      *
      *      watchOptions.poll = 250; // useful when running inside a Virtual Machine
@@ -603,8 +603,8 @@ class Encore {
      * @param {function} callback
      * @returns {Encore}
      */
-    configureDevServerWatchOptions(callback) {
-        webpackConfig.configureDevServerWatchOptions(callback);
+    configureWatchOptions(callback) {
+        webpackConfig.configureWatchOptions(callback);
 
         return this;
     }

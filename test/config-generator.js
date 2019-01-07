@@ -583,11 +583,15 @@ describe('The config-generator function', () => {
             config.setPublicPath('/');
             config.addEntry('main', './main');
 
-            config.configureDevServerWatchOptions(watchOptions => {
+            config.configureWatchOptions(watchOptions => {
                 watchOptions.poll = 250;
             });
 
             const actualConfig = configGenerator(config);
+            expect(actualConfig.watchOptions).to.deep.equals({
+                'ignored': /node_modules/,
+                'poll': 250,
+            });
             expect(actualConfig.devServer.watchOptions).to.deep.equals({
                 'ignored': /node_modules/,
                 'poll': 250,
@@ -952,6 +956,23 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
             expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
+        });
+    });
+
+    describe('Test buildWatchOptionsConfig()', () => {
+        it('Set webpack watch options', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.configureWatchOptions(watchOptions => {
+                watchOptions.poll = 250;
+            });
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.watchOptions).to.deep.equals({
+                ignored: /node_modules/,
+                poll: 250,
+            });
         });
     });
 });

@@ -1066,28 +1066,28 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureDevServerWatchOptions()', () => {
+    describe('configureWatchOptions()', () => {
         it('Pass config', () => {
             const config = createConfig();
             const callback = (watchOptions) => {
                 watchOptions.poll = 250;
             };
 
-            config.configureDevServerWatchOptions(callback);
+            config.configureWatchOptions(callback);
 
-            expect(config.devServerWatchOptionsConfigurationCallback).to.equal(callback);
+            expect(config.watchOptionsConfigurationCallback).to.equal(callback);
         });
 
         it('Call method without a valid callback', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureDevServerWatchOptions();
-            }).to.throw('Argument 1 to configureDevServerWatchOptions() must be a callback function.');
+                config.configureWatchOptions();
+            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
 
             expect(() => {
-                config.configureDevServerWatchOptions({});
-            }).to.throw('Argument 1 to configureDevServerWatchOptions() must be a callback function.');
+                config.configureWatchOptions({});
+            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
         });
     });
 });
