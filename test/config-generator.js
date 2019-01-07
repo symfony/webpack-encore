@@ -573,6 +573,26 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
             expect(actualConfig.devServer.hot).to.be.true;
         });
+
+        it('devServer with custom watch options', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.useHotModuleReplacement = true;
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+
+            config.configureDevServerWatchOptions(watchOptions => {
+                watchOptions.poll = 250;
+            });
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.devServer.watchOptions).to.deep.equals({
+                'ignored': /node_modules/,
+                'poll': 250,
+            });
+        });
     });
 
     describe('test for addPlugin config', () => {
