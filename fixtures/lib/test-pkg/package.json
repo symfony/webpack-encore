@@ -6,5 +6,6 @@
         "email": "david@desource.org"
     },
     "main":"js/javascript_entry.js",
+    "style":"css/style_entry.css",
     "sass":"css/sass_entry.scss"
 }

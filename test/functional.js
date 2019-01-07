@@ -1985,6 +1985,26 @@ module.exports = {
                 config.addStyleEntry('sass', './css/sass_package_import.scss');
 
                 testSetup.runWebpack(config, () => {
+                    // A successful compile is all that is needed to pass this test.
+                    // If this test fails then the import in the above sass file
+                    // is not loading the package's sass file.
+                    done();
+                })
+            });
+
+            it('Import via "style" package property', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+
+                config.setPublicPath('/build');
+                config.addAliases({
+                    lib:path.resolve('./lib')
+                });
+                config.addStyleEntry('style', './css/style_package_import.css');
+
+                testSetup.runWebpack(config, () => {
+                    // A successful compile is all that is needed to pass this test.
+                    // If this test fails then the import in the above css file
+                    // is not loading the package's style file.                    
                     done();
                 })
             });
