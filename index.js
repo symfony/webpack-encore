@@ -597,7 +597,7 @@ class Encore {
      * Encore.configureDevServerWatchOptions(function(watchOptions) {
      *      // change the configuration
      *
-     *      watchOptions.poll = 250;
+     *      watchOptions.poll = 250; // useful when running inside a Virtual Machine
      * });
      *
      * @param {function} callback
