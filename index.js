@@ -397,7 +397,7 @@ class Encore {
      *          nodeExternals()
      *      ]);
      *
-     * @param {object} externals
+     * @param {*} externals
      *
      * @returns {Encore}
      */
