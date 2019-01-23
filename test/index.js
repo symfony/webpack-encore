@@ -414,6 +414,22 @@ describe('Public API', () => {
 
     });
 
+    describe('isRuntimeEnvironmentConfigured', () => {
+
+        it('should return true if the runtime environment has been configured', () => {
+            const returnedValue = api.isRuntimeEnvironmentConfigured();
+            expect(returnedValue).to.be.true;
+        });
+
+        it('should return false if the runtime environment has not been configured', () => {
+            api.clearRuntimeEnvironment();
+
+            const returnedValue = api.isRuntimeEnvironmentConfigured();
+            expect(returnedValue).to.be.false;
+        });
+
+    });
+
     describe('Runtime environment proxy', () => {
         beforeEach(() => {
             api.clearRuntimeEnvironment();
