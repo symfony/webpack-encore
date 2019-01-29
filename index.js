@@ -589,6 +589,27 @@ class Encore {
     }
 
     /**
+     * Configure the watchOptions and devServer.watchOptions configuration.
+     *
+     * https://webpack.js.org/configuration/watch/
+     * https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+     *
+     * Encore.configureWatchOptions(function(watchOptions) {
+     *      // change the configuration
+     *
+     *      watchOptions.poll = 250; // useful when running inside a Virtual Machine
+     * });
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureWatchOptions(callback) {
+        webpackConfig.configureWatchOptions(callback);
+
+        return this;
+    }
+
+    /**
      * Automatically make some variables available everywhere!
      *
      * Usage:

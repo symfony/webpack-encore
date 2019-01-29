@@ -1065,4 +1065,29 @@ describe('WebpackConfig object', () => {
             }).to.throw('"foo" is not a valid key');
         });
     });
+
+    describe('configureWatchOptions()', () => {
+        it('Pass config', () => {
+            const config = createConfig();
+            const callback = (watchOptions) => {
+                watchOptions.poll = 250;
+            };
+
+            config.configureWatchOptions(callback);
+
+            expect(config.watchOptionsConfigurationCallback).to.equal(callback);
+        });
+
+        it('Call method without a valid callback', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureWatchOptions();
+            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
+
+            expect(() => {
+                config.configureWatchOptions({});
+            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
+        });
+    });
 });
