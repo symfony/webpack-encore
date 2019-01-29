@@ -1157,6 +1157,10 @@ class Encore {
         return this;
     }
 
+    isRuntimeEnvironmentConfigured() {
+        return runtimeConfig !== null;
+    }
+
     /**
      * Clear the runtime environment.
      *
@@ -1213,6 +1217,7 @@ const EncoreProxy = new Proxy(new Encore(), {
             const safeMethods = [
                 'configureRuntimeEnvironment',
                 'clearRuntimeEnvironment',
+                'isRuntimeEnvironmentConfigured',
             ];
 
             if (!webpackConfig && (safeMethods.indexOf(prop) === -1)) {
