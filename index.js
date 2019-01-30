@@ -1167,7 +1167,7 @@ class Encore {
         runtimeConfig = parseRuntime(
             Object.assign(
                 {},
-                require('yargs/yargs')([environment]).argv,
+                require('yargs-parser')([environment]),
                 options
             ),
             process.cwd()
