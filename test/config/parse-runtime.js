@@ -16,7 +16,7 @@ const fs = require('fs-extra');
 const path = require('path');
 
 function createArgv(argv) {
-    return require('yargs/yargs')(argv).argv;
+    return require('yargs-parser')(argv);
 }
 
 function createTestDirectory() {

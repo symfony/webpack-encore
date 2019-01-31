@@ -16,7 +16,7 @@ const chalk = require('chalk');
 const logger = require('../lib/logger');
 
 const runtimeConfig = parseRuntime(
-    require('yargs/yargs')(process.argv.slice(2)).argv,
+    require('yargs-parser')(process.argv.slice(2)),
     process.cwd()
 );
 context.runtimeConfig = runtimeConfig;
