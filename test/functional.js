@@ -1350,6 +1350,61 @@ module.exports = {
             });
         });
 
+        it('Vue.js supports CSS modules', (done) => {
+            const appDir = testSetup.createTestAppDir();
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs-css-modules/main');
+            config.enableVueLoader();
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.configureCssLoader(options => {
+                // Remove hashes from local ident names
+                // since they are not always the same.
+                options.localIdentName = '[local]_foo';
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                // Standard CSS
+                webpackAssert.assertOutputFileContains(
+                    'main.css',
+                    '.red {'
+                );
+
+                // CSS modules
+                webpackAssert.assertOutputFileContains(
+                    'main.css',
+                    '.italic_foo {'
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        // Standard CSS
+                        browser.assert.hasClass('#app', 'red');
+
+                        // CSS modules
+                        browser.assert.hasClass('#app', 'italic_foo');
+
+                        done();
+                    }
+                );
+            });
+        });
+
         it('Vue.js error when using non-activated loaders', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
