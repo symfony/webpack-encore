@@ -1144,4 +1144,36 @@ describe('WebpackConfig object', () => {
             }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
         });
     });
+
+    describe('configureLoaderRule()', () => {
+        it('works properly', () => {
+            const config = createConfig();
+            const callback = (loader) => {};
+
+            expect(config.loaderConfigurationCallbacks['eslint']).to.not.equal(callback);
+
+            config.configureLoaderRule('eslint', callback);
+            expect(config.loaderConfigurationCallbacks['eslint']).to.equal(callback);
+        });
+
+        it('Call method with a not supported loader', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureLoaderRule('vue');
+            }).to.throw('Loader "vue" is not configurable. Either open an issue or a pull request.');
+        });
+
+        it('Call method with not a valid callback', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureLoaderRule('eslint');
+            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+
+            expect(() => {
+                config.configureLoaderRule('eslint', {});
+            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+        });
+    });
 });

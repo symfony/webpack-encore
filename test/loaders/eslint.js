@@ -12,7 +12,9 @@
 const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
+const configGenerator = require('../../lib/config-generator');
 const eslintLoader = require('../../lib/loaders/eslint');
+const isWindows = (process.platform === 'win32');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -76,5 +78,30 @@ describe('loaders/eslint', () => {
 
         const actualOptions = eslintLoader.getOptions(config);
         expect(actualOptions).to.deep.equals({ foo: true });
+    });
+
+    it('configure ESLint loader rule', () => {
+        const config = createConfig();
+        config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+        config.setPublicPath('/');
+        config.enableEslintLoader();
+        config.configureLoaderRule('eslint', (loader) => {
+            loader.test = /\.(jsx?|vue)/;
+        });
+
+        const webpackConfig = configGenerator(config);
+        const eslintLoader = webpackConfig.module.rules.find(rule => rule.loader === 'eslint-loader');
+
+        expect(eslintLoader).to.deep.equals({
+            test: /\.(jsx?|vue)/,
+            enforce: 'pre',
+            exclude: /node_modules/,
+            loader: 'eslint-loader',
+            options: {
+                cache: true,
+                emitWarning: true,
+                parser: 'babel-eslint'
+            }
+        });
     });
 });
