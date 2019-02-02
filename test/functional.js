@@ -62,7 +62,7 @@ function getEntrypointData(config, entryName) {
 
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
-    this.timeout(8000);
+    this.timeout(10000);
 
     before(() => {
         testSetup.emptyTmpDir();
@@ -388,14 +388,16 @@ describe('Functional tests using webpack', function() {
                 config.enableVersioning(true);
 
                 testSetup.runWebpack(config, (webpackAssert) => {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            'main.89eb104b.js',
-                            'styles.8ec31654.css',
-                            'manifest.json',
-                            'entrypoints.json',
-                            'runtime.3d179b24.js',
-                        ]);
+                    if (!process.env.DISABLE_UNSTABLE_CHECKS) {
+                        expect(config.outputPath).to.be.a.directory()
+                            .with.files([
+                                'main.89eb104b.js',
+                                'styles.8ec31654.css',
+                                'manifest.json',
+                                'entrypoints.json',
+                                'runtime.3d179b24.js',
+                            ]);
+                    }
 
                     webpackAssert.assertOutputFileContains(
                         'styles.8ec31654.css',
@@ -489,17 +491,19 @@ describe('Functional tests using webpack', function() {
             config.enableVersioning(true);
 
             testSetup.runWebpack(config, (webpackAssert) => {
-                expect(config.outputPath).to.be.a.directory()
-                    .with.files([
-                        '0.590a68c7.js', // chunks are also versioned
-                        '0.8ec31654.css',
-                        'main.4a5effdb.js',
-                        'h1.8ec31654.css',
-                        'bg.0ec2735b.css',
-                        'manifest.json',
-                        'entrypoints.json',
-                        'runtime.b84a9b43.js',
-                    ]);
+                if (!process.env.DISABLE_UNSTABLE_CHECKS) {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            '0.590a68c7.js', // chunks are also versioned
+                            '0.8ec31654.css',
+                            'main.4a5effdb.js',
+                            'h1.8ec31654.css',
+                            'bg.0ec2735b.css',
+                            'manifest.json',
+                            'entrypoints.json',
+                            'runtime.b84a9b43.js',
+                        ]);
+                }
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
@@ -1159,8 +1163,8 @@ module.exports = {
         });
 
         it('TypeScript is compiled and type checking is done in a separate process!', (done) => {
-            this.timeout(8000);
-            setTimeout(done, 7000);
+            this.timeout(10000);
+            setTimeout(done, 9000);
 
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -1687,25 +1691,27 @@ module.exports = {
                 }]);
 
                 testSetup.runWebpack(config, (webpackAssert) => {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            'entrypoints.json',
-                            'runtime.6cf710cd.js',
-                            'main.d85842cc.js',
-                            'manifest.json',
-                            'symfony_logo.ea1ca6f7.png',
-                            'symfony_logo_alt.f27119c2.png',
-                        ]);
+                    if (!process.env.DISABLE_UNSTABLE_CHECKS) {
+                        expect(config.outputPath).to.be.a.directory()
+                            .with.files([
+                                'entrypoints.json',
+                                'runtime.6cf710cd.js',
+                                'main.d85842cc.js',
+                                'manifest.json',
+                                'symfony_logo.ea1ca6f7.png',
+                                'symfony_logo_alt.f27119c2.png',
+                            ]);
+
+                        webpackAssert.assertManifestPath(
+                            'build/main.js',
+                            '/build/main.d85842cc.js'
+                        );
+                    }
 
                     expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
                         .with.files([
                             'Roboto.woff2',
                         ]);
-
-                    webpackAssert.assertManifestPath(
-                        'build/main.js',
-                        '/build/main.d85842cc.js'
-                    );
 
                     webpackAssert.assertManifestPath(
                         'build/symfony_logo.png',

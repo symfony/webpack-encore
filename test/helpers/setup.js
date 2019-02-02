@@ -73,6 +73,8 @@ function runWebpack(webpackConfig, callback, allowCompilationError = false) {
 
         const compiler = webpack(configGenerator(webpackConfig));
         compiler.run((err, stats) => {
+            // Restore stdout
+            process.stdout.write = stdoutWrite;
 
             if (err) {
                 console.error(err.stack || err);
@@ -95,8 +97,6 @@ function runWebpack(webpackConfig, callback, allowCompilationError = false) {
                 console.warn(info.warnings);
             }
 
-            // Restore stdout and then call the callback
-            process.stdout.write = stdoutWrite;
             callback(assertUtil(webpackConfig), stats, stdOutContents.join('\n'));
         });
     } catch (e) {

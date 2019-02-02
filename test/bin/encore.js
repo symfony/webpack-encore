@@ -19,7 +19,7 @@ const exec = require('child_process').exec;
 
 describe('bin/encore.js', function() {
     // being functional tests, these can take quite long
-    this.timeout(8000);
+    this.timeout(10000);
 
     it('Basic smoke test', (done) => {
         testSetup.emptyTmpDir();
