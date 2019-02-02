@@ -1,5 +1,20 @@
 # CHANGELOG
 
+## 0.23.0
+
+ * Add support for CSS modules in Vue - #508 thanks to @Lyrkan
+
+ * Store externals in an array - #495 thanks to @deAtog
+
+ * Add `Encore.isRuntimeEnvironmentConfigured()` - #500 thanks
+   to @stof.
+
+ * Add the ability to configure watch options - #486 thanks
+   to @Kocal
+
+ * Enabled cache and parallelism for terser for faster builds -
+   #497 thanks to @Kocal
+
 ## 0.22.0
 
  * [BC BREAK] The values/paths in entrypoints.json were previously
