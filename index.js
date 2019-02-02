@@ -397,7 +397,9 @@ class Encore {
      *      const nodeExternals = require('webpack-node-externals');
      *
      *      Encore.addExternals(
-     *          nodeExternals()
+     *          // add any valid externals you have
+     *          nodeExternals(),
+     *          /^(jquery|\$)$/i
      *      );
      *
      * @param {*} externals
