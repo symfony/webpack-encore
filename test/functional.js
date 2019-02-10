@@ -1823,6 +1823,61 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Copy with a custom context', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({
+                    from: './images',
+                    to: '[path][name].[hash:8].[ext]',
+                    includeSubdirectories: true,
+                    context: './',
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'images')).to.be.a.directory()
+                        .with.files([
+                            'symfony_logo.ea1ca6f7.png',
+                            'symfony_logo_alt.f27119c2.png',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'images', 'same_filename')).to.be.a.directory()
+                        .with.files([
+                            'symfony_logo.f27119c2.png',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony_logo.png',
+                        '/build/images/symfony_logo.ea1ca6f7.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony_logo_alt.png',
+                        '/build/images/symfony_logo_alt.f27119c2.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/same_filename/symfony_logo.png',
+                        '/build/images/same_filename/symfony_logo.f27119c2.png'
+                    );
+
+                    done();
+                });
+            });
         });
 
         describe('entrypoints.json & splitChunks()', () => {

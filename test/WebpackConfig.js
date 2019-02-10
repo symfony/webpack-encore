@@ -394,17 +394,20 @@ describe('WebpackConfig object', () => {
                 from: './foo',
                 pattern: /.*/,
                 to: null,
-                includeSubdirectories: true
+                includeSubdirectories: true,
+                context: null,
             }, {
                 from: './bar',
                 pattern: /abc/,
                 to: 'bar',
-                includeSubdirectories: false
+                includeSubdirectories: false,
+                context: null,
             }, {
                 from: './baz',
                 pattern: /.*/,
                 to: null,
-                includeSubdirectories: true
+                includeSubdirectories: true,
+                context: null,
             }]);
         });
 
