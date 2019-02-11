@@ -1279,7 +1279,13 @@ const EncoreProxy = new Proxy(new Encore(), {
             // Find the property with the closest Levenshtein distance
             let similarProperty;
             let minDistance = Number.MAX_VALUE;
-            for (const apiProperty in target) {
+
+            for (const apiProperty of Object.getOwnPropertyNames(Encore.prototype)) {
+                // Ignore class constructor
+                if (apiProperty === 'constructor') {
+                    continue;
+                }
+
                 const distance = levenshtein.get(apiProperty, prop);
                 if (distance <= minDistance) {
                     similarProperty = apiProperty;
@@ -1292,8 +1298,14 @@ const EncoreProxy = new Proxy(new Encore(), {
                 errorMessage += ` Did you mean ${chalk.green(`Encore.${similarProperty}`)}?`;
             }
 
+            // Prettify the error message.
+            // Only keep the 2nd line of the stack trace:
+            // - First line should be this file (index.js)
+            // - Second line should be the Webpack config file
+            const pe = new PrettyError();
+            pe.skip((traceLine, lineNumber) => lineNumber !== 1);
             const error = new Error(errorMessage);
-            console.log(new PrettyError().render(error));
+            console.log(pe.render(error));
             process.exit(1); // eslint-disable-line
         }
 
