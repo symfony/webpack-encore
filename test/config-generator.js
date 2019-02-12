@@ -17,6 +17,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
+const path = require('path');
 const logger = require('../lib/logger');
 
 const isWindows = (process.platform === 'win32');
@@ -861,6 +862,10 @@ describe('The config-generator function', () => {
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
             expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
+
+            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            expect(babelEnvPreset[1].useBuiltIns).to.equal('entry');
         });
 
         it('with configureBabel() and a different exclude rule', () => {
@@ -876,6 +881,40 @@ describe('The config-generator function', () => {
 
             const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
             expect(String(jsRule.exclude)).to.equal(String(/foo/));
+        });
+
+        it('with configureBabel() and some whitelisted modules', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureBabel(() => {}, {
+                includeNodeModules: ['foo']
+            });
+
+            const actualConfig = configGenerator(config);
+
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            expect(jsRule.exclude).to.be.a('Function');
+            expect(jsRule.exclude(path.join('test', 'node_modules', 'foo', 'index.js'))).to.be.false;
+            expect(jsRule.exclude(path.join('test', 'node_modules', 'bar', 'index.js'))).to.be.true;
+        });
+
+        it('with configureBabel() and a different useBuiltIns value', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureBabel(() => { }, {
+                useBuiltIns: 'usage'
+            });
+
+            const actualConfig = configGenerator(config);
+
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
         });
     });
 

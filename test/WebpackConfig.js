@@ -499,7 +499,7 @@ describe('WebpackConfig object', () => {
             expect(config.babelOptions.exclude).to.equal('foo');
         });
 
-        it('Calling with "include_node_modules" option', () => {
+        it('Calling with "includeNodeModules" option', () => {
             const config = createConfig();
             config.configureBabel(() => {}, { include_node_modules: ['foo', 'bar'] });
 
@@ -530,6 +530,13 @@ describe('WebpackConfig object', () => {
             }
         });
 
+        it('Calling with "useBuiltIns" option', () => {
+            const config = createConfig();
+            config.configureBabel(() => { }, { useBuiltIns: 'foo' });
+
+            expect(config.babelOptions.useBuiltIns).to.equal('foo');
+        });
+
         it('Calling with non-callback throws an error', () => {
             const config = createConfig();
 
@@ -555,19 +562,19 @@ describe('WebpackConfig object', () => {
             }).to.throw('Invalid option "fake_option" passed to configureBabel()');
         });
 
-        it('Calling with both "include_node_modules" and "exclude" options', () => {
+        it('Calling with both "includeNodeModules" and "exclude" options', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureBabel(() => {}, { exclude: 'foo', include_node_modules: ['bar', 'baz'] });
+                config.configureBabel(() => {}, { exclude: 'foo', includeNodeModules: ['bar', 'baz'] });
             }).to.throw('can\'t be used together');
         });
 
-        it('Calling with an invalid "include_node_modules" option value', () => {
+        it('Calling with an invalid "includeNodeModules" option value', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureBabel(() => {}, { include_node_modules: 'foo' });
+                config.configureBabel(() => {}, { includeNodeModules: 'foo' });
             }).to.throw('must be an Array');
         });
     });
