@@ -60,6 +60,15 @@ function getEntrypointData(config, entryName) {
     return entrypointsData.entrypoints[entryName];
 }
 
+function getIntegrityData(config) {
+    const entrypointsData = JSON.parse(readOutputFileContents('entrypoints.json', config));
+    if (typeof entrypointsData.integrity === 'undefined') {
+        throw new Error('The entrypoints.json file does not contain an integrity object!');
+    }
+
+    return entrypointsData.integrity;
+}
+
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
     this.timeout(10000);
@@ -2254,5 +2263,106 @@ module.exports = {
                 });
             });
         });
+
+        if (!process.env.DISABLE_UNSTABLE_CHECKS) {
+            describe('enableIntegrityHashes() adds hashes to the entrypoints.json file', () => {
+                it('Using default algorithm', (done) => {
+                    const config = createWebpackConfig('web/build', 'dev');
+                    config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                    config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                    config.setPublicPath('/build');
+                    config.configureSplitChunks((splitChunks) => {
+                        splitChunks.chunks = 'all';
+                        splitChunks.minSize = 0;
+                    });
+                    config.enableIntegrityHashes();
+
+                    testSetup.runWebpack(config, () => {
+                        const integrityData = getIntegrityData(config);
+                        const expectedHashes = {
+                            '/build/runtime.js': 'sha384-Q86c+opr0lBUPWN28BLJFqmLhho+9ZcJpXHorQvX6mYDWJ24RQcdDarXFQYN8HLc',
+                            '/build/main.js': 'sha384-ymG7OyjISWrOpH9jsGvajKMDEOP/mKJq8bHC0XdjQA6P8sg2nu+2RLQxcNNwE/3J',
+                            '/build/main~other.js': 'sha384-4g+Zv0iELStVvA4/B27g4TQHUMwZttA5TEojjUyB8Gl5p7sarU4y+VTSGMrNab8n',
+                            '/build/main~other.css': 'sha384-hfZmq9+2oI5Cst4/F4YyS2tJAAYdGz7vqSMP8cJoa8bVOr2kxNRLxSw6P8UZjwUn',
+                            '/build/other.js': 'sha384-ZU3hiTN/+Va9WVImPi+cI0/j/Q7SzAVezqL1aEXha8sVgE5HU6/0wKUxj1LEnkC9',
+
+                            // vendors~main~other.js's hash is not tested since its
+                            // content seems to change based on the build environment.
+                        };
+
+                        for (const file in expectedHashes) {
+                            expect(integrityData[file]).to.equal(expectedHashes[file]);
+                        }
+
+                        done();
+                    });
+                });
+
+                it('Using another algorithm and a different public path', (done) => {
+                    const config = createWebpackConfig('web/build', 'dev');
+                    config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                    config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                    config.setPublicPath('http://localhost:8090/assets');
+                    config.setManifestKeyPrefix('assets');
+                    config.configureSplitChunks((splitChunks) => {
+                        splitChunks.chunks = 'all';
+                        splitChunks.minSize = 0;
+                    });
+                    config.enableIntegrityHashes(true, 'sha256');
+
+                    testSetup.runWebpack(config, () => {
+                        const integrityData = getIntegrityData(config);
+                        const expectedHashes = {
+                            'http://localhost:8090/assets/runtime.js': 'sha256-7Zze5YHq/8SPpzHbmtN7hFuexDEVMcNkYkeBJy2Uc2o=',
+                            'http://localhost:8090/assets/main.js': 'sha256-RtW3TYA1SBHUGuBnIBBJZ7etIGyYisjargouvET4sFE=',
+                            'http://localhost:8090/assets/main~other.js': 'sha256-q9xPQWa0UBbMPUNmhDaDuBFjV2gZU6ICiKzLN7jPccc=',
+                            'http://localhost:8090/assets/main~other.css': 'sha256-KVo9sI0v6MnbxPg/xZMSn2XE7qIChWiDh1uED1tP5Fo=',
+                            'http://localhost:8090/assets/other.js': 'sha256-rxT6mp9VrLO1++6G3g/VSLGisznX838ALokQhD3Jmyc=',
+
+                            // vendors~main~other.js's hash is not tested since its
+                            // content seems to change based on the build environment.
+                        };
+
+                        for (const file in expectedHashes) {
+                            expect(integrityData[file]).to.equal(expectedHashes[file]);
+                        }
+
+                        done();
+                    });
+                });
+
+                it('Using multiple algorithms', (done) => {
+                    const config = createWebpackConfig('web/build', 'dev');
+                    config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                    config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                    config.setPublicPath('/build');
+                    config.configureSplitChunks((splitChunks) => {
+                        splitChunks.chunks = 'all';
+                        splitChunks.minSize = 0;
+                    });
+                    config.enableIntegrityHashes(true, ['sha256', 'sha512']);
+
+                    testSetup.runWebpack(config, () => {
+                        const integrityData = getIntegrityData(config);
+                        const expectedHashes = {
+                            '/build/runtime.js': 'sha256-H1kWMiF/ZrdlqCP49sLKyoxC/snwX7EVGJPluTM4wh8= sha512-XyYHXWTEdfInnsN/ZWV0YQ+DSO8jcczHljYQkmkTZ/xAzoEfjxiQ5NYug+V3OWbvFZ7Azwqs7FbKcz8ABE9ZAg==',
+                            '/build/main.js': 'sha256-RtW3TYA1SBHUGuBnIBBJZ7etIGyYisjargouvET4sFE= sha512-/wl1U/L6meBga5eeRTxPz5BxFiLmwL/kjy1NTcK0DNdxV3oUI/zZ9DEDU43Cl7XqGMnUH8pJhhFJR+1k9vZrYQ==',
+                            '/build/main~other.js': 'sha256-q9xPQWa0UBbMPUNmhDaDuBFjV2gZU6ICiKzLN7jPccc= sha512-1xuC/Y+goI01JUPVYBQOpPY36ttTXnZFOBsTgNPCJu53b2/ccFqzeW3abV3KG5mFzo4cfSUOS7AXjj8ajp/MjA==',
+                            '/build/main~other.css': 'sha256-6AltZJTjdVuLywCBE8qQevkscxazmWyh/19OL6cxkwY= sha512-zE1kAcqJ/jNnycEwELK7BfauEgRlK6cGrN+9urz4JI1K+s5BpglYFF9G0VOiSA7Kj3w46XX1WcjZ5w5QohBFEw==',
+                            '/build/other.js': 'sha256-rxT6mp9VrLO1++6G3g/VSLGisznX838ALokQhD3Jmyc= sha512-XZjuolIG3/QW1PwAIaPCtQZvKvkPNsAsoUjQdDqlW/uStd9lBrT3w16WrBdc3qe4X11bGkyA7IQpQwN3FGkPMA==',
+
+                            // vendors~main~other.js's hash is not tested since its
+                            // content seems to change based on the build environment.
+                        };
+
+                        for (const file in expectedHashes) {
+                            expect(integrityData[file]).to.equal(expectedHashes[file]);
+                        }
+
+                        done();
+                    });
+                });
+            });
+        }
     });
 });
