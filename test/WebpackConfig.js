@@ -28,6 +28,32 @@ function createConfig() {
 describe('WebpackConfig object', () => {
 
     describe('setOutputPath', () => {
+        const removeDirectory = (targetPath) => {
+            if (fs.existsSync(targetPath)) {
+                const files = fs.readdirSync(targetPath);
+                for (const file of files) {
+                    const filePath = path.resolve(targetPath, file);
+                    if (fs.lstatSync(filePath).isDirectory()) {
+                        removeDirectory(filePath);
+                    } else {
+                        fs.unlinkSync(filePath);
+                    }
+                }
+
+                fs.rmdirSync(targetPath);
+            }
+        };
+
+        // Make sure the newly created directories are removed
+        // before and after each test
+        const cleanupNewDirectories = () => {
+            removeDirectory(path.resolve(__dirname, 'new_dir'));
+            removeDirectory(path.resolve(__dirname, '..', 'new_dir'));
+        };
+
+        beforeEach(cleanupNewDirectories);
+        afterEach(cleanupNewDirectories);
+
         it('use absolute, existent path', () => {
             const config = createConfig();
             config.setOutputPath(__dirname);
@@ -37,15 +63,12 @@ describe('WebpackConfig object', () => {
 
         it('relative path, becomes absolute', () => {
             const config = createConfig();
-            config.setOutputPath('assets');
+            config.setOutputPath('new_dir');
 
             // __dirname is the context
             expect(config.outputPath).to.equal(
-                path.join(__dirname, '/assets')
+                path.join(__dirname, '/new_dir')
             );
-
-            // cleanup!
-            fs.rmdirSync(path.join(__dirname, '/assets'));
         });
 
         it('non-existent path creates directory', () => {
@@ -56,23 +79,39 @@ describe('WebpackConfig object', () => {
 
             const config = createConfig();
             config.setOutputPath(targetPath);
-
             expect(fs.existsSync(config.outputPath)).to.be.true;
-
-            // cleanup!
-            fs.rmdirSync(targetPath);
         });
 
-        it('non-existent directory, 2 levels deep throws error', () => {
-            var targetPath = path.join(__dirname, 'new_dir', 'subdir');
+        it('non-existent directory, 3 levels deep is created correctly', () => {
+            var targetPath = path.join(__dirname, 'new_dir', 'subdir1', 'subdir2');
             if (fs.existsSync(targetPath)) {
                 fs.rmdirSync(targetPath);
             }
 
             const config = createConfig();
-            expect(() => {
-                config.setOutputPath(targetPath);
-            }).to.throw('create this directory');
+            config.setOutputPath(targetPath);
+            expect(fs.existsSync(config.outputPath)).to.be.true;
+        });
+
+        it('non-existent path outside of the context directory works if only one directory has to be created', () => {
+            var targetPath = path.join(__dirname, '..', 'new_dir');
+            if (fs.existsSync(targetPath)) {
+                fs.rmdirSync(targetPath);
+            }
+
+            const config = createConfig();
+            config.setOutputPath(targetPath);
+            expect(fs.existsSync(config.outputPath)).to.be.true;
+        });
+
+        it('non-existent path outside of the context directory throws an error if more than one directory has to be created', () => {
+            var targetPath = path.join(__dirname, '..', 'new_dir', 'subdir');
+            if (fs.existsSync(targetPath)) {
+                fs.rmdirSync(targetPath);
+            }
+
+            const config = createConfig();
+            expect(() => config.setOutputPath(targetPath)).to.throw('create this directory');
         });
     });
 
