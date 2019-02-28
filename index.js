@@ -500,8 +500,9 @@ class Encore {
      * Supported options:
      *      * {string} from (mandatory)
      *              The path of the source directory (mandatory)
-     *      * {RegExp} pattern (default: all files)
-     *              A pattern that the filenames must match in order to be copied
+     *      * {RegExp|string} pattern (default: all files)
+     *              A regular expression (or a string containing one) that
+     *              the filenames must match in order to be copied
      *      * {string} to (default: [path][name].[ext])
      *              Where the files must be copied to. You can add all the
      *              placeholders supported by the file-loader.
