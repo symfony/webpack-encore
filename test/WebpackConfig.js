@@ -1160,8 +1160,8 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureLoaderRule('vue');
-            }).to.throw('Loader "vue" is not configurable. Valid loaders are "eslint".');
+                config.configureLoaderRule('reason');
+            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "js", "css", "images", "fonts", "sass", "scss", "less", "stylus", "vue", "eslint", "typescript", "ts", "handlebars".');
         });
 
         it('Call method with not a valid callback', () => {

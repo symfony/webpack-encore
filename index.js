@@ -1112,8 +1112,8 @@ class Encore {
      *     Encore
      *         .enableEslintLoader()
      *         .enableVueLoader()
-     *         .configureLoaderRule('eslint', (loader) => {
-     *              loader.test = /\.(jsx?|vue)/;
+     *         .configureLoaderRule('eslint', (loaderRule) => {
+     *              loaderRule.test = /\.(jsx?|vue)/;
      *         });
      *
      * @param {string} name
