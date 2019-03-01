@@ -1,0 +1,107 @@
+---------------------------------------------------------------------------
+
+by Chesskingt at 2019-02-05T17:22:08Z
+
+Can the styles still be called by $style.scssClass?
+
+Sent from my iPhone
+
+> On Feb 5, 2019, at 8:56 AM, Vincent Le Biannic <notifications@github.com> wrote:
+>
+> @Lyrkan commented on this pull request.
+>
+> In lib/loaders/less.js:
+>
+> >   * @return {Array} of loaders to use for Less files
+>   */
+>  module.exports = {
+> -    getLoaders(webpackConfig, ignorePostCssLoader = false) {
+> ignorePostCssLoader wasn't actually useful since cssLoader.getLoaders() look into the webpackConfig object for that info.
+>
+> In lib/loaders/sass.js:
+>
+> >   * @return {Array} of loaders to use for Sass files
+>   */
+>  module.exports = {
+> -    getLoaders(webpackConfig, sassOptions = {}) {
+> No point keeping a sassOptions parameter here, the only allowed option is resolveUrlLoader which is already handled here by directly looking into the webpackConfig object.
+>
+> In lib/loaders/stylus.js:
+>
+> >   * @return {Array} of loaders to use for Stylus files
+>   */
+>  module.exports = {
+> -    getLoaders(webpackConfig, ignorePostCssLoader = false) {
+> ignorePostCssLoader wasn't needed here since cssLoader.getLoaders() look into the webpackConfig object for that info.
+>
+> —
+> You are receiving this because you were mentioned.
+> Reply to this email directly, view it on GitHub, or mute the thread.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-02-05T17:30:02Z
+
+@Chesskingt Yes, that's the default name if you don't specify one in `module`.
+I used custom names in my fixtures in order to have multiple modules in a single `.vue` file.
+
+Feel free to test it: `yarn add --dev git://github.com/Lyrkan/webpack-encore.git#scss-less-modules`
+
+---------------------------------------------------------------------------
+
+by Chesskingt at 2019-02-05T17:55:15Z
+
+Cool! Thanks!
+
+Sent from my iPhone
+
+> On Feb 5, 2019, at 12:30 PM, Vincent Le Biannic <notifications@github.com> wrote:
+>
+> @Chesskingt Yes, that's the default name if you don't specify one in module.
+> I used custom names in my fixtures in order to have multiple modules in a single .vue file.
+>
+> Feel free to test it: yarn add --dev git://github.com/Lyrkan/webpack-encore.git#scss-less-modules
+>
+> —
+> You are receiving this because you were mentioned.
+> Reply to this email directly, view it on GitHub, or mute the thread.
+
+---------------------------------------------------------------------------
+
+by Chesskingt at 2019-02-05T19:43:28Z
+
+Is this being merged into main master today?
+
+---------------------------------------------------------------------------
+
+by Chesskingt at 2019-02-06T16:29:57Z
+
+@Lyrkan ? :)
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-02-06T16:38:03Z
+
+@Chesskingt I usually don't merge my own PRs without any review (unless that's something really trivial or a security issue). And even if I did I can't publish a new version on npm anyway, so you'll have to a wait for @weaverryan to come by ^^
+
+---------------------------------------------------------------------------
+
+by Chesskingt at 2019-02-06T16:55:33Z
+
+Ok :)
+
+Sent from my iPhone
+
+> On Feb 6, 2019, at 11:38 AM, Vincent Le Biannic <notifications@github.com> wrote:
+>
+> @Chesskingt I usually don't merge my own PRs without any review (unless that's something really trivial or a security issue). And even if I did I can't publish a new version on npm anyway, so you'll have to a wait for @weaverryan to come by ^^
+>
+> —
+> You are receiving this because you were mentioned.
+> Reply to this email directly, view it on GitHub, or mute the thread.
+
+---------------------------------------------------------------------------
+
+by Chesskingt at 2019-02-15T02:14:10Z
+
+@weaverryan this in next release?
