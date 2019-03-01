@@ -793,7 +793,11 @@ class Encore {
      *
      *      // ...or keep the default rule but only allow
      *      // *some* Node modules to be processed by Babel
-     *      include_node_modules: ['foundation-sites']
+     *      includeNodeModules: ['foundation-sites']
+     *
+     *      // automatically import polyfills where they
+     *      // are needed
+     *      useBuiltIns: 'usage'
      * });
      *
      * Supported options:
@@ -803,10 +807,18 @@ class Encore {
      *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
      *              Cannot be used if the "include_node_modules" option is
      *              also set.
-     *      * {string[]} include_node_modules
+     *      * {string[]} includeNodeModules
      *              If set that option will include the given Node modules to
      *              the files that are processed by Babel. Cannot be used if
      *              the "exclude" option is also set.
+     *      * {'usage'|'entry'|false} useBuiltIns (default='entry')
+     *              Set the "useBuiltIns" option of @babel/preset-env that changes
+     *              how it handles polyfills (https://babeljs.io/docs/en/babel-preset-env#usebuiltins)
+     *              Using it with 'entry' will require you to import @babel/polyfill
+     *              once in your whole app and will result in that import being replaced
+     *              by individual polyfills. Using it with 'usage' will try to
+     *              automatically detect which polyfills are needed for each file and
+     *              add them accordingly.
      *
      * @param {function} callback
      * @param {object} encoreOptions
