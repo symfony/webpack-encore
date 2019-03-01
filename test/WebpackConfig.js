@@ -1161,7 +1161,7 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.configureLoaderRule('vue');
-            }).to.throw('Loader "vue" is not configurable. Either open an issue or a pull request.');
+            }).to.throw('Loader "vue" is not configurable. Valid loaders are "eslint".');
         });
 
         it('Call method with not a valid callback', () => {
