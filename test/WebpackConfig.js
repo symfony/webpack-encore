@@ -423,7 +423,7 @@ describe('WebpackConfig object', () => {
             // With multiple config objects
             config.copyFiles([
                 { from: './foo', pattern: /.*/ },
-                { from: './bar', pattern: /abc/, to: 'bar', includeSubdirectories: false },
+                { from: './bar', pattern: '/abc/', to: 'bar', includeSubdirectories: false },
             ]);
 
             // With a single config object
@@ -437,7 +437,7 @@ describe('WebpackConfig object', () => {
                 context: null,
             }, {
                 from: './bar',
-                pattern: /abc/,
+                pattern: '/abc/',
                 to: 'bar',
                 includeSubdirectories: false,
                 context: null,
@@ -480,6 +480,18 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.copyFiles({ from: 'images', foo: 'foo' });
             }).to.throw('Invalid config option "foo"');
+        });
+
+        it('Calling it with an invalid "pattern" option', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.copyFiles({ from: 'images', pattern: true });
+            }).to.throw('Invalid pattern "true"');
+
+            expect(() => {
+                config.copyFiles({ from: 'images', pattern: 'foo' });
+            }).to.throw('Invalid pattern "foo"');
         });
     });
 
