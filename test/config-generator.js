@@ -1089,25 +1089,25 @@ describe('The config-generator function', () => {
         it('configure rule for "sass"', () => {
             config.enableSassLoader();
             config.configureLoaderRule('sass', (loaderRule) => {
-                loaderRule.use[2].options.fooBar = 'fooBar';
+                loaderRule.oneOf[1].use[2].options.fooBar = 'fooBar';
             });
 
             const webpackConfig = configGenerator(config);
             const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
 
-            expect(rule.use[2].options.fooBar).to.equal('fooBar');
+            expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
         });
 
         it('configure rule for the alias "scss"', () => {
             config.enableSassLoader();
             config.configureLoaderRule('scss', (loaderRule) => {
-                loaderRule.use[2].options.fooBar = 'fooBar';
+                loaderRule.oneOf[1].use[2].options.fooBar = 'fooBar';
             });
 
             const webpackConfig = configGenerator(config);
             const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
 
-            expect(rule.use[2].options.fooBar).to.equal('fooBar');
+            expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
         });
 
         it('configure rule for "less"', () => {
@@ -1115,14 +1115,14 @@ describe('The config-generator function', () => {
                 options.optionA = 'optionA';
             });
             config.configureLoaderRule('less', (loaderRule) => {
-                loaderRule.use[2].options.optionB = 'optionB';
+                loaderRule.oneOf[1].use[2].options.optionB = 'optionB';
             });
 
             const webpackConfig = configGenerator(config);
             const rule = findRule(/\.less/, webpackConfig.module.rules);
 
-            expect(rule.use[2].options.optionA).to.equal('optionA');
-            expect(rule.use[2].options.optionB).to.equal('optionB');
+            expect(rule.oneOf[1].use[2].options.optionA).to.equal('optionA');
+            expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
         });
 
         it('configure rule for "stylus"', () => {
@@ -1130,14 +1130,14 @@ describe('The config-generator function', () => {
                 options.optionA = 'optionA';
             });
             config.configureLoaderRule('stylus', (loaderRule) => {
-                loaderRule.use[2].options.optionB = 'optionB';
+                loaderRule.oneOf[1].use[2].options.optionB = 'optionB';
             });
 
             const webpackConfig = configGenerator(config);
             const rule = findRule(/\.styl/, webpackConfig.module.rules);
 
-            expect(rule.use[2].options.optionA).to.equal('optionA');
-            expect(rule.use[2].options.optionB).to.equal('optionB');
+            expect(rule.oneOf[1].use[2].options.optionA).to.equal('optionA');
+            expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
         });
 
         it('configure rule for "vue"', () => {
