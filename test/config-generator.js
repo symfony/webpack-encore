@@ -1016,18 +1016,26 @@ describe('The config-generator function', () => {
     });
 
     describe('Test configureLoaderRule()', () => {
-        it('configure rule for "eslint"', () => {
-            const config = createConfig();
+        let config;
+
+        const getLoader = (loaderName) => {
+            const webpackConfig = configGenerator(config);
+            return webpackConfig.module.rules.find(rule => rule.loader === loaderName);
+        };
+
+        beforeEach(() => {
+            config = createConfig();
+            config.outputPath = '/tmp/public/build';
             config.setPublicPath('/');
+        });
+
+        it('configure rule for "eslint"', () => {
             config.enableEslintLoader();
             config.configureLoaderRule('eslint', (loader) => {
                 loader.test = /\.(jsx?|vue)/;
             });
 
-            const webpackConfig = configGenerator(config);
-            const eslintLoader = webpackConfig.module.rules.find(rule => rule.loader === 'eslint-loader');
-
-            expect(eslintLoader).to.deep.equals({
+            expect(getLoader('eslint-loader')).to.deep.equals({
                 test: /\.(jsx?|vue)/,
                 enforce: 'pre',
                 exclude: /node_modules/,
