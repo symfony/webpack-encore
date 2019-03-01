@@ -1354,7 +1354,7 @@ module.exports = {
             });
         });
 
-        it('Vue.js supports CSS modules', (done) => {
+        it('Vue.js supports CSS/Sass/Less/Stylus modules', (done) => {
             const appDir = testSetup.createTestAppDir();
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
@@ -1363,6 +1363,7 @@ module.exports = {
             config.enableVueLoader();
             config.enableSassLoader();
             config.enableLessLoader();
+            config.enableStylusLoader();
             config.configureCssLoader(options => {
                 // Remove hashes from local ident names
                 // since they are not always the same.
@@ -1378,17 +1379,22 @@ module.exports = {
                     'runtime.js',
                 ]);
 
-                // Standard CSS
-                webpackAssert.assertOutputFileContains(
-                    'main.css',
-                    '.red {'
-                );
+                const expectClassDeclaration = (className) => {
+                    webpackAssert.assertOutputFileContains(
+                        'main.css',
+                        `.${className} {`
+                    );
+                };
 
-                // CSS modules
-                webpackAssert.assertOutputFileContains(
-                    'main.css',
-                    '.italic_foo {'
-                );
+                expectClassDeclaration('red'); // Standard CSS
+                expectClassDeclaration('large'); // Standard SCSS
+                expectClassDeclaration('justified'); // Standard Less
+                expectClassDeclaration('lowercase'); // Standard Stylus
+
+                expectClassDeclaration('italic_foo'); // CSS Module
+                expectClassDeclaration('bold_foo'); // SCSS Module
+                expectClassDeclaration('underline_foo'); // Less Module
+                expectClassDeclaration('rtl_foo'); // Stylus Module
 
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
@@ -1397,11 +1403,15 @@ module.exports = {
                         'build/main.js'
                     ],
                     (browser) => {
-                        // Standard CSS
-                        browser.assert.hasClass('#app', 'red');
+                        browser.assert.hasClass('#app', 'red'); // Standard CSS
+                        browser.assert.hasClass('#app', 'large'); // Standard SCSS
+                        browser.assert.hasClass('#app', 'justified'); // Standard Less
+                        browser.assert.hasClass('#app', 'lowercase'); // Standard Stylus
 
-                        // CSS modules
-                        browser.assert.hasClass('#app', 'italic_foo');
+                        browser.assert.hasClass('#app', 'italic_foo'); // CSS module
+                        browser.assert.hasClass('#app', 'bold_foo'); // SCSS module
+                        browser.assert.hasClass('#app', 'underline_foo'); // Less module
+                        browser.assert.hasClass('#app', 'rtl_foo'); // Stylus module
 
                         done();
                     }

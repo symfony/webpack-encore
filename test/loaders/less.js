@@ -30,12 +30,13 @@ describe('loaders/less', () => {
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
+        const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
             .callsFake(() => []);
 
         const actualLoaders = lessLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(1);
         expect(actualLoaders[0].options.sourceMap).to.be.true;
+        expect(cssLoaderStub.getCall(0).args[1]).to.be.false;
 
         cssLoader.getLoaders.restore();
     });
@@ -79,6 +80,22 @@ describe('loaders/less', () => {
 
         const actualLoaders = lessLoader.getLoaders(config);
         expect(actualLoaders[0].options).to.deep.equals({ foo: true });
+        cssLoader.getLoaders.restore();
+    });
+
+    it('getLoaders() with CSS modules enabled', () => {
+        const config = createConfig();
+        config.enableSourceMaps(true);
+
+        // make the cssLoader return nothing
+        const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        const actualLoaders = lessLoader.getLoaders(config, true);
+        expect(actualLoaders).to.have.lengthOf(1);
+        expect(actualLoaders[0].options.sourceMap).to.be.true;
+        expect(cssLoaderStub.getCall(0).args[1]).to.be.true;
+
         cssLoader.getLoaders.restore();
     });
 });
