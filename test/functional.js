@@ -524,7 +524,10 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/build');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.addStyleEntry('font', './css/roboto_font.css');
-            config.enableSassLoader();
+            config.enableSassLoader(options => {
+                // Use sass-loader instead of node-sass
+                options.implementation = require('sass');
+            });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()

@@ -14,6 +14,7 @@ const packageHelper = require('../lib/package-helper');
 const path = require('path');
 const process = require('process');
 const fs = require('fs');
+const stripAnsi = require('strip-ansi');
 
 describe('package-helper', () => {
     const baseCwd = process.cwd();
@@ -29,6 +30,7 @@ describe('package-helper', () => {
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
         it('missing packages with package-lock.json only', () => {
@@ -37,6 +39,7 @@ describe('package-helper', () => {
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
             expect(packageRecommendations.installCommand).to.contain('npm install foo bar');
+            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
         it('missing packages with yarn.lock only', () => {
@@ -45,6 +48,7 @@ describe('package-helper', () => {
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
         it('missing packages with both package-lock.json and yarn.lock', () => {
@@ -53,6 +57,19 @@ describe('package-helper', () => {
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+        });
+
+        it('missing packages with alternative packages', () => {
+            process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn'));
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' },
+                [{ name: 'bar' }, { name: 'baz' }],
+                [{ name: 'qux' }, { name: 'corge' }, { name: 'grault' }],
+                [{ name: 'quux' }, { name: 'webpack' }],
+            ]);
+            expect(packageRecommendations.installCommand).to.contain('yarn add foo bar qux');
+            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar (or baz) & qux (or corge or grault)');
         });
     });
 
@@ -90,6 +107,16 @@ describe('package-helper', () => {
             ]);
 
             expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar');
+        });
+
+        it('Recommends correct install with alternative packages', () => {
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo', version: '^7.0 || ^8.0' },
+                [{ name: 'bar' }, { name: 'baz' }],
+                [{ name: 'qux', version: '^1.0' }, { name: 'quux', version: '^2.0' }]
+            ]);
+
+            expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar qux@^1.0');
         });
     });
 
