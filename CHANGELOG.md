@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## 0.24.0
+
+ * Add CSS modules support in Vue.js for Sass/Less/Stylus - #511
+   thanks to @Lyrkan
+
+ * Allow to use Dart Sass instead of Node Sass - #517 thanks to
+   @Lyrkan
+
+ * Allow to set a custom context in copyFiles - #518 thanks to
+   @Lyrkan
+
+ * Improve 'Install x to use y' and 'Unrecognized method' error
+   messages - #520 thanks to @Lyrkan
+
+ * Allow to set @babel/preset-env's useBuiltIns option - #521
+   thanks to @Lyrkan
+
+ * Allow setOutputPath to create nested directories - #525 thanks
+   to @Lyrkan
+
 ## 0.23.0
 
  * Add support for CSS modules in Vue - #508 thanks to @Lyrkan
