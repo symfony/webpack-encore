@@ -1014,4 +1014,30 @@ describe('The config-generator function', () => {
             });
         });
     });
+
+    describe('Test configureLoaderRule()', () => {
+        it('configure rule for "eslint"', () => {
+            const config = createConfig();
+            config.setPublicPath('/');
+            config.enableEslintLoader();
+            config.configureLoaderRule('eslint', (loader) => {
+                loader.test = /\.(jsx?|vue)/;
+            });
+
+            const webpackConfig = configGenerator(config);
+            const eslintLoader = webpackConfig.module.rules.find(rule => rule.loader === 'eslint-loader');
+
+            expect(eslintLoader).to.deep.equals({
+                test: /\.(jsx?|vue)/,
+                enforce: 'pre',
+                exclude: /node_modules/,
+                loader: 'eslint-loader',
+                options: {
+                    cache: true,
+                    emitWarning: true,
+                    parser: 'babel-eslint'
+                }
+            });
+        });
+    });
 });
