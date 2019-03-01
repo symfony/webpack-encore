@@ -493,7 +493,8 @@ class Encore {
      *          { from: './txt', pattern: /\.txt$/ },
      *      ]);
      *
-     *      // Set the context path
+     *      // Set the context path: files will be copied
+     *      // into an images/ directory in the output dir
      *      Encore.copyFiles({
      *          from: './assets/images',
      *          to: '[path][name].[hash:8].[ext]',
