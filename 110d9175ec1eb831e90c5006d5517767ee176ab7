@@ -1,0 +1,48 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-02-28T16:49:46Z
+
+Seems like the failing job is caused by the latest version of the `assets-webpack-plugin`, and is not related to this PR.
+
+Nothing is shown because we [mute Webpack's output](https://github.com/symfony/webpack-encore/blob/853e0f97a20ee664143152078fd285f0cfd27bc1/test/helpers/setup.js#L67-L70) during functional tests, and in some cases `compiler.run(handler)` fails without calling `handler` (which is supposed to unmut stdout)... maybe we could add a timeout that resets stdout after a certain amount of time if `handler` hasn't been called.
+
+Anyway, the real stacktrace is:
+
+```
+Uncaught TypeError: Cannot read property 'integrity' of undefined
+  at node_modules/assets-webpack-plugin/dist/index.js:97:55
+  at Array.reduce (<anonymous>)
+  at node_modules/assets-webpack-plugin/dist/index.js:87:30
+  at Array.reduce (<anonymous>)
+  at afterEmit (node_modules/assets-webpack-plugin/dist/index.js:74:27)
+  at AsyncSeriesHook.eval [as callAsync] (eval at create (node_modules/tapable/lib/HookCodeFactory.js:32:10), <anonymous>:7:1)
+  at AsyncSeriesHook.lazyCompileHook (node_modules/tapable/lib/Hook.js:154:20)
+  at asyncLib.forEachLimit.err (node_modules/webpack/lib/Compiler.js:432:27)
+  at node_modules/neo-async/async.js:2813:7
+  at done (node_modules/neo-async/async.js:3521:9)
+  at node_modules/graceful-fs/graceful-fs.js:45:10
+  at FSReqWrap.oncomplete (fs.js:141:20)
+```
+
+So it looks like `assets-webpack-plugin` tried to [add its own subresource-integrity support](https://github.com/ztoben/assets-webpack-plugin/commit/d69ac3ca027511f4228e0ef3a3984b86a038cddf) using [`webpack-subresource-integrity`](https://github.com/waysact/webpack-subresource-integrity) but did something that isn't compatible with what we do in the "createdSharedEntry() creates commons files" test case.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-02-28T17:27:14Z
+
+Maybe we should let V8 itself check if the regex is valid no?
+With a `try/catch` around a `new Regex(thePattern)`?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-02-28T17:31:08Z
+
+@Kocal Thought about doing that... but it sadly won't work since `/regexp/` does not mean the same thing than `new RegExp('/regexp/')`.
+
+The `RegExp` constructor expects the first parameter to be the content of the regular expression (i.e. without the beginning and trailing `/`) and the flags as a second parameter.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-02-28T17:36:57Z
+
+Ah yes, I forgot about that "rule". 😞
