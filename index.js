@@ -493,6 +493,14 @@ class Encore {
      *          { from: './txt', pattern: /\.txt$/ },
      *      ]);
      *
+     *      // Set the context path: files will be copied
+     *      // into an images/ directory in the output dir
+     *      Encore.copyFiles({
+     *          from: './assets/images',
+     *          to: '[path][name].[hash:8].[ext]',
+     *          context: './assets'
+     *      });
+     *
      * Notes:
      *      * No transformation is applied to the copied files (for instance
      *        copying a CSS file won't minify it)
@@ -508,6 +516,8 @@ class Encore {
      *              https://github.com/webpack-contrib/file-loader#placeholders
      *      * {boolean} includeSubdirectories (default: true)
      *              Whether or not the copy should include subdirectories.
+     *      * {string} context (default: path of the source directory)
+     *              The context to use as a root path when copying files.
      *
      * @param {object|Array} configs
      * @returns {Encore}
