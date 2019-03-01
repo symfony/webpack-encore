@@ -1025,11 +1025,23 @@ describe('The config-generator function', () => {
             config.enableSingleRuntimeChunk();
         });
 
-        it('configure rule for "javascript and "js"', () => {
+        it('configure rule for "javascript"', () => {
             config.configureLoaderRule('javascript', (loaderRule) => {
                 loaderRule.test = /\.m?js$/;
+                loaderRule.use[0].options.fooBar = 'fooBar';
             });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.m?js$/, webpackConfig.module.rules);
+
+            expect('file.js').to.match(rule.test);
+            expect('file.mjs').to.match(rule.test);
+            expect(rule.use[0].options.fooBar).to.equal('fooBar');
+        });
+
+        it('configure rule for the alias "js"', () => {
             config.configureLoaderRule('js', (loaderRule) => {
+                loaderRule.test = /\.m?js$/;
                 loaderRule.use[0].options.fooBar = 'fooBar';
             });
 
@@ -1074,20 +1086,28 @@ describe('The config-generator function', () => {
             expect(rule.options.name).to.equal('dirname-fonts/[hash:42].[ext]');
         });
 
-        it('configure rule for "sass" and "scss"', () => {
+        it('configure rule for "sass"', () => {
             config.enableSassLoader();
             config.configureLoaderRule('sass', (loaderRule) => {
-                loaderRule.use.push('Option pushed when configuring Sass.');
-            });
-            config.configureLoaderRule('scss', (loaderRule) => {
-                loaderRule.use.push('Option pushed when configuring SCSS.');
+                loaderRule.use[2].options.fooBar = 'fooBar';
             });
 
             const webpackConfig = configGenerator(config);
             const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
 
-            expect(rule.use.pop()).to.equal('Option pushed when configuring SCSS.');
-            expect(rule.use.pop()).to.equal('Option pushed when configuring Sass.');
+            expect(rule.use[2].options.fooBar).to.equal('fooBar');
+        });
+
+        it('configure rule for the alias "scss"', () => {
+            config.enableSassLoader();
+            config.configureLoaderRule('scss', (loaderRule) => {
+                loaderRule.use[2].options.fooBar = 'fooBar';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
+
+            expect(rule.use[2].options.fooBar).to.equal('fooBar');
         });
 
         it('configure rule for "less"', () => {
@@ -1159,8 +1179,20 @@ describe('The config-generator function', () => {
             config.configureLoaderRule('typescript', (loaderRule) => {
                 loaderRule.use[1].options.happyPackMode = true;
             });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.tsx?$/, webpackConfig.module.rules);
+
+            expect(rule.use[1].options.silent).to.be.true;
+            expect(rule.use[1].options.happyPackMode).to.be.true;
+        });
+
+        it('configure rule for the alias "ts"', () => {
+            config.enableTypeScriptLoader((options) => {
+                options.silent = true;
+            });
             config.configureLoaderRule('ts', (loaderRule) => {
-                loaderRule.use[1].options.logInfoToStdOut = true;
+                loaderRule.use[1].options.happyPackMode = true;
             });
 
             const webpackConfig = configGenerator(config);
@@ -1168,7 +1200,6 @@ describe('The config-generator function', () => {
 
             expect(rule.use[1].options.silent).to.be.true;
             expect(rule.use[1].options.happyPackMode).to.be.true;
-            expect(rule.use[1].options.logInfoToStdOut).to.be.true;
         });
 
         it('configure rule for "handlebars"', () => {
