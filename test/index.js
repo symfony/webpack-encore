@@ -378,15 +378,6 @@ describe('Public API', () => {
 
     });
 
-    describe('configureLoaderOptionsPlugin', () => {
-
-        it('should return the API object', () => {
-            const returnedValue = api.configureLoaderOptionsPlugin(() => {});
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
     describe('configureManifestPlugin', () => {
 
         it('should return the API object', () => {
