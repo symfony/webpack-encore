@@ -1047,6 +1047,22 @@ class Encore {
     }
 
     /**
+     * Call this if you don't want imported CSS to be extracted
+     * into a .css file. All your styles will then be injected
+     * into the page by your JS code.
+     *
+     * Internally, this disables the mini-css-extract-plugin
+     * and uses the style-loader instead.
+     *
+     * @returns {Encore}
+     */
+    disableCssExtraction() {
+        webpackConfig.disableCssExtraction();
+
+        return this;
+    }
+
+    /**
      * Call this to change how the name of each output
      * file is generated.
      *

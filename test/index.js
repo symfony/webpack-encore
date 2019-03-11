@@ -324,6 +324,15 @@ describe('Public API', () => {
 
     });
 
+    describe('disableCssExtraction', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableCssExtraction();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('configureFilenames', () => {
 
         it('must return the API object', () => {

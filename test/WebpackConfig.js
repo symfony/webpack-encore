@@ -1033,6 +1033,21 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('disableCssExtraction', () => {
+        it('By default the CSS extraction is enabled', () => {
+            const config = createConfig();
+
+            expect(config.extractCss).to.be.true;
+        });
+
+        it('Calling it disables the CSS extraction', () => {
+            const config = createConfig();
+            config.disableCssExtraction();
+
+            expect(config.extractCss).to.be.false;
+        });
+    });
+
     describe('configureFilenames', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
