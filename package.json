@@ -25,9 +25,9 @@
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.4.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-env": "^7.4.0",
     "assets-webpack-plugin": "^3.9.7",
     "babel-loader": "^8.0.0",
     "chalk": "^2.4.1",
@@ -57,7 +57,6 @@
     "yargs-parser": "^12.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^8.5.0",

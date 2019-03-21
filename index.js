@@ -780,6 +780,11 @@ class Encore {
      *      // automatically import polyfills where they
      *      // are needed
      *      useBuiltIns: 'usage'
+     *
+     *      // if you set useBuiltIns you also have to add
+     *      // core-js to your project using Yarn or npm and
+     *      // inform Babel of the version it will use.
+     *      corejs: 3
      * });
      *
      * Supported options:
@@ -793,14 +798,18 @@ class Encore {
      *              If set that option will include the given Node modules to
      *              the files that are processed by Babel. Cannot be used if
      *              the "exclude" option is also set.
-     *      * {'usage'|'entry'|false} useBuiltIns (default='entry')
+     *      * {'usage'|'entry'|false} useBuiltIns (default=false)
      *              Set the "useBuiltIns" option of @babel/preset-env that changes
      *              how it handles polyfills (https://babeljs.io/docs/en/babel-preset-env#usebuiltins)
-     *              Using it with 'entry' will require you to import @babel/polyfill
+     *              Using it with 'entry' will require you to import core-js
      *              once in your whole app and will result in that import being replaced
      *              by individual polyfills. Using it with 'usage' will try to
      *              automatically detect which polyfills are needed for each file and
      *              add them accordingly.
+     *      * {number|string} corejs (default=not set)
+     *              Set the "corejs" option of @babel/preset-env.
+     *              It should contain the version of core-js you added to your project
+     *              if useBuiltIns isn't set to false.
      *
      * @param {function} callback
      * @param {object} encoreOptions
