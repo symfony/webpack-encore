@@ -2204,5 +2204,55 @@ module.exports = {
                 });
             });
         });
+
+        describe('CSS extraction', () => {
+            it('With CSS extraction enabled', (done) => {
+                const config = createWebpackConfig('build', 'dev');
+                config.setPublicPath('/build');
+                config.disableSingleRuntimeChunk();
+                config.addEntry('main', './js/css_import');
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js',
+                            'main.css',
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'main.css',
+                        'font-size: 50px;'
+                    );
+
+                    done();
+                });
+            });
+
+            it('With CSS extraction disabled', (done) => {
+                const config = createWebpackConfig('build', 'dev');
+                config.setPublicPath('/build');
+                config.disableSingleRuntimeChunk();
+                config.addEntry('main', './js/css_import');
+                config.disableCssExtraction();
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js'
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'main.js',
+                        'font-size: 50px;'
+                    );
+
+                    done();
+                });
+            });
+        });
     });
 });
