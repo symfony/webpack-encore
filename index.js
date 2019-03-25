@@ -12,7 +12,7 @@
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
-const PrettyError = require('pretty-error');
+const prettyError = require('./lib/utils/pretty-error');
 const logger = require('./lib/logger');
 const parseRuntime = require('./lib/config/parse-runtime');
 const chalk = require('chalk');
@@ -1320,10 +1320,7 @@ const EncoreProxy = new Proxy(new Encore(), {
                     const res = target[prop](...parameters);
                     return (res === target) ? EncoreProxy : res;
                 } catch (error) {
-                    // prettifies errors thrown by our library
-                    const pe = new PrettyError();
-
-                    console.log(pe.render(error));
+                    prettyError(error);
                     process.exit(1); // eslint-disable-line
                 }
             };
@@ -1356,10 +1353,11 @@ const EncoreProxy = new Proxy(new Encore(), {
             // Only keep the 2nd line of the stack trace:
             // - First line should be this file (index.js)
             // - Second line should be the Webpack config file
-            const pe = new PrettyError();
-            pe.skip((traceLine, lineNumber) => lineNumber !== 1);
-            const error = new Error(errorMessage);
-            console.log(pe.render(error));
+            prettyError(
+                new Error(errorMessage),
+                { skipTrace: (traceLine, lineNumber) => lineNumber !== 1 }
+            );
+
             process.exit(1); // eslint-disable-line
         }
 
