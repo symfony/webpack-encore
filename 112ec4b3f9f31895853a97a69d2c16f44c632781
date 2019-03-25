@@ -1,0 +1,58 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2019-02-08T14:55:47Z
+
+The implementation (with tests) is done for:
+- `javascript` and its alias `js`
+- `css`
+- `images`
+- `fonts`
+- `sass` and its alias `scss`
+- `less`
+- `stylus`
+- `vue`
+- `eslint`
+- `typescript` and its alias `ts`
+- `handlebars`
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-02-25T09:27:33Z
+
+By the way, should I start working (now) on a PR for [symfony/symfony-docs](https://github.com/symfony/symfony-docs)?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-03-01T15:21:26Z
+
+Hey @Kocal!
+
+I'm for this change - it's one of the ugliest things to try to hack into the Encore config. I merged a PR ahead of this - could you fix the conflict?
+
+About the docs, I think the feature is already mostly documented in the code (you've done a nice job). But, I think it would probably be worth mentioning here https://symfony.com/doc/current/frontend/encore/advanced-config.html
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-03-01T16:56:27Z
+
+Hey,
+
+I totally fucked up my rebase+force push, I didn't checked that my local branch was outdated and commits were reduced from ~10 to 3 :sweat_smile: Thanks to Travis and GitHub, I was able to retrieve what I've done (even if that's not really funny to manually apply 7 patches).
+
+Some of my tests broke due to last changes on Encore (in particular Sass, SCSS, Stylus... loaders). I will fix them and ping you when I finished.
+
+Also, I will work ASAP on a PR for symfony-docs :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-03-01T18:34:11Z
+
+PR opened on https://github.com/symfony/symfony-docs/pull/11075
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-03-21T17:35:53Z
+
+Friendly bump 👀
