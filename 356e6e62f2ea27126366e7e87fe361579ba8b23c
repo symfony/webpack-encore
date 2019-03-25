@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-03-01T14:36:00Z
+
+I'm worried that while this will make sure the production build is always "correct", it can cause a real difference between dev builds and production builds - e.g. you tweak the `browserslist`, check things on dev (nothing really changed due to caching), see that it looks good in some browser, then deploy.
+
+Alternative fixes could be: (A) documentation or (B) [a little crazy] but storing the `browserslist` value somewhere and warning the user when it's changed.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-03-04T08:13:08Z
+
+@weaverryan Thought about it during the week-end and I don't seen any good solution:
+
+* If we keep the cache enabled all the time (and document it): not only it causes the issue described in #514 (no changes on the developer's machine), but if you are also using a CI pipeline that resets the `node_modules` folder, the final production build will also be different from your dev environment.
+
+* If we only disable the cache in production mode (this PR): we end-up with the issue you're talking about
+
+* If we disable the cache all the time: The build times will be increased (not sure by how much) and some people's builds already take a lot of time to complete
+
+* If we try to store the `browserslist` value: not sure that would be *that* easy to do, we'd have to call the same `browserslist` than `@babel/preset-env` (other deps can have their own version) and hope the preset doesn't do any change to it internally. Also, it would only fix the `browserslist` case, but from what I understood this is a more generic issue that can happen with other external dependencies.
