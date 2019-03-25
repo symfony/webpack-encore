@@ -1101,6 +1101,32 @@ class Encore {
     }
 
     /**
+     * Configure Webpack loaders rules (`module.rules`).
+     * This is a low-level function, be careful when using it.
+     *
+     * https://webpack.js.org/concepts/loaders/#configuration
+     *
+     * For example, if you are using Vue and ESLint loader,
+     * this is how you can configure ESLint to lint Vue files:
+     *
+     *     Encore
+     *         .enableEslintLoader()
+     *         .enableVueLoader()
+     *         .configureLoaderRule('eslint', (loaderRule) => {
+     *              loaderRule.test = /\.(jsx?|vue)/;
+     *         });
+     *
+     * @param {string} name
+     * @param {function} callback
+     * @return {Encore}
+     */
+    configureLoaderRule(name, callback) {
+        webpackConfig.configureLoaderRule(name, callback);
+
+        return this;
+    }
+
+    /**
      * If enabled, the output directory is emptied between each build (to remove old files).
      *
      * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin

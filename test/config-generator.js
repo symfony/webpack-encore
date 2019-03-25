@@ -1014,4 +1014,207 @@ describe('The config-generator function', () => {
             });
         });
     });
+
+    describe('Test configureLoaderRule()', () => {
+        let config;
+
+        beforeEach(() => {
+            config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/');
+            config.enableSingleRuntimeChunk();
+        });
+
+        it('configure rule for "javascript"', () => {
+            config.configureLoaderRule('javascript', (loaderRule) => {
+                loaderRule.test = /\.m?js$/;
+                loaderRule.use[0].options.fooBar = 'fooBar';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.m?js$/, webpackConfig.module.rules);
+
+            expect('file.js').to.match(rule.test);
+            expect('file.mjs').to.match(rule.test);
+            expect(rule.use[0].options.fooBar).to.equal('fooBar');
+        });
+
+        it('configure rule for the alias "js"', () => {
+            config.configureLoaderRule('js', (loaderRule) => {
+                loaderRule.test = /\.m?js$/;
+                loaderRule.use[0].options.fooBar = 'fooBar';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.m?js$/, webpackConfig.module.rules);
+
+            expect('file.js').to.match(rule.test);
+            expect('file.mjs').to.match(rule.test);
+            expect(rule.use[0].options.fooBar).to.equal('fooBar');
+        });
+
+        it('configure rule for "css"', () => {
+            config.configureLoaderRule('css', (loaderRule) => {
+                loaderRule.camelCase = true;
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.css$/, webpackConfig.module.rules);
+
+            expect(rule.camelCase).to.be.true;
+        });
+
+        it('configure rule for "images"', () => {
+            config.configureLoaderRule('images', (loaderRule) => {
+                loaderRule.options.name = 'dirname-images/[hash:42].[ext]';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, webpackConfig.module.rules);
+
+            expect(rule.options.name).to.equal('dirname-images/[hash:42].[ext]');
+        });
+
+        it('configure rule for "fonts"', () => {
+            config.configureLoaderRule('fonts', (loader) => {
+                loader.options.name = 'dirname-fonts/[hash:42].[ext]';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, webpackConfig.module.rules);
+
+            expect(rule.options.name).to.equal('dirname-fonts/[hash:42].[ext]');
+        });
+
+        it('configure rule for "sass"', () => {
+            config.enableSassLoader();
+            config.configureLoaderRule('sass', (loaderRule) => {
+                loaderRule.oneOf[1].use[2].options.fooBar = 'fooBar';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
+
+            expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
+        });
+
+        it('configure rule for the alias "scss"', () => {
+            config.enableSassLoader();
+            config.configureLoaderRule('scss', (loaderRule) => {
+                loaderRule.oneOf[1].use[2].options.fooBar = 'fooBar';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
+
+            expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
+        });
+
+        it('configure rule for "less"', () => {
+            config.enableLessLoader((options) => {
+                options.optionA = 'optionA';
+            });
+            config.configureLoaderRule('less', (loaderRule) => {
+                loaderRule.oneOf[1].use[2].options.optionB = 'optionB';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.less/, webpackConfig.module.rules);
+
+            expect(rule.oneOf[1].use[2].options.optionA).to.equal('optionA');
+            expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
+        });
+
+        it('configure rule for "stylus"', () => {
+            config.enableStylusLoader((options) => {
+                options.optionA = 'optionA';
+            });
+            config.configureLoaderRule('stylus', (loaderRule) => {
+                loaderRule.oneOf[1].use[2].options.optionB = 'optionB';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.styl/, webpackConfig.module.rules);
+
+            expect(rule.oneOf[1].use[2].options.optionA).to.equal('optionA');
+            expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
+        });
+
+        it('configure rule for "vue"', () => {
+            config.enableVueLoader((options) => {
+                options.shadowMode = true;
+            });
+            config.configureLoaderRule('vue', (loaderRule) => {
+                loaderRule.use[0].options.prettify = false;
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.vue$/, webpackConfig.module.rules);
+
+            expect(rule.use[0].options.shadowMode).to.be.true;
+            expect(rule.use[0].options.prettify).to.be.false;
+        });
+
+        it('configure rule for "eslint"', () => {
+            config.enableEslintLoader((options) => {
+                options.extends = 'airbnb';
+            });
+            config.configureLoaderRule('eslint', (loaderRule) => {
+                loaderRule.test = /\.(jsx?|vue)/;
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.(jsx?|vue)/, webpackConfig.module.rules);
+
+            expect(rule.options.extends).to.equal('airbnb');
+            expect('file.js').to.match(rule.test);
+            expect('file.jsx').to.match(rule.test);
+            expect('file.vue').to.match(rule.test);
+        });
+
+        it('configure rule for "typescript" and "ts"', () => {
+            config.enableTypeScriptLoader((options) => {
+                options.silent = true;
+            });
+            config.configureLoaderRule('typescript', (loaderRule) => {
+                loaderRule.use[1].options.happyPackMode = true;
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.tsx?$/, webpackConfig.module.rules);
+
+            expect(rule.use[1].options.silent).to.be.true;
+            expect(rule.use[1].options.happyPackMode).to.be.true;
+        });
+
+        it('configure rule for the alias "ts"', () => {
+            config.enableTypeScriptLoader((options) => {
+                options.silent = true;
+            });
+            config.configureLoaderRule('ts', (loaderRule) => {
+                loaderRule.use[1].options.happyPackMode = true;
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.tsx?$/, webpackConfig.module.rules);
+
+            expect(rule.use[1].options.silent).to.be.true;
+            expect(rule.use[1].options.happyPackMode).to.be.true;
+        });
+
+        it('configure rule for "handlebars"', () => {
+            config.enableHandlebarsLoader((options) => {
+                options.debug = true;
+            });
+            config.configureLoaderRule('handlebars', (loaderRule) => {
+                loaderRule.use[0].options.fooBar = 'fooBar';
+            });
+
+            const webpackConfig = configGenerator(config);
+            const rule = findRule(/\.(handlebars|hbs)$/, webpackConfig.module.rules);
+
+            expect(rule.use[0].options.debug).to.be.true;
+            expect(rule.use[0].options.fooBar).to.be.equal('fooBar');
+        });
+    });
 });
