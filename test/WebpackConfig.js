@@ -283,24 +283,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureLoaderOptionsPlugin', () => {
-        it('Setting callback', () => {
-            const config = createConfig();
-            const callback = () => {};
-            config.configureLoaderOptionsPlugin(callback);
-
-            expect(config.loaderOptionsPluginOptionsCallback).to.equal(callback);
-        });
-
-        it('Setting invalid callback argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.configureLoaderOptionsPlugin('foo');
-            }).to.throw('Argument 1 to configureLoaderOptionsPlugin() must be a callback function');
-        });
-    });
-
     describe('configureManifestPlugin', () => {
         it('Setting callback', () => {
             const config = createConfig();

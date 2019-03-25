@@ -220,12 +220,6 @@ describe('The config-generator function', () => {
             config.enableVersioning(true);
 
             const actualConfig = configGenerator(config);
-
-            const loaderOptionsPlugin = findPlugin(webpack.LoaderOptionsPlugin, actualConfig.plugins);
-            expect(loaderOptionsPlugin.options.debug).to.equal(true);
-            expect(loaderOptionsPlugin.options.options.context).to.equal('/tmp/context');
-            expect(loaderOptionsPlugin.options.options.output.path).to.equal('/tmp/output/public-path');
-
             expect(actualConfig.optimization.namedModules).to.be.true;
         });
 
@@ -238,9 +232,6 @@ describe('The config-generator function', () => {
             config.addEntry('main', './main');
 
             const actualConfig = configGenerator(config);
-
-            const loaderOptionsPlugin = findPlugin(webpack.LoaderOptionsPlugin, actualConfig.plugins);
-            expect(loaderOptionsPlugin.options.debug).to.equal(false);
 
             const moduleHashedIdsPlugin = findPlugin(webpack.HashedModuleIdsPlugin, actualConfig.plugins);
             expect(moduleHashedIdsPlugin).to.not.be.undefined;

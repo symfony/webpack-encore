@@ -165,25 +165,6 @@ class Encore {
     }
 
     /**
-     * Allows you to configure the options passed to the LoaderOptionsPlugins.
-     * A list of available options can be found at https://webpack.js.org/plugins/loader-options-plugin/
-     *
-     * For example:
-     *
-     *      Encore.configureLoaderOptionsPlugin((options) => {
-     *          options.minimize = true;
-     *      })
-     *
-     * @param {function} loaderOptionsPluginOptionsCallback
-     * @returns {Encore}
-     */
-    configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback = () => {}) {
-        webpackConfig.configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback);
-
-        return this;
-    }
-
-    /**
      * Allows you to configure the options passed to webpack-manifest-plugin.
      * A list of available options can be found at https://github.com/danethurber/webpack-manifest-plugin
      *
@@ -1296,6 +1277,14 @@ class Encore {
      */
     configureUglifyJsPlugin() {
         throw new Error('The configureUglifyJsPlugin() method was removed from Encore due to uglify-js dropping ES6+ support in its latest version. Please use configureTerserPlugin() instead.');
+    }
+
+    /**
+     * @deprecated
+     * @return {void}
+     */
+    configureLoaderOptionsPlugin() {
+        throw new Error('The configureLoaderOptionsPlugin() method was removed from Encore. The underlying plugin should not be needed anymore unless you are using outdated loaders. If that\'s the case you can still add it using addPlugin().');
     }
 }
 
