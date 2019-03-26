@@ -787,7 +787,7 @@ class Encore {
      *      // change the babelConfig
      *      // if you use an external Babel configuration
      *      // this callback will NOT be used. In this case
-     *      // you can pass false as the first parameter to
+     *      // you can pass null as the first parameter to
      *      // still be able to use some of the options below
      *      // without a warning.
      * }, {
@@ -833,7 +833,7 @@ class Encore {
      *              file for instance). In this case you can set the option directly into
      *              that configuration file.
      *
-     * @param {function|false} callback
+     * @param {function|null} callback
      * @param {object} encoreOptions
      * @returns {Encore}
      */

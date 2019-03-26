@@ -621,14 +621,14 @@ describe('WebpackConfig object', () => {
         it('Calling with a whitelisted option when .babelrc is present works fine', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
-            config.configureBabel(false, { includeNodeModules: ['foo'] });
+            config.configureBabel(null, { includeNodeModules: ['foo'] });
             expect(logger.getMessages().warning).to.be.empty;
         });
 
         it('Calling with a non-whitelisted option when .babelrc is present displays a warning', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
-            config.configureBabel(false, { useBuiltIns: 'foo' });
+            config.configureBabel(null, { useBuiltIns: 'foo' });
 
             const warnings = logger.getMessages().warning;
             expect(warnings).to.have.lengthOf(1);
