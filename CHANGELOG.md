@@ -11,7 +11,7 @@
    be output via the `style-loader` - #539 thank to @Lyrkan.
 
  * Added `Encore.configureLoaderRule()` as a way to configure the
-   loader config that Encore normally handlers - #509 thanks to @Kocal.
+   loader config that Encore normally handles - #509 thanks to @Kocal.
 
  * Babel cache is no longer used for production builds to avoid a
    bug where the cache prevents browserslist from being used - #516
