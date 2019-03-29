@@ -1,0 +1,71 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-02-14T13:12:39Z
+
+Slightly changed how the `integrity` part of the `entrypoints.json` looks, from:
+
+```json
+{
+    "integrity": {
+        "file1" : { "algorithm": "<alg>", "hash": "<hash>" },
+        "file2" : { "algorithm": "<alg>", "hash": "<hash>" }
+    }
+}
+```
+
+to:
+
+```json
+{
+    "integrity": {
+        "algorithm": "<alg>",
+        "hashes": {
+            "file1" : "<hash>",
+            "file2" : "<hash>"
+        }
+    }
+}
+```
+
+I thought the first version could be useful (for instance if we added a way to use a different algorithm for each file) but after thinking about it for a while I'm not sure that's really needed.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-03-01T21:15:33Z
+
+Ok so, changed the content again to something like:
+
+```js
+{
+    "integrity": {
+        "file1" : "<alg>-<hash1>",
+        "file2" : "<alg>-<hash2>"
+    }
+}
+```
+
+The reason being that it now allows to generate multiple hashes for each file (which is a feature supported by the `integrity` attribute):
+
+```js
+{
+    "integrity": {
+        "file1" : "<alg1>-<hash1> <alg2>-<hash2>",
+        "file2" : "<alg1>-<hash3> <alg2>-<hash4>"
+    }
+}
+```
+
+Which also means that the `Encore.enableIntegrityHashes()` can now take an array of strings as its second parameter, for instance:
+
+```js
+Encore.enableIntegrityHashes(
+    true,
+    ['sha256', 'sha384', 'sha512']
+);
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-03-25T23:52:03Z
+
+Needs a rebase now :)
