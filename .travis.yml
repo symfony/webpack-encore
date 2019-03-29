@@ -11,7 +11,9 @@ matrix:
     - name: 'Lowest versions of the dependencies'
       os: linux
       node_js: "10"
-      env: JOB_PART=test
+      env:
+        - JOB_PART=test
+        - DISABLE_UNSTABLE_CHECKS=1
       install:
         - rm yarn.lock
         - node ./scripts/force-lowest-dependencies
@@ -19,13 +21,18 @@ matrix:
     - name: 'Highest versions of the dependencies'
       os: linux
       node_js: "10"
-      env: JOB_PART=test
+      env:
+        - JOB_PART=test
+        - DISABLE_UNSTABLE_CHECKS=1
       install:
         - rm yarn.lock
         - yarn
     - os: linux
       node_js: "10"
       env: JOB_PART=travis:lint
+    - os: linux
+      node_js: "11"
+      env: JOB_PART=test
     - os: linux
       node_js: "10"
       env: JOB_PART=test
@@ -34,9 +41,6 @@ matrix:
       env: JOB_PART=test
     - os: linux
       node_js: "8"
-      env: JOB_PART=test
-    - os: linux
-      node_js: "6"
       env: JOB_PART=test
 
 script: npm run $JOB_PART

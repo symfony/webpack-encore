@@ -324,6 +324,15 @@ describe('Public API', () => {
 
     });
 
+    describe('disableCssExtraction', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableCssExtraction();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('configureFilenames', () => {
 
         it('must return the API object', () => {
@@ -378,15 +387,6 @@ describe('Public API', () => {
 
     });
 
-    describe('configureLoaderOptionsPlugin', () => {
-
-        it('should return the API object', () => {
-            const returnedValue = api.configureLoaderOptionsPlugin(() => {});
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
     describe('configureManifestPlugin', () => {
 
         it('should return the API object', () => {
@@ -410,6 +410,22 @@ describe('Public API', () => {
         it('should return the API object', () => {
             const returnedValue = api.configureOptimizeCssPlugin(() => {});
             expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('isRuntimeEnvironmentConfigured', () => {
+
+        it('should return true if the runtime environment has been configured', () => {
+            const returnedValue = api.isRuntimeEnvironmentConfigured();
+            expect(returnedValue).to.be.true;
+        });
+
+        it('should return false if the runtime environment has not been configured', () => {
+            api.clearRuntimeEnvironment();
+
+            const returnedValue = api.isRuntimeEnvironmentConfigured();
+            expect(returnedValue).to.be.false;
         });
 
     });

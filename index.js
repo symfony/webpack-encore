@@ -12,7 +12,7 @@
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
-const PrettyError = require('pretty-error');
+const prettyError = require('./lib/utils/pretty-error');
 const logger = require('./lib/logger');
 const parseRuntime = require('./lib/config/parse-runtime');
 const chalk = require('chalk');
@@ -160,25 +160,6 @@ class Encore {
      */
     configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
         webpackConfig.configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback);
-
-        return this;
-    }
-
-    /**
-     * Allows you to configure the options passed to the LoaderOptionsPlugins.
-     * A list of available options can be found at https://webpack.js.org/plugins/loader-options-plugin/
-     *
-     * For example:
-     *
-     *      Encore.configureLoaderOptionsPlugin((options) => {
-     *          options.minimize = true;
-     *      })
-     *
-     * @param {function} loaderOptionsPluginOptionsCallback
-     * @returns {Encore}
-     */
-    configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback = () => {}) {
-        webpackConfig.configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback);
 
         return this;
     }
@@ -390,9 +371,23 @@ class Encore {
      *      Encore.addExternals({
      *          jquery: 'jQuery',
      *          react: 'react'
-     *      })
+     *      });
      *
-     * @param {object} externals
+     * Or:
+     *
+     *      const nodeExternals = require('webpack-node-externals');
+     *
+     *      Encore.addExternals(
+     *          nodeExternals()
+     *      );
+     *
+     *      // or add multiple things at once
+     *      Encore.addExternals([
+     *          nodeExternals(),
+     *          /^(jquery|\$)$/i
+     *      ]);
+     *
+     * @param {*} externals
      *
      * @returns {Encore}
      */
@@ -479,6 +474,14 @@ class Encore {
      *          { from: './txt', pattern: /\.txt$/ },
      *      ]);
      *
+     *      // Set the context path: files will be copied
+     *      // into an images/ directory in the output dir
+     *      Encore.copyFiles({
+     *          from: './assets/images',
+     *          to: '[path][name].[hash:8].[ext]',
+     *          context: './assets'
+     *      });
+     *
      * Notes:
      *      * No transformation is applied to the copied files (for instance
      *        copying a CSS file won't minify it)
@@ -486,14 +489,17 @@ class Encore {
      * Supported options:
      *      * {string} from (mandatory)
      *              The path of the source directory (mandatory)
-     *      * {RegExp} pattern (default: all files)
-     *              A pattern that the filenames must match in order to be copied
+     *      * {RegExp|string} pattern (default: all files)
+     *              A regular expression (or a string containing one) that
+     *              the filenames must match in order to be copied
      *      * {string} to (default: [path][name].[ext])
      *              Where the files must be copied to. You can add all the
      *              placeholders supported by the file-loader.
      *              https://github.com/webpack-contrib/file-loader#placeholders
      *      * {boolean} includeSubdirectories (default: true)
      *              Whether or not the copy should include subdirectories.
+     *      * {string} context (default: path of the source directory)
+     *              The context to use as a root path when copying files.
      *
      * @param {object|Array} configs
      * @returns {Encore}
@@ -584,6 +590,27 @@ class Encore {
      */
     configureSplitChunks(callback) {
         webpackConfig.configureSplitChunks(callback);
+
+        return this;
+    }
+
+    /**
+     * Configure the watchOptions and devServer.watchOptions configuration.
+     *
+     * https://webpack.js.org/configuration/watch/
+     * https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
+     *
+     * Encore.configureWatchOptions(function(watchOptions) {
+     *      // change the configuration
+     *
+     *      watchOptions.poll = 250; // useful when running inside a Virtual Machine
+     * });
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureWatchOptions(callback) {
+        webpackConfig.configureWatchOptions(callback);
 
         return this;
     }
@@ -748,7 +775,16 @@ class Encore {
      *
      *      // ...or keep the default rule but only allow
      *      // *some* Node modules to be processed by Babel
-     *      include_node_modules: ['foundation-sites']
+     *      includeNodeModules: ['foundation-sites']
+     *
+     *      // automatically import polyfills where they
+     *      // are needed
+     *      useBuiltIns: 'usage'
+     *
+     *      // if you set useBuiltIns you also have to add
+     *      // core-js to your project using Yarn or npm and
+     *      // inform Babel of the version it will use.
+     *      corejs: 3
      * });
      *
      * Supported options:
@@ -758,10 +794,22 @@ class Encore {
      *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
      *              Cannot be used if the "include_node_modules" option is
      *              also set.
-     *      * {string[]} include_node_modules
+     *      * {string[]} includeNodeModules
      *              If set that option will include the given Node modules to
      *              the files that are processed by Babel. Cannot be used if
      *              the "exclude" option is also set.
+     *      * {'usage'|'entry'|false} useBuiltIns (default=false)
+     *              Set the "useBuiltIns" option of @babel/preset-env that changes
+     *              how it handles polyfills (https://babeljs.io/docs/en/babel-preset-env#usebuiltins)
+     *              Using it with 'entry' will require you to import core-js
+     *              once in your whole app and will result in that import being replaced
+     *              by individual polyfills. Using it with 'usage' will try to
+     *              automatically detect which polyfills are needed for each file and
+     *              add them accordingly.
+     *      * {number|string} corejs (default=not set)
+     *              Set the "corejs" option of @babel/preset-env.
+     *              It should contain the version of core-js you added to your project
+     *              if useBuiltIns isn't set to false.
      *
      * @param {function} callback
      * @param {object} encoreOptions
@@ -989,6 +1037,22 @@ class Encore {
     }
 
     /**
+     * Call this if you don't want imported CSS to be extracted
+     * into a .css file. All your styles will then be injected
+     * into the page by your JS code.
+     *
+     * Internally, this disables the mini-css-extract-plugin
+     * and uses the style-loader instead.
+     *
+     * @returns {Encore}
+     */
+    disableCssExtraction() {
+        webpackConfig.disableCssExtraction();
+
+        return this;
+    }
+
+    /**
      * Call this to change how the name of each output
      * file is generated.
      *
@@ -1043,6 +1107,32 @@ class Encore {
     }
 
     /**
+     * Configure Webpack loaders rules (`module.rules`).
+     * This is a low-level function, be careful when using it.
+     *
+     * https://webpack.js.org/concepts/loaders/#configuration
+     *
+     * For example, if you are using Vue and ESLint loader,
+     * this is how you can configure ESLint to lint Vue files:
+     *
+     *     Encore
+     *         .enableEslintLoader()
+     *         .enableVueLoader()
+     *         .configureLoaderRule('eslint', (loaderRule) => {
+     *              loaderRule.test = /\.(jsx?|vue)/;
+     *         });
+     *
+     * @param {string} name
+     * @param {function} callback
+     * @return {Encore}
+     */
+    configureLoaderRule(name, callback) {
+        webpackConfig.configureLoaderRule(name, callback);
+
+        return this;
+    }
+
+    /**
      * If enabled, the output directory is emptied between each build (to remove old files).
      *
      * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin
@@ -1070,6 +1160,24 @@ class Encore {
      */
     isProduction() {
         return webpackConfig.isProduction();
+    }
+
+    /**
+     * Is this currently a "dev" build?
+     *
+     * @returns {boolean}
+     */
+    isDev() {
+        return webpackConfig.isDev();
+    }
+
+    /**
+     * Is this currently a "dev-server" build?
+     *
+     * @returns {boolean}
+     */
+    isDevServer() {
+        return webpackConfig.isDevServer();
     }
 
     /**
@@ -1128,7 +1236,7 @@ class Encore {
         runtimeConfig = parseRuntime(
             Object.assign(
                 {},
-                require('yargs/yargs')([environment]).argv,
+                require('yargs-parser')([environment]),
                 options
             ),
             process.cwd()
@@ -1137,6 +1245,10 @@ class Encore {
         initializeWebpackConfig();
 
         return this;
+    }
+
+    isRuntimeEnvironmentConfigured() {
+        return runtimeConfig !== null;
     }
 
     /**
@@ -1175,6 +1287,14 @@ class Encore {
     configureUglifyJsPlugin() {
         throw new Error('The configureUglifyJsPlugin() method was removed from Encore due to uglify-js dropping ES6+ support in its latest version. Please use configureTerserPlugin() instead.');
     }
+
+    /**
+     * @deprecated
+     * @return {void}
+     */
+    configureLoaderOptionsPlugin() {
+        throw new Error('The configureLoaderOptionsPlugin() method was removed from Encore. The underlying plugin should not be needed anymore unless you are using outdated loaders. If that\'s the case you can still add it using addPlugin().');
+    }
 }
 
 // Proxy the API in order to prevent calls to most of its methods
@@ -1195,6 +1315,7 @@ const EncoreProxy = new Proxy(new Encore(), {
             const safeMethods = [
                 'configureRuntimeEnvironment',
                 'clearRuntimeEnvironment',
+                'isRuntimeEnvironmentConfigured',
             ];
 
             if (!webpackConfig && (safeMethods.indexOf(prop) === -1)) {
@@ -1208,10 +1329,7 @@ const EncoreProxy = new Proxy(new Encore(), {
                     const res = target[prop](...parameters);
                     return (res === target) ? EncoreProxy : res;
                 } catch (error) {
-                    // prettifies errors thrown by our library
-                    const pe = new PrettyError();
-
-                    console.log(pe.render(error));
+                    prettyError(error);
                     process.exit(1); // eslint-disable-line
                 }
             };
@@ -1221,7 +1339,13 @@ const EncoreProxy = new Proxy(new Encore(), {
             // Find the property with the closest Levenshtein distance
             let similarProperty;
             let minDistance = Number.MAX_VALUE;
-            for (const apiProperty in target) {
+
+            for (const apiProperty of Object.getOwnPropertyNames(Encore.prototype)) {
+                // Ignore class constructor
+                if (apiProperty === 'constructor') {
+                    continue;
+                }
+
                 const distance = levenshtein.get(apiProperty, prop);
                 if (distance <= minDistance) {
                     similarProperty = apiProperty;
@@ -1234,8 +1358,15 @@ const EncoreProxy = new Proxy(new Encore(), {
                 errorMessage += ` Did you mean ${chalk.green(`Encore.${similarProperty}`)}?`;
             }
 
-            const error = new Error(errorMessage);
-            console.log(new PrettyError().render(error));
+            // Prettify the error message.
+            // Only keep the 2nd line of the stack trace:
+            // - First line should be this file (index.js)
+            // - Second line should be the Webpack config file
+            prettyError(
+                new Error(errorMessage),
+                { skipTrace: (traceLine, lineNumber) => lineNumber !== 1 }
+            );
+
             process.exit(1); // eslint-disable-line
         }
 

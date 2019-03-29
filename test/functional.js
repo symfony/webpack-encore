@@ -62,7 +62,7 @@ function getEntrypointData(config, entryName) {
 
 describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
-    this.timeout(8000);
+    this.timeout(10000);
 
     before(() => {
         testSetup.emptyTmpDir();
@@ -388,14 +388,16 @@ describe('Functional tests using webpack', function() {
                 config.enableVersioning(true);
 
                 testSetup.runWebpack(config, (webpackAssert) => {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            'main.89eb104b.js',
-                            'styles.8ec31654.css',
-                            'manifest.json',
-                            'entrypoints.json',
-                            'runtime.3d179b24.js',
-                        ]);
+                    if (!process.env.DISABLE_UNSTABLE_CHECKS) {
+                        expect(config.outputPath).to.be.a.directory()
+                            .with.files([
+                                'main.89eb104b.js',
+                                'styles.8ec31654.css',
+                                'manifest.json',
+                                'entrypoints.json',
+                                'runtime.3d179b24.js',
+                            ]);
+                    }
 
                     webpackAssert.assertOutputFileContains(
                         'styles.8ec31654.css',
@@ -489,17 +491,19 @@ describe('Functional tests using webpack', function() {
             config.enableVersioning(true);
 
             testSetup.runWebpack(config, (webpackAssert) => {
-                expect(config.outputPath).to.be.a.directory()
-                    .with.files([
-                        '0.590a68c7.js', // chunks are also versioned
-                        '0.8ec31654.css',
-                        'main.4a5effdb.js',
-                        'h1.8ec31654.css',
-                        'bg.0ec2735b.css',
-                        'manifest.json',
-                        'entrypoints.json',
-                        'runtime.b84a9b43.js',
-                    ]);
+                if (!process.env.DISABLE_UNSTABLE_CHECKS) {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            '0.590a68c7.js', // chunks are also versioned
+                            '0.8ec31654.css',
+                            'main.4a5effdb.js',
+                            'h1.8ec31654.css',
+                            'bg.0ec2735b.css',
+                            'manifest.json',
+                            'entrypoints.json',
+                            'runtime.b84a9b43.js',
+                        ]);
+                }
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
@@ -520,7 +524,10 @@ describe('Functional tests using webpack', function() {
             config.setPublicPath('/build');
             config.addStyleEntry('bg', './css/background_image.scss');
             config.addStyleEntry('font', './css/roboto_font.css');
-            config.enableSassLoader();
+            config.enableSassLoader(options => {
+                // Use sass-loader instead of node-sass
+                options.implementation = require('sass');
+            });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -1159,8 +1166,8 @@ module.exports = {
         });
 
         it('TypeScript is compiled and type checking is done in a separate process!', (done) => {
-            this.timeout(8000);
-            setTimeout(done, 7000);
+            this.timeout(10000);
+            setTimeout(done, 9000);
 
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -1278,6 +1285,136 @@ module.exports = {
                         browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
                         // make sure the styles are not inlined
                         browser.assert.elements('style', 0);
+
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('Vue.js is compiled correctly using TypeScript', (done) => {
+            const appDir = testSetup.createTestAppDir();
+
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}                            `
+            );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs-typescript/main');
+            config.enableVueLoader();
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.enableTypeScriptLoader();
+            config.configureBabel(function(config) {
+                config.presets = [
+                    ['@babel/preset-env', {
+                        'targets': {
+                            'chrome': 52
+                        }
+                    }]
+                ];
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'images/logo.82b9c7a5.png',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                // test that our custom babel config is used
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'class TestClassSyntax'
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        // assert that the vue.js app rendered
+                        browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
+                        // make sure the styles are not inlined
+                        browser.assert.elements('style', 0);
+
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('Vue.js supports CSS/Sass/Less/Stylus modules', (done) => {
+            const appDir = testSetup.createTestAppDir();
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs-css-modules/main');
+            config.enableVueLoader();
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.enableStylusLoader();
+            config.configureCssLoader(options => {
+                // Remove hashes from local ident names
+                // since they are not always the same.
+                options.localIdentName = '[local]_foo';
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                const expectClassDeclaration = (className) => {
+                    webpackAssert.assertOutputFileContains(
+                        'main.css',
+                        `.${className} {`
+                    );
+                };
+
+                expectClassDeclaration('red'); // Standard CSS
+                expectClassDeclaration('large'); // Standard SCSS
+                expectClassDeclaration('justified'); // Standard Less
+                expectClassDeclaration('lowercase'); // Standard Stylus
+
+                expectClassDeclaration('italic_foo'); // CSS Module
+                expectClassDeclaration('bold_foo'); // SCSS Module
+                expectClassDeclaration('underline_foo'); // Less Module
+                expectClassDeclaration('rtl_foo'); // Stylus Module
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        browser.assert.hasClass('#app', 'red'); // Standard CSS
+                        browser.assert.hasClass('#app', 'large'); // Standard SCSS
+                        browser.assert.hasClass('#app', 'justified'); // Standard Less
+                        browser.assert.hasClass('#app', 'lowercase'); // Standard Stylus
+
+                        browser.assert.hasClass('#app', 'italic_foo'); // CSS module
+                        browser.assert.hasClass('#app', 'bold_foo'); // SCSS module
+                        browser.assert.hasClass('#app', 'underline_foo'); // Less module
+                        browser.assert.hasClass('#app', 'rtl_foo'); // Stylus module
 
                         done();
                     }
@@ -1622,25 +1759,27 @@ module.exports = {
                 }]);
 
                 testSetup.runWebpack(config, (webpackAssert) => {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            'entrypoints.json',
-                            'runtime.21aa1db9.js',
-                            'main.22bad391.js',
-                            'manifest.json',
-                            'symfony_logo.ea1ca6f7.png',
-                            'symfony_logo_alt.f27119c2.png',
-                        ]);
+                    if (!process.env.DISABLE_UNSTABLE_CHECKS) {
+                        expect(config.outputPath).to.be.a.directory()
+                            .with.files([
+                                'entrypoints.json',
+                                'runtime.6cf710cd.js',
+                                'main.d85842cc.js',
+                                'manifest.json',
+                                'symfony_logo.ea1ca6f7.png',
+                                'symfony_logo_alt.f27119c2.png',
+                            ]);
+
+                        webpackAssert.assertManifestPath(
+                            'build/main.js',
+                            '/build/main.d85842cc.js'
+                        );
+                    }
 
                     expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
                         .with.files([
                             'Roboto.woff2',
                         ]);
-
-                    webpackAssert.assertManifestPath(
-                        'build/main.js',
-                        '/build/main.22bad391.js'
-                    );
 
                     webpackAssert.assertManifestPath(
                         'build/symfony_logo.png',
@@ -1693,6 +1832,99 @@ module.exports = {
 
                     expect(stdout).to.contain('should be set to an existing directory but "./foo" does not seem to exist');
                     expect(stdout).to.contain('should be set to an existing directory but "./images/symfony_logo.png" seems to be a file');
+
+                    done();
+                });
+            });
+
+            it('Copy with a custom context', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({
+                    from: './images',
+                    to: '[path][name].[hash:8].[ext]',
+                    includeSubdirectories: true,
+                    context: './',
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'images')).to.be.a.directory()
+                        .with.files([
+                            'symfony_logo.ea1ca6f7.png',
+                            'symfony_logo_alt.f27119c2.png',
+                        ]);
+
+                    expect(path.join(config.outputPath, 'images', 'same_filename')).to.be.a.directory()
+                        .with.files([
+                            'symfony_logo.f27119c2.png',
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony_logo.png',
+                        '/build/images/symfony_logo.ea1ca6f7.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony_logo_alt.png',
+                        '/build/images/symfony_logo_alt.f27119c2.png'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/same_filename/symfony_logo.png',
+                        '/build/images/same_filename/symfony_logo.f27119c2.png'
+                    );
+
+                    done();
+                });
+            });
+
+            it('Copy files without processing them', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({ from: './copy' });
+
+                // By default the optimize-css-assets-webpack-plugin will
+                // run on ALL emitted CSS files, which includes the ones
+                // handled by `Encore.copyFiles()`.
+                // We disable it for this test since our CSS file will
+                // not be valid and can't be handled by this plugin.
+                config.configureOptimizeCssPlugin(options => {
+                    options.assetNameRegExp = /^$/;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                            'foo.css',
+                            'foo.js',
+                            'foo.json',
+                        ]);
+
+                    for (const file of ['foo.css', 'foo.js', 'foo.json']) {
+                        webpackAssert.assertOutputFileContains(
+                            file,
+                            'This is an invalid content to check that the file is still copied'
+                        );
+                    }
 
                     done();
                 });
@@ -2007,6 +2239,56 @@ module.exports = {
                     // is not loading the package's style file.                    
                     done();
                 })
+            });
+        });
+
+        describe('CSS extraction', () => {
+            it('With CSS extraction enabled', (done) => {
+                const config = createWebpackConfig('build', 'dev');
+                config.setPublicPath('/build');
+                config.disableSingleRuntimeChunk();
+                config.addEntry('main', './js/css_import');
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js',
+                            'main.css',
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'main.css',
+                        'font-size: 50px;'
+                    );
+
+                    done();
+                });
+            });
+
+            it('With CSS extraction disabled', (done) => {
+                const config = createWebpackConfig('build', 'dev');
+                config.setPublicPath('/build');
+                config.disableSingleRuntimeChunk();
+                config.addEntry('main', './js/css_import');
+                config.disableCssExtraction();
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js'
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'main.js',
+                        'font-size: 50px;'
+                    );
+
+                    done();
+                });
             });
         });
     });

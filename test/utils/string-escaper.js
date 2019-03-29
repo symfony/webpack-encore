@@ -23,14 +23,12 @@ describe('string-escaper', () => {
         const filename = "/foo/bar's/stuff";
 
         const escapedFilename = stringEscaper(filename);
-        console.log(escapedFilename);
         expectEvaledStringToEqual(escapedFilename, filename);
     });
 
     it('escapes Windows filenames', () => {
         // eslint-disable-next-line quotes
         const filename = `C:\\path\\to\\file`;
-        console.log(filename);
 
         const escapedFilename = stringEscaper(filename);
         expectEvaledStringToEqual(escapedFilename, filename);

@@ -28,6 +28,32 @@ function createConfig() {
 describe('WebpackConfig object', () => {
 
     describe('setOutputPath', () => {
+        const removeDirectory = (targetPath) => {
+            if (fs.existsSync(targetPath)) {
+                const files = fs.readdirSync(targetPath);
+                for (const file of files) {
+                    const filePath = path.resolve(targetPath, file);
+                    if (fs.lstatSync(filePath).isDirectory()) {
+                        removeDirectory(filePath);
+                    } else {
+                        fs.unlinkSync(filePath);
+                    }
+                }
+
+                fs.rmdirSync(targetPath);
+            }
+        };
+
+        // Make sure the newly created directories are removed
+        // before and after each test
+        const cleanupNewDirectories = () => {
+            removeDirectory(path.resolve(__dirname, 'new_dir'));
+            removeDirectory(path.resolve(__dirname, '..', 'new_dir'));
+        };
+
+        beforeEach(cleanupNewDirectories);
+        afterEach(cleanupNewDirectories);
+
         it('use absolute, existent path', () => {
             const config = createConfig();
             config.setOutputPath(__dirname);
@@ -37,15 +63,12 @@ describe('WebpackConfig object', () => {
 
         it('relative path, becomes absolute', () => {
             const config = createConfig();
-            config.setOutputPath('assets');
+            config.setOutputPath('new_dir');
 
             // __dirname is the context
             expect(config.outputPath).to.equal(
-                path.join(__dirname, '/assets')
+                path.join(__dirname, '/new_dir')
             );
-
-            // cleanup!
-            fs.rmdirSync(path.join(__dirname, '/assets'));
         });
 
         it('non-existent path creates directory', () => {
@@ -56,23 +79,39 @@ describe('WebpackConfig object', () => {
 
             const config = createConfig();
             config.setOutputPath(targetPath);
-
             expect(fs.existsSync(config.outputPath)).to.be.true;
-
-            // cleanup!
-            fs.rmdirSync(targetPath);
         });
 
-        it('non-existent directory, 2 levels deep throws error', () => {
-            var targetPath = path.join(__dirname, 'new_dir', 'subdir');
+        it('non-existent directory, 3 levels deep is created correctly', () => {
+            var targetPath = path.join(__dirname, 'new_dir', 'subdir1', 'subdir2');
             if (fs.existsSync(targetPath)) {
                 fs.rmdirSync(targetPath);
             }
 
             const config = createConfig();
-            expect(() => {
-                config.setOutputPath(targetPath);
-            }).to.throw('create this directory');
+            config.setOutputPath(targetPath);
+            expect(fs.existsSync(config.outputPath)).to.be.true;
+        });
+
+        it('non-existent path outside of the context directory works if only one directory has to be created', () => {
+            var targetPath = path.join(__dirname, '..', 'new_dir');
+            if (fs.existsSync(targetPath)) {
+                fs.rmdirSync(targetPath);
+            }
+
+            const config = createConfig();
+            config.setOutputPath(targetPath);
+            expect(fs.existsSync(config.outputPath)).to.be.true;
+        });
+
+        it('non-existent path outside of the context directory throws an error if more than one directory has to be created', () => {
+            var targetPath = path.join(__dirname, '..', 'new_dir', 'subdir');
+            if (fs.existsSync(targetPath)) {
+                fs.rmdirSync(targetPath);
+            }
+
+            const config = createConfig();
+            expect(() => config.setOutputPath(targetPath)).to.throw('create this directory');
         });
     });
 
@@ -244,24 +283,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureLoaderOptionsPlugin', () => {
-        it('Setting callback', () => {
-            const config = createConfig();
-            const callback = () => {};
-            config.configureLoaderOptionsPlugin(callback);
-
-            expect(config.loaderOptionsPluginOptionsCallback).to.equal(callback);
-        });
-
-        it('Setting invalid callback argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.configureLoaderOptionsPlugin('foo');
-            }).to.throw('Argument 1 to configureLoaderOptionsPlugin() must be a callback function');
-        });
-    });
-
     describe('configureManifestPlugin', () => {
         it('Setting callback', () => {
             const config = createConfig();
@@ -384,7 +405,7 @@ describe('WebpackConfig object', () => {
             // With multiple config objects
             config.copyFiles([
                 { from: './foo', pattern: /.*/ },
-                { from: './bar', pattern: /abc/, to: 'bar', includeSubdirectories: false },
+                { from: './bar', pattern: '/abc/', to: 'bar', includeSubdirectories: false },
             ]);
 
             // With a single config object
@@ -394,17 +415,20 @@ describe('WebpackConfig object', () => {
                 from: './foo',
                 pattern: /.*/,
                 to: null,
-                includeSubdirectories: true
+                includeSubdirectories: true,
+                context: null,
             }, {
                 from: './bar',
-                pattern: /abc/,
+                pattern: '/abc/',
                 to: 'bar',
-                includeSubdirectories: false
+                includeSubdirectories: false,
+                context: null,
             }, {
                 from: './baz',
                 pattern: /.*/,
                 to: null,
-                includeSubdirectories: true
+                includeSubdirectories: true,
+                context: null,
             }]);
         });
 
@@ -438,6 +462,18 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.copyFiles({ from: 'images', foo: 'foo' });
             }).to.throw('Invalid config option "foo"');
+        });
+
+        it('Calling it with an invalid "pattern" option', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.copyFiles({ from: 'images', pattern: true });
+            }).to.throw('Invalid pattern "true"');
+
+            expect(() => {
+                config.copyFiles({ from: 'images', pattern: 'foo' });
+            }).to.throw('Invalid pattern "foo"');
         });
     });
 
@@ -499,7 +535,7 @@ describe('WebpackConfig object', () => {
             expect(config.babelOptions.exclude).to.equal('foo');
         });
 
-        it('Calling with "include_node_modules" option', () => {
+        it('Calling with "includeNodeModules" option', () => {
             const config = createConfig();
             config.configureBabel(() => {}, { include_node_modules: ['foo', 'bar'] });
 
@@ -530,6 +566,13 @@ describe('WebpackConfig object', () => {
             }
         });
 
+        it('Calling with "useBuiltIns" option', () => {
+            const config = createConfig();
+            config.configureBabel(() => { }, { useBuiltIns: 'foo' });
+
+            expect(config.babelOptions.useBuiltIns).to.equal('foo');
+        });
+
         it('Calling with non-callback throws an error', () => {
             const config = createConfig();
 
@@ -555,19 +598,19 @@ describe('WebpackConfig object', () => {
             }).to.throw('Invalid option "fake_option" passed to configureBabel()');
         });
 
-        it('Calling with both "include_node_modules" and "exclude" options', () => {
+        it('Calling with both "includeNodeModules" and "exclude" options', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureBabel(() => {}, { exclude: 'foo', include_node_modules: ['bar', 'baz'] });
+                config.configureBabel(() => {}, { exclude: 'foo', includeNodeModules: ['bar', 'baz'] });
             }).to.throw('can\'t be used together');
         });
 
-        it('Calling with an invalid "include_node_modules" option value', () => {
+        it('Calling with an invalid "includeNodeModules" option value', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureBabel(() => {}, { include_node_modules: 'foo' });
+                config.configureBabel(() => {}, { includeNodeModules: 'foo' });
             }).to.throw('must be an Array');
         });
     });
@@ -940,24 +983,17 @@ describe('WebpackConfig object', () => {
         it('Adds new externals', () => {
             const config = createConfig();
 
-            expect(config.externals).to.deep.equals({});
+            expect(config.externals).to.deep.equals([]);
 
             config.addExternals({ 'jquery': 'jQuery', 'react': 'react' });
             config.addExternals({ 'lodash': 'lodash' });
+            config.addExternals(/^(jquery|\$)$/i);
 
-            expect(config.externals).to.deep.equals({
-                'jquery': 'jQuery',
-                'react': 'react',
-                'lodash': 'lodash'
-            });
-        });
-
-        it('Calling it with an invalid argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.addExternals('foo');
-            }).to.throw('must be an object');
+            expect(config.externals).to.deep.equals([
+                { 'jquery': 'jQuery', 'react': 'react' },
+                { 'lodash': 'lodash' },
+                /^(jquery|\$)$/i
+            ]);
         });
     });
 
@@ -976,6 +1012,21 @@ describe('WebpackConfig object', () => {
             config.disableFontsLoader();
 
             expect(config.useFontsLoader).to.be.false;
+        });
+    });
+
+    describe('disableCssExtraction', () => {
+        it('By default the CSS extraction is enabled', () => {
+            const config = createConfig();
+
+            expect(config.extractCss).to.be.true;
+        });
+
+        it('Calling it disables the CSS extraction', () => {
+            const config = createConfig();
+            config.disableCssExtraction();
+
+            expect(config.extractCss).to.be.false;
         });
     });
 
@@ -1063,6 +1114,63 @@ describe('WebpackConfig object', () => {
                     foo: 'bar'
                 });
             }).to.throw('"foo" is not a valid key');
+        });
+    });
+
+    describe('configureWatchOptions()', () => {
+        it('Pass config', () => {
+            const config = createConfig();
+            const callback = (watchOptions) => {
+                watchOptions.poll = 250;
+            };
+
+            config.configureWatchOptions(callback);
+
+            expect(config.watchOptionsConfigurationCallback).to.equal(callback);
+        });
+
+        it('Call method without a valid callback', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureWatchOptions();
+            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
+
+            expect(() => {
+                config.configureWatchOptions({});
+            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
+        });
+    });
+
+    describe('configureLoaderRule()', () => {
+        it('works properly', () => {
+            const config = createConfig();
+            const callback = (loader) => {};
+
+            expect(config.loaderConfigurationCallbacks['eslint']).to.not.equal(callback);
+
+            config.configureLoaderRule('eslint', callback);
+            expect(config.loaderConfigurationCallbacks['eslint']).to.equal(callback);
+        });
+
+        it('Call method with a not supported loader', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureLoaderRule('reason');
+            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars" and the aliases "js", "ts", "scss".');
+        });
+
+        it('Call method with not a valid callback', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureLoaderRule('eslint');
+            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+
+            expect(() => {
+                config.configureLoaderRule('eslint', {});
+            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
         });
     });
 });

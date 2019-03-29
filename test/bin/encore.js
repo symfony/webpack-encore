@@ -19,7 +19,7 @@ const exec = require('child_process').exec;
 
 describe('bin/encore.js', function() {
     // being functional tests, these can take quite long
-    this.timeout(8000);
+    this.timeout(10000);
 
     it('Basic smoke test', (done) => {
         testSetup.emptyTmpDir();
@@ -190,6 +190,43 @@ module.exports = Encore.getWebpackConfig();
 
             expect(stdout).to.contain('Webpack is already provided by Webpack Encore');
 
+            done();
+        });
+    });
+
+    it('Display an error when calling an unknown method', (done) => {
+        testSetup.emptyTmpDir();
+        const testDir = testSetup.createTestAppDir();
+
+        fs.writeFileSync(
+            path.join(testDir, 'package.json'),
+            `{
+                "devDependencies": {
+                    "@symfony/webpack-encore": "*"
+                }
+            }`
+        );
+
+        fs.writeFileSync(
+            path.join(testDir, 'webpack.config.js'),
+            `
+const Encore = require('../../index.js');
+Encore
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .enableSingleRuntimeChuck()
+    .addEntry('main', './js/no_require')
+;
+
+module.exports = Encore.getWebpackConfig();
+            `
+        );
+
+        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
+            expect(err).not.to.be.null;
+            expect(stdout).to.contain('is not a recognized property or method');
+            expect(stdout).to.contain('Did you mean');
             done();
         });
     });
