@@ -1189,7 +1189,7 @@ class Encore {
      *         ['sha256', 'sha384', 'sha512']
      *     );
      *
-     * @param {bool} enabled
+     * @param {boolean} enabled
      * @param {string|Array} algorithms
      * @returns {Encore}
      */
