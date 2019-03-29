@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## 0.26.0
+
+ * [Behavior change] The Babel `useBuiltIns` option default value changed
+   from `entry` to `false`, which means that polyfills may no longer be
+   provided in the same way. This is due to a change in Babel and core-js.
+   To get the same functionality back, run `yarn add core-js --dev`, then use:
+
+   ```js
+   Encore.configureBabel(() => {}, {
+       useBuiltIns: 'entry', // or try "usage"
+       corejs: 3
+   })
+   ```
+
+   This comes from #545 thanks to @Lyrkan.
+
+ * Added the ability to "resolve" CSS and Sass files without specifying
+   the file extension and by taking advantage of the `sass` or `style`
+   attribute in an npm package. For example, you can now import the main
+   Bootstrap SASS file from within a SASS file by saying `@import ~bootstrap`.
+   This will use the `sass` attribute from the bootstrap `package.json`
+   file to find which file to load. #474 thanks to @deAtog.
+
+ * Added a new `Encore.enableIntegrityHashes()`, which will cause a new
+   `integrity` key to be added to `entrypoints.json` with integrity values
+   that can be included in the `script` or `link` tag for that asset - #522
+   thanks to @Lyrkan.
+
+ * Allow some parts of `configureBabel()` to be used, even if there is
+   an external `.babelrc` configuration file - #544 thanks to @Lyrkan.
+
 ## 0.25.0
 
  * [BC BREAK] Various dependency versions were updated, including
