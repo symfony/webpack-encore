@@ -520,6 +520,15 @@ describe('WebpackConfig object', () => {
     });
 
     describe('configureBabel', () => {
+        beforeEach(() => {
+            logger.reset();
+            logger.quiet();
+        });
+
+        afterEach(() => {
+            logger.quiet(false);
+        });
+
         it('Calling method sets it', () => {
             const config = createConfig();
             const testCallback = () => {};
@@ -581,13 +590,31 @@ describe('WebpackConfig object', () => {
             }).to.throw('must be a callback function');
         });
 
-        it('Calling when .babelrc is present throws an exception', () => {
+        it('Calling with a callback when .babelrc is present displays a warning', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
+            config.configureBabel(() => {});
 
-            expect(() => {
-                config.configureBabel(() => {});
-            }).to.throw('configureBabel() cannot be called because your app already has Babel configuration');
+            const warnings = logger.getMessages().warning;
+            expect(warnings).to.have.lengthOf(1);
+            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+        });
+
+        it('Calling with a whitelisted option when .babelrc is present works fine', () => {
+            const config = createConfig();
+            config.runtimeConfig.babelRcFileExists = true;
+            config.configureBabel(null, { includeNodeModules: ['foo'] });
+            expect(logger.getMessages().warning).to.be.empty;
+        });
+
+        it('Calling with a non-whitelisted option when .babelrc is present displays a warning', () => {
+            const config = createConfig();
+            config.runtimeConfig.babelRcFileExists = true;
+            config.configureBabel(null, { useBuiltIns: 'foo' });
+
+            const warnings = logger.getMessages().warning;
+            expect(warnings).to.have.lengthOf(1);
+            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
         });
 
         it('Pass invalid config', () => {

@@ -766,6 +766,11 @@ class Encore {
      *
      * Encore.configureBabel(function(babelConfig) {
      *      // change the babelConfig
+     *      // if you use an external Babel configuration
+     *      // this callback will NOT be used. In this case
+     *      // you can pass null as the first parameter to
+     *      // still be able to use some of the options below
+     *      // without a warning.
      * }, {
      *      // set optional Encore-specific options, for instance:
      *
@@ -792,12 +797,16 @@ class Encore {
      *              A Webpack Condition passed to the JS/JSX rule that
      *              determines which files and folders should not be
      *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
-     *              Cannot be used if the "include_node_modules" option is
+     *              Can be used even if you have an external Babel configuration
+     *              (a .babelrc file for instance)
+     *              Cannot be used if the "includeNodeModules" option is
      *              also set.
      *      * {string[]} includeNodeModules
      *              If set that option will include the given Node modules to
-     *              the files that are processed by Babel. Cannot be used if
-     *              the "exclude" option is also set.
+     *              the files that are processed by Babel.
+     *              Can be used even if you have an external Babel configuration
+     *              (a .babelrc file for instance).
+     *              Cannot be used if the "exclude" option is also set
      *      * {'usage'|'entry'|false} useBuiltIns (default=false)
      *              Set the "useBuiltIns" option of @babel/preset-env that changes
      *              how it handles polyfills (https://babeljs.io/docs/en/babel-preset-env#usebuiltins)
@@ -806,12 +815,15 @@ class Encore {
      *              by individual polyfills. Using it with 'usage' will try to
      *              automatically detect which polyfills are needed for each file and
      *              add them accordingly.
+     *              Cannot be used if you have an external Babel configuration (a .babelrc
+     *              file for instance). In this case you can set the option directly into
+     *              that configuration file.
      *      * {number|string} corejs (default=not set)
      *              Set the "corejs" option of @babel/preset-env.
      *              It should contain the version of core-js you added to your project
      *              if useBuiltIns isn't set to false.
      *
-     * @param {function} callback
+     * @param {function|null} callback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
