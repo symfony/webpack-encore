@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by deAtog at 2019-01-02T15:36:22Z
+
+I'm not sure how to write tests for this. Maybe you can help with that aspect of it?
+
+I can't think of any case where these changes would break an existing project as CSS imports currently have to be very explicit otherwise users end up importing a Javascript file in their CSS file. E.g. The main property in package.json for bootstrap is 'dist/js/bootstrap' which is a Javascript file. Thus without these changes, ~bootstrap in a CSS file resolves to a Javascript file.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-01-02T15:55:27Z
+
+What I meant by "to make sure we won't break people projects" is that once this feature is introduced projects will be able to use things like `@import '~bootstrap';`.
+
+Now imagine that in a future release (for instance when we're going to migrate to Webpack 5) this feature stops working. If we don't have any test that checks if the resolving works correctly we won't be able to know that something is broken... and that could cause unexpected errors in these projects.
+
+As for how to test it... adding a functional test case that compiles a CSS/SCSS file with that kind of import should do the trick.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-01-05T04:39:02Z
+
+@deAtog I'm very interested in this change - I've noticed the "sass" and "style" properties on package.json in some packages, but couldn't figure out where it's used. Could you point me to some documentation or blog post or something about this? Basically, we try to stay as "standard" Webpack as possible, while making people's lives easier. We're 100% for moving towards standards, but less eager to move towards emerging or non-standard solutions. I don't have enough information about this yet to make a decision.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by deAtog at 2019-01-07T19:38:49Z
+
+I'm not sure the "style" and "sass" properties are a standard just yet, but they are definitely a convention. The __next__ version of the sass-loader _may_ include these defaults internally, but that change is currently blocked by a bug which causes the resolve options specified in the webpack-config to be ignored by the sass-loader. These changes add that functionality and is consistent with how the sass-loader _may_ eventually work without these options.
+
+---------------------------------------------------------------------------
+
+by deAtog at 2019-03-19T15:26:31Z
+
+@Lyrkan any chance of getting this merged? Additionally, is there a better forum for discussing these sort of changes? My responses have gone unanswered for over a month and the last commit I made is now over two months old. Needless to say, the response time here is very sub-optimal to my current work plan. There are several improvements I'd like to make, but am starting to think it's not worth my time to get them accepted here.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-03-19T15:38:27Z
+
+@deAtog Apart from the few linting issues (see the Travis build, the test job should however be solved after a rebase) I'm not against merging this PR, however I'd also like a 👍 from @weaverryan before doing so (since he expressed some concerns).
+
+If you want to discuss there's an #encore channel on [Slack](https://symfony.com/slack-invite) (or feel free to send me a dm).
