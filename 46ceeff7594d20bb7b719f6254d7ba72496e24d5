@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-03-21T22:06:28Z
+
+Test failure is unrelated, it seems that Babel is now displaying a warning when `useBuiltIns` is set (which is the case by default in Encore) without also setting the `corejs` option.
+
+See: https://github.com/babel/babel/pull/7646
