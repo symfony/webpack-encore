@@ -856,7 +856,7 @@ describe('The config-generator function', () => {
 
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
-            expect(babelEnvPreset[1].useBuiltIns).to.equal('entry');
+            expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
 
         it('with configureBabel() and a different exclude rule', () => {
@@ -897,7 +897,8 @@ describe('The config-generator function', () => {
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
             config.configureBabel(() => { }, {
-                useBuiltIns: 'usage'
+                useBuiltIns: 'usage',
+                corejs: 3,
             });
 
             const actualConfig = configGenerator(config);
@@ -906,6 +907,7 @@ describe('The config-generator function', () => {
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
+            expect(babelEnvPreset[1].corejs).to.equal(3);
         });
     });
 
