@@ -1,0 +1,11 @@
+{
+    "name":"@symfony/webpack-encore-test-pkg",
+    "description": "This is a test package for use by functional tests which use packages.",
+    "author": {
+        "name": "David Ellingsworth",
+        "email": "david@desource.org"
+    },
+    "main":"js/javascript_entry.js",
+    "style":"css/style_entry.css",
+    "sass":"css/sass_entry.scss"
+}
