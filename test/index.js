@@ -324,6 +324,15 @@ describe('Public API', () => {
 
     });
 
+    describe('disableCssExtraction', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.disableCssExtraction();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('configureFilenames', () => {
 
         it('must return the API object', () => {
@@ -373,15 +382,6 @@ describe('Public API', () => {
 
         it('should return the API object', () => {
             const returnedValue = api.configureFriendlyErrorsPlugin(() => {});
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
-    describe('configureLoaderOptionsPlugin', () => {
-
-        it('should return the API object', () => {
-            const returnedValue = api.configureLoaderOptionsPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 

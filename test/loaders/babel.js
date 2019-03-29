@@ -49,6 +49,18 @@ describe('loaders/babel', () => {
         });
     });
 
+    it('getLoaders() for production', () => {
+        const config = createConfig();
+        config.runtimeConfig.babelRcFileExists = true;
+        config.runtimeConfig.environment = 'production';
+
+        const actualLoaders = babelLoader.getLoaders(config);
+        // cacheDirectory is disabled in production mode
+        expect(actualLoaders[0].options).to.deep.equal({
+            cacheDirectory: false
+        });
+    });
+
     it('getLoaders() with react', () => {
         const config = createConfig();
         config.enableReactPreset();

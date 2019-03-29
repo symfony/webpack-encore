@@ -1,6 +1,6 @@
 {
   "name": "@symfony/webpack-encore",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -21,18 +21,18 @@
     "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=8.0.0"
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
-    "@babel/core": "^7.0.0",
+    "@babel/core": "^7.4.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-env": "^7.4.0",
     "assets-webpack-plugin": "^3.9.7",
     "babel-loader": "^8.0.0",
     "chalk": "^2.4.1",
     "clean-webpack-plugin": "^0.1.19",
-    "css-loader": "^1.0.0",
+    "css-loader": "^2.1.1",
     "fast-levenshtein": "^2.0.6",
     "file-loader": "^1.1.10",
     "friendly-errors-webpack-plugin": "^1.7.0",
@@ -43,7 +43,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pkg-up": "^1.0.0",
     "pretty-error": "^2.1.1",
-    "resolve-url-loader": "^2.3.0",
+    "resolve-url-loader": "^3.0.1",
     "semver": "^5.5.0",
     "style-loader": "^0.21.0",
     "terser-webpack-plugin": "^1.1.0",
@@ -57,25 +57,24 @@
     "yargs-parser": "^12.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "autoprefixer": "^8.5.0",
-    "babel-eslint": "^8.2.1",
+    "babel-eslint": "^10.0.1",
     "chai": "^3.5.0",
     "chai-fs": "^1.0.0",
-    "eslint": "^4.15.0",
-    "eslint-loader": "^1.9.0",
+    "eslint": "^5.15.2",
+    "eslint-loader": "^2.1.2",
     "eslint-plugin-header": "^1.0.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^4.2.2",
     "fork-ts-checker-webpack-plugin": "^0.4.1",
     "handlebars": "^4.0.11",
     "handlebars-loader": "^1.7.0",
-    "http-server": "^0.9.0",
-    "less": "^2.7.2",
+    "http-server": "^0.11.1",
+    "less": "^3.9.0",
     "less-loader": "^4.1.0",
-    "mocha": "^3.2.0",
+    "mocha": "^6.0.2",
     "node-sass": "^4.5.3",
     "postcss-loader": "^3.0.0",
     "preact": "^8.2.1",
@@ -93,7 +92,7 @@
     "vue-loader": "^15.0.11",
     "vue-template-compiler": "^2.3.4",
     "webpack-notifier": "^1.6.0",
-    "zombie": "^5.0.5"
+    "zombie": "^6.1.4"
   },
   "files": [
     "lib/",

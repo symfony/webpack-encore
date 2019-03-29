@@ -283,24 +283,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureLoaderOptionsPlugin', () => {
-        it('Setting callback', () => {
-            const config = createConfig();
-            const callback = () => {};
-            config.configureLoaderOptionsPlugin(callback);
-
-            expect(config.loaderOptionsPluginOptionsCallback).to.equal(callback);
-        });
-
-        it('Setting invalid callback argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.configureLoaderOptionsPlugin('foo');
-            }).to.throw('Argument 1 to configureLoaderOptionsPlugin() must be a callback function');
-        });
-    });
-
     describe('configureManifestPlugin', () => {
         it('Setting callback', () => {
             const config = createConfig();
@@ -1060,6 +1042,21 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('disableCssExtraction', () => {
+        it('By default the CSS extraction is enabled', () => {
+            const config = createConfig();
+
+            expect(config.extractCss).to.be.true;
+        });
+
+        it('Calling it disables the CSS extraction', () => {
+            const config = createConfig();
+            config.disableCssExtraction();
+
+            expect(config.extractCss).to.be.false;
+        });
+    });
+
     describe('configureFilenames', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
@@ -1169,6 +1166,38 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureWatchOptions({});
             }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
+        });
+    });
+
+    describe('configureLoaderRule()', () => {
+        it('works properly', () => {
+            const config = createConfig();
+            const callback = (loader) => {};
+
+            expect(config.loaderConfigurationCallbacks['eslint']).to.not.equal(callback);
+
+            config.configureLoaderRule('eslint', callback);
+            expect(config.loaderConfigurationCallbacks['eslint']).to.equal(callback);
+        });
+
+        it('Call method with a not supported loader', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureLoaderRule('reason');
+            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars" and the aliases "js", "ts", "scss".');
+        });
+
+        it('Call method with not a valid callback', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureLoaderRule('eslint');
+            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+
+            expect(() => {
+                config.configureLoaderRule('eslint', {});
+            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
         });
     });
 });

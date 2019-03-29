@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 0.25.0
+
+ * [BC BREAK] Various dependency versions were updated, including
+   `css-loader` updated from `^1.0.0` to `^2.1.1` and `resolve-url-loader`
+   updated from `^2.3.0` to `^3.0.1`. The minimum Node version was
+   also bumped from 6 to 8. See #540 for more details.
+
+ * Added `Encore.disableCssExtraction()` if you prefer your CSS to
+   be output via the `style-loader` - #539 thank to @Lyrkan.
+
+ * Added `Encore.configureLoaderRule()` as a way to configure the
+   loader config that Encore normally handles - #509 thanks to @Kocal.
+
+ * Babel cache is no longer used for production builds to avoid a
+   bug where the cache prevents browserslist from being used - #516
+   thanks to @Lyrkan.
+
 ## 0.24.0
 
  * Add CSS modules support in Vue.js for Sass/Less/Stylus - #511

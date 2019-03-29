@@ -1891,6 +1891,44 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Copy files without processing them', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({ from: './copy' });
+
+                // By default the optimize-css-assets-webpack-plugin will
+                // run on ALL emitted CSS files, which includes the ones
+                // handled by `Encore.copyFiles()`.
+                // We disable it for this test since our CSS file will
+                // not be valid and can't be handled by this plugin.
+                config.configureOptimizeCssPlugin(options => {
+                    options.assetNameRegExp = /^$/;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                            'foo.css',
+                            'foo.js',
+                            'foo.json',
+                        ]);
+
+                    for (const file of ['foo.css', 'foo.js', 'foo.json']) {
+                        webpackAssert.assertOutputFileContains(
+                            file,
+                            'This is an invalid content to check that the file is still copied'
+                        );
+                    }
+
+                    done();
+                });
+            });
         });
 
         describe('entrypoints.json & splitChunks()', () => {
@@ -2163,6 +2201,56 @@ module.exports = {
 
                         done();
                     });
+                });
+            });
+        });
+
+        describe('CSS extraction', () => {
+            it('With CSS extraction enabled', (done) => {
+                const config = createWebpackConfig('build', 'dev');
+                config.setPublicPath('/build');
+                config.disableSingleRuntimeChunk();
+                config.addEntry('main', './js/css_import');
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js',
+                            'main.css',
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'main.css',
+                        'font-size: 50px;'
+                    );
+
+                    done();
+                });
+            });
+
+            it('With CSS extraction disabled', (done) => {
+                const config = createWebpackConfig('build', 'dev');
+                config.setPublicPath('/build');
+                config.disableSingleRuntimeChunk();
+                config.addEntry('main', './js/css_import');
+                config.disableCssExtraction();
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js'
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'main.js',
+                        'font-size: 50px;'
+                    );
+
+                    done();
                 });
             });
         });

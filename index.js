@@ -12,7 +12,7 @@
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
-const PrettyError = require('pretty-error');
+const prettyError = require('./lib/utils/pretty-error');
 const logger = require('./lib/logger');
 const parseRuntime = require('./lib/config/parse-runtime');
 const chalk = require('chalk');
@@ -160,25 +160,6 @@ class Encore {
      */
     configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
         webpackConfig.configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback);
-
-        return this;
-    }
-
-    /**
-     * Allows you to configure the options passed to the LoaderOptionsPlugins.
-     * A list of available options can be found at https://webpack.js.org/plugins/loader-options-plugin/
-     *
-     * For example:
-     *
-     *      Encore.configureLoaderOptionsPlugin((options) => {
-     *          options.minimize = true;
-     *      })
-     *
-     * @param {function} loaderOptionsPluginOptionsCallback
-     * @returns {Encore}
-     */
-    configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback = () => {}) {
-        webpackConfig.configureLoaderOptionsPlugin(loaderOptionsPluginOptionsCallback);
 
         return this;
     }
@@ -804,6 +785,11 @@ class Encore {
      *      // automatically import polyfills where they
      *      // are needed
      *      useBuiltIns: 'usage'
+     *
+     *      // if you set useBuiltIns you also have to add
+     *      // core-js to your project using Yarn or npm and
+     *      // inform Babel of the version it will use.
+     *      corejs: 3
      * });
      *
      * Supported options:
@@ -821,10 +807,10 @@ class Encore {
      *              Can be used even if you have an external Babel configuration
      *              (a .babelrc file for instance).
      *              Cannot be used if the "exclude" option is also set
-     *      * {'usage'|'entry'|false} useBuiltIns (default='entry')
+     *      * {'usage'|'entry'|false} useBuiltIns (default=false)
      *              Set the "useBuiltIns" option of @babel/preset-env that changes
      *              how it handles polyfills (https://babeljs.io/docs/en/babel-preset-env#usebuiltins)
-     *              Using it with 'entry' will require you to import @babel/polyfill
+     *              Using it with 'entry' will require you to import core-js
      *              once in your whole app and will result in that import being replaced
      *              by individual polyfills. Using it with 'usage' will try to
      *              automatically detect which polyfills are needed for each file and
@@ -832,6 +818,10 @@ class Encore {
      *              Cannot be used if you have an external Babel configuration (a .babelrc
      *              file for instance). In this case you can set the option directly into
      *              that configuration file.
+     *      * {number|string} corejs (default=not set)
+     *              Set the "corejs" option of @babel/preset-env.
+     *              It should contain the version of core-js you added to your project
+     *              if useBuiltIns isn't set to false.
      *
      * @param {function|null} callback
      * @param {object} encoreOptions
@@ -1059,6 +1049,22 @@ class Encore {
     }
 
     /**
+     * Call this if you don't want imported CSS to be extracted
+     * into a .css file. All your styles will then be injected
+     * into the page by your JS code.
+     *
+     * Internally, this disables the mini-css-extract-plugin
+     * and uses the style-loader instead.
+     *
+     * @returns {Encore}
+     */
+    disableCssExtraction() {
+        webpackConfig.disableCssExtraction();
+
+        return this;
+    }
+
+    /**
      * Call this to change how the name of each output
      * file is generated.
      *
@@ -1108,6 +1114,32 @@ class Encore {
      */
     configureUrlLoader(urlLoaderOptions = {}) {
         webpackConfig.configureUrlLoader(urlLoaderOptions);
+
+        return this;
+    }
+
+    /**
+     * Configure Webpack loaders rules (`module.rules`).
+     * This is a low-level function, be careful when using it.
+     *
+     * https://webpack.js.org/concepts/loaders/#configuration
+     *
+     * For example, if you are using Vue and ESLint loader,
+     * this is how you can configure ESLint to lint Vue files:
+     *
+     *     Encore
+     *         .enableEslintLoader()
+     *         .enableVueLoader()
+     *         .configureLoaderRule('eslint', (loaderRule) => {
+     *              loaderRule.test = /\.(jsx?|vue)/;
+     *         });
+     *
+     * @param {string} name
+     * @param {function} callback
+     * @return {Encore}
+     */
+    configureLoaderRule(name, callback) {
+        webpackConfig.configureLoaderRule(name, callback);
 
         return this;
     }
@@ -1267,6 +1299,14 @@ class Encore {
     configureUglifyJsPlugin() {
         throw new Error('The configureUglifyJsPlugin() method was removed from Encore due to uglify-js dropping ES6+ support in its latest version. Please use configureTerserPlugin() instead.');
     }
+
+    /**
+     * @deprecated
+     * @return {void}
+     */
+    configureLoaderOptionsPlugin() {
+        throw new Error('The configureLoaderOptionsPlugin() method was removed from Encore. The underlying plugin should not be needed anymore unless you are using outdated loaders. If that\'s the case you can still add it using addPlugin().');
+    }
 }
 
 // Proxy the API in order to prevent calls to most of its methods
@@ -1301,10 +1341,7 @@ const EncoreProxy = new Proxy(new Encore(), {
                     const res = target[prop](...parameters);
                     return (res === target) ? EncoreProxy : res;
                 } catch (error) {
-                    // prettifies errors thrown by our library
-                    const pe = new PrettyError();
-
-                    console.log(pe.render(error));
+                    prettyError(error);
                     process.exit(1); // eslint-disable-line
                 }
             };
@@ -1337,10 +1374,11 @@ const EncoreProxy = new Proxy(new Encore(), {
             // Only keep the 2nd line of the stack trace:
             // - First line should be this file (index.js)
             // - Second line should be the Webpack config file
-            const pe = new PrettyError();
-            pe.skip((traceLine, lineNumber) => lineNumber !== 1);
-            const error = new Error(errorMessage);
-            console.log(pe.render(error));
+            prettyError(
+                new Error(errorMessage),
+                { skipTrace: (traceLine, lineNumber) => lineNumber !== 1 }
+            );
+
             process.exit(1); // eslint-disable-line
         }
 
