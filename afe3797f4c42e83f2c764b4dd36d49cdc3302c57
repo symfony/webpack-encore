@@ -1,0 +1,62 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-03-22T00:38:30Z
+
+Thanks for this very detailed outline!
+
+I have one question, or possible alternative approach to ask you about. Can we (and should we) detect if corejs is installed and set the useBuiltIns option and I core-js version based on that. The idea would be: if you install core-js, we just start using it, by default.
+
+Let me know what you think. There is a cost to this magic. However, most users won’t know this option exists, and our job is to give them a great setup without them needing to know about everything before they start. Another possibility is to update the Encore Flex recipe to instal core-js and set the necessary Babel config in the default webpack.config.js file
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-03-22T09:02:15Z
+
+> Can we (and should we) detect if corejs is installed and set the useBuiltIns option and I core-js version based on that. The idea would be: if you install core-js, we just start using it, by default.
+
+I thought about that but wasn't sure it was the right thing to do.
+
+The first thing I don't really like with that solution is that we'll be modifying Webpack's conf based on which packages are installed, which means that if something goes wrong a build could break because a package was installed/updated, even if it's not used anywhere (or not in the context we expect it to). Also it's a bit like saying "we'll check if `sass-loader` and `sass` are installed and enable the loader automatically... it works but comes with some cons.
+
+The second thing that could be a bit annoying is detecting `core-js`. Currently all the checks we do in the package-helper rely on `require.resolve('<dep>')`. That works mostly fine but ignores the issues related to package hoisting which are really important in this case (which is why the `core-js` package has to be installed in the root `package.json` and its version specified in Babel).
+
+Here is a more concrete example that I think could be an issue: imagine that a lib imported by the user requires `core-js@2`. With our checks we would tell the preset to enable `useBuiltIns` and use v2. Everything is fine and so the user also decides to use `@babel/polyfill` since that was one of the recommended way to work with polyfills.
+
+Then the user decides to install another dependency which relies on `core-js@3` and for some reason that new version gets hoisted instead of `core-js@2`... now everything is broken because `@babel/polyfill` doesn't work with v3.
+
+> However, most users won’t know this option exists, and our job is to give them a great setup without them needing to know about everything before they start. Another possibility is to update the Encore Flex recipe to instal core-js and set the necessary Babel config in the default webpack.config.js file
+
+Well, that's also an issue right now: when using `useBuiltIns: 'entry'` (our default setting) you still have to add `core-js` (and/or `@babel/polyfill`) to your project and import it into one of your files for polyfills to work. This isn't part of the recipe and, AFAIK, not mentioned anywhere in the doc.
+
+I think that it would be better to add that to the recipe and either:
+* keep `useBuiltIns: 'entry'` and document somewhere that importing `core-js` is required
+* switch to `useBuiltIns: 'usage'`, but that setting is [still documented as being "experimental"](https://babeljs.io/docs/en/babel-preset-env#usebuiltins-usage-experimental) and I don't know whether or not it is impacted by the `core-js` update.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-03-25T23:46:01Z
+
+@Lyrkan Ok, let's merge this (set the default to `false`) and update the recipe to include `core-js` in package.json and re-set it back to `entry`. WDYT? Can you create a recipe PR (also, this needs a rebase now - a lot of merges!)
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-03-26T09:22:30Z
+
+@weaverryan About the recipe: should we go for `core-js@2` or `core-js@3`?
+In my opinion it would probably be safer to require `core-js@2` for now, mostly because many examples/docs still show how to use `@babel/polyfill` which doesn't work with v3... what do you think?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-03-27T08:58:22Z
+
+On second thought maybe we could use `core-js@3` with `useBuiltIns: 'usage'`, according to the author of `core-js` [that mode should now be stable/reliable](https://github.com/zloirock/core-js/blob/master/docs/2019-03-19-core-js-3-babel-and-a-look-into-the-future.md#usebuiltins-usage-with-corejs-3):
+
+> Until Babel 7.3, useBuiltIns: usage was unstable and not fully reliable: many polyfills were not included, and many others were added without their required dependencies. In Babel 7.4, I tried to make it understand every possible usage pattern.
+
+And if people encounter issues they could still switch to `useBuiltIns: 'entry'` and import `core-js` into their file.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-03-27T11:47:42Z
+
+Excellent! That always seemed like the best mode anyways, except for the unstable part. Let's go with it.
