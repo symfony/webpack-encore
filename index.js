@@ -1154,6 +1154,40 @@ class Encore {
     }
 
     /**
+     * If enabled, add integrity hashes to the entrypoints.json
+     * file for all the files it references.
+     *
+     * These hashes can then be used, for instance, in the "integrity"
+     * attributes of <script> and <style> tags to enable subresource-
+     * integrity checks in the browser.
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity
+     *
+     * For example:
+     *
+     *     Encore.enableIntegrityHashes(
+     *         Encore.isProduction(),
+     *         'sha384'
+     *     );
+     *
+     * Or with multiple algorithms:
+     *
+     *     Encore.enableIntegrityHashes(
+     *         Encore.isProduction(),
+     *         ['sha256', 'sha384', 'sha512']
+     *     );
+     *
+     * @param {bool} enabled
+     * @param {string|Array} algorithms
+     * @returns {Encore}
+     */
+    enableIntegrityHashes(enabled = true, algorithms = ['sha384']) {
+        webpackConfig.enableIntegrityHashes(enabled, algorithms);
+
+        return this;
+    }
+
+    /**
      * Is this currently a "production" build?
      *
      * @returns {boolean}

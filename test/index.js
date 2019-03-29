@@ -414,6 +414,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableIntegrityHashes', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.enableIntegrityHashes();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('isRuntimeEnvironmentConfigured', () => {
 
         it('should return true if the runtime environment has been configured', () => {

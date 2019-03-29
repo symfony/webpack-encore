@@ -1173,4 +1173,42 @@ describe('WebpackConfig object', () => {
             }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
         });
     });
+
+    describe('enableIntegrityHashes', () => {
+        it('Calling it without any option', () => {
+            const config = createConfig();
+            config.enableIntegrityHashes();
+
+            expect(config.integrityAlgorithms).to.deep.equal(['sha384']);
+        });
+
+        it('Calling it without false as a first argument disables it', () => {
+            const config = createConfig();
+            config.enableIntegrityHashes(false, 'sha1');
+
+            expect(config.integrityAlgorithms).to.deep.equal([]);
+        });
+
+        it('Calling it with a single algorithm', () => {
+            const config = createConfig();
+            config.enableIntegrityHashes(true, 'sha1');
+
+            expect(config.integrityAlgorithms).to.deep.equal(['sha1']);
+        });
+
+        it('Calling it with multiple algorithms', () => {
+            const config = createConfig();
+            config.enableIntegrityHashes(true, ['sha1', 'sha256', 'sha512']);
+
+            expect(config.integrityAlgorithms).to.deep.equal(['sha1', 'sha256', 'sha512']);
+        });
+
+        it('Calling it with an invalid algorithm', () => {
+            const config = createConfig();
+            expect(() => config.enableIntegrityHashes(true, {})).to.throw('must be a string or an array of strings');
+            expect(() => config.enableIntegrityHashes(true, [1])).to.throw('must be a string or an array of strings');
+            expect(() => config.enableIntegrityHashes(true, 'foo')).to.throw('Invalid hash algorithm "foo"');
+            expect(() => config.enableIntegrityHashes(true, ['sha1', 'foo', 'sha256'])).to.throw('Invalid hash algorithm "foo"');
+        });
+    });
 });
