@@ -9,53 +9,15 @@
 
 'use strict';
 
+const EncoreProxy = require('./lib/EncoreProxy');
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
-const prettyError = require('./lib/utils/pretty-error');
-const logger = require('./lib/logger');
 const parseRuntime = require('./lib/config/parse-runtime');
-const chalk = require('chalk');
-const levenshtein = require('fast-levenshtein');
-const fs = require('fs');
-const path = require('path');
+const context = require('./lib/context');
 
-let webpackConfig = null;
-let runtimeConfig = require('./lib/context').runtimeConfig;
-
-function initializeWebpackConfig() {
-    if (runtimeConfig.verbose) {
-        logger.verbose();
-    }
-
-    // Display a warning if webpack is listed as a [dev-]dependency
-    try {
-        const packageInfo = JSON.parse(
-            fs.readFileSync(path.resolve(runtimeConfig.context, 'package.json'))
-        );
-
-        if (packageInfo) {
-            const dependencies = new Set([
-                ...(packageInfo.dependencies ? Object.keys(packageInfo.dependencies) : []),
-                ...(packageInfo.devDependencies ? Object.keys(packageInfo.devDependencies) : []),
-            ]);
-
-            if (dependencies.has('webpack')) {
-                logger.warning('Webpack is already provided by Webpack Encore, also adding it to your package.json file may cause issues.');
-            }
-        }
-    } catch (e) {
-        logger.warning('Could not read package.json file.');
-    }
-
-    webpackConfig = new WebpackConfig(runtimeConfig);
-}
-
-// If runtimeConfig is already set webpackConfig can directly
-// be initialized here.
-if (runtimeConfig) {
-    initializeWebpackConfig();
-}
+let runtimeConfig = context.runtimeConfig;
+let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig, true) : null;
 
 class Encore {
     /**
@@ -1288,7 +1250,7 @@ class Encore {
             process.cwd()
         );
 
-        initializeWebpackConfig();
+        webpackConfig = new WebpackConfig(runtimeConfig, true);
 
         return this;
     }
@@ -1343,84 +1305,9 @@ class Encore {
     }
 }
 
-// Proxy the API in order to prevent calls to most of its methods
-// if the webpackConfig object hasn't been initialized yet.
-const EncoreProxy = new Proxy(new Encore(), {
-    get: (target, prop) => {
-        if (prop === '__esModule') {
-            // When using Babel to preprocess a webpack.config.babel.js file
-            // (for instance if we want to use ES6 syntax) the __esModule
-            // property needs to be whitelisted to avoid an "Unknown property"
-            // error.
-            return target[prop];
-        }
-
-        if (typeof target[prop] === 'function') {
-            // These methods of the public API can be called even if the
-            // webpackConfig object hasn't been initialized yet.
-            const safeMethods = [
-                'configureRuntimeEnvironment',
-                'clearRuntimeEnvironment',
-                'isRuntimeEnvironmentConfigured',
-            ];
-
-            if (!webpackConfig && (safeMethods.indexOf(prop) === -1)) {
-                throw new Error(`Encore.${prop}() cannot be called yet because the runtime environment doesn't appear to be configured. Make sure you're using the encore executable or call Encore.configureRuntimeEnvironment() first if you're purposely not calling Encore directly.`);
-            }
-
-            // Either a safe method has been called or the webpackConfig
-            // object is already available. In this case act as a passthrough.
-            return (...parameters) => {
-                try {
-                    const res = target[prop](...parameters);
-                    return (res === target) ? EncoreProxy : res;
-                } catch (error) {
-                    prettyError(error);
-                    process.exit(1); // eslint-disable-line
-                }
-            };
-        }
-
-        if (typeof target[prop] === 'undefined') {
-            // Find the property with the closest Levenshtein distance
-            let similarProperty;
-            let minDistance = Number.MAX_VALUE;
-
-            for (const apiProperty of Object.getOwnPropertyNames(Encore.prototype)) {
-                // Ignore class constructor
-                if (apiProperty === 'constructor') {
-                    continue;
-                }
-
-                const distance = levenshtein.get(apiProperty, prop);
-                if (distance <= minDistance) {
-                    similarProperty = apiProperty;
-                    minDistance = distance;
-                }
-            }
-
-            let errorMessage = `${chalk.red(`Encore.${prop}`)} is not a recognized property or method.`;
-            if (minDistance < (prop.length / 3)) {
-                errorMessage += ` Did you mean ${chalk.green(`Encore.${similarProperty}`)}?`;
-            }
-
-            // Prettify the error message.
-            // Only keep the 2nd line of the stack trace:
-            // - First line should be this file (index.js)
-            // - Second line should be the Webpack config file
-            prettyError(
-                new Error(errorMessage),
-                { skipTrace: (traceLine, lineNumber) => lineNumber !== 1 }
-            );
-
-            process.exit(1); // eslint-disable-line
-        }
-
-        return target[prop];
-    }
-});
-
 /**
+ * Proxy the API in order to prevent calls to most of its methods
+ * if the webpackConfig object hasn't been initialized yet.
  * @type {Encore}
  */
-module.exports = EncoreProxy;
+module.exports = EncoreProxy.createProxy(new Encore());
