@@ -9,53 +9,16 @@
 
 'use strict';
 
+const webpack = require('webpack'); // eslint-disable-line no-unused-vars
+const EncoreProxy = require('./lib/EncoreProxy');
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
 const validator = require('./lib/config/validator');
-const prettyError = require('./lib/utils/pretty-error');
-const logger = require('./lib/logger');
 const parseRuntime = require('./lib/config/parse-runtime');
-const chalk = require('chalk');
-const levenshtein = require('fast-levenshtein');
-const fs = require('fs');
-const path = require('path');
+const context = require('./lib/context');
 
-let webpackConfig = null;
-let runtimeConfig = require('./lib/context').runtimeConfig;
-
-function initializeWebpackConfig() {
-    if (runtimeConfig.verbose) {
-        logger.verbose();
-    }
-
-    // Display a warning if webpack is listed as a [dev-]dependency
-    try {
-        const packageInfo = JSON.parse(
-            fs.readFileSync(path.resolve(runtimeConfig.context, 'package.json'))
-        );
-
-        if (packageInfo) {
-            const dependencies = new Set([
-                ...(packageInfo.dependencies ? Object.keys(packageInfo.dependencies) : []),
-                ...(packageInfo.devDependencies ? Object.keys(packageInfo.devDependencies) : []),
-            ]);
-
-            if (dependencies.has('webpack')) {
-                logger.warning('Webpack is already provided by Webpack Encore, also adding it to your package.json file may cause issues.');
-            }
-        }
-    } catch (e) {
-        logger.warning('Could not read package.json file.');
-    }
-
-    webpackConfig = new WebpackConfig(runtimeConfig);
-}
-
-// If runtimeConfig is already set webpackConfig can directly
-// be initialized here.
-if (runtimeConfig) {
-    initializeWebpackConfig();
-}
+let runtimeConfig = context.runtimeConfig;
+let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig, true) : null;
 
 class Encore {
     /**
@@ -77,16 +40,24 @@ class Encore {
      * The public version of outputPath: the public path to outputPath.
      *
      * For example, if "web" is your document root, then:
-     *      .setOutputPath('web/build')
-     *      .setPublicPath('/build')
+     *
+     * ```
+     * Encore
+     *     .setOutputPath('web/build')
+     *     .setPublicPath('/build')
+     * ```
      *
      * This can also be set to an absolute URL if you're using
      * a CDN: publicPath is used as the prefix to all asset paths
      * in the manifest.json file and internally in webpack:
-     *      .setOutputPath('web/build')
-     *      .setPublicPath('https://coolcdn.com')
-     *      // needed when public path is absolute
-     *      .setManifestKeyPrefix('/build')
+     *
+     * ```
+     * Encore
+     *     .setOutputPath('web/build')
+     *     .setPublicPath('https://coolcdn.com')
+     *     // needed when public path is absolute
+     *     .setManifestKeyPrefix('/build')
+     * ```
      *
      * @param {string} publicPath
      * @returns {Encore}
@@ -107,15 +78,20 @@ class Encore {
      * But if publicPath is absolute, then we require you to set this.
      * For example:
      *
-     *      .setOutputPath('web/build')
-     *      .setPublicPath('https://coolcdn.com/FOO')
-     *      .setManifestKeyPrefix('build/')
+     * ```
+     * Encore
+     *     .setOutputPath('web/build')
+     *     .setPublicPath('https://coolcdn.com/FOO')
+     *     .setManifestKeyPrefix('build/')
+     * ```
      *
      * The manifest.json file would look something like this:
      *
-     *      {
-     *          "build/main.js": "https://coolcdn.com/FOO/main.a54f3ccd2.js"
-     *      }
+     * ```
+     * {
+     *     "build/main.js": "https://coolcdn.com/FOO/main.a54f3ccd2.js"
+     * }
+     * ```
      *
      * @param {string} manifestKeyPrefix
      * @returns {Encore}
@@ -132,9 +108,11 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.configureDefinePlugin((options) => {
-     *          options.VERSION = JSON.stringify('1.0.0');
-     *      })
+     * ```
+     * Encore.configureDefinePlugin((options) => {
+     *     options.VERSION = JSON.stringify('1.0.0');
+     * })
+     * ```
      *
      * @param {function} definePluginOptionsCallback
      * @returns {Encore}
@@ -151,9 +129,11 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.configureFriendlyErrorsPlugin((options) => {
-     *          options.clearConsole = true;
-     *      })
+     * ```
+     * Encore.configureFriendlyErrorsPlugin((options) => {
+     *     options.clearConsole = true;
+     * })
+     * ```
      *
      * @param {function} friendlyErrorsPluginOptionsCallback
      * @returns {Encore}
@@ -170,9 +150,11 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.configureManifestPlugin((options) => {
-     *          options.fileName = '../../var/assets/manifest.json';
-     *      })
+     * ```
+     * Encore.configureManifestPlugin((options) => {
+     *     options.fileName = '../../var/assets/manifest.json';
+     * })
+     * ```
      *
      * @param {function} manifestPluginOptionsCallback
      * @returns {Encore}
@@ -189,14 +171,16 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.configureTerserPlugin((options) => {
-     *          options.cache = true;
-     *          options.terserOptions = {
-     *              output: {
-     *                  comments: false
-     *              }
-     *          }
-     *      })
+     * ```
+     * Encore.configureTerserPlugin((options) => {
+     *     options.cache = true;
+     *     options.terserOptions = {
+     *         output: {
+     *             comments: false
+     *         }
+     *     }
+     * })
+     * ```
      *
      * @param {function} terserPluginOptionsCallback
      * @returns {Encore}
@@ -213,12 +197,14 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.configureOptimizeCssPlugin((options) => {
-     *          options.cssProcessor = require('cssnano');
-     *          options.cssProcessorPluginOptions = {
-     *              preset: ['default', { discardComments: { removeAll: true } }],
-     *          }
-     *      })
+     * ```
+     * Encore.configureOptimizeCssPlugin((options) => {
+     *     options.cssProcessor = require('cssnano');
+     *     options.cssProcessorPluginOptions = {
+     *         preset: ['default', { discardComments: { removeAll: true } }],
+     *     }
+     * })
+     * ```
      *
      * @param {function} optimizeCssPluginOptionsCallback
      * @returns {Encore}
@@ -232,8 +218,10 @@ class Encore {
     /**
      * Adds a JavaScript file that should be webpacked:
      *
-     *      // final output file will be main.js in the output directory
-     *      Encore.addEntry('main', './path/to/some_file.js');
+     * ```
+     * // final output file will be main.js in the output directory
+     * Encore.addEntry('main', './path/to/some_file.js');
+     * ```
      *
      * If the JavaScript file imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
@@ -253,8 +241,10 @@ class Encore {
     /**
      * Adds a CSS/SASS/LESS file that should be webpacked:
      *
-     *      // final output file will be main.css in the output directory
-     *      Encore.addEntry('main', './path/to/some_file.css');
+     * ```
+     *  // final output file will be main.css in the output directory
+     *  Encore.addEntry('main', './path/to/some_file.css');
+     * ```
      *
      * This is actually not something Webpack does natively, and you
      * should avoid using this function when possible. A better option
@@ -277,7 +267,10 @@ class Encore {
      * Add a plugin to the sets of plugins already registered by Encore
      *
      * For example, if you want to add the "webpack.IgnorePlugin()", then:
-     *      .addPlugin(new webpack.IgnorePlugin(requestRegExp, contextRegExp))
+     *
+     * ```
+     * Encore.addPlugin(new webpack.IgnorePlugin(requestRegExp, contextRegExp))
+     * ```
      *
      * By default custom plugins are added after the ones managed by Encore
      * but you can also set a priority to define where your plugin will be
@@ -286,7 +279,9 @@ class Encore {
      * For example, if a plugin has a priority of 0 and you want to add
      * another plugin after it, then:
      *
-     *      .addPlugin(new MyWebpackPlugin(), -10)
+     * ```
+     * Encore.addPlugin(new MyWebpackPlugin(), -10)
+     * ```
      *
      * The priority of each plugin added by Encore can be found in the
      * "lib/plugins/plugin-priorities.js" file. It is recommended to use
@@ -297,10 +292,12 @@ class Encore {
      * For example, if you want one of your plugins to have the same priority
      * than the DefinePlugin:
      *
-     *      const Encore = require('@symfony/webpack-encore');
-     *      const PluginPriorities = require('@symfony/webpack-encore/lib/plugins/plugin-priorities.js');
+     * ```
+     * const Encore = require('@symfony/webpack-encore');
+     * const PluginPriorities = require('@symfony/webpack-encore/lib/plugins/plugin-priorities.js');
      *
-     *      Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
+     * Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
+     * ```
      *
      * @param {object} plugin
      * @param {number} priority
@@ -346,10 +343,12 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.addAliases({
-     *          Utilities: path.resolve(__dirname, 'src/utilities/'),
-     *          Templates: path.resolve(__dirname, 'src/templates/')
-     *      })
+     * ```
+     * Encore.addAliases({
+     *     Utilities: path.resolve(__dirname, 'src/utilities/'),
+     *     Templates: path.resolve(__dirname, 'src/templates/')
+     * })
+     * ```
      *
      * @param {object} aliases
      *
@@ -368,24 +367,28 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.addExternals({
-     *          jquery: 'jQuery',
-     *          react: 'react'
-     *      });
+     * ```
+     * Encore.addExternals({
+     *     jquery: 'jQuery',
+     *     react: 'react'
+     * });
+     * ```
      *
      * Or:
      *
-     *      const nodeExternals = require('webpack-node-externals');
+     * ```
+     * const nodeExternals = require('webpack-node-externals');
      *
-     *      Encore.addExternals(
-     *          nodeExternals()
-     *      );
+     * Encore.addExternals(
+     *     nodeExternals()
+     * );
      *
-     *      // or add multiple things at once
-     *      Encore.addExternals([
-     *          nodeExternals(),
-     *          /^(jquery|\$)$/i
-     *      ]);
+     * // or add multiple things at once
+     * Encore.addExternals([
+     *     nodeExternals(),
+     *     /^(jquery|\$)$/i
+     * ]);
+     * ```
      *
      * @param {*} externals
      *
@@ -405,6 +408,15 @@ class Encore {
      * directory with a map from the original file path to
      * the versioned path (e.g. `builds/main.js` => `builds/main.a2b61cc.js`)
      *
+     * Note that the versioning must be disabled if you
+     * want to use the dev-server.
+     *
+     * For example:
+     *
+     * ```
+     * Encore.enableVersioning(Encore.isProduction());
+     * ```
+     *
      * @param {boolean} enabled
      * @returns {Encore}
      */
@@ -421,6 +433,18 @@ class Encore {
      * The *type* of source map will differ between a development
      * or production build.
      *
+     * For example if you want to always generate sourcemaps:
+     *
+     * ```
+     * Encore.enableSourceMaps();
+     * ```
+     *
+     * Or only enable them when not in production mode:
+     *
+     * ```
+     * Encore.enableSourceMaps(!Encore.isProduction());
+     * ```
+     *
      * @param {boolean} enabled
      * @returns {Encore}
      */
@@ -432,6 +456,15 @@ class Encore {
 
     /**
      * Add a "commons" file that holds JS shared by multiple chunks/files.
+     *
+     * For example:
+     *
+     * ```
+     * Encore.createSharedEntry(
+     *     'vendor',
+     *     './src/shared.js'
+     * );
+     * ```
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
      * @param {string} file A file whose code & imports should be put into the shared file.
@@ -448,39 +481,41 @@ class Encore {
      *
      * For example:
      *
-     *      // Copy the content of a whole directory and its subdirectories
-     *      Encore.copyFiles({ from: './assets/images' });
+     * ```
+     * // Copy the content of a whole directory and its subdirectories
+     * Encore.copyFiles({ from: './assets/images' });
      *
-     *      // Only copy files matching a given pattern
-     *      Encore.copyFiles({ from: './assets/images', pattern: /\.(png|jpg|jpeg)$/ })
+     * // Only copy files matching a given pattern
+     * Encore.copyFiles({ from: './assets/images', pattern: /\.(png|jpg|jpeg)$/ })
      *
-     *      // Set the path the files are copied to
-     *      Encore.copyFiles({
-     *          from: './assets/images',
-     *          pattern: /\.(png|jpg|jpeg)$/,
-     *          // to path is relative to the build directory
-     *          to: 'images/[path][name].[ext]'
-     *      })
+     * // Set the path the files are copied to
+     * Encore.copyFiles({
+     *     from: './assets/images',
+     *     pattern: /\.(png|jpg|jpeg)$/,
+     *     // to path is relative to the build directory
+     *     to: 'images/[path][name].[ext]'
+     * })
      *
-     *      // Version files
-     *      Encore.copyFiles({
-     *          from: './assets/images',
-     *          to: 'images/[path][name].[hash:8].[ext]'
-     *      })
+     * // Version files
+     * Encore.copyFiles({
+     *     from: './assets/images',
+     *     to: 'images/[path][name].[hash:8].[ext]'
+     * })
      *
-     *      // Add multiple configs in a single call
-     *      Encore.copyFiles([
-     *          { from: './assets/images' },
-     *          { from: './txt', pattern: /\.txt$/ },
-     *      ]);
+     * // Add multiple configs in a single call
+     * Encore.copyFiles([
+     *     { from: './assets/images' },
+     *     { from: './txt', pattern: /\.txt$/ },
+     * ]);
      *
-     *      // Set the context path: files will be copied
-     *      // into an images/ directory in the output dir
-     *      Encore.copyFiles({
-     *          from: './assets/images',
-     *          to: '[path][name].[hash:8].[ext]',
-     *          context: './assets'
-     *      });
+     * // Set the context path: files will be copied
+     * // into an images/ directory in the output dir
+     * Encore.copyFiles({
+     *     from: './assets/images',
+     *     to: '[path][name].[hash:8].[ext]',
+     *     context: './assets'
+     * });
+     * ```
      *
      * Notes:
      *      * No transformation is applied to the copied files (for instance
@@ -579,11 +614,12 @@ class Encore {
      *
      * https://webpack.js.org/plugins/split-chunks-plugin/
      *
+     * ```
      * Encore.configureSplitChunks(function(splitChunks) {
-     *      // change the configuration
-     *
-     *      splitChunks.minSize = 0;
+     *     // change the configuration
+     *     splitChunks.minSize = 0;
      * });
+     * ```
      *
      * @param {function} callback
      * @returns {Encore}
@@ -600,11 +636,12 @@ class Encore {
      * https://webpack.js.org/configuration/watch/
      * https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
      *
+     * ```
      * Encore.configureWatchOptions(function(watchOptions) {
-     *      // change the configuration
-     *
-     *      watchOptions.poll = 250; // useful when running inside a Virtual Machine
+     *     // change the configuration
+     *     watchOptions.poll = 250; // useful when running inside a Virtual Machine
      * });
+     * ```
      *
      * @param {function} callback
      * @returns {Encore}
@@ -620,10 +657,12 @@ class Encore {
      *
      * Usage:
      *
-     *  WebpackConfig.autoProvideVariables({
-     *      $: 'jquery',
-     *      jQuery: 'jquery'
-     *  });
+     * ```
+     * WebpackConfig.autoProvideVariables({
+     *     $: 'jquery',
+     *     jQuery: 'jquery'
+     * });
+     * ```
      *
      *  Then, whenever $ or jQuery are found in any
      *  modules, webpack will automatically require
@@ -644,10 +683,12 @@ class Encore {
     /**
      * Makes jQuery available everywhere. Equivalent to
      *
-     *  WebpackConfig.autoProvideVariables({
-     *      $: 'jquery',
-     *      jQuery: 'jquery'
-     *  });
+     * ```
+     * WebpackConfig.autoProvideVariables({
+     *     $: 'jquery',
+     *     jQuery: 'jquery'
+     * });
+     * ```
      *
      * @returns {Encore}
      */
@@ -664,14 +705,18 @@ class Encore {
      *
      * https://github.com/postcss/postcss-loader
      *
-     *     Encore.enablePostCssLoader();
+     * ```
+     * Encore.enablePostCssLoader();
+     * ```
      *
      * Or pass options to the loader
      *
-     *     Encore.enablePostCssLoader(function(options) {
-     *         // https://github.com/postcss/postcss-loader#options
-     *         // options.config = {...}
-     *     })
+     * ```
+     * Encore.enablePostCssLoader(function(options) {
+     *     // https://github.com/postcss/postcss-loader#options
+     *     // options.config = {...}
+     * })
+     * ```
      *
      * @param {function} postCssLoaderOptionsCallback
      * @returns {Encore}
@@ -685,20 +730,24 @@ class Encore {
     /**
      * Call this if you plan on loading SASS files.
      *
-     *     Encore.enableSassLoader();
+     * ```
+     * Encore.enableSassLoader();
+     * ```
      *
      * Or pass options to node-sass
      *
-     *     Encore.enableSassLoader(function(options) {
-     *         // https://github.com/sass/node-sass#options
-     *         // options.includePaths = [...]
-     *     }, {
-     *         // set optional Encore-specific options
-     *         // resolveUrlLoader: true
-     *     });
+     * ```
+     * Encore.enableSassLoader(function(options) {
+     *     // https://github.com/sass/node-sass#options
+     *     // options.includePaths = [...]
+     * }, {
+     *     // set optional Encore-specific options
+     *     // resolveUrlLoader: true
+     * });
+     * ```
      *
      * Supported options:
-     *      * {bool} resolveUrlLoader (default=true)
+     *      * {boolean} resolveUrlLoader (default=true)
      *              Whether or not to use the resolve-url-loader.
      *              Setting to false can increase performance in some
      *              cases, especially when using bootstrap_sass. But,
@@ -719,15 +768,19 @@ class Encore {
     /**
      * Call this if you plan on loading less files.
      *
-     *     Encore.enableLessLoader();
+     * ```
+     * Encore.enableLessLoader();
+     * ```
      *
      * Or pass options to the loader
      *
-     *     Encore.enableLessLoader(function(options) {
-     *         // https://github.com/webpack-contrib/less-loader#examples
-     *         // http://lesscss.org/usage/#command-line-usage-options
-     *         // options.relativeUrls = false;
-     *     });
+     * ```
+     * Encore.enableLessLoader(function(options) {
+     *     // https://github.com/webpack-contrib/less-loader#examples
+     *     // http://lesscss.org/usage/#command-line-usage-options
+     *     // options.relativeUrls = false;
+     * });
+     * ```
      *
      * @param {function} lessLoaderOptionsCallback
      * @returns {Encore}
@@ -741,14 +794,18 @@ class Encore {
     /**
      * Call this if you plan on loading stylus files.
      *
-     *     Encore.enableStylusLoader();
+     * ```
+     * Encore.enableStylusLoader();
+     * ```
      *
      * Or pass options to the loader
      *
-     *     Encore.enableStylusLoader(function(options) {
-     *         // https://github.com/shama/stylus-loader
-     *         // options.import = ['~library/index.styl'];
-     *     });
+     * ```
+     * Encore.enableStylusLoader(function(options) {
+     *     // https://github.com/shama/stylus-loader
+     *     // options.import = ['~library/index.styl'];
+     * });
+     * ```
      *
      * @param {function} stylusLoaderOptionsCallback
      * @returns {Encore}
@@ -764,33 +821,35 @@ class Encore {
      *
      * https://babeljs.io/docs/usage/babelrc/
      *
+     * ```
      * Encore.configureBabel(function(babelConfig) {
-     *      // change the babelConfig
-     *      // if you use an external Babel configuration
-     *      // this callback will NOT be used. In this case
-     *      // you can pass null as the first parameter to
-     *      // still be able to use some of the options below
-     *      // without a warning.
+     *     // change the babelConfig
+     *     // if you use an external Babel configuration
+     *     // this callback will NOT be used. In this case
+     *     // you can pass null as the first parameter to
+     *     // still be able to use some of the options below
+     *     // without a warning.
      * }, {
-     *      // set optional Encore-specific options, for instance:
+     *     // set optional Encore-specific options, for instance:
      *
-     *      // change the rule that determines which files
-     *      // won't be processed by Babel
-     *      exclude: /bower_components/
+     *     // change the rule that determines which files
+     *     // won't be processed by Babel
+     *     exclude: /bower_components/
      *
-     *      // ...or keep the default rule but only allow
-     *      // *some* Node modules to be processed by Babel
-     *      includeNodeModules: ['foundation-sites']
+     *     // ...or keep the default rule but only allow
+     *     // *some* Node modules to be processed by Babel
+     *     includeNodeModules: ['foundation-sites']
      *
-     *      // automatically import polyfills where they
-     *      // are needed
-     *      useBuiltIns: 'usage'
+     *     // automatically import polyfills where they
+     *     // are needed
+     *     useBuiltIns: 'usage'
      *
-     *      // if you set useBuiltIns you also have to add
-     *      // core-js to your project using Yarn or npm and
-     *      // inform Babel of the version it will use.
-     *      corejs: 3
+     *     // if you set useBuiltIns you also have to add
+     *     // core-js to your project using Yarn or npm and
+     *     // inform Babel of the version it will use.
+     *     corejs: 3
      * });
+     * ```
      *
      * Supported options:
      *      * {Condition} exclude (default=/(node_modules|bower_components)/)
@@ -818,7 +877,7 @@ class Encore {
      *              Cannot be used if you have an external Babel configuration (a .babelrc
      *              file for instance). In this case you can set the option directly into
      *              that configuration file.
-     *      * {number|string} corejs (default=not set)
+     *      * {number|string|object} corejs (default=not set)
      *              Set the "corejs" option of @babel/preset-env.
      *              It should contain the version of core-js you added to your project
      *              if useBuiltIns isn't set to false.
@@ -838,10 +897,12 @@ class Encore {
      *
      * https://github.com/webpack-contrib/css-loader#options
      *
+     * ```
      * Encore.configureCssLoader(function(config) {
-     *      // change the config
-     *      // config.minimize = true;
+     *     // change the config
+     *     // config.minimize = true;
      * });
+     * ```
      *
      * @param {function} callback
      * @returns {Encore}
@@ -869,12 +930,16 @@ class Encore {
      * If enabled, a Preact preset will be applied to
      * the generated Webpack configuration.
      *
-     *     Encore.enablePreactPreset()
+     * ```
+     * Encore.enablePreactPreset()
+     * ```
      *
      * If you wish to also use preact-compat (https://github.com/developit/preact-compat)
      * you can enable it by setting the "preactCompat" option to true:
      *
-     *     Encore.enablePreactPreset({ preactCompat: true })
+     * ```
+     * Encore.enablePreactPreset({ preactCompat: true })
+     * ```
      *
      * @param {object} options
      * @returns {Encore}
@@ -888,14 +953,18 @@ class Encore {
     /**
      * Call this if you plan on loading TypeScript files.
      *
+     * ```
      * Encore.enableTypeScriptLoader()
+     * ```
      *
      * Or, configure the ts-loader options:
      *
+     * ```
      * Encore.enableTypeScriptLoader(function(tsConfig) {
-     *      // https://github.com/TypeStrong/ts-loader/blob/master/README.md#loader-options
-     *      // tsConfig.silent = false;
+     *     // https://github.com/TypeStrong/ts-loader/blob/master/README.md#loader-options
+     *     // tsConfig.silent = false;
      * });
+     * ```
      *
      * @param {function} callback
      * @returns {Encore}
@@ -928,13 +997,15 @@ class Encore {
      *
      * https://github.com/vuejs/vue-loader
      *
-     *     Encore.enableVueLoader();
+     * ```
+     * Encore.enableVueLoader();
      *
-     *     // or configure the vue-loader options
-     *     // https://vue-loader.vuejs.org/en/configurations/advanced.html
-     *     Encore.enableVueLoader(function(options) {
-     *          options.preLoaders = { ... }
-     *     });
+     * // or configure the vue-loader options
+     * // https://vue-loader.vuejs.org/en/configurations/advanced.html
+     * Encore.enableVueLoader(function(options) {
+     *     options.preLoaders = { ... }
+     * });
+     * ```
      *
      * @param {function} vueLoaderOptionsCallback
      * @returns {Encore}
@@ -950,25 +1021,27 @@ class Encore {
      *
      * https://github.com/MoOx/eslint-loader
      *
-     *     // enables the eslint loaded using the default eslint configuration.
-     *     Encore.enableEslintLoader();
+     * ```
+     * // enables the eslint loaded using the default eslint configuration.
+     * Encore.enableEslintLoader();
      *
-     *     // Optionally, you can pass in the configuration eslint should extend.
-     *     Encore.enableEslintLoader('airbnb');
+     * // Optionally, you can pass in the configuration eslint should extend.
+     * Encore.enableEslintLoader('airbnb');
      *
-     *     // You can also pass in an object of options
-     *     // that will be passed on to the eslint-loader
-     *     Encore.enableEslintLoader({
-     *         extends: 'airbnb',
-               emitWarning: false
-     *     });
+     * // You can also pass in an object of options
+     * // that will be passed on to the eslint-loader
+     * Encore.enableEslintLoader({
+     *     extends: 'airbnb',
+     *     emitWarning: false
+     * });
      *
-     *     // For a more advanced usage you can pass in a callback
-     *     // https://github.com/MoOx/eslint-loader#options
-     *     Encore.enableEslintLoader((options) => {
-     *          options.extends = 'airbnb';
-     *          options.emitWarning = false;
-     *     });
+     * // For a more advanced usage you can pass in a callback
+     * // https://github.com/MoOx/eslint-loader#options
+     * Encore.enableEslintLoader((options) => {
+     *      options.extends = 'airbnb';
+     *      options.emitWarning = false;
+     * });
+     * ```
      *
      * @param {string|object|function} eslintLoaderOptionsOrCallback
      * @returns {Encore}
@@ -985,13 +1058,15 @@ class Encore {
      *
      * https://github.com/Turbo87/webpack-notifier
      *
-     *     Encore.enableBuildNotifications();
+     * ```
+     * Encore.enableBuildNotifications();
      *
-     *     // or configure the webpack-notifier options
-     *     // https://github.com/Turbo87/webpack-notifier#configuration
-     *     Encore.enableBuildNotifications(true, function(options) {
-     *         options.title = 'Webpack build';
-     *     });
+     * // or configure the webpack-notifier options
+     * // https://github.com/Turbo87/webpack-notifier#configuration
+     * Encore.enableBuildNotifications(true, function(options) {
+     *     options.title = 'Webpack build';
+     * });
+     * ```
      *
      * @param {boolean} enabled
      * @param {function} notifierPluginOptionsCallback
@@ -1006,14 +1081,18 @@ class Encore {
     /**
      * Call this if you plan on loading Handlebars files.
      *
-     *     Encore.enableHandlebarsLoader();
+     * ```
+     * Encore.enableHandlebarsLoader();
+     * ```
      *
      * Or pass options to the loader
      *
-     *     Encore.enableHandlebarsLoader(function(options) {
-     *         // https://github.com/pcardune/handlebars-loader
-     *         // options.debug = true;
-     *     });
+     * ```
+     * Encore.enableHandlebarsLoader(function(options) {
+     *     // https://github.com/pcardune/handlebars-loader
+     *     // options.debug = true;
+     * });
+     * ```
      *
      * @param {function} callback
      * @returns {Encore}
@@ -1068,12 +1147,14 @@ class Encore {
      * Call this to change how the name of each output
      * file is generated.
      *
-     *     Encore.configureFilenames({
-     *         js: '[name].[contenthash].js',
-     *         css: '[name].[contenthash].css',
-     *         images: 'images/[name].[hash:8].[ext]',
-     *         fonts: 'fonts/[name].[hash:8].[ext]'
-     *     });
+     * ```
+     * Encore.configureFilenames({
+     *     js: '[name].[contenthash].js',
+     *     css: '[name].[contenthash].css',
+     *     images: 'images/[name].[hash:8].[ext]',
+     *     fonts: 'fonts/[name].[hash:8].[ext]'
+     * });
+     * ```
      *
      * It's safe to omit a key (e.g. css): the default naming strategy
      * will be used for any file types not passed.
@@ -1096,15 +1177,17 @@ class Encore {
      *
      * https://github.com/webpack-contrib/url-loader
      *
-     *     Encore.configureUrlLoader({
-     *         images: {
-     *             limit: 8192,
-     *             mimetype: 'image/png'
-     *         },
-     *         fonts: {
-     *             limit: 4096
-     *         }
-     *     });
+     * ```
+     * Encore.configureUrlLoader({
+     *     images: {
+     *         limit: 8192,
+     *         mimetype: 'image/png'
+     *     },
+     *     fonts: {
+     *         limit: 4096
+     *     }
+     * });
+     * ```
      *
      * If a key (e.g. fonts) doesn't exists or contains a
      * falsy value the file-loader will be used instead.
@@ -1127,12 +1210,14 @@ class Encore {
      * For example, if you are using Vue and ESLint loader,
      * this is how you can configure ESLint to lint Vue files:
      *
-     *     Encore
-     *         .enableEslintLoader()
-     *         .enableVueLoader()
-     *         .configureLoaderRule('eslint', (loaderRule) => {
-     *              loaderRule.test = /\.(jsx?|vue)/;
-     *         });
+     * ```
+     * Encore
+     *     .enableEslintLoader()
+     *     .enableVueLoader()
+     *     .configureLoaderRule('eslint', (loaderRule) => {
+     *          loaderRule.test = /\.(jsx?|vue)/;
+     *     });
+     * ```
      *
      * @param {string} name
      * @param {function} callback
@@ -1151,9 +1236,11 @@ class Encore {
      *
      * For example:
      *
-     *      Encore.cleanupOutputBeforeBuild(['*.js'], (options) => {
-     *          options.dry = true;
-     *      })
+     * ```
+     * Encore.cleanupOutputBeforeBuild(['*.js'], (options) => {
+     *     options.dry = true;
+     * })
+     * ```
      *
      * @param {Array} paths Paths that should be cleaned, relative to the "root" option
      * @param {function} cleanWebpackPluginOptionsCallback
@@ -1177,17 +1264,21 @@ class Encore {
      *
      * For example:
      *
-     *     Encore.enableIntegrityHashes(
-     *         Encore.isProduction(),
-     *         'sha384'
-     *     );
+     * ```
+     * Encore.enableIntegrityHashes(
+     *     Encore.isProduction(),
+     *     'sha384'
+     * );
+     * ```
      *
      * Or with multiple algorithms:
      *
-     *     Encore.enableIntegrityHashes(
-     *         Encore.isProduction(),
-     *         ['sha256', 'sha384', 'sha512']
-     *     );
+     * ```
+     * Encore.enableIntegrityHashes(
+     *     Encore.isProduction(),
+     *     ['sha256', 'sha384', 'sha512']
+     * );
+     * ```
      *
      * @param {boolean} enabled
      * @param {string|Array} algorithms
@@ -1229,9 +1320,11 @@ class Encore {
     /**
      * Use this at the bottom of your webpack.config.js file:
      *
+     * ```
      * module.exports = Encore.getWebpackConfig();
+     * ```
      *
-     * @returns {*}
+     * @returns {webpack.Configuration}
      */
     getWebpackConfig() {
         validator(webpackConfig);
@@ -1258,6 +1351,7 @@ class Encore {
      * using Encore without executing the "./node_module/.bin/encore"
      * utility (e.g. with karma-webpack).
      *
+     * ```
      * Encore.configureRuntimeEnvironment(
      *     // Environment to use (dev, dev-server, production)
      *     'dev-server',
@@ -1270,6 +1364,7 @@ class Encore {
      *         keepPublicPath: true
      *     }
      * )
+     * ```
      *
      * Be aware than using this method will also reset the current
      * webpack configuration.
@@ -1288,11 +1383,18 @@ class Encore {
             process.cwd()
         );
 
-        initializeWebpackConfig();
+        webpackConfig = new WebpackConfig(runtimeConfig, true);
 
         return this;
     }
 
+    /**
+     * Check if Encore was either called through
+     * the CLI utility or after being manually intialized
+     * using Encore.configureRuntimeEnvironment.
+     *
+     * @returns {boolean}
+     */
     isRuntimeEnvironmentConfigured() {
         return runtimeConfig !== null;
     }
@@ -1343,84 +1445,9 @@ class Encore {
     }
 }
 
-// Proxy the API in order to prevent calls to most of its methods
-// if the webpackConfig object hasn't been initialized yet.
-const EncoreProxy = new Proxy(new Encore(), {
-    get: (target, prop) => {
-        if (prop === '__esModule') {
-            // When using Babel to preprocess a webpack.config.babel.js file
-            // (for instance if we want to use ES6 syntax) the __esModule
-            // property needs to be whitelisted to avoid an "Unknown property"
-            // error.
-            return target[prop];
-        }
-
-        if (typeof target[prop] === 'function') {
-            // These methods of the public API can be called even if the
-            // webpackConfig object hasn't been initialized yet.
-            const safeMethods = [
-                'configureRuntimeEnvironment',
-                'clearRuntimeEnvironment',
-                'isRuntimeEnvironmentConfigured',
-            ];
-
-            if (!webpackConfig && (safeMethods.indexOf(prop) === -1)) {
-                throw new Error(`Encore.${prop}() cannot be called yet because the runtime environment doesn't appear to be configured. Make sure you're using the encore executable or call Encore.configureRuntimeEnvironment() first if you're purposely not calling Encore directly.`);
-            }
-
-            // Either a safe method has been called or the webpackConfig
-            // object is already available. In this case act as a passthrough.
-            return (...parameters) => {
-                try {
-                    const res = target[prop](...parameters);
-                    return (res === target) ? EncoreProxy : res;
-                } catch (error) {
-                    prettyError(error);
-                    process.exit(1); // eslint-disable-line
-                }
-            };
-        }
-
-        if (typeof target[prop] === 'undefined') {
-            // Find the property with the closest Levenshtein distance
-            let similarProperty;
-            let minDistance = Number.MAX_VALUE;
-
-            for (const apiProperty of Object.getOwnPropertyNames(Encore.prototype)) {
-                // Ignore class constructor
-                if (apiProperty === 'constructor') {
-                    continue;
-                }
-
-                const distance = levenshtein.get(apiProperty, prop);
-                if (distance <= minDistance) {
-                    similarProperty = apiProperty;
-                    minDistance = distance;
-                }
-            }
-
-            let errorMessage = `${chalk.red(`Encore.${prop}`)} is not a recognized property or method.`;
-            if (minDistance < (prop.length / 3)) {
-                errorMessage += ` Did you mean ${chalk.green(`Encore.${similarProperty}`)}?`;
-            }
-
-            // Prettify the error message.
-            // Only keep the 2nd line of the stack trace:
-            // - First line should be this file (index.js)
-            // - Second line should be the Webpack config file
-            prettyError(
-                new Error(errorMessage),
-                { skipTrace: (traceLine, lineNumber) => lineNumber !== 1 }
-            );
-
-            process.exit(1); // eslint-disable-line
-        }
-
-        return target[prop];
-    }
-});
-
 /**
+ * Proxy the API in order to prevent calls to most of its methods
+ * if the webpackConfig object hasn't been initialized yet.
  * @type {Encore}
  */
-module.exports = EncoreProxy;
+module.exports = EncoreProxy.createProxy(new Encore());
