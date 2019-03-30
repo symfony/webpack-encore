@@ -660,7 +660,7 @@ class Encore {
      *     });
      *
      * Supported options:
-     *      * {bool} resolveUrlLoader (default=true)
+     *      * {boolean} resolveUrlLoader (default=true)
      *              Whether or not to use the resolve-url-loader.
      *              Setting to false can increase performance in some
      *              cases, especially when using bootstrap_sass. But,
