@@ -12,7 +12,7 @@
 
 const parseRuntime = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
-const chalk = require('chalk');
+const chalk = require('chalk').default;
 const logger = require('../lib/logger');
 
 const runtimeConfig = parseRuntime(
@@ -40,7 +40,7 @@ if (!runtimeConfig.isValidCommand) {
     }
     showUsageInstructions();
 
-    process.exit(1);
+    process.exit(1); // eslint-disable-line no-process-exit
 }
 
 if (runtimeConfig.helpRequested) {

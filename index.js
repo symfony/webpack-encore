@@ -9,6 +9,7 @@
 
 'use strict';
 
+const webpack = require('webpack'); // eslint-disable-line no-unused-vars
 const EncoreProxy = require('./lib/EncoreProxy');
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
@@ -780,7 +781,7 @@ class Encore {
      *              Cannot be used if you have an external Babel configuration (a .babelrc
      *              file for instance). In this case you can set the option directly into
      *              that configuration file.
-     *      * {number|string} corejs (default=not set)
+     *      * {number|string|object} corejs (default=not set)
      *              Set the "corejs" option of @babel/preset-env.
      *              It should contain the version of core-js you added to your project
      *              if useBuiltIns isn't set to false.
@@ -1193,7 +1194,7 @@ class Encore {
      *
      * module.exports = Encore.getWebpackConfig();
      *
-     * @returns {*}
+     * @returns {webpack.Configuration}
      */
     getWebpackConfig() {
         validator(webpackConfig);
@@ -1255,6 +1256,13 @@ class Encore {
         return this;
     }
 
+    /**
+     * Check if Encore was either called through
+     * the CLI utility or after being manually intialized
+     * using Encore.configureRuntimeEnvironment.
+     *
+     * @returns {boolean}
+     */
     isRuntimeEnvironmentConfigured() {
         return runtimeConfig !== null;
     }
