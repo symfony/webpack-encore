@@ -219,8 +219,8 @@ class Encore {
      * Adds a JavaScript file that should be webpacked:
      *
      * ```
-     *  // final output file will be main.js in the output directory
-     *  Encore.addEntry('main', './path/to/some_file.js');
+     * // final output file will be main.js in the output directory
+     * Encore.addEntry('main', './path/to/some_file.js');
      * ```
      *
      * If the JavaScript file imports/requires CSS/Sass/LESS files,
@@ -408,6 +408,15 @@ class Encore {
      * directory with a map from the original file path to
      * the versioned path (e.g. `builds/main.js` => `builds/main.a2b61cc.js`)
      *
+     * Note that the versioning must be disabled if you
+     * want to use the dev-server.
+     *
+     * For example:
+     *
+     * ```
+     * Encore.enableVersioning(Encore.isProduction());
+     * ```
+     *
      * @param {boolean} enabled
      * @returns {Encore}
      */
@@ -424,6 +433,18 @@ class Encore {
      * The *type* of source map will differ between a development
      * or production build.
      *
+     * For example if you want to always generate sourcemaps:
+     *
+     * ```
+     * Encore.enableSourceMaps();
+     * ```
+     *
+     * Or only enable them when not in production mode:
+     *
+     * ```
+     * Encore.enableSourceMaps(!Encore.isProduction());
+     * ```
+     *
      * @param {boolean} enabled
      * @returns {Encore}
      */
@@ -435,6 +456,15 @@ class Encore {
 
     /**
      * Add a "commons" file that holds JS shared by multiple chunks/files.
+     *
+     * For example:
+     *
+     * ```
+     * Encore.createSharedEntry(
+     *     'vendor',
+     *     './src/shared.js'
+     * );
+     * ```
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
      * @param {string} file A file whose code & imports should be put into the shared file.
