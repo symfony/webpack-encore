@@ -1490,6 +1490,18 @@ module.exports = {
                     'class TestClassSyntax'
                 );
 
+                // test that global styles are working correctly
+                webpackAssert.assertOutputFileContains(
+                    'main.css',
+                    '#app {'
+                );
+
+                // test that CSS Modules (for scoped styles) is used
+                webpackAssert.assertOutputFileContains(
+                    'main.css',
+                    '.h1_' // `.h1` is transformed to `.h1_[a-zA-Z0-9]`
+                );
+
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
                     [
