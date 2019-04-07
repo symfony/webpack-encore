@@ -876,6 +876,27 @@ describe('WebpackConfig object', () => {
             expect(config.useVueLoader).to.be.true;
             expect(config.vueLoaderOptionsCallback).to.equal(callback);
         });
+
+        it('Should validate Encore-specific options', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableVueLoader(() => {}, {
+                    notExisting: false,
+                });
+            }).to.throw('"notExisting" is not a valid key for enableVueLoader(). Valid keys: useJsx.');
+        });
+
+        it('Should set Encore-specific options', () => {
+            const config = createConfig();
+            config.enableVueLoader(() => {}, {
+                useJsx: true,
+            });
+
+            expect(config.vueOptions).to.deep.equal({
+                useJsx: true,
+            });
+        });
     });
 
 

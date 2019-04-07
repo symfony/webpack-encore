@@ -936,11 +936,26 @@ class Encore {
      *          options.preLoaders = { ... }
      *     });
      *
+     *     // or configure Encore-specific options
+     *     Encore.enableVueLoader(() => {}, {
+     *         // set optional Encore-specific options, for instance:
+     *
+     *         // enable JSX usage in Vue components
+     *         // https://vuejs.org/v2/guide/render-function.html#JSX
+     *         useJsx: true
+     *     })
+     *
+     * Supported options:
+     *      * {boolean} useJsx (default=false)
+     *              Configure Babel to use the preset "@vue/babel-preset-jsx",
+     *              in order to enable JSX usage in Vue components.
+     *
      * @param {function} vueLoaderOptionsCallback
+     * @param {object} encoreOptions
      * @returns {Encore}
      */
-    enableVueLoader(vueLoaderOptionsCallback = () => {}) {
-        webpackConfig.enableVueLoader(vueLoaderOptionsCallback);
+    enableVueLoader(vueLoaderOptionsCallback = () => {}, encoreOptions = {}) {
+        webpackConfig.enableVueLoader(vueLoaderOptionsCallback, encoreOptions);
 
         return this;
     }

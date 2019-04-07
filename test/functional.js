@@ -1445,6 +1445,81 @@ module.exports = {
             }, true);
         });
 
+        it('Vue.js is compiled correctly with JSX support', (done) => {
+            const appDir = testSetup.createTestAppDir();
+
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}                            `
+            );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './vuejs-jsx/main');
+            config.enableVueLoader(() => {}, {
+                useJsx: true,
+            });
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.configureBabel(function(config) {
+                expect(config.presets[0][0]).to.equal('@babel/preset-env');
+                config.presets[0][1].targets = {
+                    chrome: 52
+                };
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'images/logo.82b9c7a5.png',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                // test that our custom babel config is used
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'class TestClassSyntax'
+                );
+
+                // test that global styles are working correctly
+                webpackAssert.assertOutputFileContains(
+                    'main.css',
+                    '#app {'
+                );
+
+                // test that CSS Modules (for scoped styles) is used
+                webpackAssert.assertOutputFileContains(
+                    'main.css',
+                    '.h1_' // `.h1` is transformed to `.h1_[a-zA-Z0-9]`
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    (browser) => {
+                        // assert that the vue.js app rendered
+                        browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
+                        // make sure the styles are not inlined
+                        browser.assert.elements('style', 0);
+
+                        done();
+                    }
+                );
+            });
+        });
+
         it('configureUrlLoader() allows to use the URL loader for images/fonts', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
             config.setPublicPath('/build');
