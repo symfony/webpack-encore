@@ -1093,6 +1093,61 @@ module.exports = {
             });
         });
 
+        it('Babel adds polyfills correctly', (done) => {
+            const cwd = process.cwd();
+            after(() => {
+                process.chdir(cwd);
+            });
+
+            const appDir = testSetup.createTestAppDir();
+            process.chdir(appDir);
+
+            fs.writeFileSync(
+                path.join(appDir, 'package.json'),
+
+                // The test case uses Array.flat which
+                // isn't supported by IE11
+                '{"browserslist": "IE 11"}'
+            );
+
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('commonjs', './js/import_polyfills_commonjs.js');
+            config.addEntry('ecmascript', './js/import_polyfills_ecmascript.js');
+            config.configureBabel(null, {
+                useBuiltIns: 'usage',
+                corejs: 3,
+            });
+
+            testSetup.runWebpack(config, async(webpackAssert) => {
+                for (const scriptName of ['commonjs.js', 'ecmascript.js']) {
+                    // Check that the polyfills are included correctly
+                    // in both files.
+                    webpackAssert.assertOutputFileContains(
+                        scriptName,
+                        'Array.prototype.flat'
+                    );
+
+                    // Test that the generated scripts work fine
+                    await new Promise(resolve => {
+                        testSetup.requestTestPage(
+                            path.join(config.getContext(), 'www'),
+                            [
+                                'build/runtime.js',
+                                `build/${scriptName}`,
+                            ],
+                            (browser) => {
+                                browser.assert.text('body', '[1,2,3,4]');
+                                resolve();
+                            }
+                        );
+                    });
+                }
+
+                done();
+            });
+        });
+
         it('When enabled, react JSX is transformed!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
