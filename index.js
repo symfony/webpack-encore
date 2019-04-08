@@ -946,7 +946,7 @@ class Encore {
      *     })
      *
      * Supported options:
-     *      * {true|false} useJsx (default=false)
+     *      * {boolean} useJsx (default=false)
      *              Configure Babel to use the preset "@vue/babel-preset-jsx",
      *              in order to enable JSX usage in Vue components.
      *
