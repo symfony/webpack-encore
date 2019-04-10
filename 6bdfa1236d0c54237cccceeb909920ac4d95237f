@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-04-07T18:59:48Z
+
+One of the jobs currently fails due to a bug in the new version of `mocha` released a few hours ago (see https://github.com/mochajs/mocha/issues/3866).
