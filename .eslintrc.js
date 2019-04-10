@@ -40,7 +40,7 @@ module.exports = {
         }],
         "no-console": "off",
         "valid-jsdoc": ["error", {"requireParamDescription": false, "requireReturnDescription": false}],
-        "node/no-unsupported-features": ["error", { version: 6 }],
+        "node/no-unsupported-features": ["error", { version: 8 }],
         "node/no-deprecated-api": "error",
         "node/no-missing-import": "error",
         "node/no-missing-require": [

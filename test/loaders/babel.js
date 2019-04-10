@@ -45,7 +45,8 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
         // we only add cacheDirectory
         expect(actualLoaders[0].options).to.deep.equal({
-            cacheDirectory: true
+            cacheDirectory: true,
+            sourceType: 'unambiguous',
         });
     });
 
@@ -57,7 +58,8 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
         // cacheDirectory is disabled in production mode
         expect(actualLoaders[0].options).to.deep.equal({
-            cacheDirectory: false
+            cacheDirectory: false,
+            sourceType: 'unambiguous',
         });
     });
 
