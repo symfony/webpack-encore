@@ -126,4 +126,22 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
         expect(actualLoaders[0].options).to.deep.equal({ 'foo': true });
     });
+
+    it('getLoaders() with Vue and JSX support', () => {
+        const config = createConfig();
+        config.enableVueLoader(() => {}, {
+            useJsx: true,
+        });
+
+        config.configureBabel(function(babelConfig) {
+            babelConfig.presets.push('foo');
+        });
+
+        const actualLoaders = babelLoader.getLoaders(config);
+
+        expect(actualLoaders[0].options.presets).to.deep.include.members([
+            '@vue/babel-preset-jsx',
+            'foo'
+        ]);
+    });
 });
