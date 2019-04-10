@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 0.27.0
+
+ * [Behavior Change] The Babel configuration `sourceType` default was
+   changed from not being specified (so, the default `module` was used)
+   to `unambiguous`. This is to help Babel's `useBuiltIns` functionality
+   properly determine if a `require` or `import` should be automatically
+   added to your files, based on that file's style - #555 thanks to @Lyrkan.
+
+ * Added JSX support to Vue! #553 thanks to @Kocal.
+
+ * Cleaned up the jsdoc in `index.js` to add better docs and better
+   IDE auto-completion - #550 thank sto @Lyrkan.
+
 ## 0.26.0
 
  * [Behavior change] The Babel `useBuiltIns` option default value changed
