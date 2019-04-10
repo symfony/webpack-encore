@@ -1007,14 +1007,16 @@ class Encore {
      * });
      * ```
      *
-     *     // or configure Encore-specific options
-     *     Encore.enableVueLoader(() => {}, {
-     *         // set optional Encore-specific options, for instance:
+     * ```
+     * // or configure Encore-specific options
+     * Encore.enableVueLoader(() => {}, {
+     *     // set optional Encore-specific options, for instance:
      *
-     *         // enable JSX usage in Vue components
-     *         // https://vuejs.org/v2/guide/render-function.html#JSX
-     *         useJsx: true
-     *     })
+     *     // enable JSX usage in Vue components
+     *     // https://vuejs.org/v2/guide/render-function.html#JSX
+     *     useJsx: true
+     * })
+     * ```
      *
      * Supported options:
      *      * {boolean} useJsx (default=false)
