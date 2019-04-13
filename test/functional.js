@@ -401,7 +401,7 @@ describe('Functional tests using webpack', function() {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'main.89eb104b.js',
-                                'styles.8ec31654.css',
+                                'styles.d8f0e981.css',
                                 'manifest.json',
                                 'entrypoints.json',
                                 'runtime.191f859b.js',
@@ -409,7 +409,7 @@ describe('Functional tests using webpack', function() {
                     }
 
                     webpackAssert.assertOutputFileContains(
-                        'styles.8ec31654.css',
+                        'styles.d8f0e981.css',
                         'font-size: 50px;'
                     );
                     webpackAssert.assertManifestPathDoesNotExist(
@@ -417,7 +417,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.8ec31654.css'
+                        '/styles.d8f0e981.css'
                     );
 
                     done();
@@ -448,7 +448,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?91597a40238e0e66'
+                        '/styles.css?05d43eef7455a252'
                     );
 
                     done();
@@ -503,14 +503,14 @@ describe('Functional tests using webpack', function() {
                 if (!process.env.DISABLE_UNSTABLE_CHECKS) {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
-                            '0.590a68c7.js', // chunks are also versioned
-                            '0.8ec31654.css',
+                            '0.90edc8e8.js', // chunks are also versioned
+                            '0.6ba897e2.css',
                             'main.4a5effdb.js',
-                            'h1.8ec31654.css',
-                            'bg.0ec2735b.css',
+                            'h1.6ba897e2.css',
+                            'bg.76e19b0d.css',
                             'manifest.json',
                             'entrypoints.json',
-                            'runtime.a59dcd0a.js',
+                            'runtime.7c5b5f14.js',
                         ]);
                 }
 
@@ -520,7 +520,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.0ec2735b.css',
+                    'bg.76e19b0d.css',
                     '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
@@ -2502,7 +2502,7 @@ module.exports = {
                             '/build/main.js': 'sha384-ymG7OyjISWrOpH9jsGvajKMDEOP/mKJq8bHC0XdjQA6P8sg2nu+2RLQxcNNwE/3J',
                             '/build/main~other.js': 'sha384-4g+Zv0iELStVvA4/B27g4TQHUMwZttA5TEojjUyB8Gl5p7sarU4y+VTSGMrNab8n',
                             '/build/main~other.css': 'sha384-hfZmq9+2oI5Cst4/F4YyS2tJAAYdGz7vqSMP8cJoa8bVOr2kxNRLxSw6P8UZjwUn',
-                            '/build/other.js': 'sha384-ZU3hiTN/+Va9WVImPi+cI0/j/Q7SzAVezqL1aEXha8sVgE5HU6/0wKUxj1LEnkC9',
+                            '/build/other.js': 'sha384-iQlk+cKfriMc65IK1z9JnG/jZxcbgNoqHo4IUFsT9VAo/ILn4iYd1apHrKJoDhL2',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.
@@ -2535,7 +2535,7 @@ module.exports = {
                             'http://localhost:8090/assets/main.js': 'sha256-RtW3TYA1SBHUGuBnIBBJZ7etIGyYisjargouvET4sFE=',
                             'http://localhost:8090/assets/main~other.js': 'sha256-q9xPQWa0UBbMPUNmhDaDuBFjV2gZU6ICiKzLN7jPccc=',
                             'http://localhost:8090/assets/main~other.css': 'sha256-KVo9sI0v6MnbxPg/xZMSn2XE7qIChWiDh1uED1tP5Fo=',
-                            'http://localhost:8090/assets/other.js': 'sha256-rxT6mp9VrLO1++6G3g/VSLGisznX838ALokQhD3Jmyc=',
+                            'http://localhost:8090/assets/other.js': 'sha256-LlL6lle4zx9AYq+Pwx5fCLPx25wRBFLYXkOkv5FC4jw=',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.
@@ -2567,7 +2567,7 @@ module.exports = {
                             '/build/main.js': 'sha256-RtW3TYA1SBHUGuBnIBBJZ7etIGyYisjargouvET4sFE= sha512-/wl1U/L6meBga5eeRTxPz5BxFiLmwL/kjy1NTcK0DNdxV3oUI/zZ9DEDU43Cl7XqGMnUH8pJhhFJR+1k9vZrYQ==',
                             '/build/main~other.js': 'sha256-q9xPQWa0UBbMPUNmhDaDuBFjV2gZU6ICiKzLN7jPccc= sha512-1xuC/Y+goI01JUPVYBQOpPY36ttTXnZFOBsTgNPCJu53b2/ccFqzeW3abV3KG5mFzo4cfSUOS7AXjj8ajp/MjA==',
                             '/build/main~other.css': 'sha256-6AltZJTjdVuLywCBE8qQevkscxazmWyh/19OL6cxkwY= sha512-zE1kAcqJ/jNnycEwELK7BfauEgRlK6cGrN+9urz4JI1K+s5BpglYFF9G0VOiSA7Kj3w46XX1WcjZ5w5QohBFEw==',
-                            '/build/other.js': 'sha256-rxT6mp9VrLO1++6G3g/VSLGisznX838ALokQhD3Jmyc= sha512-XZjuolIG3/QW1PwAIaPCtQZvKvkPNsAsoUjQdDqlW/uStd9lBrT3w16WrBdc3qe4X11bGkyA7IQpQwN3FGkPMA==',
+                            '/build/other.js': 'sha256-LlL6lle4zx9AYq+Pwx5fCLPx25wRBFLYXkOkv5FC4jw= sha512-Blitdhb6rxaT7DpRNBmNjv1gH/St0kO9OURNytKJxF2sO8cv3uWTf4TLCjBEvQkWC0F1YxpVoJVyOQW9mvRgaA==',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.

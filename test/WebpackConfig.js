@@ -660,6 +660,40 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('configureMiniCssExtractPlugin', () => {
+        it('Calling method with its first parameter sets the loader\'s options', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureMiniCssExtractPlugin(testCallback);
+            expect(config.miniCssExtractLoaderConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling method with its second parameter sets the plugin\'s options', () => {
+            const config = createConfig();
+            const testCallbackLoader = () => {};
+            const testCallbackPlugin = () => {};
+            config.configureMiniCssExtractPlugin(testCallbackLoader, testCallbackPlugin);
+            expect(config.miniCssExtractLoaderConfigurationCallback).to.equal(testCallbackLoader);
+            expect(config.miniCssExtractPluginConfigurationCallback).to.equal(testCallbackPlugin);
+        });
+
+        it('Calling with non-callback as 1st parameter throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureMiniCssExtractPlugin('FOO');
+            }).to.throw('must be a callback function');
+        });
+
+        it('Calling with non-callback as 2nd parameter throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureMiniCssExtractPlugin(() => {}, 'FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('configureSplitChunks', () => {
         it('Calling method sets it', () => {
             const config = createConfig();

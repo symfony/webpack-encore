@@ -914,6 +914,34 @@ class Encore {
     }
 
     /**
+     * Configure the mini-css-extract-plugin.
+     *
+     * https://github.com/webpack-contrib/mini-css-extract-plugin#configuration
+     *
+     * ```
+     * Encore.configureMiniCssExtractPlugin(
+     *     function(loaderConfig) {
+     *         // change the loader's config
+     *         // loaderConfig.reloadAll = true;
+     *     },
+     *     function(pluginConfig) {
+     *         // change the plugin's config
+     *         // pluginConfig.chunkFilename = '[id].css';
+     *     }
+     * );
+     * ```
+     *
+     * @param {function} loaderOptionsCallback
+     * @param {function} pluginOptionsCallback
+     * @returns {Encore}
+     */
+    configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback = () => {}) {
+        webpackConfig.configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback);
+
+        return this;
+    }
+
+    /**
      * If enabled, the react preset is added to Babel.
      *
      * https://babeljs.io/docs/plugins/preset-react/

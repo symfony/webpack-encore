@@ -414,6 +414,16 @@ describe('Public API', () => {
 
     });
 
+    describe('configureMiniCssExtractPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureMiniCssExtractPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+
     describe('enableIntegrityHashes', () => {
 
         it('should return the API object', () => {
