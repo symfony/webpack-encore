@@ -2531,5 +2531,31 @@ module.exports = {
                 });
             });
         }
+
+        describe('Environment variables injection', () => {
+            it('In development environment', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.setPublicPath('/build');
+                config.injectEnvironmentVariables('./envs/.env');
+                config.addEntry('main', './envs');
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // ...
+                    done();
+                });
+            });
+
+            it('In production environment', (done) => {
+                const config = createWebpackConfig('web/build', 'production');
+                config.setPublicPath('/build');
+                config.injectEnvironmentVariables('./envs/.env');
+                config.addEntry('main', './envs');
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // ...
+                    done();
+                });
+            });
+        });
     });
 });
