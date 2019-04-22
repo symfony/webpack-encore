@@ -18,6 +18,7 @@ const parseRuntime = require('./lib/config/parse-runtime');
 const context = require('./lib/context');
 
 let runtimeConfig = context.runtimeConfig;
+/** @type {WebpackConfig|null} */
 let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig, true) : null;
 
 class Encore {
@@ -1427,6 +1428,10 @@ class Encore {
     clearRuntimeEnvironment() {
         runtimeConfig = null;
         webpackConfig = null;
+    }
+
+    injectEnvironmentVariables(path = './.env') {
+        webpackConfig.injectEnvironmentVariables(path);
     }
 
     /**
