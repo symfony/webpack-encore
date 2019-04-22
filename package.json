@@ -33,6 +33,7 @@
     "chalk": "^2.4.1",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^2.1.1",
+    "dotenv": "^7.0.0",
     "fast-levenshtein": "^2.0.6",
     "file-loader": "^1.1.10",
     "friendly-errors-webpack-plugin": "^1.7.0",
