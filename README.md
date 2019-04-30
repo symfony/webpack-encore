@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/symfony/webpack-encore.svg?branch=master)](https://travis-ci.org/symfony/webpack-encore)
 [![NPM Version](https://badge.fury.io/js/%40symfony%2Fwebpack-encore.svg)](https://badge.fury.io/js/%40symfony%2Fwebpack-encore)
+![Node](https://img.shields.io/node/v/@symfony/webpack-encore.svg)
 
 Webpack Encore is a simpler way to integrate [Webpack](https://webpack.js.org/) into your
 application. It *wraps* Webpack, giving you a clean & powerful API
