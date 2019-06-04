@@ -21,7 +21,7 @@
     "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
-    "node": ">=8.0.0"
+    "node": "8.* || >= 10.*"
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
