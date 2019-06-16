@@ -2056,14 +2056,65 @@ module.exports = {
                             'foo.css',
                             'foo.js',
                             'foo.json',
+                            'foo.png',
                         ]);
 
-                    for (const file of ['foo.css', 'foo.js', 'foo.json']) {
+                    for (const file of ['foo.css', 'foo.js', 'foo.json', 'foo.png']) {
                         webpackAssert.assertOutputFileContains(
                             file,
                             'This is an invalid content to check that the file is still copied'
                         );
                     }
+
+                    done();
+                });
+            });
+
+            it('Do not copy files excluded by a RegExp', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+
+                // foo.css and foo.js should match this rule
+                // and be versioned
+                config.copyFiles({
+                    from: './copy',
+                    to: './[path][name]-[hash].[ext]',
+                    pattern: /\.(css|js)$/,
+                });
+
+                // foo.css and foo.js should *not* match this rule
+                config.copyFiles({
+                    from: './copy',
+                    to: './[path][name].[ext]',
+                    pattern: /\.(?!(css|js)$)([^.]+$)/
+                });
+
+                // By default the optimize-css-assets-webpack-plugin will
+                // run on ALL emitted CSS files, which includes the ones
+                // handled by `Encore.copyFiles()`.
+                // We disable it for this test since our CSS file will
+                // not be valid and can't be handled by this plugin.
+                config.configureOptimizeCssPlugin(options => {
+                    options.assetNameRegExp = /^$/;
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+
+                            // 1st rule
+                            'foo-40095734b7c5293c04603aa78333c23e.css',
+                            'foo-40095734b7c5293c04603aa78333c23e.js',
+
+                            // 2nd rule
+                            'foo.json',
+                            'foo.png',
+                        ]);
 
                     done();
                 });
