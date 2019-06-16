@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-06-16T16:45:39Z
+
+Build failure in the "Highest versions of the dependencies" job is unrelated (also present on `master`).
+
+Edit: see #591
