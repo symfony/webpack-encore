@@ -948,12 +948,21 @@ module.exports = {
             // load a file that @import's another file, so that we can
             // test that @import resources are parsed through postcss
             config.addStyleEntry('styles', ['./css/imports_autoprefixer.css']);
+            config.addStyleEntry('postcss', './css/postcss_extension.postcss');
             config.enablePostCssLoader();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that the autoprefixer did its work!
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
+                    '-webkit-full-screen'
+                );
+
+                // check that the .postcss file was also processed
+                // correctly (it also @import the autoprefixer_test.css
+                // file)
+                webpackAssert.assertOutputFileContains(
+                    'postcss.css',
                     '-webkit-full-screen'
                 );
 
@@ -1421,7 +1430,7 @@ module.exports = {
             });
         });
 
-        it('Vue.js supports CSS/Sass/Less/Stylus modules', (done) => {
+        it('Vue.js supports CSS/Sass/Less/Stylus/PostCSS modules', (done) => {
             const appDir = testSetup.createTestAppDir();
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
@@ -1436,6 +1445,18 @@ module.exports = {
                 // since they are not always the same.
                 options.localIdentName = '[local]_foo';
             });
+
+            // Enable the PostCSS loader so we can use `lang="postcss"`
+            config.enablePostCssLoader();
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}                            `
+            );
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
@@ -1457,11 +1478,13 @@ module.exports = {
                 expectClassDeclaration('large'); // Standard SCSS
                 expectClassDeclaration('justified'); // Standard Less
                 expectClassDeclaration('lowercase'); // Standard Stylus
+                expectClassDeclaration('block'); // Standard Postcss
 
                 expectClassDeclaration('italic_foo'); // CSS Module
                 expectClassDeclaration('bold_foo'); // SCSS Module
                 expectClassDeclaration('underline_foo'); // Less Module
                 expectClassDeclaration('rtl_foo'); // Stylus Module
+                expectClassDeclaration('hidden_foo'); // Stylus Module
 
                 testSetup.requestTestPage(
                     path.join(config.getContext(), 'www'),
@@ -1474,11 +1497,13 @@ module.exports = {
                         browser.assert.hasClass('#app', 'large'); // Standard SCSS
                         browser.assert.hasClass('#app', 'justified'); // Standard Less
                         browser.assert.hasClass('#app', 'lowercase'); // Standard Stylus
+                        browser.assert.hasClass('#app', 'block'); // Standard Stylus
 
                         browser.assert.hasClass('#app', 'italic_foo'); // CSS module
                         browser.assert.hasClass('#app', 'bold_foo'); // SCSS module
                         browser.assert.hasClass('#app', 'underline_foo'); // Less module
                         browser.assert.hasClass('#app', 'rtl_foo'); // Stylus module
+                        browser.assert.hasClass('#app', 'hidden_foo'); // Stylus module
 
                         done();
                     }
