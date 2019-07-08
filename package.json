@@ -43,7 +43,7 @@
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pkg-up": "^1.0.0",
     "pretty-error": "^2.1.1",
-    "resolve-url-loader": "^3.0.1",
+    "resolve-url-loader": "^3.1.0",
     "semver": "^5.5.0",
     "style-loader": "^0.21.0",
     "terser-webpack-plugin": "^1.1.0",
