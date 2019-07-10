@@ -848,6 +848,9 @@ class Encore {
      *     // core-js to your project using Yarn or npm and
      *     // inform Babel of the version it will use.
      *     corejs: 3
+     *
+     *     // pre-include needed polyfills
+     *     polyfills: []
      * });
      * ```
      *
