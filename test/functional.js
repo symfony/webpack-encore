@@ -1148,6 +1148,41 @@ module.exports = {
             });
         });
 
+        it('Babel does not force transforms if they are not needed', (done) => {
+            const cwd = process.cwd();
+            after(() => {
+                process.chdir(cwd);
+            });
+
+            const appDir = testSetup.createTestAppDir();
+            process.chdir(appDir);
+
+            fs.writeFileSync(
+                path.join(appDir, 'package.json'),
+
+                // Chrome 55 supports async and arrow functions
+                '{"browserslist": "Chrome 55"}'
+            );
+
+            const config = createWebpackConfig('www/build', 'prod');
+            config.setPublicPath('/build');
+            config.addEntry('async', './js/async_function.js');
+            config.configureBabel(null, {
+                useBuiltIns: 'usage',
+                corejs: 3,
+            });
+
+            testSetup.runWebpack(config, async(webpackAssert) => {
+                webpackAssert.assertOutputFileContains(
+                    'async.js',
+                    'async function(){console.log("foo")}().then(()=>{console.log("bar")})'
+                );
+
+                done();
+            });
+        });
+
+
         it('When enabled, react JSX is transformed!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
