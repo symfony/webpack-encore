@@ -65,6 +65,26 @@ describe('loaders/sass', () => {
         cssLoader.getLoaders.restore();
     });
 
+    it('getLoaders() with resolve-url-loader options', () => {
+        const config = createConfig();
+        config.enableSassLoader(() => {}, {
+            resolveUrlLoaderOptions: {
+                removeCR: true
+            }
+        });
+
+        // make the cssLoader return nothing
+        sinon.stub(cssLoader, 'getLoaders')
+            .callsFake(() => []);
+
+        const actualLoaders = sassLoader.getLoaders(config);
+        expect(actualLoaders).to.have.lengthOf(2);
+        expect(actualLoaders[0].loader).to.equal('resolve-url-loader');
+        expect(actualLoaders[0].options.removeCR).to.be.true;
+
+        cssLoader.getLoaders.restore();
+    });
+
     it('getLoaders() without resolve-url-loader', () => {
         const config = createConfig();
         config.enableSassLoader(() => {}, {
