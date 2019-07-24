@@ -510,7 +510,7 @@ describe('Functional tests using webpack', function() {
                             'bg.0ec2735b.css',
                             'manifest.json',
                             'entrypoints.json',
-                            'runtime.8818c459.js',
+                            'runtime.a59dcd0a.js',
                         ]);
                 }
 
@@ -1902,8 +1902,8 @@ module.exports = {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'entrypoints.json',
-                                'runtime.26bd8744.js',
-                                'main.c506d5aa.js',
+                                'runtime.e59078a6.js',
+                                'main.172bc009.js',
                                 'manifest.json',
                                 'symfony_logo.ea1ca6f7.png',
                                 'symfony_logo_alt.f27119c2.png',
@@ -1911,7 +1911,7 @@ module.exports = {
 
                         webpackAssert.assertManifestPath(
                             'build/main.js',
-                            '/build/main.c506d5aa.js'
+                            '/build/main.172bc009.js'
                         );
                     }
 
