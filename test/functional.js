@@ -500,19 +500,40 @@ describe('Functional tests using webpack', function() {
             config.enableVersioning(true);
 
             testSetup.runWebpack(config, (webpackAssert) => {
-                if (!process.env.DISABLE_UNSTABLE_CHECKS) {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            '0.90edc8e8.js', // chunks are also versioned
-                            '0.6ba897e2.css',
-                            'main.4a5effdb.js',
-                            'h1.6ba897e2.css',
-                            'bg.76e19b0d.css',
-                            'manifest.json',
-                            'entrypoints.json',
-                            'runtime.7c5b5f14.js',
-                        ]);
-                }
+                const actualFilesMap = {};
+                const expectedFiles = [
+                    '0.[hash].js', // chunks are also versioned
+                    '0.[hash].css',
+                    'main.[hash].js',
+                    'h1.[hash].css',
+                    'bg.[hash].css',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.[hash].js',
+                ];
+
+                expect(config.outputPath).to.be.a.directory()
+                    .with.files.that.satisfy(files => {
+                        for (const expectedFile of expectedFiles) {
+                            const expectedFileRegexp = new RegExp(`^${
+                                expectedFile
+                                    .replace('.', '\\.')
+                                    .replace('[hash]', '[0-9a-f]+')
+                            }$`);
+
+                            const matchingFile = files.find(file => {
+                                return expectedFileRegexp.test(file);
+                            });
+
+                            if (!matchingFile) {
+                                return false;
+                            }
+
+                            actualFilesMap[expectedFile] = matchingFile;
+                        }
+
+                        return true;
+                    });
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
@@ -520,7 +541,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.76e19b0d.css',
+                    actualFilesMap['bg.[hash].css'],
                     '/build/images/symfony_logo.ea1ca6f7.png'
                 );
 
