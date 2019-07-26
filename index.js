@@ -754,6 +754,9 @@ class Encore {
      *              when disabled, all url()'s are resolved relative
      *              to the original entry file... not whatever file
      *              the url() appears in.
+     *      * {object} resolveUrlLoaderOptions (default={})
+     *              Options parameters for resolve-url-loader
+     *              // https://www.npmjs.com/package/resolve-url-loader#options
      *
      * @param {function} sassLoaderOptionsCallback
      * @param {object} encoreOptions
