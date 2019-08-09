@@ -1,0 +1,28 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-07-09T10:09:14Z
+
+Hey @diegocardoso93
+
+`resolve-url-loader@3.1.0` was already allowed by the current version range (`^3.0.1`) so the question is: is `removeCR: true` a good default value?
+
+Do you know if it could have any drawbacks on setups that don't need it to be `true` (ie. why it isn't already `true` by default in the `resolve-url-loader`)?
+
+If that's the case it could  be better to allow setting it easily (maybe using a new option in `enableSassLoader`) and detect the error (using `friendly-errors-webpack-plugin`) to display a comprehensive message. What do you think?
+
+---------------------------------------------------------------------------
+
+by diegocardoso93 at 2019-07-09T12:35:40Z
+
+Hello @Lyrkan
+Totally agree, it can be better if the decision of enable `removeCR` option can be take by user.
+Could you do this change, please?
+Thanks!
+
+---------------------------------------------------------------------------
+
+by diegocardoso93 at 2019-07-17T18:48:18Z
+
+@Lyrkan I've just updated with the `resolveUrlLoaderOptions`.
+I don't sure if the option variable name is the best.
+Can you take a look?
