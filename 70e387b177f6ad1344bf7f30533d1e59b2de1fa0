@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-07-24T20:40:42Z
+
+Hi @gustawdaniel,
+
+Would you be able to rebase and run `yarn` again to fix the `yarn.lock` conflict?
+
+---------------------------------------------------------------------------
+
+by gustawdaniel at 2019-07-24T21:15:42Z
+
+I can't because I removed my fork. Probably simplest solution is allow to made this change manually by somebody who can merge.
+
+https://help.github.com/en/articles/resolving-a-merge-conflict-on-github
+
+This is only replace
+
+```
+    "url-loader": "^1.0.1",
+```
+
+by
+
+```
+    "url-loader": "^1.0.1 || ^2.0.1",
+```
+
+in `package.json`
