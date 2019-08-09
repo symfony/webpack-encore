@@ -1113,23 +1113,6 @@ describe('WebpackConfig object', () => {
                 });
             }).to.throw('"foo" is not a valid key');
         });
-
-        it('Using chunkhash is deprecated', () => {
-            logger.reset();
-            logger.quiet();
-
-            after(() => {
-                logger.quiet(false);
-            });
-
-            const config = createConfig();
-
-            config.configureFilenames({
-                js: 'file.[chunkhash:16].js'
-            });
-
-            expect(logger.getMessages().deprecation).to.not.be.empty;
-        });
     });
 
     describe('configureUrlLoader', () => {

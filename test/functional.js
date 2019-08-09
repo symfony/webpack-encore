@@ -431,8 +431,8 @@ describe('Functional tests using webpack', function() {
                 config.addStyleEntry('styles', './css/h1_style.css');
                 config.enableVersioning(true);
                 config.configureFilenames({
-                    js: '[name].js?[chunkhash:16]',
-                    css: '[name].css?[chunkhash:16]'
+                    js: '[name].js?[contenthash:16]',
+                    css: '[name].css?[contenthash:16]'
                 });
 
                 testSetup.runWebpack(config, (webpackAssert) => {
@@ -448,7 +448,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?91597a40238e0e66'
+                        '/styles.css?8ec316547cc77b39'
                     );
 
                     done();
