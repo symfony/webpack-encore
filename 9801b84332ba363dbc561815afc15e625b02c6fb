@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by XWB at 2019-07-24T12:24:07Z
+
+Looks good. Any idea when it can be merged?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-07-24T14:39:06Z
+
+@XWB I'm not sure... even if I merge it (which is something that I usually try to avoid on my own PRs) we'll have to wait for @weaverryan to release a new version, and he's quite busy right now.
+
+However if you really need it you can directly use that branch (or fork the repository, apply the patch and do the same thing):
+
+```
+$ yarn remove @symfony/webpack-encore
+$ yarn add git://github.com/lyrkan/webpack-encore.git#fix-shared-entry-query-param
+```
+
+Note that it is up-to-date with the current `master` though... so you'll also get some other unreleased things (the only BC break being that Encore won't support Node 9 anymore).
+
+---------------------------------------------------------------------------
+
+by XWB at 2019-07-25T10:50:27Z
+
+> even if I merge it (which is something that I usually try to avoid on my own PRs)
+
+Fair enough :)
+
+> we'll have to wait for @weaverryan to release a new version
+
+If merged, we can also install the master branch, or lock to a specific commit.
+
+> However if you really need it you can directly use that branch (or fork the repository, apply the patch and do the same thing):
+
+Thank you!
