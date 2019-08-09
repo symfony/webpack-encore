@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 0.28.0
+
+ * Don't make `@babel/preset-env` use `forceAllTransforms` option
+   in production - this will reduce build size in production
+   for environments that only need to support more modern
+   browsers - #612 thanks to @Lyrkan.
+
+ * Added support with `enablePostCssLoader()` to process files
+   ending in `.postcss` or using `lang="postcss"` in Vue - #594
+   thanks to @Lyrkan.
+
+ * Allow `resolve-url-loader` to be configured via `enableSassLoader()` -
+   #603 thanks to @diegocardoso93.
+
+ * [BC Break] Removed the ability to use `[chunkhash]` in
+   `configureFilenames()`, which was already deprecated and
+   no longer reliable - #608 thanks to @Lyrkan.
+
 ## 0.27.0
 
  * [Behavior Change] The Babel configuration `sourceType` default was
