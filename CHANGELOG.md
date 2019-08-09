@@ -14,6 +14,9 @@
  * Allow `resolve-url-loader` to be configured via `enableSassLoader()` -
    #603 thanks to @diegocardoso93.
 
+ * Support was removed from Node 9 (a no-longer-supported version
+   of Node) - #585 thanks to @weaverryan
+
  * [BC Break] Removed the ability to use `[chunkhash]` in
    `configureFilenames()`, which was already deprecated and
    no longer reliable - #608 thanks to @Lyrkan.
