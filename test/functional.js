@@ -854,13 +854,40 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('createdSharedEntry() works with versioning', (done) => {
+        it('createdSharedEntry() works with default versioning strategy', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
             config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
             config.createSharedEntry('shared', './js/shared_example');
             config.enableVersioning();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        convertToManifestPath('build/runtime.js', config),
+                        convertToManifestPath('build/shared.js', config),
+                    ],
+                    (browser) => {
+                        // assert that the javascript brought into shared is executed
+                        browser.assert.text('#app', 'Welcome to Encore!');
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('createdSharedEntry() works with query string versioning strategy', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/no_require', './js/code_splitting', './js/arrow_function', './js/print_to_app']);
+            config.addEntry('other', ['./js/no_require', './css/h1_style.css']);
+            config.createSharedEntry('shared', './js/shared_example');
+            config.configureFilenames({
+                js: '[name].js?[contenthash:8]',
+                css: '[name].css?[contenthash:8]',
+            });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 testSetup.requestTestPage(
