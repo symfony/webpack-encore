@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="red large justified lowercase" :class="[$css.italic, $scss.bold, $less.underline, $stylus.rtl]"></div>
+  <div id="app" class="red large justified lowercase block" :class="[$css.italic, $scss.bold, $less.underline, $stylus.rtl, $postcss.hidden]"></div>
 </template>
 
 <style>
@@ -25,6 +25,13 @@
     text-transform: lowercase
 </style>
 
+<style lang="postcss">
+  .block {
+    display: block;
+  }
+</style>
+
+
 <style module="$css">
   .italic {
     font-style: italic;
@@ -46,4 +53,10 @@
 <style lang="styl" module="$stylus">
   .rtl
     direction: rtl;
+</style>
+
+<style lang="postcss" module="$postcss">
+  .hidden {
+    visibility: hidden;
+  }
 </style>

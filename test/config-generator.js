@@ -1052,7 +1052,7 @@ describe('The config-generator function', () => {
             });
 
             const webpackConfig = configGenerator(config);
-            const rule = findRule(/\.css$/, webpackConfig.module.rules);
+            const rule = findRule(/\.(css)$/, webpackConfig.module.rules);
 
             expect(rule.camelCase).to.be.true;
         });
@@ -1208,6 +1208,44 @@ describe('The config-generator function', () => {
 
             expect(rule.use[0].options.debug).to.be.true;
             expect(rule.use[0].options.fooBar).to.be.equal('fooBar');
+        });
+    });
+
+    describe('enablePostCssLoader() makes the CSS rule process .postcss file', () => {
+        it('without enablePostCssLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.addEntry('main', './main');
+            // do not call disableImagesLoader
+
+            const actualConfig = configGenerator(config);
+
+            expect(function() {
+                findRule(/\.(css)$/, actualConfig.module.rules);
+            }).not.to.throw();
+            expect(function() {
+                findRule(/\.(css|postcss)$/, actualConfig.module.rules);
+            }).to.throw();
+        });
+
+        it('with enablePostCssLoader()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableSingleRuntimeChunk();
+            config.enablePostCssLoader();
+
+            const actualConfig = configGenerator(config);
+
+            expect(function() {
+                findRule(/\.(css)$/, actualConfig.module.rules);
+            }).to.throw();
+            expect(function() {
+                findRule(/\.(css|postcss)$/, actualConfig.module.rules);
+            }).to.not.throw();
         });
     });
 });
