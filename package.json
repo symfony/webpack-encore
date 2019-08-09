@@ -1,7 +1,7 @@
 {
   "name": "@symfony/webpack-encore",
   "version": "0.27.0",
-  "description": "",
+  "description": "Webpack Encore is a simpler way to integrate Webpack into your application",
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec test --recursive",
