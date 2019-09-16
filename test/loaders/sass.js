@@ -120,6 +120,7 @@ describe('loaders/sass', () => {
 
         expect(actualLoaders[1].options).to.deep.equals({
             sourceMap: true,
+            outputStyle: 'expanded',
             custom_optiona: 'baz',
             other_option: true
         });
