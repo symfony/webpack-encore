@@ -146,4 +146,24 @@ describe('loaders/babel', () => {
             'foo'
         ]);
     });
+
+    it('getLoaders() with configured babel env preset', () => {
+        const config = createConfig();
+        config.runtimeConfig.babelRcFileExists = false;
+
+        config.configureBabel(function(config) {
+            config.corejs = null;
+        });
+
+        config.configureBabelPresetEnv(function(config) {
+            config.corejs = 3;
+            config.include = ['bar'];
+        });
+
+        const actualLoaders = babelLoader.getLoaders(config);
+
+        // options are overridden
+        expect(actualLoaders[0].options.presets[0][1].corejs).to.equal(3);
+        expect(actualLoaders[0].options.presets[0][1].include).to.have.members(['bar']);
+    });
 });
