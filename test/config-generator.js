@@ -453,6 +453,28 @@ describe('The config-generator function', () => {
                 'testB': 'src/testB'
             });
         });
+
+        it('with addAliases() that overwrites pre-defined aliases', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableVueLoader(); // Adds the 'vue$' alias
+            config.enablePreactPreset({ preactCompat: true }); // Adds the 'react' and 'react-dom' aliases
+            config.addAliases({
+                'foo': 'bar',
+                'vue$': 'new-vue$',
+                'react-dom': 'new-react-dom',
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve.alias).to.deep.equals({
+                'foo': 'bar',
+                'vue$': 'new-vue$',
+                'react-dom': 'new-react-dom',
+                'react': 'preact-compat' // Keeps predefined aliases that are not overwritten
+            });
+        });
     });
 
     describe('addExternals() adds new externals', () => {
