@@ -19,6 +19,7 @@ const CleanWebpackPlugin = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 const logger = require('../lib/logger');
+const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 
 const isWindows = (process.platform === 'win32');
 
@@ -1268,6 +1269,22 @@ describe('The config-generator function', () => {
             expect(function() {
                 findRule(/\.(css|postcss)$/, actualConfig.module.rules);
             }).to.not.throw();
+        });
+    });
+
+    describe('enableBrowserSync', () => {
+        it('add browser sync webpack plugin', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+
+            config.enableBrowserSync([]);
+
+            const actualConfig = configGenerator(config);
+            const browserSyncPlugin = findPlugin(BrowserSyncPlugin, actualConfig.plugins);
+            expect(browserSyncPlugin).to.not.be.undefined;
+            expect(browserSyncPlugin.browserSyncOptions.files.length).to.equal(1);
         });
     });
 });

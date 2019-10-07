@@ -1242,4 +1242,22 @@ describe('WebpackConfig object', () => {
             expect(() => config.enableIntegrityHashes(true, ['sha1', 'foo', 'sha256'])).to.throw('Invalid hash algorithm "foo"');
         });
     });
+
+    describe('enableBrowserSync', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {
+            };
+            config.enableBrowserSync([], testCallback);
+            expect(config.browserSyncOptionsCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableBrowserSync([], 'FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
 });
