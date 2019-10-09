@@ -642,6 +642,41 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('configureBabelPresetEnv', () => {
+        beforeEach(() => {
+            logger.reset();
+            logger.quiet();
+        });
+
+        afterEach(() => {
+            logger.quiet(false);
+        });
+
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureBabelPresetEnv(testCallback);
+            expect(config.babelPresetEnvOptionsCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureBabelPresetEnv('FOO');
+            }).to.throw('must be a callback function');
+        });
+
+        it('Calling with a callback when .babelrc is present throws an error', () => {
+            const config = createConfig();
+            config.runtimeConfig.babelRcFileExists = true;
+
+            expect(() => {
+                config.configureBabelPresetEnv(() => {});
+            }).to.throw('your app already provides an external Babel configuration');
+        });
+    });
+
     describe('configureCssLoader', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
