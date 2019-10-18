@@ -1111,7 +1111,7 @@ class Encore {
      * Encore.enableEslintLoader(() => {}, {
      *     // set optional Encore-specific options, for instance:
      *
-     *     // lint `.vue` files
+     *     // lint `.vue` files, see below for more informatin about linting Vue files
      *     lintVue: true
      * });
      * ```
@@ -1119,6 +1119,18 @@ class Encore {
      * Supported options:
      *      * {boolean} lintVue (default=false)
      *              Configure the loader to lint `.vue` files
+     *
+     * // Linting Vue files
+     * Encore.enableEslintLoader((options) => {
+     *     // Deleting the hard-coded `parser` option prevent the error "Use the latest vue-eslint-parser", see:
+     *     // - https://eslint.vuejs.org/user-guide/#what-is-the-use-the-latest-vue-eslint-parser-error
+     *     // - https://github.com/symfony/webpack-encore/pull/574
+     *     // Note that it will not be mandatory anymore is some times.
+     *     delete options.parser;
+     * }, {
+     *     lintVue: true
+     * });
+     * ```
      *
      * @param {string|object|function} eslintLoaderOptionsOrCallback
      * @param {object} encoreOptions
