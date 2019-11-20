@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-11-17T20:52:44Z
+
+> It also makes me wonder why we have lodash in our dependencies, it doesn't seem needed at all.
+
+Found out why: it was needed when we embedded a patched version of the `webpack-manifest-plugin`.
+
+We could probably remove it safely now and also move `fs-extra` to `devDependencies`.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-11-18T20:12:48Z
+
+Nice research! I did both things - tests pass locally, let's see how if the CI is happy :)
