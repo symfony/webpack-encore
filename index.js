@@ -896,6 +896,31 @@ class Encore {
     }
 
     /**
+     * Configure @babel/preset-env
+     *
+     * https://babeljs.io/docs/en/babel-preset-env
+     *
+     * ```
+     * Encore.configureBabelPresetEnv(function(options) {
+     *     // change the @babel/preset-env config
+     *     // if you use an external Babel configuration
+     *     // this callback will NOT be used
+     *     // options.corejs = 3;
+     *     // options.useBuiltIns = 'usage';
+     *     // ...
+     * });
+     * ```
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureBabelPresetEnv(callback) {
+        webpackConfig.configureBabelPresetEnv(callback);
+
+        return this;
+    }
+
+    /**
      * Configure the css-loader.
      *
      * https://github.com/webpack-contrib/css-loader#options

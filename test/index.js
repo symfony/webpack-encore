@@ -243,6 +243,15 @@ describe('Public API', () => {
 
     });
 
+    describe('configureBabelPresetEnv', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.configureBabelPresetEnv(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enableReactPreset', () => {
 
         it('must return the API object', () => {

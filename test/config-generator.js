@@ -933,6 +933,39 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('Test configureBabelPresetEnv()', () => {
+        it('without configureBabelPresetEnv()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+
+            const actualConfig = configGenerator(config);
+
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
+        });
+
+        it('with configureBabelPresetEnv()', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureBabelPresetEnv(options => {
+                options.useBuiltIns = 'usage';
+            });
+
+            const actualConfig = configGenerator(config);
+
+            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
+        });
+    });
+
     describe('Test shouldSplitEntryChunks', () => {
         it('Not production', () => {
             const config = createConfig();
