@@ -1228,6 +1228,20 @@ class Encore {
     }
 
     /**
+     * Enables image optimization with imagemin.
+     *
+     * https://github.com/tcoopman/image-webpack-loader
+     *
+     * @param {object|function} imageWebpackLoaderOptionsOrCallback
+     * @returns {Encore}
+     */
+    enableImageWebpackLoader(imageWebpackLoaderOptionsOrCallback = () => {}) {
+        webpackConfig.enableImageWebpackLoader(imageWebpackLoaderOptionsOrCallback);
+
+        return this;
+    }
+
+    /**
      * If enabled, display build notifications using
      * webpack-notifier.
      *
