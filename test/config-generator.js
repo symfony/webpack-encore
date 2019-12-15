@@ -1362,4 +1362,70 @@ describe('The config-generator function', () => {
             }).to.not.throw();
         });
     });
+
+    describe('Test addCacheGroup()', () => {
+        it('Calling it adds cache groups', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.addEntry('main', './main');
+            config.addCacheGroup('foo', { test: /foo/ });
+            config.addCacheGroup('bar', { test: /bar/ });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+                foo: { name: 'foo', test: /foo/, chunks: 'all', enforce: true },
+                bar: { name: 'bar', test: /bar/, chunks: 'all', enforce: true },
+            });
+        });
+
+        it('Calling it using the "node_modules" option', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.addEntry('main', './main');
+            config.addCacheGroup('foo', { node_modules: ['foo','bar', 'baz'] });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+                foo: {
+                    name: 'foo',
+                    test: /[\\/]node_modules[\\/](foo|bar|baz)[\\/]/,
+                    chunks: 'all',
+                    enforce: true,
+                },
+            });
+        });
+
+        it('Calling it and overriding default options', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.addEntry('main', './main');
+            config.addCacheGroup('foo', {
+                name: 'bar',
+                test: /foo/,
+                chunks: 'initial',
+                minChunks: 2,
+                enforce: false,
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+                foo: {
+                    name: 'bar',
+                    test: /foo/,
+                    chunks: 'initial',
+                    minChunks: 2,
+                    enforce: false,
+                },
+            });
+        });
+    });
 });

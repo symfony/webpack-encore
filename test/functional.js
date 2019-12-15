@@ -930,6 +930,220 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        describe('addCacheGroup()', () => {
+            it('addCacheGroup() to extract a vendor into its own chunk', (done) => {
+                const config = createWebpackConfig('www/build', 'dev');
+                config.setPublicPath('/build');
+                config.enableVueLoader();
+                config.enablePreactPreset();
+                config.enableSassLoader();
+                config.enableLessLoader();
+                config.addEntry('page1', './vuejs/main');
+                config.addEntry('page2', './preact/main');
+
+                // Move Vue.js code into its own chunk
+                config.addCacheGroup('vuejs', { test: /[\\/]node_modules[\\/]vue[\\/]/ });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // Vue.js code should be present in common.js but not in page1.js/page2.js
+                    webpackAssert.assertOutputFileContains(
+                        'vuejs.js',
+                        '/***/ "../../node_modules/vue/'
+                    );
+
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'page1.js',
+                        '/***/ "../../node_modules/vue/'
+                    );
+
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'page2.js',
+                        '/***/ "../../node_modules/vue/'
+                    );
+
+                    // Preact code should be present in page2.js only
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'vuejs.js',
+                        '/***/ "../../node_modules/preact/'
+                    );
+
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'page1.js',
+                        '/***/ "../../node_modules/preact/'
+                    );
+
+                    webpackAssert.assertOutputFileContains(
+                        'page2.js',
+                        '/***/ "../../node_modules/preact/'
+                    );
+
+                    // Check if each entrypoint is associated to the right chunks
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        entrypoints: {
+                            page1: {
+                                js: ['/build/runtime.js', '/build/vuejs.js', '/build/page1.js'],
+                                css: ['/build/page1.css']
+                            },
+                            page2: {
+                                js: ['/build/runtime.js', '/build/page2.js']
+                            }
+                        }
+                    });
+
+                    // Check if Vue.js code is still executed properly
+                    testSetup.requestTestPage(
+                        path.join(config.getContext(), 'www'),
+                        [
+                            'build/runtime.js',
+                            'build/page1.js',
+                            'build/vuejs.js',
+                        ],
+                        (browser) => {
+                            browser.assert.text('#app', /Welcome to Your Vue\.js App/);
+                            done();
+                        }
+                    );
+                });
+            });
+
+            it('addCacheGroup() with node_modules', (done) => {
+                const config = createWebpackConfig('www/build', 'dev');
+                config.setPublicPath('/build');
+                config.enableVueLoader();
+                config.enablePreactPreset();
+                config.enableSassLoader();
+                config.enableLessLoader();
+                config.addEntry('page1', './vuejs/main');
+                config.addEntry('page2', './preact/main');
+
+                // Move both vue.js and preact code into their own chunk
+                config.addCacheGroup('common', { node_modules: ['vue', 'preact'] });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // Vue.js code should be present in common.js but not in page1.js/page2.js
+                    webpackAssert.assertOutputFileContains(
+                        'common.js',
+                        '/***/ "../../node_modules/vue/'
+                    );
+
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'page1.js',
+                        '/***/ "../../node_modules/vue/'
+                    );
+
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'page2.js',
+                        '/***/ "../../node_modules/vue/'
+                    );
+
+                    // Preact code should be present in common.js but not in page1.js/page2.js
+                    webpackAssert.assertOutputFileContains(
+                        'common.js',
+                        '/***/ "../../node_modules/preact/'
+                    );
+
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'page1.js',
+                        '/***/ "../../node_modules/preact/'
+                    );
+
+                    webpackAssert.assertOutputFileDoesNotContain(
+                        'page2.js',
+                        '/***/ "../../node_modules/preact/'
+                    );
+
+                    // Check if each entrypoint is associated to the right chunks
+                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
+                        entrypoints: {
+                            page1: {
+                                js: ['/build/runtime.js', '/build/common.js', '/build/page1.js'],
+                                css: ['/build/page1.css']
+                            },
+                            page2: {
+                                js: ['/build/runtime.js', '/build/common.js', '/build/page2.js']
+                            }
+                        }
+                    });
+
+                    // Check if Preact code is still executed properly
+                    testSetup.requestTestPage(
+                        path.join(config.getContext(), 'www'),
+                        [
+                            'build/runtime.js',
+                            'build/page2.js',
+                            'build/common.js',
+                        ],
+                        (browser) => {
+                            browser.assert.text('#app', /This is a React component!/);
+                            done();
+                        }
+                    );
+                });
+            });
+
+            it('addCacheGroup() with versioning enabled', (done) => {
+                const config = createWebpackConfig('www/build', 'dev');
+                config.setPublicPath('/build');
+                config.enableVersioning();
+                config.enableVueLoader();
+                config.enablePreactPreset();
+                config.enableSassLoader();
+                config.enableLessLoader();
+                config.addEntry('page1', './vuejs/main');
+                config.addEntry('page2', './preact/main');
+
+                // Move Vue.js code into its own chunk
+                config.addCacheGroup('vuejs', { test: /[\\/]node_modules[\\/]vue[\\/]/ });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // Check if Vue.js code is still executed properly
+                    testSetup.requestTestPage(
+                        path.join(config.getContext(), 'www'),
+                        [
+                            convertToManifestPath('build/runtime.js', config),
+                            convertToManifestPath('build/page1.js', config),
+                            convertToManifestPath('build/vuejs.js', config),
+                        ],
+                        (browser) => {
+                            browser.assert.text('#app', /Welcome to Your Vue\.js App/);
+                            done();
+                        }
+                    );
+                });
+            });
+
+            it('addCacheGroup() with source maps enabled', (done) => {
+                const config = createWebpackConfig('www/build', 'dev');
+                config.setPublicPath('/build');
+                config.enableSourceMaps();
+                config.enableVueLoader();
+                config.enablePreactPreset();
+                config.enableSassLoader();
+                config.enableLessLoader();
+                config.addEntry('page1', './vuejs/main');
+                config.addEntry('page2', './preact/main');
+
+                // Move Vue.js code into its own chunk
+                config.addCacheGroup('vuejs', { test: /[\\/]node_modules[\\/]vue[\\/]/ });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    // Check if Vue.js code is still executed properly
+                    testSetup.requestTestPage(
+                        path.join(config.getContext(), 'www'),
+                        [
+                            'build/runtime.js',
+                            'build/page1.js',
+                            'build/vuejs.js',
+                        ],
+                        (browser) => {
+                            browser.assert.text('#app', /Welcome to Your Vue\.js App/);
+                            done();
+                        }
+                    );
+                });
+            });
+        });
+
         it('in production mode, code is uglified', (done) => {
             const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');

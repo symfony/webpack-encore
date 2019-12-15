@@ -96,4 +96,21 @@ describe('The validator function', () => {
         expect(logger.getMessages().warning).to.have.lengthOf(1);
         expect(logger.getMessages().warning[0]).to.include('Passing "vendors" to createSharedEntry() is not recommended');
     });
+
+    it('warning with addCacheGroup() and core cache group name', () => {
+        const config = createConfig();
+        config.outputPath = '/tmp/public/build';
+        config.setPublicPath('/build');
+        config.addEntry('main', './main');
+        config.addCacheGroup('defaultVendors', {
+            test: /[\\/]main/,
+        });
+
+        logger.reset();
+        logger.quiet();
+        validator(config);
+
+        expect(logger.getMessages().warning).to.have.lengthOf(1);
+        expect(logger.getMessages().warning[0]).to.include('Passing "defaultVendors" to addCacheGroup() is not recommended');
+    });
 });
