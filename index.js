@@ -1228,20 +1228,6 @@ class Encore {
     }
 
     /**
-     * Enables image optimization with imagemin.
-     *
-     * https://github.com/tcoopman/image-webpack-loader
-     *
-     * @param {object|function} imageWebpackLoaderOptionsOrCallback
-     * @returns {Encore}
-     */
-    enableImageWebpackLoader(imageWebpackLoaderOptionsOrCallback = () => {}) {
-        webpackConfig.enableImageWebpackLoader(imageWebpackLoaderOptionsOrCallback);
-
-        return this;
-    }
-
-    /**
      * If enabled, display build notifications using
      * webpack-notifier.
      *
@@ -1300,6 +1286,50 @@ class Encore {
      */
     disableImagesLoader() {
         webpackConfig.disableImagesLoader();
+
+        return this;
+    }
+
+    /**
+     * If enabled, images will be optimized with
+     * imagemin.
+     *
+     * ```
+     * Encore.enableImagemin()
+     * ```
+     *
+     * or configure the imagemin options
+     * https://github.com/tcoopman/image-webpack-loader#options
+     *
+     * ```
+     * Encore.enableImagemin({
+     *     mozjpeg: {
+     *         progressive: true,
+     *         quality: 65
+     *     },
+     *     // optipng.enabled: false will disable optipng
+     *     optipng: {
+     *         enabled: false,
+     *     },
+     *     pngquant: {
+     *         quality: [0.65, 0.90],
+     *         speed: 4
+     *     },
+     *     gifsicle: {
+     *         interlaced: false,
+     *     },
+     *     // the webp option will enable WEBP
+     *     webp: {
+     *         quality: 75
+     *     }
+     * });
+     * ```
+     *
+     * @param {object} options
+     * @return {Encore}
+     */
+    enableImagemin(options = {}) {
+        webpackConfig.enableImagemin(options);
 
         return this;
     }

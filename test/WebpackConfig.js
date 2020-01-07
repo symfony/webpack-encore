@@ -1221,6 +1221,35 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableImagemin', () => {
+        it('Without options', () => {
+            const config = createConfig();
+            config.enableImagemin();
+
+            expect(config.useImagemin).to.be.true;
+            expect(config.imageminOptions.disable).to.be.null;
+        });
+
+        it('With options', () => {
+            const config = createConfig();
+            config.enableImagemin({
+                optipng: { enable: false },
+            });
+
+            expect(config.useImagemin).to.be.true;
+            expect(config.imageminOptions.optipng.enable).to.be.false;
+        });
+
+        it('With an invalid option', () => {
+            const config = createConfig();
+            expect(() => {
+                config.enableImagemin({
+                    foo: true
+                });
+            }).to.throw('Invalid option "foo"');
+        });
+    });
+
     describe('disableFontsLoader', () => {
         it('Disable default fonts loader', () => {
             const config = createConfig();
