@@ -9,6 +9,7 @@
 
 'use strict';
 
+const os = require('os');
 const chai = require('chai');
 chai.use(require('chai-fs'));
 const expect = chai.expect;
@@ -1761,6 +1762,32 @@ module.exports = {
 
                 done();
             }, true);
+        });
+
+        it('When enabled and without any configuration, ESLint will throw an error and a nice message should be displayed', (done) => {
+            const cwd = process.cwd();
+
+            this.timeout(5000);
+            setTimeout(() => {
+                process.chdir(cwd);
+                done();
+            }, 4000);
+
+            const appDir = testSetup.createTestAppDir(os.tmpdir()); // to prevent issue with Encore's .eslintrc.js
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/eslint');
+            config.enableEslintLoader({
+                // Force eslint-loader to output errors instead of sometimes
+                // using warnings (see: https://github.com/MoOx/eslint-loader#errors-and-warning)
+                emitError: true,
+            });
+
+            process.chdir(appDir);
+
+            expect(() => {
+                testSetup.runWebpack(config, (webpackAssert, stats) => {});
+            }).to.throw('No ESLint configration has been found.');
         });
 
         it('Code splitting with dynamic import', (done) => {
