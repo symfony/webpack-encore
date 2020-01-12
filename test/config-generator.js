@@ -372,6 +372,10 @@ describe('The config-generator function', () => {
         });
 
         it('enableEslintLoader("extends-name")', () => {
+            before(() => {
+                logger.reset();
+            });
+
             const config = createConfig();
             config.addEntry('main', './main');
             config.publicPath = '/';
@@ -380,6 +384,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
+            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('enableEslintLoader: Extending from a configuration is deprecated, please use a configuration file instead. See https://eslint.org/docs/user-guide/configuring for more information.');
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
         });
