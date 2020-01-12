@@ -1722,6 +1722,47 @@ module.exports = {
             }, true);
         });
 
+        it('When enabled, eslint checks for linting errors by using configuration from file', (done) => {
+            const cwd = process.cwd();
+            after(() => {
+                process.chdir(cwd);
+            });
+
+            const appDir = testSetup.createTestAppDir();
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/eslint-es2018');
+            config.enableEslintLoader({
+                // Force eslint-loader to output errors instead of sometimes
+                // using warnings (see: https://github.com/MoOx/eslint-loader#errors-and-warning)
+                emitError: true,
+            });
+            fs.writeFileSync(
+                path.join(appDir, '.eslintrc.js'),
+                `
+module.exports = {
+    parser: 'babel-eslint',
+    rules: {
+        'indent': ['error', 2],
+        'no-unused-vars': ['error', { 'args': 'all' }]
+    }
+}                            `
+            );
+
+            process.chdir(appDir);
+
+            testSetup.runWebpack(config, (webpackAssert, stats) => {
+                const eslintErrors = stats.toJson().errors[0];
+
+                expect(eslintErrors).not.to.contain('Parsing error: Unexpected token ..');
+                expect(eslintErrors).to.contain('Expected indentation of 0 spaces but found 2');
+                expect(eslintErrors).to.contain('\'x\' is assigned a value but never used');
+                expect(eslintErrors).to.contain('\'b\' is assigned a value but never used');
+
+                done();
+            }, true);
+        });
+
         it('Code splitting with dynamic import', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
