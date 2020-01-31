@@ -1323,13 +1323,19 @@ class Encore {
      *         quality: 75
      *     }
      * });
+     *
+     * // For a more advanced usage you can pass in a callback
+     * Encore.enableImagemin((options) => {
+     *      options.mozjpeg = { progressive: true };
+     *      options.optipng = { enabled: false };
+     * });
      * ```
      *
-     * @param {object} options
+     * @param {object|function} imageminLoaderOptionsOrCallback
      * @return {Encore}
      */
-    enableImagemin(options = {}) {
-        webpackConfig.enableImagemin(options);
+    enableImagemin(imageminLoaderOptionsOrCallback = () => {}) {
+        webpackConfig.enableImageminLoader(imageminLoaderOptionsOrCallback);
 
         return this;
     }
