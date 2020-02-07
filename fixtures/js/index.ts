@@ -1,3 +1,3 @@
-import render = require('./render');
+import render from './render';
 
 render();
