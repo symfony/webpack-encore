@@ -11,6 +11,7 @@
 
 const chai = require('chai');
 chai.use(require('chai-fs'));
+chai.use(require('chai-subset'));
 const expect = chai.expect;
 const path = require('path');
 const testSetup = require('./helpers/setup');
