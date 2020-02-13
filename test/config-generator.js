@@ -125,7 +125,7 @@ describe('The config-generator function', () => {
             config.useSourceMaps = false;
 
             const actualConfig = configGenerator(config);
-            expect(actualConfig.devtool).to.be.undefined;
+            expect(actualConfig.devtool).to.be.false;
 
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('?sourceMap');
         });
