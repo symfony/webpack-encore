@@ -659,10 +659,9 @@ describe('Functional tests using webpack', function() {
                 webpackAssert.assertOutputFileDoesNotHaveSourcemap(
                     'main.js'
                 );
-                // TODO - fix this, there IS always a sourcemap in .sass files
-                // webpackAssert.assertOutputFileDoesNotHaveSourcemap(
-                //     'bg.css'
-                // );
+                webpackAssert.assertOutputFileDoesNotHaveSourcemap(
+                    'bg.css'
+                );
                 webpackAssert.assertOutputFileDoesNotHaveSourcemap(
                     'font.css'
                 );
@@ -2586,10 +2585,10 @@ module.exports = {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
                             '/build/runtime.js': 'sha384-GhoJXFTd5hHxARTOCT3RTrcOdggU7hmL/esw02KNiVIWsdumxg20TRjgdzXBMGfE',
-                            '/build/main.js': 'sha384-ymG7OyjISWrOpH9jsGvajKMDEOP/mKJq8bHC0XdjQA6P8sg2nu+2RLQxcNNwE/3J',
-                            '/build/main~other.js': 'sha384-4g+Zv0iELStVvA4/B27g4TQHUMwZttA5TEojjUyB8Gl5p7sarU4y+VTSGMrNab8n',
+                            '/build/main.js': 'sha384-TnYCkFJqLSzDkhJOQRhe1JPC6MhfAurWWjEqNVNa0YK8N4a89mMsaAHFOP+8u3Oq',
+                            '/build/main~other.js': 'sha384-XFgE9lNhD68TAYS7RjTCP7aXyjUxWftiNFMNxG7izJZ3urzp/7u1Tn4DMARxCLIw',
                             '/build/main~other.css': 'sha384-hfZmq9+2oI5Cst4/F4YyS2tJAAYdGz7vqSMP8cJoa8bVOr2kxNRLxSw6P8UZjwUn',
-                            '/build/other.js': 'sha384-ZU3hiTN/+Va9WVImPi+cI0/j/Q7SzAVezqL1aEXha8sVgE5HU6/0wKUxj1LEnkC9',
+                            '/build/other.js': 'sha384-xZXDGUPL+RIK36nvmtEbJleQy9BCgG89MXkrYTNcbpDcZs4C1VbWAFMFehc8Mmnw',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.
@@ -2619,10 +2618,10 @@ module.exports = {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
                             'http://localhost:8090/assets/runtime.js': 'sha256-qW5QarAS9yWb4YTF5gVKNF24g4p5GayDErYme10iu7A=',
-                            'http://localhost:8090/assets/main.js': 'sha256-RtW3TYA1SBHUGuBnIBBJZ7etIGyYisjargouvET4sFE=',
-                            'http://localhost:8090/assets/main~other.js': 'sha256-q9xPQWa0UBbMPUNmhDaDuBFjV2gZU6ICiKzLN7jPccc=',
+                            'http://localhost:8090/assets/main.js': 'sha256-GCcvESjPed0klG3VxS0DLeRZ0UNJl/Ln210ldsAz9U4=',
+                            'http://localhost:8090/assets/main~other.js': 'sha256-iNXyEC346lU4Z8e4pxtatvElwLSJu/in5Mpg+EsIrwA=',
                             'http://localhost:8090/assets/main~other.css': 'sha256-KVo9sI0v6MnbxPg/xZMSn2XE7qIChWiDh1uED1tP5Fo=',
-                            'http://localhost:8090/assets/other.js': 'sha256-rxT6mp9VrLO1++6G3g/VSLGisznX838ALokQhD3Jmyc=',
+                            'http://localhost:8090/assets/other.js': 'sha256-O2agOBc6WzelNGpE0dg3k6X1jtEVTRq9ogik4UAlBjg=',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.
@@ -2651,10 +2650,10 @@ module.exports = {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
                             '/build/runtime.js': 'sha256-wxWX1GOm4edacCjvQsqZ1hG9tls4ZtuUOGQ8goGNg54= sha512-eiQrrAyaBpUlypIGVURWONjsAW8sImJllkwQ6NSDK6tIVNy/lInthruFT30x/OGRfHa4aYEaOHriEjisoxcw1Q==',
-                            '/build/main.js': 'sha256-RtW3TYA1SBHUGuBnIBBJZ7etIGyYisjargouvET4sFE= sha512-/wl1U/L6meBga5eeRTxPz5BxFiLmwL/kjy1NTcK0DNdxV3oUI/zZ9DEDU43Cl7XqGMnUH8pJhhFJR+1k9vZrYQ==',
-                            '/build/main~other.js': 'sha256-q9xPQWa0UBbMPUNmhDaDuBFjV2gZU6ICiKzLN7jPccc= sha512-1xuC/Y+goI01JUPVYBQOpPY36ttTXnZFOBsTgNPCJu53b2/ccFqzeW3abV3KG5mFzo4cfSUOS7AXjj8ajp/MjA==',
+                            '/build/main.js': 'sha256-GCcvESjPed0klG3VxS0DLeRZ0UNJl/Ln210ldsAz9U4= sha512-dxwgdqyuVFpEn4D/xSTLDf524+OSdwBgAYwB6zRswaM4SszrrClIBK3FScktIU3CNWEqiHgjHPj2SnQTLAonGg==',
+                            '/build/main~other.js': 'sha256-iNXyEC346lU4Z8e4pxtatvElwLSJu/in5Mpg+EsIrwA= sha512-ay9A5f9PnQgqkt0obZY0UD+Bx0IVf13NijC74/Gek6Fl5JoOpHMXBlqWxZnMlnbP0/OCm1lgKRDitLd4vys87w==',
                             '/build/main~other.css': 'sha256-6AltZJTjdVuLywCBE8qQevkscxazmWyh/19OL6cxkwY= sha512-zE1kAcqJ/jNnycEwELK7BfauEgRlK6cGrN+9urz4JI1K+s5BpglYFF9G0VOiSA7Kj3w46XX1WcjZ5w5QohBFEw==',
-                            '/build/other.js': 'sha256-rxT6mp9VrLO1++6G3g/VSLGisznX838ALokQhD3Jmyc= sha512-XZjuolIG3/QW1PwAIaPCtQZvKvkPNsAsoUjQdDqlW/uStd9lBrT3w16WrBdc3qe4X11bGkyA7IQpQwN3FGkPMA==',
+                            '/build/other.js': 'sha256-O2agOBc6WzelNGpE0dg3k6X1jtEVTRq9ogik4UAlBjg= sha512-tXToyMmW0EuKUF667SlO7QJZFg8eE6fHSmZIk7G0qIo9oUhgMQzwWyc5UpzlHlTOoLaKWB+UNgjOb0x3t28PZg==',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.

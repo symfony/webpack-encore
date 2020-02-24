@@ -75,24 +75,29 @@ class Assert {
     assertOutputFileHasSourcemap(filePath) {
         const actualContents = readOutputFile(this.webpackConfig, filePath);
 
-        if (!actualContents.includes('sourceMappingURL')) {
+        const hasSourceMappingUrl = actualContents.includes('sourceMappingURL');
+        const hasSourceUrl = actualContents.includes('sourceURL');
+
+        if (!hasSourceMappingUrl && !hasSourceUrl) {
             throw new Error(`No sourcemap found for ${filePath}!`);
         }
 
-        const sourceMappingUrlContents = actualContents.split('sourceMappingURL')[1];
+        if (hasSourceMappingUrl) {
+            const sourceMappingUrlContents = actualContents.split('sourceMappingURL')[1];
 
-        // if you set config.devtool = '#inline-source-map', but then
-        // incorrectly configure css/sass sourcemaps, you WILL have
-        // a sourcemap, but it will be too small / i.e. basically empty
-        if (sourceMappingUrlContents.length < 200) {
-            throw new Error(`Sourcemap for ${filePath} appears to be empty!`);
+            // if you set config.devtool = '#inline-source-map', but then
+            // incorrectly configure css/sass sourcemaps, you WILL have
+            // a sourcemap, but it will be too small / i.e. basically empty
+            if (sourceMappingUrlContents.length < 200) {
+                throw new Error(`Sourcemap for ${filePath} appears to be empty!`);
+            }
         }
     }
 
     assertOutputFileDoesNotHaveSourcemap(filePath) {
         const actualContents = readOutputFile(this.webpackConfig, filePath);
 
-        if (actualContents.includes('sourceMappingURL')) {
+        if (actualContents.includes('sourceMappingURL') || actualContents.includes('sourceURL')) {
             throw new Error(`Sourcemap found for ${filePath}!`);
         }
     }
