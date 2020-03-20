@@ -872,6 +872,15 @@ describe('WebpackConfig object', () => {
                 config.enableTypeScriptLoader('FOO');
             }).to.throw('must be a callback function');
         });
+
+        it('TypeScript can not be compiled by ts-loader is Babel is already handling TypeScript', () => {
+            const config = createConfig();
+            config.enableBabelTypeScriptPreset();
+
+            expect(function() {
+                config.enableTypeScriptLoader();
+            }).to.throw('Encore.enableTypeScriptLoader() can not be called when Encore.enableBabelTypeScriptPreset() has been called.');
+        });
     });
 
     describe('enableForkedTypeScriptTypesChecking', () => {
@@ -891,7 +900,36 @@ describe('WebpackConfig object', () => {
                 config.enableForkedTypeScriptTypesChecking('FOO');
             }).to.throw('must be a callback function');
         });
+
+        it('TypeScript can not be compiled by Babel if forked types checking is enabled', () => {
+            const config = createConfig();
+            config.enableForkedTypeScriptTypesChecking();
+
+            expect(function() {
+                config.enableBabelTypeScriptPreset();
+            }).to.throw('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableForkedTypeScriptTypesChecking() has been called.');
+        });
     });
+
+    describe('enableBabelTypeScriptPreset', () => {
+        it('TypeScript can not be compiled by Babel if ts-loader is already enabled', () => {
+            const config = createConfig();
+            config.enableTypeScriptLoader();
+
+            expect(function() {
+                config.enableBabelTypeScriptPreset();
+            }).to.throw('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableTypeScriptLoader() has been called.');
+        });
+
+        it('TypeScript can not be compiled by Babel if ts-loader is already enabled', () => {
+            const config = createConfig();
+            config.enableForkedTypeScriptTypesChecking();
+
+            expect(function() {
+                config.enableBabelTypeScriptPreset();
+            }).to.throw('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableForkedTypeScriptTypesChecking() has been called.');
+        });
+    })
 
     describe('enableVueLoader', () => {
         it('Call with no config', () => {
