@@ -1070,18 +1070,14 @@ class Encore {
      * // enables the eslint loaded using the default eslint configuration.
      * Encore.enableEslintLoader();
      *
-     * // Optionally, you can pass in the configuration eslint should extend.
-     * Encore.enableEslintLoader('airbnb');
-     *
      * // You can also pass in an object of options
      * // that will be passed on to the eslint-loader
      * Encore.enableEslintLoader({
-     *     extends: 'airbnb',
      *     emitWarning: false
      * });
      *
      * // For a more advanced usage you can pass in a callback
-     * // https://github.com/MoOx/eslint-loader#options
+     * // https://github.com/webpack-contrib/eslint-loader#options
      * Encore.enableEslintLoader((options) => {
      *      options.extends = 'airbnb';
      *      options.emitWarning = false;

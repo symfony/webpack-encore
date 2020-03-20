@@ -25,8 +25,8 @@ const testFixturesDir = path.join(__dirname, '../', '../', 'fixtures');
 
 let servers = [];
 
-function createTestAppDir() {
-    const testAppDir = path.join(tmpDir, Math.random().toString(36).substring(7));
+function createTestAppDir(rootDir = tmpDir) {
+    const testAppDir = path.join(rootDir, Math.random().toString(36).substring(7));
 
     // copy the fixtures into this new directory
     fs.copySync(testFixturesDir, testAppDir);

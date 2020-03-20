@@ -30,7 +30,6 @@ describe('loaders/eslint', () => {
 
         expect(actualOptions).to.deep.equal({
             cache: true,
-            parser: 'babel-eslint',
             emitWarning: true
         });
     });
@@ -45,7 +44,6 @@ describe('loaders/eslint', () => {
 
         expect(actualOptions).to.deep.equal({
             cache: true,
-            parser: 'babel-eslint',
             emitWarning: true,
             extends: 'airbnb'
         });
@@ -61,7 +59,6 @@ describe('loaders/eslint', () => {
 
         expect(actualOptions).to.deep.equal({
             cache: true,
-            parser: 'babel-eslint',
             emitWarning: false
         });
     });
