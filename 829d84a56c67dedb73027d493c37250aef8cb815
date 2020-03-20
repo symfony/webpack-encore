@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-01-13T07:46:56Z
+
+Thanks @Kocal, I think that we **really** need this :)
+
+> I couldn't use FriendlyErrorsPlugin for this because error is not coming from Webpack. If someone has a better idea... 😕
+
+Not a big issue imo, the message looks fine (**edit:** ahah, no wonder it looks fine and really similar to the ones we already have after pushing that missing commit 😄).
+
+> EDIT: tests failures are unrelated I think.
+
+Yeah, the ones on AppVeyor have been there for a while now (and I still have no clue what causes them...), and the ones on Travis are related to TypeScript (a bit weird that they only happen for that job though).
