@@ -653,6 +653,30 @@ class Encore {
     }
 
     /**
+     * Configure the devServer configuration.
+     *
+     * https://webpack.js.org/configuration/dev-server
+     *
+     * ```
+     * Encore.configureDevServerOptions(function(options) {
+     *     // change the configuration
+     *     options.https = {
+     *         key: '<your SSL cert key content>',
+     *         cert: '<your SSL cert content>',
+     *     };
+     * });
+     * ```
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureDevServerOptions(callback) {
+        webpackConfig.configureDevServerOptions(callback);
+
+        return this;
+    }
+
+    /**
      * Automatically make some variables available everywhere!
      *
      * Usage:

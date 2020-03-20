@@ -593,6 +593,31 @@ describe('The config-generator function', () => {
             expect(actualConfig.devServer.hot).to.be.true;
         });
 
+        it('devServer with custom options', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+
+            config.configureDevServerOptions(options => {
+                options.https = {
+                    key: 'https.key',
+                    cert: 'https.cert',
+                };
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.devServer).to.containSubset({
+                https: {
+                    key: 'https.key',
+                    cert: 'https.cert',
+                },
+            });
+        });
+
         it('devServer with custom watch options', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
@@ -607,6 +632,7 @@ describe('The config-generator function', () => {
             });
 
             const actualConfig = configGenerator(config);
+
             expect(actualConfig.watchOptions).to.deep.equals({
                 'ignored': /node_modules/,
                 'poll': 250,
@@ -614,6 +640,34 @@ describe('The config-generator function', () => {
             expect(actualConfig.devServer.watchOptions).to.deep.equals({
                 'ignored': /node_modules/,
                 'poll': 250,
+            });
+        });
+
+        it('devServer with custom options and watch options', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.useHotModuleReplacement = true;
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+
+            config.configureWatchOptions(watchOptions => {
+                watchOptions.poll = 250;
+            });
+            config.configureDevServerOptions(options => {
+                // should take precedence over `configureWatchOptions()`
+                options.watchOptions.poll = 500;
+            });
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.watchOptions).to.deep.equals({
+                'ignored': /node_modules/,
+                'poll': 250,
+            });
+            expect(actualConfig.devServer.watchOptions).to.deep.equals({
+                'ignored': /node_modules/,
+                'poll': 500,
             });
         });
     });
