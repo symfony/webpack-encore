@@ -966,6 +966,27 @@ class Encore {
     }
 
     /**
+     * Configure the css-loader.
+     *
+     * https://github.com/webpack-contrib/style-loader#Options
+     *
+     * ```
+     * Encore.configureStyleLoader(function(config) {
+     *     // change the config
+     *     // config.injectType: 'styleTag'
+     * });
+     * ```
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureStyleLoader(callback) {
+        webpackConfig.configureStyleLoader(callback);
+
+        return this;
+    }
+
+    /**
      * If enabled, the react preset is added to Babel.
      *
      * https://babeljs.io/docs/plugins/preset-react/
