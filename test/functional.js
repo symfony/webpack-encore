@@ -1325,22 +1325,7 @@ module.exports = {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/render.ts', './js/index.ts']);
-            config.configureBabel(function(config) {
-                config.presets = [
-                    ['@babel/preset-env', {
-                        'targets': {
-                            'chrome': 52,
-                        },
-                    }],
-                    '@babel/typescript', // required preset
-                ];
-                // not required, but recommended
-                config.plugins = ['@babel/proposal-class-properties'];
-            });
-
-            config.configureLoaderRule('javascript', loader => {
-                loader.test = /.(j|t)sx?$/; // let Babel to run over .tsx? files too
-            });
+            config.enableBabelTypeScriptPreset();
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 // check that babel-loader transformed the ts file

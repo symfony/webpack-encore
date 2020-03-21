@@ -929,7 +929,16 @@ describe('WebpackConfig object', () => {
                 config.enableBabelTypeScriptPreset();
             }).to.throw('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableForkedTypeScriptTypesChecking() has been called.');
         });
-    })
+
+        it('Options should be defined', () => {
+            const config = createConfig();
+            const options = { isTSX: true };
+
+            config.enableBabelTypeScriptPreset(options);
+
+            expect(config.babelTypeScriptPresetOptions).to.equal(options);
+        });
+    });
 
     describe('enableVueLoader', () => {
         it('Call with no config', () => {

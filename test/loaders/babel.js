@@ -166,4 +166,41 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options.presets[0][1].corejs).to.equal(3);
         expect(actualLoaders[0].options.presets[0][1].include).to.have.members(['bar']);
     });
+
+    it('getLoaders() with TypeScript', () => {
+        const config = createConfig();
+        const presetTypeScriptOptions = { isTSX: true };
+
+        config.enableBabelTypeScriptPreset(presetTypeScriptOptions);
+
+        config.configureBabel(function(babelConfig) {
+            babelConfig.plugins.push('foo');
+        });
+
+        const actualLoaders = babelLoader.getLoaders(config);
+
+        expect(actualLoaders[0].options.presets[0][0]).to.equal('@babel/preset-env');
+        expect(actualLoaders[0].options.presets[1][0]).to.equal('@babel/preset-typescript');
+        expect(actualLoaders[0].options.presets[1][1]).to.equal(presetTypeScriptOptions);
+        expect(actualLoaders[0].options.plugins).to.deep.include.members([
+            '@babel/plugin-syntax-dynamic-import',
+            '@babel/plugin-proposal-class-properties',
+            'foo'
+        ]);
+    });
+
+    it('getTest() base behavior', () => {
+        const config = createConfig();
+
+        const actualTest = babelLoader.getTest(config);
+        expect(actualTest.toString()).to.equals(/\.(jsx?)$/.toString());
+    });
+
+    it('getTest() with TypeScript', () => {
+        const config = createConfig();
+        config.enableBabelTypeScriptPreset();
+
+        const actualTest = babelLoader.getTest(config);
+        expect(actualTest.toString()).to.equals(/\.(jsx?|tsx?)$/.toString());
+    });
 });
