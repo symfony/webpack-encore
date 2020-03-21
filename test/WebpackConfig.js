@@ -873,7 +873,7 @@ describe('WebpackConfig object', () => {
             }).to.throw('must be a callback function');
         });
 
-        it('TypeScript can not be compiled by ts-loader is Babel is already handling TypeScript', () => {
+        it('TypeScript can not be compiled by ts-loader if Babel is already handling TypeScript', () => {
             const config = createConfig();
             config.enableBabelTypeScriptPreset();
 
@@ -903,11 +903,11 @@ describe('WebpackConfig object', () => {
 
         it('TypeScript can not be compiled by Babel if forked types checking is enabled', () => {
             const config = createConfig();
-            config.enableForkedTypeScriptTypesChecking();
+            config.enableBabelTypeScriptPreset();
 
             expect(function() {
-                config.enableBabelTypeScriptPreset();
-            }).to.throw('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableForkedTypeScriptTypesChecking() has been called.');
+                config.enableForkedTypeScriptTypesChecking();
+            }).to.throw('Encore.enableForkedTypeScriptTypesChecking() can not be called when Encore.enableBabelTypeScriptPreset() has been called.');
         });
     });
 
