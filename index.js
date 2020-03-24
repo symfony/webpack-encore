@@ -966,14 +966,14 @@ class Encore {
     }
 
     /**
-     * Configure the css-loader.
+     * Configure the style-loader.
      *
      * https://github.com/webpack-contrib/style-loader#Options
      *
      * ```
      * Encore.configureStyleLoader(function(config) {
      *     // change the config
-     *     // config.injectType: 'styleTag'
+     *     // config.injectType = 'styleTag';
      * });
      * ```
      *
