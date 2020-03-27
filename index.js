@@ -1003,11 +1003,14 @@ class Encore {
     }
 
     /**
-     * Call this if you plan on loading TypeScript files.
+     * Call this to process TypeScript files through ts-loader.
      *
      * ```
      * Encore.enableTypeScriptLoader()
      * ```
+     *
+     * Or see Encore.enableBabelTypeScriptPreset() for a faster
+     * method of processing TypeScript files.
      *
      * Or, configure the ts-loader options:
      *
@@ -1053,12 +1056,12 @@ class Encore {
      * Encore.enableBabelTypeScriptPreset()
      * ```
      *
-     * This method let Babel handle your TypeScript code
-     * and can not be used with `Encore.enableTypeScriptLoader()`
+     * This method lets Babel handle your TypeScript code
+     * and cannot be used with `Encore.enableTypeScriptLoader()`
      * or `Encore.enableForkedTypeScriptTypesChecking()`.
      *
      * Since all types are removed by Babel,
-     * you must run `tsc --noEmit` yourself for types checking.
+     * you must run `tsc --noEmit` yourself for type checking.
      *
      * The Babel TypeScript preset can be configured,
      * see https://babeljs.io/docs/en/babel-preset-typescript#options
