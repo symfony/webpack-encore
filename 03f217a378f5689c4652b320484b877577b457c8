@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2020-02-13T21:07:50Z
+
+I've added a small TypeScript-specific code, and tests pass fine.
+It should be ok now :+1:
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-03-20T14:30:50Z
+
+Wait a second :).
+
+If Babel is a *better* way to compile Typescript - I was just reading this article https://iamturns.com/typescript-babel/ - then why not make it a first-class citizen? Maybe we add a new:
+
+```
+Encore.enableBabelTypeScriptPreset()
+```
+
+And it takes care of everything for you:
+
+1) The warning on what you need to install
+2) Adding the preset to your Babel config (similar to what we do with `enableReactPreset()` and (I guess?) also the `@babel/proposal-class-properties` plugin
+3) Tweak the babel loader test to include .tsx? files
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-03-20T14:49:34Z
+
+I don't know if it's a _better_ way to _compile_ TypeScript with Babel, but that's an interesting alternative.
+
+But note that you lose TypeScript _power_ at compilation since every types are removed during transpilation. You need to run `tsc` manually to check your `.ts` files (it can be done in CI for example), **we should document it**.
+
+However, `Encore.enableBabelTypeScriptPreset()` sounds nice if it can make our life easier 😄
+
+I will try to work on it tonight :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-03-21T07:42:26Z
+
+@weaverryan I've added support to `Encore.enableBabelTypeScriptPreset()`
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-03-24T06:34:07Z
+
+Hi @Lyrkan, thanks for your review.
+I fixed the error message and added two tests in `config-generator.js`.
