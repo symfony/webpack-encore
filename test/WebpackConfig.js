@@ -398,6 +398,77 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('addCacheGroup', () => {
+        it('Calling it adds cache groups', () => {
+            const config = createConfig();
+            config.addCacheGroup('foo', { test: /foo/ });
+            config.addCacheGroup('bar', { test: /bar/ });
+
+            expect(config.cacheGroups).to.deep.equal({
+                foo: { test: /foo/ },
+                bar: { test: /bar/ },
+            });
+        });
+
+        it('Calling it using the "node_modules" option', () => {
+            const config = createConfig();
+            config.addCacheGroup('foo', { node_modules: ['foo','bar', 'baz'] });
+
+            expect(config.cacheGroups).to.deep.equal({
+                foo: {
+                    test: /[\\/]node_modules[\\/](foo|bar|baz)[\\/]/,
+                },
+            });
+        });
+
+        it('Calling it with other SplitChunksPlugin options', () => {
+            const config = createConfig();
+            config.addCacheGroup('foo', {
+                test: /foo/,
+                chunks: 'initial',
+                minChunks: 2
+            });
+
+            expect(config.cacheGroups).to.deep.equal({
+                foo: {
+                    test: /foo/,
+                    chunks: 'initial',
+                    minChunks: 2
+                },
+            });
+        });
+
+        it('Calling it with an invalid name', () => {
+            const config = createConfig();
+            expect(() => {
+                config.addCacheGroup(true, { test: /foo/ });
+            }).to.throw('must be a string');
+        });
+
+        it('Calling it with an invalid options parameter', () => {
+            const config = createConfig();
+            expect(() => {
+                config.addCacheGroup('foo', 'bar');
+            }).to.throw('must be an object');
+        });
+
+        it('Calling it with an invalid node_modules option', () => {
+            const config = createConfig();
+            expect(() => {
+                config.addCacheGroup('foo', {
+                    'node_modules': 'foo'
+                });
+            }).to.throw('must be an array');
+        });
+
+        it('Calling it without the "test" or "node_modules" option', () => {
+            const config = createConfig();
+            expect(() => {
+                config.addCacheGroup('foo', { type: 'json' });
+            }).to.throw('Either the "test" option or the "node_modules" option');
+        });
+    });
+
     describe('copyFiles', () => {
         it('Calling it adds files to be copied', () => {
             const config = createConfig();

@@ -134,6 +134,17 @@ describe('Public API', () => {
 
     });
 
+    describe('addCacheGroup', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.addCacheGroup('sharedEntry', {
+                test: /vendor\.js/
+            });
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('copyFiles', () => {
 
         it('must return the API object', () => {
