@@ -1321,6 +1321,35 @@ module.exports = {
             }).to.throw('wrong `tsconfig` path in fork plugin configuration (should be a relative or absolute path)');
         });
 
+        it('TypeScript can be compiled by Babel', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', ['./js/render.ts', './js/index.ts']);
+            config.enableBabelTypeScriptPreset();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel-loader transformed the ts file
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'document.getElementById(\'app\').innerHTML =',
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js',
+                    ],
+                    (browser) => {
+
+                        // assert that the ts module rendered
+                        browser.assert.text('#app h1', 'Welcome to Your TypeScript App');
+                        done();
+                    },
+                );
+            });
+        });
+
         it('When configured, Handlebars is compiled', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');

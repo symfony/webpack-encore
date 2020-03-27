@@ -520,7 +520,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
 
             // check for the default env preset only
             expect(JSON.stringify(jsRule.use[0].options.presets)).contains('@babel/preset-env');
@@ -932,7 +932,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
 
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
@@ -951,7 +951,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             expect(String(jsRule.exclude)).to.equal(String(/foo/));
         });
 
@@ -966,7 +966,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             expect(jsRule.exclude).to.be.a('Function');
             expect(jsRule.exclude(path.join('test', 'node_modules', 'foo', 'index.js'))).to.be.false;
             expect(jsRule.exclude(path.join('test', 'node_modules', 'bar', 'index.js'))).to.be.true;
@@ -984,7 +984,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
@@ -1001,7 +1001,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
@@ -1018,7 +1018,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');

@@ -980,7 +980,7 @@ class Encore {
 
     /**
      * If enabled, a Preact preset will be applied to
-     * the generated Webpack configuration.
+     * the generated Webpack and Babel configuration.
      *
      * ```
      * Encore.enablePreactPreset()
@@ -1040,6 +1040,42 @@ class Encore {
         webpackConfig.enableForkedTypeScriptTypesChecking(
             forkedTypeScriptTypesCheckOptionsCallback
         );
+
+        return this;
+    }
+
+
+    /**
+     * If enabled, a TypeScript preset will be applied to
+     * the generated Webpack and Babel configuration.
+     *
+     * ```
+     * Encore.enableBabelTypeScriptPreset()
+     * ```
+     *
+     * This method let Babel handle your TypeScript code
+     * and can not be used with `Encore.enableTypeScriptLoader()`
+     * or `Encore.enableForkedTypeScriptTypesChecking()`.
+     *
+     * Since all types are removed by Babel,
+     * you must run `tsc --noEmit` yourself for types checking.
+     *
+     * The Babel TypeScript preset can be configured,
+     * see https://babeljs.io/docs/en/babel-preset-typescript#options
+     * for available options.
+     *
+     * For example:
+     * ```
+     * Encore.enableBabelTypeScriptPreset({
+     *     isTSX: true
+     * })
+     * ```
+     *
+     * @param {object} options
+     * @returns {Encore}
+     */
+    enableBabelTypeScriptPreset(options) {
+        webpackConfig.enableBabelTypeScriptPreset(options);
 
         return this;
     }

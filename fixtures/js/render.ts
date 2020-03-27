@@ -1,5 +1,6 @@
 function render() {
-    document.getElementById('app').innerHTML = "<h1>Welcome to Your TypeScript App</h1>";
+    const html: string = "<h1>Welcome to Your TypeScript App</h1>";
+    document.getElementById('app').innerHTML = html;
 }
 
-export = render;
+export default render;
