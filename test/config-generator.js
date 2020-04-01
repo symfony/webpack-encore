@@ -1340,7 +1340,7 @@ describe('The config-generator function', () => {
                 findRule(/\.(css)$/, actualConfig.module.rules);
             }).not.to.throw();
             expect(function() {
-                findRule(/\.(css|postcss)$/, actualConfig.module.rules);
+                findRule(/\.(css|pcss|postcss)$/, actualConfig.module.rules);
             }).to.throw();
         });
 
@@ -1358,7 +1358,7 @@ describe('The config-generator function', () => {
                 findRule(/\.(css)$/, actualConfig.module.rules);
             }).to.throw();
             expect(function() {
-                findRule(/\.(css|postcss)$/, actualConfig.module.rules);
+                findRule(/\.(css|pcss|postcss)$/, actualConfig.module.rules);
             }).to.not.throw();
         });
     });
