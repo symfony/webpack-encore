@@ -520,7 +520,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
 
             // check for the default env preset only
             expect(JSON.stringify(jsRule.use[0].options.presets)).contains('@babel/preset-env');
@@ -932,7 +932,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
 
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
@@ -951,7 +951,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             expect(String(jsRule.exclude)).to.equal(String(/foo/));
         });
 
@@ -966,7 +966,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             expect(jsRule.exclude).to.be.a('Function');
             expect(jsRule.exclude(path.join('test', 'node_modules', 'foo', 'index.js'))).to.be.false;
             expect(jsRule.exclude(path.join('test', 'node_modules', 'bar', 'index.js'))).to.be.true;
@@ -984,7 +984,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
@@ -1001,7 +1001,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
@@ -1018,7 +1018,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const jsRule = findRule(/\.jsx?$/, actualConfig.module.rules);
+            const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
@@ -1360,6 +1360,72 @@ describe('The config-generator function', () => {
             expect(function() {
                 findRule(/\.(css|postcss)$/, actualConfig.module.rules);
             }).to.not.throw();
+        });
+    });
+
+    describe('Test addCacheGroup()', () => {
+        it('Calling it adds cache groups', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.addEntry('main', './main');
+            config.addCacheGroup('foo', { test: /foo/ });
+            config.addCacheGroup('bar', { test: /bar/ });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+                foo: { name: 'foo', test: /foo/, chunks: 'all', enforce: true },
+                bar: { name: 'bar', test: /bar/, chunks: 'all', enforce: true },
+            });
+        });
+
+        it('Calling it using the "node_modules" option', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.addEntry('main', './main');
+            config.addCacheGroup('foo', { node_modules: ['foo','bar', 'baz'] });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+                foo: {
+                    name: 'foo',
+                    test: /[\\/]node_modules[\\/](foo|bar|baz)[\\/]/,
+                    chunks: 'all',
+                    enforce: true,
+                },
+            });
+        });
+
+        it('Calling it and overriding default options', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.addEntry('main', './main');
+            config.addCacheGroup('foo', {
+                name: 'bar',
+                test: /foo/,
+                chunks: 'initial',
+                minChunks: 2,
+                enforce: false,
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+                foo: {
+                    name: 'bar',
+                    test: /foo/,
+                    chunks: 'initial',
+                    minChunks: 2,
+                    enforce: false,
+                },
+            });
         });
     });
 });

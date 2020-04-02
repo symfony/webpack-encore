@@ -477,6 +477,53 @@ class Encore {
     }
 
     /**
+     * Add a new cache group to Webpack's SplitChunksPlugin.
+     * This can, for instance, be used to extract code that
+     * is common to multiple entries into its own chunk.
+     *
+     * See: https://webpack.js.org/plugins/split-chunks-plugin/#examples
+     *
+     * For example:
+     *
+     * ```
+     * Encore.addCacheGroup('vendor', {
+     *     test: /[\\/]node_modules[\\/]react/
+     * });
+     * ```
+     *
+     * You can pass all the options supported by the SplitChunksPlugin
+     * but also the following shorthand provided by Encore:
+     *
+     * * `node_modules`: An array of `node_modules` packages names
+     *
+     * For example:
+     *
+     * ```
+     * Encore.addCacheGroup('vendor', {
+     *     node_modules: ['react', 'react-dom']
+     * });
+     * ```
+     *
+     * At least one of the `test` or the `node_modules` option
+     * should be provided.
+     *
+     * By default, the new cache group will be created with the
+     * following options:
+     * * `chunks` set to `"all"`
+     * * `enforce` set to `true`
+     * * `name` set to the value of the "name" parameter
+     *
+     * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
+     * @param {object} options Cache group option
+     * @returns {Encore}
+     */
+    addCacheGroup(name, options) {
+        webpackConfig.addCacheGroup(name, options);
+
+        return this;
+    }
+
+    /**
      * Copy files or folders to the build directory.
      *
      * For example:
@@ -1001,7 +1048,7 @@ class Encore {
 
     /**
      * If enabled, a Preact preset will be applied to
-     * the generated Webpack configuration.
+     * the generated Webpack and Babel configuration.
      *
      * ```
      * Encore.enablePreactPreset()
@@ -1024,11 +1071,14 @@ class Encore {
     }
 
     /**
-     * Call this if you plan on loading TypeScript files.
+     * Call this to process TypeScript files through ts-loader.
      *
      * ```
      * Encore.enableTypeScriptLoader()
      * ```
+     *
+     * Or see Encore.enableBabelTypeScriptPreset() for a faster
+     * method of processing TypeScript files.
      *
      * Or, configure the ts-loader options:
      *
@@ -1061,6 +1111,42 @@ class Encore {
         webpackConfig.enableForkedTypeScriptTypesChecking(
             forkedTypeScriptTypesCheckOptionsCallback
         );
+
+        return this;
+    }
+
+
+    /**
+     * If enabled, a TypeScript preset will be applied to
+     * the generated Webpack and Babel configuration.
+     *
+     * ```
+     * Encore.enableBabelTypeScriptPreset()
+     * ```
+     *
+     * This method lets Babel handle your TypeScript code
+     * and cannot be used with `Encore.enableTypeScriptLoader()`
+     * or `Encore.enableForkedTypeScriptTypesChecking()`.
+     *
+     * Since all types are removed by Babel,
+     * you must run `tsc --noEmit` yourself for type checking.
+     *
+     * The Babel TypeScript preset can be configured,
+     * see https://babeljs.io/docs/en/babel-preset-typescript#options
+     * for available options.
+     *
+     * For example:
+     * ```
+     * Encore.enableBabelTypeScriptPreset({
+     *     isTSX: true
+     * })
+     * ```
+     *
+     * @param {object} options
+     * @returns {Encore}
+     */
+    enableBabelTypeScriptPreset(options) {
+        webpackConfig.enableBabelTypeScriptPreset(options);
 
         return this;
     }
