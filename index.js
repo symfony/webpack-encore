@@ -1014,13 +1014,14 @@ class Encore {
 
     /**
      * Configure the style-loader.
+     * The style-loader is used only if you also call Encore. disableCssExtraction().
      *
-     * https://github.com/webpack-contrib/style-loader#Options
+     * https://github.com/webpack-contrib/style-loader#options
      *
      * ```
      * Encore.configureStyleLoader(function(config) {
      *     // change the config
-     *     // config.injectType = 'styleTag';
+     *     // config.injectType = 'singletonStyleTag';
      * });
      * ```
      *
