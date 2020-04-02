@@ -1013,28 +1013,6 @@ class Encore {
     }
 
     /**
-     * Configure the style-loader.
-     * The style-loader is used only if you also call Encore. disableCssExtraction().
-     *
-     * https://github.com/webpack-contrib/style-loader#options
-     *
-     * ```
-     * Encore.configureStyleLoader(function(config) {
-     *     // change the config
-     *     // config.injectType = 'singletonStyleTag';
-     * });
-     * ```
-     *
-     * @param {function} callback
-     * @returns {Encore}
-     */
-    configureStyleLoader(callback) {
-        webpackConfig.configureStyleLoader(callback);
-
-        return this;
-    }
-
-    /**
      * If enabled, the react preset is added to Babel.
      *
      * https://babeljs.io/docs/plugins/preset-react/
@@ -1312,6 +1290,28 @@ class Encore {
      */
     disableCssExtraction() {
         webpackConfig.disableCssExtraction();
+
+        return this;
+    }
+
+    /**
+     * Configure the style-loader.
+     * The style-loader is used only if you also call Encore. disableCssExtraction().
+     *
+     * https://github.com/webpack-contrib/style-loader#options
+     *
+     * ```
+     * Encore.configureStyleLoader(function(config) {
+     *     // change the config
+     *     // config.injectType = 'singletonStyleTag';
+     * });
+     * ```
+     *
+     * @param {function} callback
+     * @returns {Encore}
+     */
+    configureStyleLoader(callback) {
+        webpackConfig.configureStyleLoader(callback);
 
         return this;
     }
