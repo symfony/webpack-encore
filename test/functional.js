@@ -2927,10 +2927,10 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
-                        'manifest.json',
-                        'entrypoints.json',
-                        'main.js'
-                    ]);
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js'
+                        ]);
 
                     webpackAssert.assertOutputFileContains(
                         'main.js',
