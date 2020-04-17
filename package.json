@@ -32,7 +32,7 @@
     "babel-loader": "^8.0.0",
     "chalk": "^2.4.1",
     "clean-webpack-plugin": "^0.1.19",
-    "css-loader": "^2.1.1",
+    "css-loader": "^3.5.2",
     "fast-levenshtein": "^2.0.6",
     "file-loader": "^1.1.10",
     "friendly-errors-webpack-plugin": "^2.0.0-beta.1",
@@ -54,8 +54,8 @@
     "yargs-parser": "^12.0.0"
   },
   "devDependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-transform-react-jsx": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0-beta.3",
