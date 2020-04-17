@@ -1,0 +1,376 @@
+---------------------------------------------------------------------------
+
+by masi at 2019-05-05T10:52:15Z
+
+FYI: to make the Vue linter plugin work you have to use it's own parser:
+
+```
+    .enableEslintLoader(options => {
+        options.parser = 'vue-eslint-parser';
+        options.parserOptions.parser = 'babel-eslint';
+    })
+
+```
+
+If you fail to do so, linting will fail:
+
+https://eslint.vuejs.org/user-guide/#what-is-the-use-the-latest-vue-eslint-parser-error
+
+Or is this is part of the configuration work left for the user to do? Otherwise the user may assume that the loader ensures not only "babel-eslint" but "also "vue-eslint-parser" which it currently does not. Actually the current code doesn't even verify if the Vue loader is enabled at all.
+
+Sidenote: if you're using typescript then it is `@typescript-eslint/parser`for parserOptions.parser.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-05-05T12:02:12Z
+
+> Or is this is part of the configuration work left for the user to do?
+
+Normally yes, but since Encore already configure some ESLint options (`loader`) I may think to no.
+
+I don't like to configure ESLint with `.enableEslintLoader()` - because linting issues are not displayed in IDE, and we can't run ESLint manually -, but maybe we can document something like this:
+```js
+Encore.enableEslintLoader(options => {
+  // remove Encore pre-defined value
+  delete options.parser; // let eslint-vue-plugin handle the new parser value
+
+  options.extends = (options.extends || []).concat('plugin:vue/recommended');
+  options.parserOptions = Object.assign({}, options.parserOptions || {}, {
+    parser: 'babel-eslint'
+  });
+}, {
+  lintVue: true
+});
+```
+
+If it were up to me, I would only use `.enableEslintLoader()` to use my `.eslintrc` file to prevent issues:
+```js
+Encore.enableEslintLoader(options => {
+  options.configFile = __dirname + '/.eslintrc';
+  delete options.parser; // I'm not sure I should do this, it's taken from #473
+}, {
+  lintVue: true
+});
+```
+
+In my opinion, Encore should only **run** and not **configure** ESLint. 😕
+
+> Actually the current code doesn't even verify if the Vue loader is enabled at all.
+
+You don't need to enable Vue loader to lint Vue files with ESLint loader.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-05-05T12:06:49Z
+
+In fact I even don't find my PR useful, using `.configureLoaderRule()` should be enough: 🤔
+```js
+Encore.configureLoaderRule('eslint', loader => {
+  loader.test = /\.(jsx?|vue)$/
+});
+```
+
+---------------------------------------------------------------------------
+
+by masi at 2019-05-05T13:43:46Z
+
+>
+> I don't like to configure ESLint with `.enableEslintLoader()` - because linting issues are not displayed in IDE, and we can't run ESLint manually
+
+And I don't like the fact that the configuration is hidden away within Encore/Webpack.
+
+> ```js
+> Encore.enableEslintLoader(options => {
+>   options.configFile = __dirname + '/.eslintrc';
+>   delete config.parser; // I'm not sure I should do this, it's taken from #473
+> }, {
+>   lintVue: true
+> });
+> ```
+
+I didn't delete config.parser, but set it to the same value as in my .eslintrc (which has been BTW been deprectated in favour of .eslintrc.yaml and .eslintrc.js).
+
+Does Encore need to set babel-eslint as parser? If it didn't we hadn't do go into such troubles for Vue (and Typescript) which need a different configuration.
+
+> In my opinion, Encore should only **run** and not **configure** ESLint. 😕
+
+Perhaps the new eslintOption lintVue could turn off the default configuration completely.
+
+Personally I'm happy to use configureLoaderRule and kicking the default configuraton, but getting a warning about messing with the loader rules every times is annoying.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-05-05T15:31:31Z
+
+> Personally I'm happy to use configureLoaderRule and kicking the default configuraton, but getting a warning about messing with the loader rules every times is annoying.
+
+We can improving the actual behavior by using a boolean like `displayWarningForConfigureLoaderRule = true`, display the warning when it's `true`, and set it at `false` after calling the method. 👍
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-05-16T20:48:01Z
+
+Sorry for not looking into this sooner.
+
+I actually prefer this solution to #504 even if it only adds `.vue` files to the ones processed by the `eslint-loader`.
+
+> but maybe we can document something like this:
+>
+> ```js
+> Encore.enableEslintLoader(options => {
+>   // remove Encore pre-defined value
+>   delete options.parser; // let eslint-vue-plugin handle the new parser value
+>
+>   options.extends = (options.extends || []).concat('plugin:vue/recommended');
+>   options.parserOptions = Object.assign({}, options.parserOptions || {}, {
+>     parser: 'babel-eslint'
+>   });
+> }, {
+>   lintVue: true
+> });
+> ```
+
+I'm against that as it is *way* to complicated and won't be understood by someone who isn't used to JavaScript (many Symfony devs aren't).
+
+> If it were up to me, I would only use .enableEslintLoader() to use my .eslintrc file to prevent issues:
+>
+> ```js
+> Encore.enableEslintLoader(options => {
+>   options.configFile = __dirname + '/.eslintrc';
+>   delete config.parser; // I'm not sure I should do this, it's taken from #473
+> }, {
+>   lintVue: true
+> });
+> ```
+
+Do you actually need all of that? we are not changing the default value for `configFile`, so it should already look for an `.eslintrc` file by default, no?
+
+As for `parser` you'd also have to set it in your `.eslintrc` file anyway, so our default value would probably be overriden.
+
+If we remove both of those lines we get something way simpler:
+
+```js
+Encore.enableEslintLoader(() => {}, {
+  lintVue: true,
+});
+```
+
+> In fact I even don't find my PR useful, using .configureLoaderRule() should be enough: 🤔
+>
+> ```js
+> Encore.configureLoaderRule('eslint', loader => {
+>   loader.test = /\.(jsx?|vue)$/
+> });
+> ```
+
+I'd say that *for now* it should be enough, but I don't like recommending it since it relies on our internal implementation, which prevents us from guaranteeing BC.
+
+> In my opinion, Encore should only run and not configure ESLint.
+
+When I started to respond I was disagreeing with you about that point, but the more I think about it the more I feel that you may be right...
+
+We should probably only be configuring things that can't be set from within an `.eslintrc` file (loader options or [CLIEngine](https://eslint.org/docs/developer-guide/nodejs-api#cliengine)-only options).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-05-17T05:28:09Z
+
+> I'm against that as it is way to complicated and won't be understood by someone who isn't used to JavaScript (many Symfony devs aren't).
+
+Nah just forgot about this, I don't know what happens in my head when I wrote this... :sweat_smile:
+
+> Do you actually need all of that? we are not changing the default value for configFile, so it should already look for an .eslintrc file by default, no?
+
+No we actually don't need to configure `configFile`, actually only `parser` is to configure.
+
+> As for parser you'd also have to set it in your .eslintrc file anyway, so our default value would probably be overriden.
+
+That what [I thought](https://github.com/vuejs/eslint-plugin-vue/blob/master/lib/configs/base.js#L7) but nope, I have to delete `options.parser` to make it works. Otherwise I have the following error:
+![Capture d’écran de 2019-05-17 07-03-04](https://user-images.githubusercontent.com/2103975/57904701-3ad3a880-7874-11e9-85a5-dd14bd3e4133.png)
+
+It's a well known error ([see FAQ](https://eslint.vuejs.org/user-guide/#faq)), it seems that `eslint-loader` override `.eslint*` config :thinking:
+
+By using the following code, `eslint-loader` is able to lint `.vue` files properly:
+```js
+Encore
+  .enableEslintLoader(options => {
+    delete options.parser;
+  })
+  .configureLoaderRule('eslint', loader => {
+    loader.test = /\.(jsx?|vue)$/;
+  })
+```
+![Capture d’écran de 2019-05-17 07-23-46](https://user-images.githubusercontent.com/2103975/57904842-bb92a480-7874-11e9-97b3-667403789d47.png)
+
+(Note that the issue with `./DataTable.scss?module`, I don't have this when running ESLint manually. I will probably open a new issue soon :wink: )
+**EDIT:** my bad, it's because my preset is using `eslint-plugin-import-resolver-node`, configuring it to use `eslint-import-resolver-webpack` made the work :) )
+
+> When I started to respond I was disagreeing with you about that point, but the more I think about it the more I feel that you may be right...
+
+In fact, the main problem with Encore configuring ESLint is that Encore pre-configure ESLint and the final user is not aware about that (unless he take a look to the source code).
+
+And also the fact that IDEs won't be able to provide ESLint integration.
+
+> We should probably only be configuring things that can't be set from within an .eslintrc file (loader options or CLIEngine-only options).
+
+Definitly yes! :smile:
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-05-17T07:05:46Z
+
+> That what I thought  but nope, I have to delete options.parser to make it works. Otherwise I have the following error:
+
+Yep... it actually makes sense since options from the loader are passed to the CLIEngine and that ESLint uses the following order of precedence (https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy):
+
+> The complete configuration hierarchy, from highest precedence to lowest precedence, is as follows:
+>
+> 1. Inline configuration
+>   1.1. /*eslint-disable*/ and /*eslint-enable*/
+>   1.2. /*global*/
+>   1.3. /*eslint*/
+>   1.4. /*eslint-env*/
+> 2. Command line options (or CLIEngine equivalents):
+>   2.1. --global
+>   2.2.--rule
+>   2.3. --env
+>   2.4. -c, --config
+> 3. Project-level configuration:
+>   3.1. .eslintrc.* or package.json file in same directory as linted file
+>   3.2. Continue searching for .eslintrc and package.json files in ancestor directories (parent has highest precedence, then grandparent, etc.), up to and including the root directory or until a config with "root": true is found.
+> 4. In the absence of any configuration from (1) through (3), fall back to a personal default configuration in ~/.eslintrc.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-06-16T19:25:49Z
+
+Hi!
+
+Sorry for coming in late. This is a complex issue with... I think a lot being learned along the way. Is this PR still valid & does it solve the issues with vue and eslint? And should #504 be closed?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-06-16T19:34:28Z
+
+Hi, don't worry :)
+
+Yes this PR is still valid and allow ESLint to lint `.vue` files in an easier way than using `.configureLoaderRule('eslint', ...)`:
+
+```js
+  Encore
+    .enableEslintLoader(options => {
+        delete options.parser;
+    })
+    .configureLoaderRule('eslint', loader => {
+        loader.test = /\.(jsx?|vue)$/;
+    })
+```
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-07-12T13:12:22Z
+
+@weaverryan What would you think about not passing the `parser` option to the `eslint-loader` anymore?
+
+**TL;DR of previous comments:**
+
+The default ESLint parser doesn't support experimental things so we currently default to `babel-eslint`.
+
+In some cases people may want/need to use another parser (for instance the `vue-eslint-parser`) but they won't be able to do it from within their `.eslintrc` file (which is usually read by IDEs, so probably a good thing to have it here) because what we pass to the loader has a higher priority than what is set there.
+
+Doing this shouldn't break a lot of things but some users could have to `yarn add -D babel-eslint` and add `"parser": "babel-eslint"` to their conf.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-10-17T08:00:12Z
+
+What should we do about this PR?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-10-19T06:14:28Z
+
+As requested by @weaverryan, I've added a temporary comment which show how to make ESLint working with Vue files and `eslint-plugin-vue`.
+
+See #657 for the discussion about ESLint external configuration.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-02-08T19:49:30Z
+
+Blocked by #687
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-03-20T14:20:37Z
+
+Unblocked ;)
+
+Sorry for the wait
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-03-20T14:22:06Z
+
+Nice! Thank you :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-03-20T21:15:20Z
+
+@weaverryan PR has been rebased updated, the comment about `delete options.parser` has been removed.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-03-27T14:08:42Z
+
+@Kocal This is looking really solid.
+
+But if the user has `enableVueLoader()` AND `enableEslintLoader()`, might it be safe to assume that they want to lint `.vue` files also?
+
+Or... we could even go further... and *always* lint `.vue` files? We already "always" lint `.jsx` files... why not lint `.vue` files if the user happens to process any? Because, it now looks like this PR as all about just adding the `.vue` extension to the loader test.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-03-27T17:57:37Z
+
+Hi 👋
+
+> But if the user has `enableVueLoader()` AND `enableEslintLoader()`, might it be safe to assume that they want to lint .vue files also?
+
+Mmmh maybe... but I don't like to force the user like this.
+It will sureley break for users that don't use [`eslint-plugin-vue`](https://github.com/vuejs/eslint-plugin-vue) (or anything else that handle .vue files), they will see the error `Parsing error: Unexpected token <` when ESLint will try to lint `.vue` files, and nothing will them that they can use `eslint-plugin-vue`.
+
+I prefer this setting to be explicit to prevent those kind of issues. But that's my opinion. What do you think @weaverryan / @Lyrkan?
+
+> Or... we could even go further... and always lint .vue files? We already "always" lint .jsx files... why not lint .vue files if the user happens to process any? Because, it now looks like this PR as all about just adding the .vue extension to the loader test.
+
+Yeah that's what I thought some months ago https://github.com/symfony/webpack-encore/pull/574#issuecomment-489420283 😅
+
+But while writing this comment, I thought about different files that ESLint can lints with good plugins/parser.
+Since ESLint can literally lint any kind of files if there is a plugin/parser for that (like GraphQL, JSON, Svelte, ...), maybe it would be better to have a method which configure extensions for `eslint-loader`? Something like this:
+
+```js
+Encore.enableEslintLoader(() => {}, {
+    extensions: /^.(jsx?|vue)$/, // e.g.: with a regex
+    extensions: ['.js', '.jsx', '.vue', '...'], // with an array
+});
+```
+
+That would be futur proof.
+
+What do you think?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-04-17T10:48:11Z
+
+Hey @Kocal!
+
+Sorry for the slow reply - I kept almost replying, then something at home distracted me :p. Anyways, after reading your message, I'm happy with the current status of the PR. And we can discuss other options once we've used this and gotten feedback :).
+
+Cheers!
