@@ -20,7 +20,7 @@ matrix:
         - yarn
     - name: 'Highest versions of the dependencies'
       os: linux
-      node_js: "10"
+      node_js: "12"
       env:
         - JOB_PART=test
         - DISABLE_UNSTABLE_CHECKS=1
@@ -37,7 +37,7 @@ matrix:
       node_js: "10"
       env: JOB_PART=test
     - os: linux
-      node_js: "8"
+      node_js: "12"
       env: JOB_PART=test
 
 script: npm run $JOB_PART
