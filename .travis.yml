@@ -36,6 +36,9 @@ matrix:
     - os: linux
       node_js: "10"
       env: JOB_PART=test
+    - os: windows
+      node_js: "10"
+      env: JOB_PART=test
     - os: linux
       node_js: "12"
       env: JOB_PART=test
