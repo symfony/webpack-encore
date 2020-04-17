@@ -21,7 +21,7 @@
     "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
-    "node": "8.* || >= 10.*"
+    "node": ">= 10.13.0"
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
@@ -34,7 +34,7 @@
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^3.5.2",
     "fast-levenshtein": "^2.0.6",
-    "file-loader": "^1.1.10",
+    "file-loader": "^6.0.0",
     "friendly-errors-webpack-plugin": "^2.0.0-beta.1",
     "loader-utils": "^1.1.0",
     "mini-css-extract-plugin": ">=0.4.0 <0.4.3",
@@ -91,7 +91,7 @@
     "stylus-loader": "^3.0.2",
     "ts-loader": "^5.3.0",
     "typescript": ">=2.9",
-    "url-loader": "^1.0.1 || ^2.0.1",
+    "url-loader": "^4.0.0",
     "vue": "^2.3.4",
     "vue-loader": "^15.0.11",
     "vue-template-compiler": "^2.3.4",
