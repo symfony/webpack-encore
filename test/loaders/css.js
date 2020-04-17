@@ -71,7 +71,9 @@ describe('loaders/css', () => {
         expect(actualLoaders).to.have.lengthOf(1);
         expect(actualLoaders[0].options.foo).to.be.true;
         expect(actualLoaders[0].options.url).to.be.false;
-        expect(actualLoaders[0].options.modules).to.be.true;
+        expect(actualLoaders[0].options.modules).to.deep.equals({
+            localIdentName: '[local]_[hash:base64:5]',
+        });
     });
 
     describe('getLoaders() with PostCSS', () => {

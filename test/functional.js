@@ -1749,7 +1749,9 @@ module.exports = {
             config.configureCssLoader(options => {
                 // Remove hashes from local ident names
                 // since they are not always the same.
-                options.localIdentName = '[local]_foo';
+                if (options.modules) {
+                    options.modules.localIdentName = '[local]_foo';
+                }
             });
 
             // Enable the PostCSS loader so we can use `lang="postcss"`
@@ -2300,8 +2302,8 @@ module.exports = {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'entrypoints.json',
-                                'runtime.d2591ff7.js',
-                                'main.ceeddab6.js',
+                                'runtime.e9dea5e6.js',
+                                'main.00415522.js',
                                 'manifest.json',
                                 'symfony_logo.ea1ca6f7.png',
                                 'symfony_logo_alt.f27119c2.png',
@@ -2309,7 +2311,7 @@ module.exports = {
 
                         webpackAssert.assertManifestPath(
                             'build/main.js',
-                            '/build/main.ceeddab6.js'
+                            '/build/main.00415522.js'
                         );
                     }
 
