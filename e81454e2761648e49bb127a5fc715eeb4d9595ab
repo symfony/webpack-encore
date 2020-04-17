@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by opdavies at 2020-04-01T10:14:02Z
+
+@weaverryan Any advice on this? The tests are passing here, but failing locally if I run `npm run test` and don't update the versioned filenames.
+
+```
+1) Functional tests using webpack
+   Basic scenarios.
+     copyFiles() allows to copy files and folders
+       Copy with versioning enabled:
+
+  Uncaught AssertionError: expected '/Users/opdavies/Code/tmp/webpack-encore/test_tmp/oil16n/www/build' to have the same files as [ Array(6) ]
+  + expected - actual
+
+   [
+     "entrypoints.json"
+  -  "main.88a14d18.js"
+  +  "main.ceeddab6.js"
+     "manifest.json"
+  -  "runtime.0c796a0d.js"
+  +  "runtime.d2591ff7.js"
+     "symfony_logo.ea1ca6f7.png"
+     "symfony_logo_alt.f27119c2.png"
+   ]
+```
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-04-01T10:53:37Z
+
+> The tests are passing here, but failing locally if I run npm run test and don't update the versioned filenames.
+
+Did you retrieve the dependencies using npm instead of Yarn?
+The project only has a `yarn.lock` file, so if you don't install them through Yarn you won't get the right versions.
+
+---------------------------------------------------------------------------
+
+by opdavies at 2020-04-01T10:55:12Z
+
+Possibly. :)
+
+I'll delete `node_modules`, re-download using Yarn and re-try.
+
+---------------------------------------------------------------------------
+
+by opdavies at 2020-04-01T10:59:57Z
+
+I've re-installed with Yarn and run `yarn run test` instead, and everything passes.
+
+Thanks @Lyrkan!
