@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2020-03-24T08:00:07Z
+
+Hi :wave:
+
+> Also I'm wondering if this should be added as a separate method or directly as a `disableCssExtraction()` argument (since it is the only method that enables the loader)
+
+Hum, I am bit divided on this point but I think a separate method is better.
+
+If we had use a `disableCssExtraction()` argument:
+- yes `style-loader` is only used if CSS extraction is disabled, but it feels weird to me to configure a loader in a method which is not named `configure...Loader()`
+- what if one day we use `style-loader` somewhere else? (but I can't imagine cases where it would be possible :stuck_out_tongue:)
+
+But if we have a `configureStyleLoader`:
+- that's nice, a method for configuring a loader
+- but the loader is not active by default, only when the CSS extraction is disabled. We should warn the user about this
+
+---------------------------------------------------------------------------
+
+by tooltonix at 2020-03-24T08:08:33Z
+
+Due to internal requirements, we use a different style loader, which we install per yarn, so that the options of the previous style loader are no longer applicable. In the latest version 1.1.3 of the StyleLoader, the loader automatically inject source maps when previous loader emit them.
+
+It is correct that the method disableCssExtraction() activates the StyleLoader, but I would override the options with a separate method configureStyleLoader(), as it is more consistent for me in context and name.
+
+---------------------------------------------------------------------------
+
+by tooltonix at 2020-04-03T10:55:44Z
+
+> Hey @tooltonix!
+>
+> This looks good to me - and I agree with the 2 separate methods, but I'm happy we had the conversation - I think it will help us with some docs to show that these methods are connected.
+>
+> Only minor comments. But we _do_ need a functional test for this. See `functional.js` - there is already a case that includes `disableCssExtraction()`. We could duplicate that test case, maybe set the `attributes` option to `TESTING_ATTRIBUTES` and then assert that this string is present inside `main.js`.
+>
+> Cheers!
+
+Hi @weaverryan
+
+I'm sorry, but I haven't written any tests in Mocha yet. But I tried anyway and the test was successful, as long as I used the correct options of the style loader in version 1.1.3. I hope that the test is sufficient. Otherwise I ask for appropriate suggestions.
