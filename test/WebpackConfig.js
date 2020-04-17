@@ -1395,4 +1395,16 @@ describe('WebpackConfig object', () => {
             expect(() => config.enableIntegrityHashes(true, ['sha1', 'foo', 'sha256'])).to.throw('Invalid hash algorithm "foo"');
         });
     });
+
+    describe('enableEslintLoader', () => {
+        it('Should validate Encore-specific options', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableEslintLoader(() => {}, {
+                    notExisting: false,
+                });
+            }).to.throw('"notExisting" is not a valid key for enableEslintLoader(). Valid keys: lintVue.');
+        });
+    });
 });

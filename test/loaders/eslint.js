@@ -74,4 +74,21 @@ describe('loaders/eslint', () => {
         const actualOptions = eslintLoader.getOptions(config);
         expect(actualOptions).to.deep.equals({ foo: true });
     });
+
+    it('getTest() base behavior', () => {
+        const config = createConfig();
+
+        const actualTest = eslintLoader.getTest(config);
+        expect(actualTest.toString()).to.equals(/\.(jsx?)$/.toString());
+    });
+
+    it('getTest() with Vue', () => {
+        const config = createConfig();
+        config.enableEslintLoader(() => {}, {
+            lintVue: true,
+        });
+
+        const actualTest = eslintLoader.getTest(config);
+        expect(actualTest.toString()).to.equals(/\.(jsx?|vue)$/.toString());
+    });
 });

@@ -1192,13 +1192,27 @@ class Encore {
      *      options.extends = 'airbnb';
      *      options.emitWarning = false;
      * });
+     *
+     * // configure Encore-specific options
+     * Encore.enableEslintLoader(() => {}, {
+     *     // set optional Encore-specific options, for instance:
+     *
+     *     // lint `.vue` files
+     *     lintVue: true
+     * });
+     * ```
+     *
+     * Supported options:
+     *      * {boolean} lintVue (default=false)
+     *              Configure the loader to lint `.vue` files
      * ```
      *
      * @param {string|object|function} eslintLoaderOptionsOrCallback
+     * @param {object} encoreOptions
      * @returns {Encore}
      */
-    enableEslintLoader(eslintLoaderOptionsOrCallback = () => {}) {
-        webpackConfig.enableEslintLoader(eslintLoaderOptionsOrCallback);
+    enableEslintLoader(eslintLoaderOptionsOrCallback = () => {}, encoreOptions = {}) {
+        webpackConfig.enableEslintLoader(eslintLoaderOptionsOrCallback, encoreOptions);
 
         return this;
     }

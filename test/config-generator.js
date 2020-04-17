@@ -416,6 +416,22 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
         });
+
+        it('enableEslintLoader(() => {}, {lintVue: true})', () => {
+            const config = createConfig();
+            config.addEntry('main', './main');
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.enableEslintLoader(() => {}, {
+                lintVue: true,
+            });
+
+            const actualConfig = configGenerator(config);
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
+
+            const eslintRule = findRule(/\.(jsx?|vue)$/, actualConfig.module.rules);
+            expect(eslintRule.test.toString()).to.equal(/\.(jsx?|vue)$/.toString());
+        });
     });
 
     describe('addLoader() adds a custom loader', () => {
