@@ -67,7 +67,7 @@
     "chai-subset": "^1.6.0",
     "core-js": "^3.0.0",
     "eslint": "^5.15.2 || ^6.0.0",
-    "eslint-loader": "^2.1.2",
+    "eslint-loader": "^3.0.0",
     "eslint-plugin-header": "^1.0.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^8.0.1",
