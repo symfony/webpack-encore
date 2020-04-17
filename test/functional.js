@@ -97,8 +97,8 @@ describe('Functional tests using webpack', function() {
                     'main.js',
                     'font.css',
                     'bg.css',
-                    'fonts/Roboto.9896f773.woff2',
-                    'images/symfony_logo.ea1ca6f7.png',
+                    'fonts/Roboto.e1dcc0db.woff2',
+                    'images/symfony_logo.91beba37.png',
                     'manifest.json',
                     'entrypoints.json'
                 ]);
@@ -123,11 +123,11 @@ describe('Functional tests using webpack', function() {
                 );
                 webpackAssert.assertManifestPath(
                     'build/fonts/Roboto.woff2',
-                    '/build/fonts/Roboto.9896f773.woff2'
+                    '/build/fonts/Roboto.e1dcc0db.woff2'
                 );
                 webpackAssert.assertManifestPath(
                     'build/images/symfony_logo.png',
-                    '/build/images/symfony_logo.ea1ca6f7.png'
+                    '/build/images/symfony_logo.91beba37.png'
                 );
 
                 webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
@@ -217,11 +217,11 @@ describe('Functional tests using webpack', function() {
 
                 webpackAssert.assertOutputFileContains(
                     'bg.css',
-                    'http://localhost:8090/assets/images/symfony_logo.ea1ca6f7.png'
+                    'http://localhost:8090/assets/images/symfony_logo.91beba37.png'
                 );
                 webpackAssert.assertOutputFileContains(
                     'font.css',
-                    'http://localhost:8090/assets/fonts/Roboto.9896f773.woff2'
+                    'http://localhost:8090/assets/fonts/Roboto.e1dcc0db.woff2'
                 );
                 // manifest file has CDN in value
                 webpackAssert.assertManifestPath(
@@ -272,7 +272,7 @@ describe('Functional tests using webpack', function() {
 
                 webpackAssert.assertOutputFileContains(
                     'bg.css',
-                    'http://localhost:8090/assets/images/symfony_logo.ea1ca6f7.png'
+                    'http://localhost:8090/assets/images/symfony_logo.91beba37.png'
                 );
                 // manifest file has CDN in value
                 webpackAssert.assertManifestPath(
@@ -509,7 +509,7 @@ describe('Functional tests using webpack', function() {
                             '0.8ec31654.css',
                             'main.4a5effdb.js',
                             'h1.8ec31654.css',
-                            'bg.0ec2735b.css',
+                            'bg.d06c66d9.css',
                             'manifest.json',
                             'entrypoints.json',
                             'runtime.0f36ae93.js',
@@ -518,12 +518,12 @@ describe('Functional tests using webpack', function() {
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
-                        'symfony_logo.ea1ca6f7.png'
+                        'symfony_logo.91beba37.png'
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.0ec2735b.css',
-                    '/build/images/symfony_logo.ea1ca6f7.png'
+                    'bg.d06c66d9.css',
+                    '/build/images/symfony_logo.91beba37.png'
                 );
 
                 done();
@@ -552,22 +552,22 @@ describe('Functional tests using webpack', function() {
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
-                        'symfony_logo.ea1ca6f7.png'
+                        'symfony_logo.91beba37.png'
                     ]);
 
                 expect(path.join(config.outputPath, 'fonts')).to.be.a.directory()
                     .with.files([
-                        'Roboto.9896f773.woff2'
+                        'Roboto.e1dcc0db.woff2'
                     ]);
 
                 webpackAssert.assertOutputFileContains(
                     'bg.css',
-                    '/build/images/symfony_logo.ea1ca6f7.png'
+                    '/build/images/symfony_logo.91beba37.png'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'font.css',
-                    '/build/fonts/Roboto.9896f773.woff2'
+                    '/build/fonts/Roboto.e1dcc0db.woff2'
                 );
 
                 done();
@@ -591,34 +591,34 @@ describe('Functional tests using webpack', function() {
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
-                        'symfony_logo.ea1ca6f7.png',
-                        'symfony_logo.f27119c2.png'
+                        'symfony_logo.91beba37.png',
+                        'symfony_logo.f880ba14.png'
                     ]);
 
                 expect(path.join(config.outputPath, 'fonts')).to.be.a.directory()
                     .with.files([
-                        'Roboto.9896f773.woff2',
-                        'Roboto.3c37aa69.woff2'
+                        'Roboto.e1dcc0db.woff2',
+                        'Roboto.2779fd7b.woff2'
                     ]);
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/images/symfony_logo.ea1ca6f7.png'
+                    '/build/images/symfony_logo.91beba37.png'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/images/symfony_logo.f27119c2.png'
+                    '/build/images/symfony_logo.f880ba14.png'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/fonts/Roboto.9896f773.woff2'
+                    '/build/fonts/Roboto.e1dcc0db.woff2'
                 );
 
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '/build/fonts/Roboto.3c37aa69.woff2'
+                    '/build/fonts/Roboto.2779fd7b.woff2'
                 );
 
                 done();
@@ -1641,7 +1641,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    'images/logo.82b9c7a5.png',
+                    'images/logo.26bd867d.png',
                     'manifest.json',
                     'entrypoints.json',
                     'runtime.js',
@@ -1706,7 +1706,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    'images/logo.82b9c7a5.png',
+                    'images/logo.26bd867d.png',
                     'manifest.json',
                     'entrypoints.json',
                     'runtime.js',
@@ -1866,7 +1866,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    'images/logo.82b9c7a5.png',
+                    'images/logo.26bd867d.png',
                     'manifest.json',
                     'entrypoints.json',
                     'runtime.js',
@@ -2212,13 +2212,13 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                         .with.files([
-                            'symfony_logo.ea1ca6f7.png',
-                            'symfony_logo_alt.f27119c2.png',
+                            'symfony_logo.91beba37.png',
+                            'symfony_logo_alt.f880ba14.png',
                         ]);
 
                     expect(path.join(config.outputPath, 'images', 'same_filename')).to.be.a.directory()
                         .with.files([
-                            'symfony_logo.f27119c2.png',
+                            'symfony_logo.f880ba14.png',
                         ]);
 
                     webpackAssert.assertManifestPath(
@@ -2228,17 +2228,17 @@ module.exports = {
 
                     webpackAssert.assertManifestPath(
                         'build/images/symfony_logo.png',
-                        '/build/images/symfony_logo.ea1ca6f7.png'
+                        '/build/images/symfony_logo.91beba37.png'
                     );
 
                     webpackAssert.assertManifestPath(
                         'build/images/symfony_logo_alt.png',
-                        '/build/images/symfony_logo_alt.f27119c2.png'
+                        '/build/images/symfony_logo_alt.f880ba14.png'
                     );
 
                     webpackAssert.assertManifestPath(
                         'build/images/same_filename/symfony_logo.png',
-                        '/build/images/same_filename/symfony_logo.f27119c2.png'
+                        '/build/images/same_filename/symfony_logo.f880ba14.png'
                     );
 
                     done();
@@ -2305,8 +2305,8 @@ module.exports = {
                                 'runtime.e9dea5e6.js',
                                 'main.00415522.js',
                                 'manifest.json',
-                                'symfony_logo.ea1ca6f7.png',
-                                'symfony_logo_alt.f27119c2.png',
+                                'symfony_logo.91beba37.png',
+                                'symfony_logo_alt.f880ba14.png',
                             ]);
 
                         webpackAssert.assertManifestPath(
@@ -2322,12 +2322,12 @@ module.exports = {
 
                     webpackAssert.assertManifestPath(
                         'build/symfony_logo.png',
-                        '/build/symfony_logo.ea1ca6f7.png'
+                        '/build/symfony_logo.91beba37.png'
                     );
 
                     webpackAssert.assertManifestPath(
                         'build/symfony_logo_alt.png',
-                        '/build/symfony_logo_alt.f27119c2.png'
+                        '/build/symfony_logo_alt.f880ba14.png'
                     );
 
                     webpackAssert.assertManifestPath(
@@ -2398,13 +2398,13 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                         .with.files([
-                            'symfony_logo.ea1ca6f7.png',
-                            'symfony_logo_alt.f27119c2.png',
+                            'symfony_logo.91beba37.png',
+                            'symfony_logo_alt.f880ba14.png',
                         ]);
 
                     expect(path.join(config.outputPath, 'images', 'same_filename')).to.be.a.directory()
                         .with.files([
-                            'symfony_logo.f27119c2.png',
+                            'symfony_logo.f880ba14.png',
                         ]);
 
                     webpackAssert.assertManifestPath(
@@ -2414,17 +2414,17 @@ module.exports = {
 
                     webpackAssert.assertManifestPath(
                         'build/images/symfony_logo.png',
-                        '/build/images/symfony_logo.ea1ca6f7.png'
+                        '/build/images/symfony_logo.91beba37.png'
                     );
 
                     webpackAssert.assertManifestPath(
                         'build/images/symfony_logo_alt.png',
-                        '/build/images/symfony_logo_alt.f27119c2.png'
+                        '/build/images/symfony_logo_alt.f880ba14.png'
                     );
 
                     webpackAssert.assertManifestPath(
                         'build/images/same_filename/symfony_logo.png',
-                        '/build/images/same_filename/symfony_logo.f27119c2.png'
+                        '/build/images/same_filename/symfony_logo.f880ba14.png'
                     );
 
                     done();
@@ -2508,8 +2508,8 @@ module.exports = {
                             'manifest.json',
 
                             // 1st rule
-                            'foo-40095734b7c5293c04603aa78333c23e.css',
-                            'foo-40095734b7c5293c04603aa78333c23e.js',
+                            'foo-5d76c098640df1edecc7ca66ee62b1ea.css',
+                            'foo-5d76c098640df1edecc7ca66ee62b1ea.js',
 
                             // 2nd rule
                             'foo.json',
@@ -2963,7 +2963,7 @@ module.exports = {
                             '/build/runtime.js': 'sha384-GhoJXFTd5hHxARTOCT3RTrcOdggU7hmL/esw02KNiVIWsdumxg20TRjgdzXBMGfE',
                             '/build/main.js': 'sha384-TnYCkFJqLSzDkhJOQRhe1JPC6MhfAurWWjEqNVNa0YK8N4a89mMsaAHFOP+8u3Oq',
                             '/build/main~other.js': 'sha384-XFgE9lNhD68TAYS7RjTCP7aXyjUxWftiNFMNxG7izJZ3urzp/7u1Tn4DMARxCLIw',
-                            '/build/main~other.css': 'sha384-hfZmq9+2oI5Cst4/F4YyS2tJAAYdGz7vqSMP8cJoa8bVOr2kxNRLxSw6P8UZjwUn',
+                            '/build/main~other.css': 'sha384-CwxeOsagC0TZKZIMFU7gd1fQG1nbF7wHg/uLJSsU/5Soa9JwEOZcAzAFMmctn6kX',
                             '/build/other.js': 'sha384-xZXDGUPL+RIK36nvmtEbJleQy9BCgG89MXkrYTNcbpDcZs4C1VbWAFMFehc8Mmnw',
 
                             // vendors~main~other.js's hash is not tested since its
@@ -2996,7 +2996,7 @@ module.exports = {
                             'http://localhost:8090/assets/runtime.js': 'sha256-qW5QarAS9yWb4YTF5gVKNF24g4p5GayDErYme10iu7A=',
                             'http://localhost:8090/assets/main.js': 'sha256-GCcvESjPed0klG3VxS0DLeRZ0UNJl/Ln210ldsAz9U4=',
                             'http://localhost:8090/assets/main~other.js': 'sha256-iNXyEC346lU4Z8e4pxtatvElwLSJu/in5Mpg+EsIrwA=',
-                            'http://localhost:8090/assets/main~other.css': 'sha256-KVo9sI0v6MnbxPg/xZMSn2XE7qIChWiDh1uED1tP5Fo=',
+                            'http://localhost:8090/assets/main~other.css': 'sha256-GyGOCV1nJYunb8s/DT5wICbruabZcqzDFJRnXIlZ9I4=',
                             'http://localhost:8090/assets/other.js': 'sha256-O2agOBc6WzelNGpE0dg3k6X1jtEVTRq9ogik4UAlBjg=',
 
                             // vendors~main~other.js's hash is not tested since its
@@ -3028,7 +3028,7 @@ module.exports = {
                             '/build/runtime.js': 'sha256-wxWX1GOm4edacCjvQsqZ1hG9tls4ZtuUOGQ8goGNg54= sha512-eiQrrAyaBpUlypIGVURWONjsAW8sImJllkwQ6NSDK6tIVNy/lInthruFT30x/OGRfHa4aYEaOHriEjisoxcw1Q==',
                             '/build/main.js': 'sha256-GCcvESjPed0klG3VxS0DLeRZ0UNJl/Ln210ldsAz9U4= sha512-dxwgdqyuVFpEn4D/xSTLDf524+OSdwBgAYwB6zRswaM4SszrrClIBK3FScktIU3CNWEqiHgjHPj2SnQTLAonGg==',
                             '/build/main~other.js': 'sha256-iNXyEC346lU4Z8e4pxtatvElwLSJu/in5Mpg+EsIrwA= sha512-ay9A5f9PnQgqkt0obZY0UD+Bx0IVf13NijC74/Gek6Fl5JoOpHMXBlqWxZnMlnbP0/OCm1lgKRDitLd4vys87w==',
-                            '/build/main~other.css': 'sha256-6AltZJTjdVuLywCBE8qQevkscxazmWyh/19OL6cxkwY= sha512-zE1kAcqJ/jNnycEwELK7BfauEgRlK6cGrN+9urz4JI1K+s5BpglYFF9G0VOiSA7Kj3w46XX1WcjZ5w5QohBFEw==',
+                            '/build/main~other.css': 'sha256-bsTMZz4D7wBon35PnVm0dN51OH4EMq79NRecjZVoJ0A= sha512-kUbxtlmFlqBd+mB0P2HfsGoTZDGjdPz/BT9wc7l5fdSkML8CCNGg/ccrWXglUNIdgH10y92Jf8zIOHTRygXwxQ==',
                             '/build/other.js': 'sha256-O2agOBc6WzelNGpE0dg3k6X1jtEVTRq9ogik4UAlBjg= sha512-tXToyMmW0EuKUF667SlO7QJZFg8eE6fHSmZIk7G0qIo9oUhgMQzwWyc5UpzlHlTOoLaKWB+UNgjOb0x3t28PZg==',
 
                             // vendors~main~other.js's hash is not tested since its
