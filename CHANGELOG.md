@@ -2,18 +2,28 @@
 
 ## 0.29.0
 
- * [BC BREAK] `css-loader` was bumped from version 2 to version 3.
-   This change shouldn't affect most users, but that loader did
-   contain breaking changes from v2 to v3. See their
-   [CHANGELOG](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#300-2019-06-11)
-   for details. You are most likely to be affected if you're
-   using `Encore.configureCssLoader()` - #729 thanks to @weaverryan.
+ * Support for Node 8 was dropped.
 
- * [BC BREAK] `style-loader` was bumped from version 0.21 to at least 1.1.
-   Unless you're doing custom configuration, it's unlikely you're affected.
-   However, that libraries breaking changes can be seen in their
-   [CHANGELOG](https://github.com/webpack-contrib/style-loader/blob/master/CHANGELOG.md#100-2019-08-06).
-   This happened in #710 thanks to @Grafikart.
+ * [BC BREAK] Several loader dependencies we upgraded across major versions.
+   These won't affect most users, but could affect you if you have custom
+   configuration for those loaders that changed between versions:
+
+   * `css-loader` upgraded from version 2 to 3 - #729 thanks to @weaverryan.
+     [CHANGELOG](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#300-2019-06-11)
+     This shouldn't affect most users - you are most likely to be affected
+     if you're using `Encore.configureCssLoader()`.
+
+   * `style-loader` upgraded from 0.21 to 1.1  - #710 thanks to @Grafikart.
+     [CHANGELOG](https://github.com/webpack-contrib/style-loader/blob/master/CHANGELOG.md#100-2019-08-06)
+     Unless you're doing custom configuration, it's unlikely you're affected.
+
+   * `file-loader` upgraded from 1.1 to 6  - #731 thanks to @weaverryan.
+     [CHANGELOG](https://github.com/webpack-contrib/file-loader/blob/master/CHANGELOG.md#600-2020-03-17)
+     Unless you're doing custom configuration, it's unlikely you're affected.
+
+   * `url-loader` upgraded from allowing version 1 or 2 to allowing version 4 - #731 thanks to @weaverryan.
+     [CHANGELOG](https://github.com/webpack-contrib/url-loader/blob/master/CHANGELOG.md#400-2020-03-17)
+     Unless you're doing custom configuration, it's unlikely you're affected.
 
  * [BC BREAK] If you're using `enableEslintLoader()`, Encore no longer
    configures eslint for you: you now *must* configure your own
