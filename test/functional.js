@@ -2913,6 +2913,33 @@ module.exports = {
                     done();
                 });
             });
+
+            it('With CSS extraction disabled and with options callback of the StyleLoader', (done) => {
+                const config = createWebpackConfig('build', 'dev');
+                config.setPublicPath('/build');
+                config.disableSingleRuntimeChunk();
+                config.addEntry('main', './js/css_import');
+                config.disableCssExtraction();
+                config.configureStyleLoader((options) => {
+                    options.attributes = { id: 'TESTING_ATTRIBUTES' };
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'manifest.json',
+                            'entrypoints.json',
+                            'main.js'
+                        ]);
+
+                    webpackAssert.assertOutputFileContains(
+                        'main.js',
+                        'TESTING_ATTRIBUTES'
+                    );
+
+                    done();
+                });
+            });
         });
 
         if (!process.env.DISABLE_UNSTABLE_CHECKS) {
