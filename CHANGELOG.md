@@ -1,5 +1,44 @@
 # CHANGELOG
 
+## 0.29.0
+
+ * [BC BREAK] `css-loader` was bumped from version 2 to version 3.
+   This change shouldn't affect most users, but that loader did
+   contain breaking changes from v2 to v3. See their
+   [CHANGELOG](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#300-2019-06-11)
+   for details. You are most likely to be affected if you're
+   using `Encore.configureCssLoader()` - #729 thanks to @weaverryan.
+
+ * [BC BREAK] `style-loader` was bumped from version 0.21 to at least 1.1.
+   Unless you're doing custom configuration, it's unlikely you're affected.
+   However, that libraries breaking changes can be seen in their
+   [CHANGELOG](https://github.com/webpack-contrib/style-loader/blob/master/CHANGELOG.md#100-2019-08-06).
+   This happened in #710 thanks to @Grafikart.
+
+ * [BC BREAK] If you're using `enableEslintLoader()`, Encore no longer
+   configures eslint for you: you now *must* configure your own
+   `.eslintrc.js` file. If this is missing, you'll now get a nice
+   error about this telling you how to fix it - #687 thanks to @Kocal.
+
+ * Added `Encore.enableBabelTypeScriptPreset()` to "compile" TypeScript with
+   Babel, which is a more performant option than `ts-loader` - #694
+   thanks to @Kocal.
+
+ * Added `Encore.configureDevServerOptions()` as an easy way to configure
+   dev-server options - #693 thanks to @Kocal.
+
+ * Added `Encore.addCacheGroup()` method as an easy way to add custom
+   caching groups - #680 thanks to @Lyrkan.
+
+ * Include the .pcss extension for PostCSS files - #718 thanks to @opdavies
+
+ * Added `Encore.configureStyleLoader()` to configure the `style-loader` - #715
+   thanks to @tooltonix.
+
+ * Added `lintVue: true` option to `Encore.enableEslintLoader()` to explicitly
+   turn on linting of Vue files (which requires  the `vue-eslint-parser`
+   package) - #574 thanks to @Kocal.
+
 ## 0.28.0
 
  * Don't make `@babel/preset-env` use `forceAllTransforms` option
