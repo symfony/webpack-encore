@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-04-17T21:24:31Z
+
+@Lyrkan and I are discussing the version. What I can’t remember is if the version here will affect the “yarn add” that’s displayed if eslint is missing. That was my main motivator for allowing 5 or 6 - I want to make sure that it doesn’t give you a command that would allow version 7 to be installed when it comes out (until we can verify we’re compatible). But I’m not at a computer at the moment to check :)
