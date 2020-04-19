@@ -842,7 +842,7 @@ describe('WebpackConfig object', () => {
 
         it('Pass options callback', () => {
             const config = createConfig();
-            const callback = (sassOptions) => {};
+            const callback = (options) => {};
             config.enableSassLoader(callback);
 
             expect(config.sassLoaderOptionsCallback).to.equal(callback);
