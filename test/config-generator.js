@@ -861,10 +861,10 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.loader).to.equal('file-loader');
+            expect(imagesRule.loader).to.contain('file-loader');
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.loader).to.equal('file-loader');
+            expect(fontsRule.loader).to.contain('file-loader');
         });
 
         it('with configureUrlLoader() and missing keys', () => {
@@ -877,10 +877,10 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.loader).to.equal('file-loader');
+            expect(imagesRule.loader).to.contain('file-loader');
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.loader).to.equal('file-loader');
+            expect(fontsRule.loader).to.contain('file-loader');
         });
 
         it('with configureUrlLoader()', () => {
@@ -900,12 +900,12 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.loader).to.equal('url-loader');
+            expect(imagesRule.loader).to.contain('url-loader');
             expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
             expect(imagesRule.options.limit).to.equal(8192);
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.loader).to.equal('url-loader');
+            expect(fontsRule.loader).to.contain('url-loader');
             expect(fontsRule.options.limit).to.equal(4096);
             expect(fontsRule.options.name).to.equal('[name].bar.[ext]');
         });
@@ -951,7 +951,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
             expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
 
-            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
@@ -1001,7 +1001,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
-            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
             expect(babelEnvPreset[1].corejs).to.equal(3);
@@ -1018,7 +1018,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
-            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
@@ -1035,7 +1035,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const jsRule = findRule(/\.(jsx?)$/, actualConfig.module.rules);
-            const babelLoader = jsRule.use.find(loader => loader.loader === 'babel-loader');
+            const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
         });
