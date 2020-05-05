@@ -12,6 +12,9 @@
 const fs = require('fs');
 const childProcess = require('child_process');
 
+const vueLowVersion = '^2.3.4';
+const vueLoaderLowVersion = '^15.0.11';
+
 function getLowestVersion(dependency, range) {
     return new Promise((resolve, reject) => {
         childProcess.exec(
@@ -108,6 +111,11 @@ fs.readFile('package.json', (error, data) => {
                 resolve();
             });
         }))
+        .then(() => {
+            console.log('Manually forcing Vue to version 2');
+            packageInfo.devDependencies.vue = vueLowVersion;
+            packageInfo.devDependencies['vue-loader'] = vueLoaderLowVersion;
+        })
         .then(() => {
             console.log('Updated package.json file with lowest dependency versions: ');
 
