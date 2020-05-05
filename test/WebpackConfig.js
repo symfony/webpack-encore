@@ -1037,7 +1037,7 @@ describe('WebpackConfig object', () => {
                 config.enableVueLoader(() => {}, {
                     notExisting: false,
                 });
-            }).to.throw('"notExisting" is not a valid key for enableVueLoader(). Valid keys: useJsx.');
+            }).to.throw('"notExisting" is not a valid key for enableVueLoader(). Valid keys: useJsx, version.');
         });
 
         it('Should set Encore-specific options', () => {
@@ -1048,7 +1048,18 @@ describe('WebpackConfig object', () => {
 
             expect(config.vueOptions).to.deep.equal({
                 useJsx: true,
+                version: null,
             });
+        });
+
+        it('Should validate Vue version', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableVueLoader(() => {}, {
+                    version: 4,
+                });
+            }).to.throw('"4" is not a valid value for the "version" option passed to enableVueLoader(). Valid versions are: 2, 3.');
         });
     });
 

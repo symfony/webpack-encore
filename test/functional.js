@@ -18,6 +18,7 @@ const path = require('path');
 const testSetup = require('./helpers/setup');
 const fs = require('fs-extra');
 const sharedEntryTmpName = require('../lib/utils/sharedEntryTmpName');
+const getVueVersion = require('../lib/utils/get-vue-version');
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     const webpackConfig = testSetup.createWebpackConfig(
@@ -938,7 +939,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('page1', './vuejs/main');
+                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move Vue.js code into its own chunk
@@ -1013,7 +1014,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('page1', './vuejs/main');
+                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move both vue.js and preact code into their own chunk
@@ -1089,7 +1090,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('page1', './vuejs/main');
+                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move Vue.js code into its own chunk
@@ -1120,7 +1121,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('page1', './vuejs/main');
+                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move Vue.js code into its own chunk
@@ -1623,7 +1624,7 @@ module.exports = {
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
-            config.addEntry('main', './vuejs/main');
+            config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
             config.enableVueLoader();
             config.enableSassLoader();
             config.enableLessLoader();
@@ -1685,9 +1686,10 @@ module.exports = {
             );
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            const vueVersion = getVueVersion(config);
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
-            config.addEntry('main', './vuejs-typescript/main');
+            config.addEntry('main', `./vuejs-typescript/main_v${vueVersion}`);
             config.enableVueLoader();
             config.enableSassLoader();
             config.enableLessLoader();
@@ -1701,6 +1703,13 @@ module.exports = {
                     }]
                 ];
             });
+
+            // to avoid typescript breaking on the "invalid" file, delete it.
+            if (vueVersion === 3) {
+                fs.unlinkSync(path.join(config.getContext(), 'vuejs-typescript', 'main_v2.ts'));
+            } else {
+                fs.unlinkSync(path.join(config.getContext(), 'vuejs-typescript', 'main_v3.ts'));
+            }
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
@@ -1741,7 +1750,7 @@ module.exports = {
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
-            config.addEntry('main', './vuejs-css-modules/main');
+            config.addEntry('main', `./vuejs-css-modules/main_v${getVueVersion(config)}`);
             config.enableVueLoader();
             config.enableSassLoader();
             config.enableLessLoader();
@@ -1822,7 +1831,7 @@ module.exports = {
         it('Vue.js error when using non-activated loaders', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
-            config.addEntry('main', './vuejs/main');
+            config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
             config.enableVueLoader();
 
             testSetup.runWebpack(config, (webpackAssert, stats, output) => {
@@ -1849,7 +1858,7 @@ module.exports = {
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
-            config.addEntry('main', './vuejs-jsx/main');
+            config.addEntry('main', `./vuejs-jsx/main_v${getVueVersion(config)}`);
             config.enableVueLoader(() => {}, {
                 useJsx: true,
             });
