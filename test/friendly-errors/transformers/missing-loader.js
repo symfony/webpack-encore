@@ -10,7 +10,14 @@
 'use strict';
 
 const expect = require('chai').expect;
-const transform = require('../../../lib/friendly-errors/transformers/missing-loader');
+const transformFactory = require('../../../lib/friendly-errors/transformers/missing-loader');
+const RuntimeConfig = require('../../../lib/config/RuntimeConfig');
+const WebpackConfig = require('../../../lib/WebpackConfig');
+
+const runtimeConfig = new RuntimeConfig();
+runtimeConfig.context = __dirname;
+runtimeConfig.babelRcFileExists = false;
+const transform = transformFactory(new WebpackConfig(runtimeConfig));
 
 describe('transform/missing-loader', () => {
 

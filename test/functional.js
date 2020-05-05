@@ -1686,10 +1686,9 @@ module.exports = {
             );
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
-            const vueVersion = getVueVersion(config);
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
-            config.addEntry('main', `./vuejs-typescript/main_v${vueVersion}`);
+            config.addEntry('main', `./vuejs-typescript${getVueVersion(config)}/main`);
             config.enableVueLoader();
             config.enableSassLoader();
             config.enableLessLoader();
@@ -1703,13 +1702,6 @@ module.exports = {
                     }]
                 ];
             });
-
-            // to avoid typescript breaking on the "invalid" file, delete it.
-            if (vueVersion === 3) {
-                fs.unlinkSync(path.join(config.getContext(), 'vuejs-typescript', 'main_v2.ts'));
-            } else {
-                fs.unlinkSync(path.join(config.getContext(), 'vuejs-typescript', 'main_v3.ts'));
-            }
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
