@@ -166,7 +166,7 @@ describe('package-helper', () => {
             const inputPackages = [
                 { name: 'sass-loader', enforce_version: 7 },
                 { name: 'node-sass' },
-                { name: 'vue', version: '^2'}
+                { name: 'vue', version: '^2' }
             ];
 
             const packageInfo = JSON.parse(
