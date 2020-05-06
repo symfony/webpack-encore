@@ -165,7 +165,8 @@ describe('package-helper', () => {
         it('Lookup a version constraint', () => {
             const inputPackages = [
                 { name: 'sass-loader', enforce_version: 7 },
-                { name: 'node-sass' }
+                { name: 'node-sass' },
+                { name: 'vue', version: '^2'}
             ];
 
             const packageInfo = JSON.parse(
@@ -174,7 +175,8 @@ describe('package-helper', () => {
 
             const expectedPackages = [
                 { name: 'sass-loader', version: packageInfo.devDependencies['sass-loader'] },
-                { name: 'node-sass' }
+                { name: 'node-sass' },
+                { name: 'vue', version: '^2' }
             ];
 
             const actualPackages = packageHelper.addPackagesVersionConstraint(inputPackages);
