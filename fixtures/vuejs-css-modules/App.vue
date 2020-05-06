@@ -1,36 +1,6 @@
 <template>
-  <div id="app" class="red large justified lowercase block" :class="[$css.italic, $scss.bold, $less.underline, $stylus.rtl, $postcss.hidden]"></div>
+  <div class="red large justified lowercase block" :class="[$css.italic, $scss.bold, $less.underline, $stylus.rtl, $postcss.hidden]"></div>
 </template>
-
-<style>
-  .red {
-    color: red;
-  }
-</style>
-
-<style lang="scss">
-  .large {
-    font-size: 50px;
-  }
-</style>
-
-<style lang="less">
-  .justified {
-    text-align: justify;
-  }
-</style>
-
-<style lang="styl">
-  .lowercase
-    text-transform: lowercase
-</style>
-
-<style lang="postcss">
-  .block {
-    display: block;
-  }
-</style>
-
 
 <style module="$css">
   .italic {
@@ -58,5 +28,34 @@
 <style lang="postcss" module="$postcss">
   .hidden {
     visibility: hidden;
+  }
+</style>
+
+<style>
+  .red {
+    color: red;
+  }
+</style>
+
+<style lang="scss">
+  .large {
+    font-size: 50px;
+  }
+</style>
+
+<style lang="less">
+  .justified {
+    text-align: justify;
+  }
+</style>
+
+<style lang="styl">
+  .lowercase
+    text-transform: lowercase
+</style>
+
+<style lang="postcss">
+  .block {
+    display: block;
   }
 </style>

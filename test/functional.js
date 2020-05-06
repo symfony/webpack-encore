@@ -1802,17 +1802,17 @@ module.exports = {
                         'build/main.js'
                     ],
                     (browser) => {
-                        browser.assert.hasClass('#app', 'red'); // Standard CSS
-                        browser.assert.hasClass('#app', 'large'); // Standard SCSS
-                        browser.assert.hasClass('#app', 'justified'); // Standard Less
-                        browser.assert.hasClass('#app', 'lowercase'); // Standard Stylus
-                        browser.assert.hasClass('#app', 'block'); // Standard Stylus
+                        browser.assert.hasClass('#app div', 'red'); // Standard CSS
+                        browser.assert.hasClass('#app div', 'large'); // Standard SCSS
+                        browser.assert.hasClass('#app div', 'justified'); // Standard Less
+                        browser.assert.hasClass('#app div', 'lowercase'); // Standard Stylus
+                        browser.assert.hasClass('#app div', 'block'); // Standard Stylus
 
-                        browser.assert.hasClass('#app', 'italic_foo'); // CSS module
-                        browser.assert.hasClass('#app', 'bold_foo'); // SCSS module
-                        browser.assert.hasClass('#app', 'underline_foo'); // Less module
-                        browser.assert.hasClass('#app', 'rtl_foo'); // Stylus module
-                        browser.assert.hasClass('#app', 'hidden_foo'); // Stylus module
+                        browser.assert.hasClass('#app div', 'italic_foo'); // CSS module
+                        browser.assert.hasClass('#app div', 'bold_foo'); // SCSS module
+                        browser.assert.hasClass('#app div', 'underline_foo'); // Less module
+                        browser.assert.hasClass('#app div', 'rtl_foo'); // Stylus module
+                        browser.assert.hasClass('#app div', 'hidden_foo'); // Stylus module
 
                         done();
                     }
