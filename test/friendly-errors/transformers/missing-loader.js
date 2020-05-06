@@ -82,11 +82,25 @@ describe('transform/missing-loader', () => {
             expect(actualError.loaderName).to.deep.equal('typescript');
         });
 
-        it('vue-loader is handled correctly', () => {
+        it('vue-loader15 is handled correctly', () => {
             const startError = {
                 name: 'ModuleParseError',
                 message: 'Module parse failed: Unexpected character \'#\' (35:0)\nYou may need an appropriate loader to handle this file type.\n| \n| \n| #app {\n|   display: flex;\n|   color: #2c3e90;',
                 file: '/path/to/project/node_modules/vue-loader/lib??vue-loader-options!./vuejs/App.vue?vue&type=style&index=1&lang=scss'
+            };
+            const actualError = transform(Object.assign({}, startError));
+
+            expect(actualError.name).to.deep.equal('Loader not enabled');
+            expect(actualError.type).to.deep.equal('loader-not-enabled');
+            expect(actualError.loaderName).to.deep.equal('sass');
+            expect(actualError.isVueLoader).to.be.true;
+        });
+
+        it('vue-loader16 is handled correctly', () => {
+            const startError = {
+                name: 'ModuleParseError',
+                message: 'Module parse failed: Unexpected character \'#\' (35:0)\nYou may need an appropriate loader to handle this file type.\n| \n| \n| #app {\n|   display: flex;\n|   color: #2c3e90;',
+                file: '/path/to/project/node_modules/vue-loader/dist??ref--4-0!./vuejs/App.vue?vue&type=style&index=1&lang=scss'
             };
             const actualError = transform(Object.assign({}, startError));
 
