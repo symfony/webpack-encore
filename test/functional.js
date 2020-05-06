@@ -939,7 +939,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
+                config.addEntry('page1', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move Vue.js code into its own chunk
@@ -1014,7 +1014,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
+                config.addEntry('page1', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move both vue.js and preact code into their own chunk
@@ -1090,7 +1090,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
+                config.addEntry('page1', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move Vue.js code into its own chunk
@@ -1121,7 +1121,7 @@ describe('Functional tests using webpack', function() {
                 config.enablePreactPreset();
                 config.enableSassLoader();
                 config.enableLessLoader();
-                config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
+                config.addEntry('page1', `./vuejs/main_v${getVueVersion(config)}`);
                 config.addEntry('page2', './preact/main');
 
                 // Move Vue.js code into its own chunk
