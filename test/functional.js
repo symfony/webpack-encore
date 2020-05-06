@@ -2302,8 +2302,8 @@ module.exports = {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'entrypoints.json',
-                                'runtime.e9dea5e6.js',
-                                'main.00415522.js',
+                                'runtime.518d4a5c.js',
+                                'main.78f7d83e.js',
                                 'manifest.json',
                                 'symfony_logo.91beba37.png',
                                 'symfony_logo_alt.f880ba14.png',
@@ -2311,7 +2311,7 @@ module.exports = {
 
                         webpackAssert.assertManifestPath(
                             'build/main.js',
-                            '/build/main.00415522.js'
+                            '/build/main.78f7d83e.js'
                         );
                     }
 
