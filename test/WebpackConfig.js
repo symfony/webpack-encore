@@ -139,8 +139,10 @@ describe('WebpackConfig object', () => {
 
         it('You can omit the opening slash, but get a warning', () => {
             const config = createConfig();
-            config.setPublicPath('foo');
+            logger.reset();
+            logger.quiet();
 
+            config.setPublicPath('foo');
             expect(logger.getMessages().warning).to.have.lengthOf(1);
         });
     });
