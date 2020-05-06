@@ -1688,7 +1688,7 @@ module.exports = {
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
-            config.addEntry('main', `./vuejs-typescript${getVueVersion(config)}/main`);
+            config.addEntry('main', `./vuejs${getVueVersion(config)}-typescript/main`);
             config.enableVueLoader();
             config.enableSassLoader();
             config.enableLessLoader();
