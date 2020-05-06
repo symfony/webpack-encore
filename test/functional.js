@@ -2697,12 +2697,12 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/main.js'],
-                                css: ['/build/1.css']
+                                js: ['/build/runtime.js', '/build/1.js', '/build/0.js', '/build/main.js'],
+                                css: ['/build/0.css']
                             },
                             other: {
-                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/other.js'],
-                                css: ['/build/1.css']
+                                js: ['/build/runtime.js', '/build/1.js', '/build/0.js', '/build/other.js'],
+                                css: ['/build/0.css']
                             }
                         }
                     });
