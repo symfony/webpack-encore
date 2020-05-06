@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-05-06T11:15:54Z
+
+Also, for the Encore 1.0 release (with Webpack 5), I have been wondering if we should consider to stop the practice of requiring things on behalf of our users. We would still, of course, require things we use directly - e.g. `semver` - but not things that user "should" (in a pure `webpack.config.js` with Webpack setup) have installed - e.g. `webpack` itself, `css-loader`, `babel-loader`. The original motivation was to help keep the user's `package.json` "sane", which I still think is nice. However, with the recipe system, it's still very easy to ship a working `package.json` to the user. And even without that, we would leverage the `features.js` system to notify the user of what they need to install. On the downside, this would give users more freedom to choose what versions of packages they want. That's a "downside" because Encore would need to be able to handle more versions of possible dependencies, or at least communicate intelligently when we think you might be using a version we don't support. We already do that - we would just need to make sure it was very solid.
+
+I'd love any thoughts you have on that - the goal would be to create less problems (as sometimes requiring these dependencies like we are causes issues) not more ;)
+
+---------------------------------------------------------------------------
+
+by stof at 2020-05-06T12:44:43Z
+
+Will this help with yarn's PnP mode too ?
+
+---------------------------------------------------------------------------
+
+by stof at 2020-05-06T13:55:33Z
+
+@weaverryan with your proposal, a nice effect could also be to reduce the dependency footprint of Encore. For instance, I'm only bundling JS with encore, not CSS, so I don't need all the css-loader or optimize-css-assets-webpack-plugin stuff.
