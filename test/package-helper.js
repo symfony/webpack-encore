@@ -159,6 +159,14 @@ describe('package-helper', () => {
             // just sass-loader
             expect(versionProblems).to.have.length(1);
         });
+
+        it('Beta version is ok', () => {
+            const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
+                { name: 'vue', version: '^3.0.0-beta.5' },
+            ]);
+
+            expect(versionProblems).to.be.empty;
+        });
     });
 
     describe('addPackagesVersionConstraint', () => {
