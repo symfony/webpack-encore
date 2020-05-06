@@ -1834,7 +1834,7 @@ module.exports = {
             }, true);
         });
 
-        it('Vue.js is compiled correctly with JSX support', (done) => {
+        it('Vue.js is compiled correctly with JSX support', function(done) {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
@@ -1848,6 +1848,14 @@ module.exports = {
             );
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+
+            if (getVueVersion(config) === 3) {
+                // not supported for vue3 at this time
+                this.skip();
+
+                return;
+            }
+
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
             config.addEntry('main', `./vuejs-jsx/main_v${getVueVersion(config)}`);
