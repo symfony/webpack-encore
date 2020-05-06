@@ -8705,10 +8705,10 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz#78641c488b8e6ca91a75f511e7a3b32a86e5dda0"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
-vue-loader@16.0.0-alpha.1:
-  version "16.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-16.0.0-alpha.1.tgz#4c0fbd0dcd4e7994127f96dfa3d403c28a6419a0"
-  integrity sha512-I2dfJyojGDXDyznRlcLlgQ0OLuhg+X8pWU38EKuO/Lcitr1tEJc1G2wxFk3ZGUX/PjlUSeUmCo3Adx1z+usVLA==
+vue-loader@^16.0.0-alpha.1:
+  version "16.0.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/vue-loader/-/vue-loader-16.0.0-alpha.3.tgz#3471a3325a07a94e569aa281f83361819e4ad280"
+  integrity sha512-aC7TyXfzGs30mgru4iSfmEC8ZQigwpetaBpr/Q0PA0DZa5lEX9NMT7py9SCrXVq7mZeaYaz0QC/kzuUZtnYMHw==
   dependencies:
     chalk "^3.0.0"
     hash-sum "^2.0.0"
