@@ -11,7 +11,7 @@ platform:
 
 install:
   - ps: Install-Product node $env:nodejs_version $env:platform
-  - yarn
+  - 'yarn --frozen-lockfile'
 
 test_script:
   - node --version
