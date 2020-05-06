@@ -2970,10 +2970,10 @@ module.exports = {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
                             '/build/runtime.js': 'sha384-GhoJXFTd5hHxARTOCT3RTrcOdggU7hmL/esw02KNiVIWsdumxg20TRjgdzXBMGfE',
-                            '/build/main.js': 'sha384-TnYCkFJqLSzDkhJOQRhe1JPC6MhfAurWWjEqNVNa0YK8N4a89mMsaAHFOP+8u3Oq',
+                            '/build/main.js': 'sha384-wkZLuTTNUxL0K7TYO/D4riciVueancehUebu/+8WGb1SANW3RnxYJTFgnhwg8Elw',
                             '/build/main~other.js': 'sha384-XFgE9lNhD68TAYS7RjTCP7aXyjUxWftiNFMNxG7izJZ3urzp/7u1Tn4DMARxCLIw',
                             '/build/main~other.css': 'sha384-CwxeOsagC0TZKZIMFU7gd1fQG1nbF7wHg/uLJSsU/5Soa9JwEOZcAzAFMmctn6kX',
-                            '/build/other.js': 'sha384-xZXDGUPL+RIK36nvmtEbJleQy9BCgG89MXkrYTNcbpDcZs4C1VbWAFMFehc8Mmnw',
+                            '/build/other.js': 'sha384-7gh0MFSndi4hHJXwmnHXUupb3TfTVCImS4idhohSOxSJ3FKKc8ybb+NxAuJbbCC3',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.
@@ -3003,10 +3003,10 @@ module.exports = {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
                             'http://localhost:8090/assets/runtime.js': 'sha256-qW5QarAS9yWb4YTF5gVKNF24g4p5GayDErYme10iu7A=',
-                            'http://localhost:8090/assets/main.js': 'sha256-GCcvESjPed0klG3VxS0DLeRZ0UNJl/Ln210ldsAz9U4=',
+                            'http://localhost:8090/assets/main.js': 'sha256-3a4VzpoJ+rA8r+WhxcUcXuLS5502wUCt0cqPAHWZO5g=',
                             'http://localhost:8090/assets/main~other.js': 'sha256-iNXyEC346lU4Z8e4pxtatvElwLSJu/in5Mpg+EsIrwA=',
                             'http://localhost:8090/assets/main~other.css': 'sha256-GyGOCV1nJYunb8s/DT5wICbruabZcqzDFJRnXIlZ9I4=',
-                            'http://localhost:8090/assets/other.js': 'sha256-O2agOBc6WzelNGpE0dg3k6X1jtEVTRq9ogik4UAlBjg=',
+                            'http://localhost:8090/assets/other.js': 'sha256-9oddnaT30pExJEeYadmhuQSsYohroPuLSAnwxRX47vI=',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.
@@ -3035,10 +3035,10 @@ module.exports = {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
                             '/build/runtime.js': 'sha256-wxWX1GOm4edacCjvQsqZ1hG9tls4ZtuUOGQ8goGNg54= sha512-eiQrrAyaBpUlypIGVURWONjsAW8sImJllkwQ6NSDK6tIVNy/lInthruFT30x/OGRfHa4aYEaOHriEjisoxcw1Q==',
-                            '/build/main.js': 'sha256-GCcvESjPed0klG3VxS0DLeRZ0UNJl/Ln210ldsAz9U4= sha512-dxwgdqyuVFpEn4D/xSTLDf524+OSdwBgAYwB6zRswaM4SszrrClIBK3FScktIU3CNWEqiHgjHPj2SnQTLAonGg==',
+                            '/build/main.js': 'sha256-3a4VzpoJ+rA8r+WhxcUcXuLS5502wUCt0cqPAHWZO5g= sha512-ay7YoJiViziqmG2wUJgAbHfbXH1I27AXI1rPhBCTu5cjc+n9dvMeSmJJumtveDOP0PdqYWahtmmS2ozwRMK0lg==',
                             '/build/main~other.js': 'sha256-iNXyEC346lU4Z8e4pxtatvElwLSJu/in5Mpg+EsIrwA= sha512-ay9A5f9PnQgqkt0obZY0UD+Bx0IVf13NijC74/Gek6Fl5JoOpHMXBlqWxZnMlnbP0/OCm1lgKRDitLd4vys87w==',
                             '/build/main~other.css': 'sha256-bsTMZz4D7wBon35PnVm0dN51OH4EMq79NRecjZVoJ0A= sha512-kUbxtlmFlqBd+mB0P2HfsGoTZDGjdPz/BT9wc7l5fdSkML8CCNGg/ccrWXglUNIdgH10y92Jf8zIOHTRygXwxQ==',
-                            '/build/other.js': 'sha256-O2agOBc6WzelNGpE0dg3k6X1jtEVTRq9ogik4UAlBjg= sha512-tXToyMmW0EuKUF667SlO7QJZFg8eE6fHSmZIk7G0qIo9oUhgMQzwWyc5UpzlHlTOoLaKWB+UNgjOb0x3t28PZg==',
+                            '/build/other.js': 'sha256-9oddnaT30pExJEeYadmhuQSsYohroPuLSAnwxRX47vI= sha512-eYhSSl7Q366tIcT+pt6diNaa4a8PfLReY4skS/1GWzmbtSwKBJCArvZDSSNofm1t3V2YgzEprtcMa/Ixucn02A==',
 
                             // vendors~main~other.js's hash is not tested since its
                             // content seems to change based on the build environment.
