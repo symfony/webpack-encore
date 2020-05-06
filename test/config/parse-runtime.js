@@ -96,10 +96,34 @@ describe('parse-runtime', () => {
         expect(config.context).to.equal('/tmp/custom-context');
     });
 
+    it('babel config in package.json detected when present', () => {
+        const projectDir = createTestDirectory();
+        fs.writeFileSync(
+            path.join(projectDir, 'package.json'),
+            '{"babel": {}}'
+        );
+
+        const config = parseArgv(createArgv(['dev']), projectDir);
+
+        expect(config.babelRcFileExists).to.be.true;
+    });
+
     it('.babelrc detected when present', () => {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, '.babelrc'),
+            '{}'
+        );
+
+        const config = parseArgv(createArgv(['dev']), projectDir);
+
+        expect(config.babelRcFileExists).to.be.true;
+    });
+
+    it('babel.config.json detected when present', () => {
+        const projectDir = createTestDirectory();
+        fs.writeFileSync(
+            path.join(projectDir, 'babel.config.json'),
             '{}'
         );
 
