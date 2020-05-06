@@ -35,10 +35,10 @@ describe('loaders/sass', () => {
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.equal('resolve-url-loader');
+        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
         expect(actualLoaders[0].options.sourceMap).to.be.true;
 
-        expect(actualLoaders[1].loader).to.equal('sass-loader');
+        expect(actualLoaders[1].loader).to.contain('sass-loader');
         expect(actualLoaders[1].options.sourceMap).to.be.true;
         expect(cssLoaderStub.getCall(0).args[1]).to.be.false;
 
@@ -55,10 +55,10 @@ describe('loaders/sass', () => {
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.equal('resolve-url-loader');
+        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
         expect(actualLoaders[0].options.sourceMap).to.be.false;
 
-        expect(actualLoaders[1].loader).to.equal('sass-loader');
+        expect(actualLoaders[1].loader).to.contain('sass-loader');
         // sourcemaps always enabled when resolve-url-loader is enabled
         expect(actualLoaders[1].options.sourceMap).to.be.true;
 
@@ -79,7 +79,7 @@ describe('loaders/sass', () => {
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.equal('resolve-url-loader');
+        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
         expect(actualLoaders[0].options.removeCR).to.be.true;
 
         cssLoader.getLoaders.restore();
@@ -98,7 +98,7 @@ describe('loaders/sass', () => {
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].loader).to.equal('sass-loader');
+        expect(actualLoaders[0].loader).to.contain('sass-loader');
         expect(actualLoaders[0].options.sourceMap).to.be.false;
 
         cssLoader.getLoaders.restore();
@@ -158,10 +158,10 @@ describe('loaders/sass', () => {
 
         const actualLoaders = sassLoader.getLoaders(config, true);
         expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.equal('resolve-url-loader');
+        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
         expect(actualLoaders[0].options.sourceMap).to.be.true;
 
-        expect(actualLoaders[1].loader).to.equal('sass-loader');
+        expect(actualLoaders[1].loader).to.contain('sass-loader');
         expect(actualLoaders[1].options.sourceMap).to.be.true;
         expect(cssLoaderStub.getCall(0).args[1]).to.be.true;
 
