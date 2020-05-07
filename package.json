@@ -36,7 +36,7 @@
     "fast-levenshtein": "^2.0.6",
     "file-loader": "^6.0.0",
     "friendly-errors-webpack-plugin": "^2.0.0-beta.1",
-    "loader-utils": "^1.1.0",
+    "loader-utils": "^2.0.0",
     "mini-css-extract-plugin": ">=0.4.0 <0.4.3",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "pkg-up": "^1.0.0",
