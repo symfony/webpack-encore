@@ -12,7 +12,7 @@
 
 const parseRuntime = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
-const chalk = require('chalk').default;
+const chalk = require('chalk');
 const logger = require('../lib/logger');
 
 const runtimeConfig = parseRuntime(
