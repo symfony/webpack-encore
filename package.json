@@ -71,7 +71,7 @@
     "eslint-plugin-header": "^1.0.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^8.0.1",
-    "fork-ts-checker-webpack-plugin": "^0.4.1",
+    "fork-ts-checker-webpack-plugin": "^4.0.0",
     "fs-extra": "^9.0.0",
     "handlebars": "^4.0.11",
     "handlebars-loader": "^1.7.0",
