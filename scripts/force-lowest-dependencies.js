@@ -12,8 +12,8 @@
 const fs = require('fs');
 const childProcess = require('child_process');
 
-const vueLowVersion = '^2.3.4';
-const vueLoaderLowVersion = '^15.0.11';
+const vueLowVersion = '2.3.4';
+const vueLoaderLowVersion = '15.0.11';
 
 function getLowestVersion(dependency, range) {
     return new Promise((resolve, reject) => {
