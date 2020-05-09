@@ -19,7 +19,10 @@
 
    * `file-loader` upgraded from 1.1 to 6  - #731 thanks to @weaverryan.
      [CHANGELOG](https://github.com/webpack-contrib/file-loader/blob/master/CHANGELOG.md#600-2020-03-17)
-     Unless you're doing custom configuration, it's unlikely you're affected.
+     If you are importing images/fonts using the CommonJS syntax (`require('foo.png')`),
+     you will now need to explicitely retrieve the default export (`require('foo.png').default`)
+     in order to get the path of the file.
+     Imports done using the `import` keyword should not be affected.
 
    * `url-loader` upgraded from allowing version 1 or 2 to allowing version 4 - #731 thanks to @weaverryan.
      [CHANGELOG](https://github.com/webpack-contrib/url-loader/blob/master/CHANGELOG.md#400-2020-03-17)
