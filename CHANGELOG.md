@@ -2,12 +2,31 @@
 
 ## 0.30.0
 
+ * [BEHAVIOR CHANGE] Encore now resolves loaders directly form its
+   `node_modules/`, instead of by name. This change will cause a behavior
+   change if you do any of the following:
+
+   * Add a different version of a loader (that Encore embeds) into your
+     `package.json`: the different loader won't be used anymore.
+
+   * Require a package that also included one of our embedded loaders:
+     depending on which one was hoisted it could result in a different
+     behavior.
+
+   * Manipulate the generated config and filter loaders based on their
+     names: the comparison won't be the same anymore
+
+   See #739 thanks to @Lyrkan.
+
  * Upgraded `clean-webpack-plugin` from `^0.1.19` to `^3.0.0`. You
    should not notice significant changes unless you use
    `Encore.cleanupOutputBeforeBuild()` and pass custom options.
    For more info, see [v1 to v2 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/issues/106)
    and [v2 to v3 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/releases/tag/v3.0.0).
    There were no changes from `0.1.19` to `1.0.0`.
+
+ * Encore will now correctly recognize a project-wide `babel.config.js` file - #738
+   thanks to @jdreesen.
 
  * The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
    from `^0.4.1` to `^4.0.0`. If you're using `enableForkedTypeScriptTypesChecking()`,
