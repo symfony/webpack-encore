@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 0.30.0
+
+ * The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
+   from `^0.4.1` to `^4.0.0`. If you're using `enableForkedTypeScriptTypesChecking()`,
+   you control the `fork-ts-checker-webpack-plugin` version in your
+   `package.json` file. You should upgrade to `^4.0.0` to ensure
+   that the plugin works correctly with Encore. See
+   [fork-ts-checker-webpack-plugin](https://github.com/TypeStrong/fork-ts-checker-webpack-plugin)
+   for details about the changes.
+
 ## 0.29.0
 
  * Support for Node 8 was dropped.
