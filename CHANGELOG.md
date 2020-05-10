@@ -2,6 +2,12 @@
 
 ## 0.30.0
 
+ * [DEPENDENCY UPGRADE] `sass-loader` was upgraded from version 7 to 8.
+   See the [CHANGELOG](https://github.com/webpack-contrib/sass-loader/blob/master/CHANGELOG.md#800-2019-08-29)
+   for breaking changes. This likely will not affect you unless pass
+   custom options to `Encore.enableSassLoader()`: several options were
+   moved or renamed - #758 thanks to @Kocal.
+
  * [BEHAVIOR CHANGE] Encore now resolves loaders directly form its
    `node_modules/`, instead of by name. This change will cause a behavior
    change if you do any of the following:
@@ -18,23 +24,28 @@
 
    See #739 thanks to @Lyrkan.
 
- * Upgraded `clean-webpack-plugin` from `^0.1.19` to `^3.0.0`. You
-   should not notice significant changes unless you use
+ * [DEPENDENCY UPGRADE] Webpack minimum version was changed from
+   `4.20.0` to `4.36.0` - see #746 and #758.
+
+ * [DEPENDENCY UPGRADE] Upgraded `clean-webpack-plugin` from `^0.1.19` to `^3.0.0`.
+   You should not notice significant changes unless you use
    `Encore.cleanupOutputBeforeBuild()` and pass custom options.
    For more info, see [v1 to v2 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/issues/106)
    and [v2 to v3 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/releases/tag/v3.0.0).
-   There were no changes from `0.1.19` to `1.0.0`.
+   There were no changes from `0.1.19` to `1.0.0`. See #760 thanks to @weaverryan.
 
  * Encore will now correctly recognize a project-wide `babel.config.js` file - #738
    thanks to @jdreesen.
 
- * The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
+ * [DEPENDENCY UPGRADE] The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
    from `^0.4.1` to `^4.0.0`. If you're using `enableForkedTypeScriptTypesChecking()`,
    you control the `fork-ts-checker-webpack-plugin` version in your
    `package.json` file. You should upgrade to `^4.0.0` to ensure
    that the plugin works correctly with Encore. See
    [fork-ts-checker-webpack-plugin](https://github.com/TypeStrong/fork-ts-checker-webpack-plugin)
-   for details about the changes.
+   for details about the changes. See #759 thanks to @weaverryan.
+
+ * Added support for Vue3 - #746 thanks to @weaverryan.
 
 ## 0.29.0
 

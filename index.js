@@ -1150,6 +1150,10 @@ class Encore {
      * Encore.enableVueLoader(() => {}, {
      *     // set optional Encore-specific options, for instance:
      *
+     *     // use version 2 or 3 to force your Vue version
+     *     // otherwise, Encore will detect it automatically
+     *     version: 2
+     *
      *     // enable JSX usage in Vue components
      *     // https://vuejs.org/v2/guide/render-function.html#JSX
      *     useJsx: true
