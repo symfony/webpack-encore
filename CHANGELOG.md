@@ -2,6 +2,13 @@
 
 ## 0.30.0
 
+ * Upgraded `clean-webpack-plugin` from `^0.1.19` to `^3.0.0`. You
+   should not notice significant changes unless you use
+   `Encore.cleanupOutputBeforeBuild()` and pass custom options.
+   For more info, see [v1 to v2 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/issues/106)
+   and [v2 to v3 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/releases/tag/v3.0.0).
+   There were no changes from `0.1.19` to `1.0.0`.
+
  * The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
    from `^0.4.1` to `^4.0.0`. If you're using `enableForkedTypeScriptTypesChecking()`,
    you control the `fork-ts-checker-webpack-plugin` version in your

@@ -10,7 +10,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const cleanPluginUtil = require('../../lib/plugins/clean');
@@ -41,8 +41,8 @@ describe('plugins/clean', () => {
         cleanPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
-        expect(plugins[0].plugin.paths).to.deep.equal(['**/*']);
-        expect(plugins[0].plugin.options.dry).to.equal(false);
+        expect(plugins[0].plugin.cleanOnceBeforeBuildPatterns).to.deep.equal(['**/*']);
+        expect(plugins[0].plugin.dry).to.equal(false);
     });
 
     it('enabled with custom paths and options callback', () => {
@@ -56,8 +56,8 @@ describe('plugins/clean', () => {
         cleanPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
-        expect(plugins[0].plugin.paths).to.deep.equal(['**/*.js', '**/*.css']);
-        expect(plugins[0].plugin.options.dry).to.equal(true);
+        expect(plugins[0].plugin.cleanOnceBeforeBuildPatterns).to.deep.equal(['**/*.js', '**/*.css']);
+        expect(plugins[0].plugin.dry).to.equal(true);
     });
 
     it('enabled with an options callback that returns an object', () => {
@@ -68,13 +68,13 @@ describe('plugins/clean', () => {
             options.dry = true;
 
             // This should override the original config
-            return { foo: true };
+            return { verbose: true };
         });
 
         cleanPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
-        expect(plugins[0].plugin.options.dry).to.equal(false);
-        expect(plugins[0].plugin.options.foo).to.equal(true);
+        expect(plugins[0].plugin.dry).to.equal(false);
+        expect(plugins[0].plugin.verbose).to.equal(true);
     });
 });
