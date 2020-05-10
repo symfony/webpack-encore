@@ -15,7 +15,7 @@ const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const logger = require('../lib/logger');
+const loggerAssert = require('./helpers/logger-assert');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -139,11 +139,9 @@ describe('WebpackConfig object', () => {
 
         it('You can omit the opening slash, but get a warning', () => {
             const config = createConfig();
-            logger.reset();
-            logger.quiet();
 
             config.setPublicPath('foo');
-            expect(logger.getMessages().warning).to.have.lengthOf(1);
+            loggerAssert.assertWarning('TODO');
         });
     });
 
@@ -206,10 +204,8 @@ describe('WebpackConfig object', () => {
         it('You can use an opening slash, but get a warning', () => {
             const config = createConfig();
 
-            logger.reset();
-            logger.quiet();
             config.setManifestKeyPrefix('/foo/');
-            expect(logger.getMessages().warning).to.have.lengthOf(1);
+            loggerAssert.assertWarning('TODO');
         });
     });
 
@@ -593,15 +589,6 @@ describe('WebpackConfig object', () => {
     });
 
     describe('configureBabel', () => {
-        beforeEach(() => {
-            logger.reset();
-            logger.quiet();
-        });
-
-        afterEach(() => {
-            logger.quiet(false);
-        });
-
         it('Calling method sets it', () => {
             const config = createConfig();
             const testCallback = () => {};
@@ -668,16 +655,14 @@ describe('WebpackConfig object', () => {
             config.runtimeConfig.babelRcFileExists = true;
             config.configureBabel(() => {});
 
-            const warnings = logger.getMessages().warning;
-            expect(warnings).to.have.lengthOf(1);
-            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+            loggerAssert.assertWarning('your app already provides an external Babel configuration');
         });
 
         it('Calling with a whitelisted option when .babelrc is present works fine', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
             config.configureBabel(null, { includeNodeModules: ['foo'] });
-            expect(logger.getMessages().warning).to.be.empty;
+            loggerAssert.assertWarning('TODO');
         });
 
         it('Calling with a non-whitelisted option when .babelrc is present displays a warning', () => {
@@ -685,9 +670,7 @@ describe('WebpackConfig object', () => {
             config.runtimeConfig.babelRcFileExists = true;
             config.configureBabel(null, { useBuiltIns: 'foo' });
 
-            const warnings = logger.getMessages().warning;
-            expect(warnings).to.have.lengthOf(1);
-            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+            loggerAssert.assertWarning('your app already provides an external Babel configuration');
         });
 
         it('Pass invalid config', () => {
@@ -716,15 +699,6 @@ describe('WebpackConfig object', () => {
     });
 
     describe('configureBabelPresetEnv', () => {
-        beforeEach(() => {
-            logger.reset();
-            logger.quiet();
-        });
-
-        afterEach(() => {
-            logger.quiet(false);
-        });
-
         it('Calling method sets it', () => {
             const config = createConfig();
             const testCallback = () => {};

@@ -18,7 +18,7 @@ const ManifestPlugin = require('webpack-manifest-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
-const logger = require('../lib/logger');
+const loggerAssert = require('./helpers/logger-assert');
 
 const isWindows = (process.platform === 'win32');
 
@@ -372,10 +372,6 @@ describe('The config-generator function', () => {
         });
 
         it('enableEslintLoader("extends-name")', () => {
-            before(() => {
-                logger.reset();
-            });
-
             const config = createConfig();
             config.addEntry('main', './main');
             config.publicPath = '/';
@@ -384,7 +380,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('enableEslintLoader: Extending from a configuration is deprecated, please use a configuration file instead. See https://eslint.org/docs/user-guide/configuring for more information.');
+            loggerAssert.assertDeprecation('enableEslintLoader: Extending from a configuration is deprecated, please use a configuration file instead. See https://eslint.org/docs/user-guide/configuring for more information.');
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
         });
@@ -1068,15 +1064,6 @@ describe('The config-generator function', () => {
     });
 
     describe('Test shouldUseSingleRuntimeChunk', () => {
-        before(() => {
-            logger.reset();
-            logger.quiet();
-        });
-
-        after(() => {
-            logger.quiet(false);
-        });
-
         it('Set to true', () => {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
@@ -1085,7 +1072,6 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.optimization.runtimeChunk).to.equal('single');
-            expect(logger.getMessages().deprecation).to.be.empty;
         });
 
         it('Set to false', () => {
@@ -1096,7 +1082,6 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
-            expect(logger.getMessages().deprecation).to.be.empty;
         });
 
         it('Not set + createSharedEntry()', () => {
@@ -1107,7 +1092,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.optimization.runtimeChunk.name).to.equal('manifest');
-            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
+            loggerAssert.assertDeprecation('the recommended setting is Encore.enableSingleRuntimeChunk()');
         });
 
         it('Not set without createSharedEntry()', () => {
@@ -1117,7 +1102,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
-            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
+            loggerAssert.assertDeprecation('the recommended setting is Encore.enableSingleRuntimeChunk()');
         });
     });
 

@@ -13,7 +13,7 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const validator = require('../../lib/config/validator');
-const logger = require('../../lib/logger');
+const loggerAssert = require('../helpers/logger-assert');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -75,12 +75,9 @@ describe('The validator function', () => {
         config.addEntry('main', './main');
         config.runtimeConfig.useDevServer = true;
 
-        logger.reset();
-        logger.quiet();
         validator(config);
 
-        expect(logger.getMessages().warning).to.have.lengthOf(1);
-        expect(logger.getMessages().warning[0]).to.include('Passing an absolute URL to setPublicPath() *and* using the dev-server can cause issues');
+        loggerAssert.assertWarning('Passing an absolute URL to setPublicPath() *and* using the dev-server can cause issues');
     });
 
     it('warning with createSharedEntry() and core cache group name', () => {
@@ -89,12 +86,9 @@ describe('The validator function', () => {
         config.setPublicPath('/build');
         config.createSharedEntry('vendors', './main');
 
-        logger.reset();
-        logger.quiet();
         validator(config);
 
-        expect(logger.getMessages().warning).to.have.lengthOf(1);
-        expect(logger.getMessages().warning[0]).to.include('Passing "vendors" to createSharedEntry() is not recommended');
+        loggerAssert.assertWarning('Passing "vendors" to createSharedEntry() is not recommended');
     });
 
     it('warning with addCacheGroup() and core cache group name', () => {
@@ -106,12 +100,9 @@ describe('The validator function', () => {
             test: /[\\/]main/,
         });
 
-        logger.reset();
-        logger.quiet();
         validator(config);
 
-        expect(logger.getMessages().warning).to.have.lengthOf(1);
-        expect(logger.getMessages().warning[0]).to.include('Passing "defaultVendors" to addCacheGroup() is not recommended');
+        loggerAssert.assertWarning('Passing "defaultVendors" to addCacheGroup() is not recommended');
     });
 
     it('warning with addCacheGroup() and a similar createSharedEntry() name', () => {
@@ -124,11 +115,8 @@ describe('The validator function', () => {
             test: /[\\/]main/,
         });
 
-        logger.reset();
-        logger.quiet();
         validator(config);
 
-        expect(logger.getMessages().warning).to.have.lengthOf(1);
-        expect(logger.getMessages().warning[0]).to.include('Using the same name when calling createSharedEntry() and addCacheGroup() is not recommended.');
+        loggerAssert.assertWarning('Using the same name when calling createSharedEntry() and addCacheGroup() is not recommended.');
     });
 });
