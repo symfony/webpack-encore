@@ -159,13 +159,22 @@ describe('package-helper', () => {
             // just sass-loader
             expect(versionProblems).to.have.length(1);
         });
+
+        it('Beta version is ok', () => {
+            const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
+                { name: 'vue', version: '^3.0.0-beta.5' },
+            ]);
+
+            expect(versionProblems).to.be.empty;
+        });
     });
 
     describe('addPackagesVersionConstraint', () => {
         it('Lookup a version constraint', () => {
             const inputPackages = [
                 { name: 'sass-loader', enforce_version: 7 },
-                { name: 'node-sass' }
+                { name: 'node-sass' },
+                { name: 'vue', version: '^2' }
             ];
 
             const packageInfo = JSON.parse(
@@ -174,7 +183,8 @@ describe('package-helper', () => {
 
             const expectedPackages = [
                 { name: 'sass-loader', version: packageInfo.devDependencies['sass-loader'] },
-                { name: 'node-sass' }
+                { name: 'node-sass' },
+                { name: 'vue', version: '^2' }
             ];
 
             const actualPackages = packageHelper.addPackagesVersionConstraint(inputPackages);
