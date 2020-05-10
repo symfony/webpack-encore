@@ -111,18 +111,20 @@ describe('loaders/sass', () => {
         sinon.stub(cssLoader, 'getLoaders')
             .callsFake(() => []);
 
-        config.enableSassLoader(function(sassOptions) {
-            sassOptions.custom_optiona = 'baz';
-            sassOptions.other_option = true;
+        config.enableSassLoader(function(options) {
+            options.sassOptions.custom_option = 'baz';
+            options.sassOptions.other_option = true;
         });
 
         const actualLoaders = sassLoader.getLoaders(config);
 
         expect(actualLoaders[1].options).to.deep.equals({
             sourceMap: true,
-            outputStyle: 'expanded',
-            custom_optiona: 'baz',
-            other_option: true
+            sassOptions: {
+                outputStyle: 'expanded',
+                custom_option: 'baz',
+                other_option: true
+            }
         });
         cssLoader.getLoaders.restore();
     });
@@ -134,8 +136,8 @@ describe('loaders/sass', () => {
         sinon.stub(cssLoader, 'getLoaders')
             .callsFake(() => []);
 
-        config.enableSassLoader(function(sassOptions) {
-            sassOptions.custom_option = 'baz';
+        config.enableSassLoader(function(options) {
+            options.custom_option = 'baz';
 
             // This should override the original config
             return { foo: true };

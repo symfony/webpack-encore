@@ -123,7 +123,7 @@ describe('package-helper', () => {
     describe('The getInvalidPackageVersionRecommendations correctly checks installed versions', () => {
         it('Check package that *is* the correct version', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
-                { name: 'sass-loader', version: '^7.0.1' },
+                { name: 'sass-loader', version: '^8.0.0' },
                 { name: 'preact', version: '^8.1.0' }
             ]);
 
@@ -132,7 +132,7 @@ describe('package-helper', () => {
 
         it('Check package with a version too low', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
-                { name: 'sass-loader', version: '^8.0.1' },
+                { name: 'sass-loader', version: '^9.0.0' },
                 { name: 'preact', version: '9.0.0' }
             ]);
 
@@ -140,9 +140,9 @@ describe('package-helper', () => {
             expect(versionProblems[0]).to.contain('is too old');
         });
 
-        it('Check package with a version too low', () => {
+        it('Check package with a version too new', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
-                { name: 'sass-loader', version: '^6.9.11' },
+                { name: 'sass-loader', version: '^7.0.1' },
                 { name: 'preact', version: '7.0.0' }
             ]);
 
