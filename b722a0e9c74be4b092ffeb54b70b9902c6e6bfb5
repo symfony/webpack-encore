@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-05-10T19:25:00Z
+
+Thanks for this @Kocal!
+
+So, apparently there weren't any BC breaks that affected us? Tests are green.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-05-10T19:37:53Z
+
+TBH I've just upgraded those packages, ran tests, tests were successful, and so I pushed :sweat_smile:
+
+Quick resume of breakings changes:
+- [chai v4](https://github.com/chaijs/chai/releases/tag/4.0.0): drop node.js 0.10 and 0.12, some updates on assertions
+- [chai-fs v2](https://github.com/chaijs/chai-fs/releases/tag/v1.0.0): support for Chai v3 and v4
+- [sinon v3](https://github.com/sinonjs/sinon/blob/master/CHANGELOG.md#300--2017-08-03): remove deprecated exports
+- [sinon v4](https://github.com/sinonjs/sinon/blob/master/CHANGELOG.md#400--2017-09-26): deps updates
+- [sinon v5](https://github.com/sinonjs/sinon/blob/master/CHANGELOG.md#501--2018-04-27): remove deprecated method
+- [sinon v6](https://github.com/sinonjs/sinon/blob/master/CHANGELOG.md#600--2018-06-11): use ES modules for exports
+- [sinon v7](https://github.com/sinonjs/sinon/blob/master/CHANGELOG.md#700--2018-10-14): dependency update
+- [sinon v8](https://github.com/sinonjs/sinon/blob/master/CHANGELOG.md#800--2019-12-22): update some dependencies, remove some methods
+- [sinon v9](https://github.com/sinonjs/sinon/blob/master/CHANGELOG.md#900--2020-02-19): drop node.js 8 support
+- [mocha v7](https://github.com/mochajs/mocha/blob/master/CHANGELOG.md#700--2020-01-05): drop node.js 6 support
+
+It seems that we are not affected by all those updates :)
