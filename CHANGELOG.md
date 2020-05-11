@@ -2,6 +2,28 @@
 
 ## 0.30.0
 
+ * [BC BREAK] The Vue "build" was changed from `vue.esm.js` (full build) to
+   `vue.runtime.esm.js` (runtime build). With the runtime build, there are
+   two things that you cannot do:
+   
+   A) You cannot pass a string to `template`:
+   
+   ```js
+   new Vue({
+     template: '<div>{{ hi }}</div>'
+   })
+   ```
+   
+   B) You cannot mount to a DOM element and use its HTML as your template:
+
+   ```js
+    new Vue({
+      el: '#app', // where <div id="app"> contains your Vue template
+    });
+   ```
+
+    If you need this behavior, call `Encore.addAliases({ vue$: 'vue/dist/vue.esm.js' });`
+
  * [DEPENDENCY UPGRADE] `sass-loader` was upgraded from version 7 to 8.
    See the [CHANGELOG](https://github.com/webpack-contrib/sass-loader/blob/master/CHANGELOG.md#800-2019-08-29)
    for breaking changes. This likely will not affect you unless pass
@@ -38,6 +60,8 @@
    thanks to @jdreesen.
 
  * [DEPENDENCY UPGRADE] The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
+
+ * The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
    from `^0.4.1` to `^4.0.0`. If you're using `enableForkedTypeScriptTypesChecking()`,
    you control the `fork-ts-checker-webpack-plugin` version in your
    `package.json` file. You should upgrade to `^4.0.0` to ensure
