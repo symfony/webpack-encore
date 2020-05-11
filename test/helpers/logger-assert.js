@@ -21,7 +21,7 @@ function assertDeprecation(expectedMessage) {
 
 function assertLogMessage(messages, description, expectedMessage) {
     if (messages.length === 0) {
-        throw new Error(`Found zero log ${description}s. And so, expected ${description} ${expectedMessage} was not logged.`);
+        throw new Error(`Found zero log ${description}s. And so, expected "${description} ${expectedMessage}" was not logged.`);
     }
 
     let isFound = false;

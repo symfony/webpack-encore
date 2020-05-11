@@ -22,7 +22,7 @@ const loggerAssert = require('./helpers/logger-assert');
 
 const isWindows = (process.platform === 'win32');
 
-function createConfig(runtimeConfig = null) {
+function createConfig(runtimeConfig = null, disableSingleRuntimeChunk = true) {
     runtimeConfig = runtimeConfig ? runtimeConfig : new RuntimeConfig();
 
     if (null === runtimeConfig.context) {
@@ -37,7 +37,12 @@ function createConfig(runtimeConfig = null) {
         runtimeConfig.babelRcFileExists = false;
     }
 
-    return new WebpackConfig(runtimeConfig);
+    const config = new WebpackConfig(runtimeConfig);
+    if (disableSingleRuntimeChunk) {
+        config.disableSingleRuntimeChunk();
+    }
+
+    return config;
 }
 
 function findPlugin(pluginConstructor, plugins) {
@@ -167,6 +172,7 @@ describe('The config-generator function', () => {
             // pretend we're installed to a subdirectory
             config.setPublicPath('/subdirectory/build');
             config.setManifestKeyPrefix('/build');
+            loggerAssert.assertWarning('The value passed to setManifestKeyPrefix "/build" starts with "/"');
 
             const actualConfig = configGenerator(config);
 
@@ -1085,7 +1091,7 @@ describe('The config-generator function', () => {
         });
 
         it('Not set + createSharedEntry()', () => {
-            const config = createConfig();
+            const config = createConfig(null, false);
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
             config.createSharedEntry('foo', 'bar.js');
@@ -1096,7 +1102,7 @@ describe('The config-generator function', () => {
         });
 
         it('Not set without createSharedEntry()', () => {
-            const config = createConfig();
+            const config = createConfig(null, false);
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
 
@@ -1131,6 +1137,10 @@ describe('The config-generator function', () => {
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/');
             config.enableSingleRuntimeChunk();
+        });
+
+        afterEach(function() {
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
         });
 
         it('configure rule for "javascript"', () => {

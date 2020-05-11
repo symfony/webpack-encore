@@ -17,7 +17,7 @@ beforeEach(function() {
 
 afterEach(function() {
     if (logger.getDeprecations().length > 0) {
-        this.test.error(new Error(`There were ${logger.getWarnings().length} unexpected deprecation log messages: \n${logger.getDeprecations().join('\n')}`));
+        this.test.error(new Error(`There were ${logger.getDeprecations().length} unexpected deprecation log messages: \n${logger.getDeprecations().join('\n')}`));
     }
 
     if (logger.getWarnings().length > 0) {

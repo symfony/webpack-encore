@@ -141,7 +141,7 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
 
             config.setPublicPath('foo');
-            loggerAssert.assertWarning('TODO');
+            loggerAssert.assertWarning('The value passed to setPublicPath() should *usually* start with "/" or be a full URL');
         });
     });
 
@@ -205,7 +205,7 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
 
             config.setManifestKeyPrefix('/foo/');
-            loggerAssert.assertWarning('TODO');
+            loggerAssert.assertWarning('The value passed to setManifestKeyPrefix "/foo/" starts with "/". This is allowed, but since the key prefix does not normally start with a "/"');
         });
     });
 
@@ -380,6 +380,7 @@ describe('WebpackConfig object', () => {
         it('Calling twice throws an error', () => {
             const config = createConfig();
             config.createSharedEntry('vendor', 'jquery');
+            loggerAssert.assertDeprecation('Encore.createSharedEntry() is deprecated');
 
             expect(() => {
                 config.createSharedEntry('vendor2', './main');
@@ -606,7 +607,7 @@ describe('WebpackConfig object', () => {
 
         it('Calling with "includeNodeModules" option', () => {
             const config = createConfig();
-            config.configureBabel(() => {}, { include_node_modules: ['foo', 'bar'] });
+            config.configureBabel(() => {}, { includeNodeModules: ['foo', 'bar'] });
 
             expect(config.babelOptions.exclude).to.be.a('Function');
 
@@ -662,7 +663,6 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
             config.configureBabel(null, { includeNodeModules: ['foo'] });
-            loggerAssert.assertWarning('TODO');
         });
 
         it('Calling with a non-whitelisted option when .babelrc is present displays a warning', () => {
@@ -1322,6 +1322,7 @@ describe('WebpackConfig object', () => {
 
             config.configureLoaderRule('eslint', callback);
             expect(config.loaderConfigurationCallbacks['eslint']).to.equal(callback);
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
         });
 
         it('Call method with a not supported loader', () => {
@@ -1330,6 +1331,7 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureLoaderRule('reason');
             }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars" and the aliases "js", "ts", "scss".');
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
         });
 
         it('Call method with not a valid callback', () => {
@@ -1338,10 +1340,12 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureLoaderRule('eslint');
             }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
 
             expect(() => {
                 config.configureLoaderRule('eslint', {});
             }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
         });
     });
 
