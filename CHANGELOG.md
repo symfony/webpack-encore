@@ -30,7 +30,7 @@
    custom options to `Encore.enableSassLoader()`: several options were
    moved or renamed - #758 thanks to @Kocal.
 
- * [BEHAVIOR CHANGE] Encore now resolves loaders directly form its
+ * [BEHAVIOR CHANGE] Encore now resolves loaders directly from its
    `node_modules/`, instead of by name. This change will cause a behavior
    change if you do any of the following:
 
@@ -60,8 +60,6 @@
    thanks to @jdreesen.
 
  * [DEPENDENCY UPGRADE] The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
-
- * The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
    from `^0.4.1` to `^4.0.0`. If you're using `enableForkedTypeScriptTypesChecking()`,
    you control the `fork-ts-checker-webpack-plugin` version in your
    `package.json` file. You should upgrade to `^4.0.0` to ensure
