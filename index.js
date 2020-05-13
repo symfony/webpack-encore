@@ -1151,7 +1151,7 @@ class Encore {
      *     // set optional Encore-specific options, for instance:
      *
      *     // set to false to *only* include the smaller "runtime"
-     *     // build, which can't compile templates at runtime, but it
+     *     // build, which can't compile templates at runtime, but is
      *     // CSP compliant/
      *     // set explicitly to true to silence the recommendation
      *     runtimeCompilerBuild: false
