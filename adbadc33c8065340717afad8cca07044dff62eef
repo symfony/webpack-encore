@@ -1,0 +1,48 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-05-13T03:52:31Z
+
+Displaying the recommendation during prod builds only may be too late I think. If someone starts working on an app only using `encore dev`/`encore dev-server` they could use things that won't be compatible with the runtime-only build and then need to do a lot of refactoring in order to be able to use it once they learn about the alias. Also, having a CSP compliant build by default could prevent other issues that are hard to diagnose for beginners.
+
+Couldn't we detect the error thrown by Vue and make it easier to understand instead (with an example of how to add the alias)?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-05-13T03:54:57Z
+
+Also, the failing test looks like the one I had to fix recently when working on Webpack 5 : https://github.com/symfony/webpack-encore/pull/645/files#r422717443
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-05-13T10:49:35Z
+
+> Couldn't we detect the error thrown by Vue and make it easier to understand instead (with an example of how to add the alias)?
+
+I don't think so? You see the error at runtime. For example, in Vue 3 (this is the source .ts, but you get the general idea of how this looks in the final dist file), you get the error simply because the `compile()` function is set to one that throws an error: https://github.com/vuejs/vue-next/blob/e954ba21f04f0ef848c687233fcb849d75e4153f/packages/vue/src/runtime.ts#L8
+
+I don't think you can detect that at build time, well, at least not easily.
+
+We could move the "recommendation" to show on *any* build... I just thought it might be annoying... though being annoying is not the worst thing here. CSP is great, but it's not our main use-case as afaik, it's only a problem in environments like Chrome apps.
+
+---------------------------------------------------------------------------
+
+by stof at 2020-05-13T10:54:09Z
+
+> We could move the "recommendation" to show on _any_ build... I just thought it might be annoying... though being annoying is not the worst thing here. CSP is great, but it's not our main use-case as afaik, it's only a problem in environments like Chrome apps.
+
+Or any site where you deploy CSP.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-05-13T11:17:12Z
+
+Ok, compromise time! With help from Stof:
+
+1) This PR still defaults to the "full" build. This helps beginners.
+2) We now print a recommendation on ALL builds, AND that recommendation includes some info about CSP. So if CSP is not something you've thought about, we've just pinged you about it ;)
+
+> To create a smaller (and CSP-compliant) build, see https://symfony.com/doc/current/frontend/encore/vuejs.html#runtime-compiler-build
+
+That points to a docs PR I just made: https://github.com/symfony/symfony-docs/pull/13664/files
+
+3) You can silence the warning (if you really DO want a runtime build and don't like seeing our nice blue message on each build) by explicitly setting `runtimeCompilerBuild: true`.
