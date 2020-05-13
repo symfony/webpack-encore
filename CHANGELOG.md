@@ -2,27 +2,8 @@
 
 ## 0.30.0
 
- * [BC BREAK] The Vue "build" was changed from `vue.esm.js` (full build) to
-   `vue.runtime.esm.js` (runtime build). With the runtime build, there are
-   two things that you cannot do:
-   
-   A) You cannot pass a string to `template`:
-   
-   ```js
-   new Vue({
-     template: '<div>{{ hi }}</div>'
-   })
-   ```
-   
-   B) You cannot mount to a DOM element and use its HTML as your template:
-
-   ```js
-    new Vue({
-      el: '#app', // where <div id="app"> contains your Vue template
-    });
-   ```
-
-    If you need this behavior, call `Encore.addAliases({ vue$: 'vue/dist/vue.esm.js' });`
+ * ~~[BC BREAK] The Vue "build" was changed from `vue.esm.js` (full build) to `vue.runtime.esm.js` (runtime build)~~
+   This was reverted in Encore 0.30.1.
 
  * [DEPENDENCY UPGRADE] `sass-loader` was upgraded from version 7 to 8.
    See the [CHANGELOG](https://github.com/webpack-contrib/sass-loader/blob/master/CHANGELOG.md#800-2019-08-29)

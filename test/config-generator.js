@@ -447,6 +447,34 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('enableVueLoader() with runtimeCompilerBuild sets Vue alias', () => {
+        it('defaults to "true"', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.enableVueLoader(() => {}, { version: 3 });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve.alias).to.deep.equals({
+                'vue$': 'vue/dist/vue.esm-bundler.js',
+            });
+        });
+
+        it('no alias for false', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/output/public-path';
+            config.publicPath = '/public-path';
+            config.enableSingleRuntimeChunk();
+            config.enableVueLoader(() => {}, { version: 3, runtimeCompilerBuild: false });
+
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.resolve.alias).to.deep.empty;
+        });
+    });
+
     describe('addAliases() adds new aliases', () => {
         it('without addAliases()', () => {
             const config = createConfig();
