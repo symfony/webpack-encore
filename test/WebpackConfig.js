@@ -1300,12 +1300,12 @@ describe('WebpackConfig object', () => {
 
             expect(config.externals).to.deep.equals([]);
 
-            config.addExternals({ 'jquery': 'jQuery', 'react': 'react' });
+            config.addExternals({ 'jquery': 'jQuery', 'react': 'react', 'svelte': 'svelte' });
             config.addExternals({ 'lodash': 'lodash' });
             config.addExternals(/^(jquery|\$)$/i);
 
             expect(config.externals).to.deep.equals([
-                { 'jquery': 'jQuery', 'react': 'react' },
+                { 'jquery': 'jQuery', 'react': 'react', 'svelte': 'svelte' },
                 { 'lodash': 'lodash' },
                 /^(jquery|\$)$/i
             ]);

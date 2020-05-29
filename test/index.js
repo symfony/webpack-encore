@@ -266,6 +266,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableSvelte', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableSvelte();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enablePreactPreset', () => {
 
         it('must return the API object', () => {
