@@ -1494,7 +1494,7 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.configureLoaderRule('reason');
-            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars" and the aliases "js", "ts", "scss".');
+            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars", "svelte" and the aliases "js", "ts", "scss".');
         });
 
         it('Call method with not a valid callback', () => {
