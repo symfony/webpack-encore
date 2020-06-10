@@ -1227,26 +1227,18 @@ describe('WebpackConfig object', () => {
             config.enableImagemin();
 
             expect(config.useImagemin).to.be.true;
-            expect(config.imageminOptions.disable).to.be.null;
         });
 
         it('With options', () => {
             const config = createConfig();
-            config.enableImagemin({
-                optipng: { enable: false },
-            });
+            const callback = (options) => {
+                options.optipng = { enable: false };
+            };
+
+            config.enableImagemin(callback);
 
             expect(config.useImagemin).to.be.true;
-            expect(config.imageminOptions.optipng.enable).to.be.false;
-        });
-
-        it('With an invalid option', () => {
-            const config = createConfig();
-            expect(() => {
-                config.enableImagemin({
-                    foo: true
-                });
-            }).to.throw('Invalid option "foo"');
+            expect(config.imageminLoaderOptionsCallback).to.equal(callback);
         });
     });
 
