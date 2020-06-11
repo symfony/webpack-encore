@@ -40,7 +40,6 @@ describe('loaders/images', () => {
         const actualLoaders = imagesLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(2);
         expect(actualLoaders[1].loader).to.contain('image-webpack-loader');
-        expect(actualLoaders[1].options).to.be.object;
     });
 
     it('getLoaders() with imagemin config', () => {
