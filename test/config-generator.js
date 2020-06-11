@@ -806,7 +806,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.use[1].loader).to.equal('image-webpack-loader');
+            expect(imagesRule.use[1].loader).to.contain('image-webpack-loader');
         });
 
         it('with config', () => {
@@ -817,7 +817,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.use[1].loader).to.equal('image-webpack-loader');
+            expect(imagesRule.use[1].loader).to.contain('image-webpack-loader');
             expect(imagesRule.use[1].options.optipng.enabled).to.false;
         });
 

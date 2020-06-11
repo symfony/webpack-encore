@@ -28,7 +28,7 @@ describe('loaders/images', () => {
 
         const actualLoaders = imagesLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].loader).to.equal('file-loader');
+        expect(actualLoaders[0].loader).to.contain('file-loader');
         expect(actualLoaders[0].options.name).to.equal('images/[name].[hash:8].[ext]');
         expect(actualLoaders[0].options.publicPath).to.equal(config.getRealPublicPath());
     });
@@ -39,7 +39,7 @@ describe('loaders/images', () => {
 
         const actualLoaders = imagesLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[1].loader).to.equal('image-webpack-loader');
+        expect(actualLoaders[1].loader).to.contain('image-webpack-loader');
         expect(actualLoaders[1].options).to.be.object;
     });
 
@@ -51,7 +51,7 @@ describe('loaders/images', () => {
 
         const actualLoaders = imagesLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[1].loader).to.equal('image-webpack-loader');
+        expect(actualLoaders[1].loader).to.contain('image-webpack-loader');
         expect(actualLoaders[1].options.optipng.enable).to.false;
     });
 });
