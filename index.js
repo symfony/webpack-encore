@@ -1182,6 +1182,20 @@ class Encore {
     }
 
     /**
+     * If enabled, the Elm loader is enabled.
+     *
+     * https://github.com/elm-community/elm-webpack-loader
+     *
+     * Encore.enableElm()
+     *
+     * @returns {Encore}
+     */
+    enableElm() {
+        webpackConfig.enableElm();
+        return this;
+    }
+
+    /**
      * If enabled, the eslint-loader is enabled.
      *
      * https://github.com/MoOx/eslint-loader

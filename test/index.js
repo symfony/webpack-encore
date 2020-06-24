@@ -281,6 +281,15 @@ describe('Public API', () => {
 
     });
 
+    describe('enableElm', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.enableElm();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
     describe('enableTypeScriptLoader', () => {
 
         it('must return the API object', () => {
