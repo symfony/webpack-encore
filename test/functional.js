@@ -81,6 +81,20 @@ describe('Functional tests using webpack', function() {
     });
 
     describe('Basic scenarios.', () => {
+        it('Generates a correct manifest when images are imported from a js file', (done) => {
+            const config = createWebpackConfig('web/build', 'production');
+            config.addEntry('svg', './js/import_svg');
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertManifestPath(
+                    'build/images/symfony-logo.svg',
+                    '/build/images/symfony-logo.579acd4f.svg'
+                );
+
+                done();
+            });
+        });
 
         it('Builds a few simple entries file + manifest.json', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
