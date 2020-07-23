@@ -2134,6 +2134,11 @@ module.exports = {
                     );
 
                     webpackAssert.assertManifestPath(
+                        'build/symfony-logo.svg',
+                        '/build/symfony-logo.svg'
+                    );
+
+                    webpackAssert.assertManifestPath(
                         'build/symfony_logo.png',
                         '/build/symfony_logo.png'
                     );
@@ -2181,6 +2186,11 @@ module.exports = {
                     webpackAssert.assertManifestPath(
                         'build/main.js',
                         '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/assets/symfony-logo.svg',
+                        '/build/assets/symfony-logo.svg'
                     );
 
                     webpackAssert.assertManifestPath(
@@ -2236,6 +2246,11 @@ module.exports = {
                     webpackAssert.assertManifestPath(
                         'build/main.js',
                         '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony-logo.svg',
+                        '/build/images/symfony-logo.579acd4f.svg'
                     );
 
                     webpackAssert.assertManifestPath(
@@ -2334,6 +2349,11 @@ module.exports = {
                         ]);
 
                     webpackAssert.assertManifestPath(
+                        'build/symfony-logo.svg',
+                        '/build/symfony-logo.579acd4f.svg'
+                    );
+
+                    webpackAssert.assertManifestPath(
                         'build/symfony_logo.png',
                         '/build/symfony_logo.91beba37.png'
                     );
@@ -2424,6 +2444,11 @@ module.exports = {
                     webpackAssert.assertManifestPath(
                         'build/main.js',
                         '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony-logo.svg',
+                        '/build/images/symfony-logo.579acd4f.svg'
                     );
 
                     webpackAssert.assertManifestPath(
