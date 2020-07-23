@@ -2343,8 +2343,8 @@ module.exports = {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'entrypoints.json',
-                                'runtime.d94b3b43.js',
-                                'main.31fd3788.js',
+                                'runtime.518d4a5c.js',
+                                'main.78f7d83e.js',
                                 'manifest.json',
                                 'symfony-logo.579acd4f.svg',
                                 'symfony_logo.91beba37.png',
