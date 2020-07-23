@@ -2124,6 +2124,7 @@ module.exports = {
                             'main.js',
                             'manifest.json',
                             'symfony_logo.png',
+                            'symfony-logo.svg',
                             'symfony_logo_alt.png',
                         ]);
 
@@ -2171,6 +2172,7 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
                         .with.files([
+                            'symfony-logo.svg',
                             'symfony_logo.png',
                             'symfony_logo_alt.png',
                             'Roboto.woff2',
@@ -2221,6 +2223,7 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                         .with.files([
+                            'symfony-logo.579acd4f.svg',
                             'symfony_logo.91beba37.png',
                             'symfony_logo_alt.f880ba14.png',
                         ]);
@@ -2311,16 +2314,17 @@ module.exports = {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'entrypoints.json',
-                                'runtime.518d4a5c.js',
-                                'main.78f7d83e.js',
+                                'runtime.d94b3b43.js',
+                                'main.31fd3788.js',
                                 'manifest.json',
+                                'symfony-logo.579acd4f.svg',
                                 'symfony_logo.91beba37.png',
                                 'symfony_logo_alt.f880ba14.png',
                             ]);
 
                         webpackAssert.assertManifestPath(
                             'build/main.js',
-                            '/build/main.78f7d83e.js'
+                            '/build/main.31fd3788.js'
                         );
                     }
 
@@ -2407,6 +2411,7 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                         .with.files([
+                            'symfony-logo.579acd4f.svg',
                             'symfony_logo.91beba37.png',
                             'symfony_logo_alt.f880ba14.png',
                         ]);
