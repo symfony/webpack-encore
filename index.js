@@ -941,7 +941,7 @@ class Encore {
      *              If set that option will include the given Node modules to
      *              the files that are processed by Babel.
      *              Can be used even if you have an external Babel configuration
-     *              (a babel.config.json file for instance). 
+     *              (a babel.config.json file for instance).
      *              Warning: .babelrc config files don't apply to node_modules. Use
      *              babel.config.json instead to apply the same config to these modules.
      *              Cannot be used if the "exclude" option is also set
