@@ -85,7 +85,7 @@
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
     "sass": "^1.17.0",
-    "sass-loader": "^8.0.0",
+    "sass-loader": "^9.0.1",
     "sinon": "^9.0.2",
     "strip-ansi": "^6.0.0",
     "stylus": "^0.54.5",
