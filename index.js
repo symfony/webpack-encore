@@ -643,7 +643,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(webpack.Options.SplitChunksOptions): webpack.Options.SplitChunksOptions|void} callback
      * @returns {Encore}
      */
     configureSplitChunks(callback) {
@@ -665,7 +665,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(webpack.Options.WatchOptions): webpack.Options.WatchOptions|void} callback
      * @returns {Encore}
      */
     configureWatchOptions(callback) {
@@ -689,7 +689,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(object): object|void} callback
      * @returns {Encore}
      */
     configureDevServerOptions(callback) {
@@ -765,7 +765,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} postCssLoaderOptionsCallback
+     * @param {function(object): object|void} postCssLoaderOptionsCallback
      * @returns {Encore}
      */
     enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
@@ -805,7 +805,7 @@ class Encore {
      *              Options parameters for resolve-url-loader
      *              // https://www.npmjs.com/package/resolve-url-loader#options
      *
-     * @param {function} sassLoaderOptionsCallback
+     * @param {function(object): object|void} sassLoaderOptionsCallback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -832,7 +832,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} lessLoaderOptionsCallback
+     * @param {function(object): object|void} lessLoaderOptionsCallback
      * @returns {Encore}
      */
     enableLessLoader(lessLoaderOptionsCallback = () => {}) {
@@ -857,7 +857,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} stylusLoaderOptionsCallback
+     * @param {function(object): object|void} stylusLoaderOptionsCallback
      * @returns {Encore}
      */
     enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
@@ -937,7 +937,7 @@ class Encore {
      *              It should contain the version of core-js you added to your project
      *              if useBuiltIns isn't set to false.
      *
-     * @param {function|null} callback
+     * @param {(function(object): object|void)|null} callback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -963,7 +963,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(object): object|void} callback
      * @returns {Encore}
      */
     configureBabelPresetEnv(callback) {
@@ -984,7 +984,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(object): object|void} callback
      * @returns {Encore}
      */
     configureCssLoader(callback) {
@@ -1120,7 +1120,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(object): object|void} callback
      * @returns {Encore}
      */
     enableTypeScriptLoader(callback = () => {}) {
@@ -1135,7 +1135,7 @@ class Encore {
      *
      * This is a build optimization API to reduce build times.
      *
-     * @param {function} forkedTypeScriptTypesCheckOptionsCallback
+     * @param {function(object): object|void} forkedTypeScriptTypesCheckOptionsCallback
      * @returns {Encore}
      */
     enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
@@ -1223,7 +1223,7 @@ class Encore {
      *              Configure Babel to use the preset "@vue/babel-preset-jsx",
      *              in order to enable JSX usage in Vue components.
      *
-     * @param {function} vueLoaderOptionsCallback
+     * @param {function(object): object|void} vueLoaderOptionsCallback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -1269,7 +1269,7 @@ class Encore {
      *              Configure the loader to lint `.vue` files
      * ```
      *
-     * @param {string|object|function} eslintLoaderOptionsOrCallback
+     * @param {string|object|(function(object): object|void)} eslintLoaderOptionsOrCallback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -1296,7 +1296,7 @@ class Encore {
      * ```
      *
      * @param {boolean} enabled
-     * @param {function} notifierPluginOptionsCallback
+     * @param {function(object): object|void} notifierPluginOptionsCallback
      * @returns {Encore}
      */
     enableBuildNotifications(enabled = true, notifierPluginOptionsCallback = () => {}) {
@@ -1321,7 +1321,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(object): object|void} callback
      * @returns {Encore}
      */
     enableHandlebarsLoader(callback = () => {}) {
@@ -1367,7 +1367,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {function(object): object|void} callback
      * @returns {Encore}
      */
     configureStyleLoader(callback) {
@@ -1499,7 +1499,7 @@ class Encore {
      * ```
      *
      * @param {string} name
-     * @param {function} callback
+     * @param {function(webpack.RuleSetRule): webpack.RuleSetRule|void} callback
      * @return {Encore}
      */
     configureLoaderRule(name, callback) {
@@ -1522,7 +1522,7 @@ class Encore {
      * ```
      *
      * @param {string[]} paths Paths that should be cleaned, relative to the "root" option
-     * @param {function} cleanWebpackPluginOptionsCallback
+     * @param {function(object): object|void} cleanWebpackPluginOptionsCallback
      * @returns {Encore}
      */
     cleanupOutputBeforeBuild(paths = ['**/*'], cleanWebpackPluginOptionsCallback = () => {}) {
