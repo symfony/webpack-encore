@@ -13,6 +13,10 @@
  * @import webpack from 'webpack'
  */
 
+/**
+ * @import { OptionsCallback } from './lib/utils/apply-options-callback.js'
+ */
+
 const EncoreProxy = require('./lib/EncoreProxy');
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
@@ -117,7 +121,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Function} definePluginOptionsCallback
+     * @param {OptionsCallback<ConstructorParameters<typeof webpack.DefinePlugin>[0]>} definePluginOptionsCallback
      * @returns {Encore}
      */
     configureDefinePlugin(definePluginOptionsCallback = () => {}) {
@@ -138,7 +142,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Function} friendlyErrorsPluginOptionsCallback
+     * @param {OptionsCallback<object>} friendlyErrorsPluginOptionsCallback
      * @returns {Encore}
      */
     configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
@@ -159,7 +163,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Function} manifestPluginOptionsCallback
+     * @param {OptionsCallback<object>} manifestPluginOptionsCallback
      * @returns {Encore}
      */
     configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
@@ -185,7 +189,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Function} terserPluginOptionsCallback
+     * @param {OptionsCallback<import('terser-webpack-plugin').BasePluginOptions & import('terser-webpack-plugin').DefinedDefaultMinimizerAndOptions<import('terser').MinifyOptions>>} terserPluginOptionsCallback
      * @returns {Encore}
      */
     configureTerserPlugin(terserPluginOptionsCallback = () => {}) {
@@ -206,7 +210,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Function} cssMinimizerPluginOptionsCallback
+     * @param {OptionsCallback<import('css-minimizer-webpack-plugin').BasePluginOptions & import('css-minimizer-webpack-plugin').DefinedDefaultMinimizerAndOptions<import('css-minimizer-webpack-plugin').CssNanoOptionsExtended>>} cssMinimizerPluginOptionsCallback
      * @returns {Encore}
      */
     configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback = () => {}) {
@@ -669,7 +673,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
     configureSplitChunks(callback) {
@@ -691,7 +695,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<Exclude<webpack.Configuration['watchOptions'], undefined>>} callback
      * @returns {Encore}
      */
     configureWatchOptions(callback) {
@@ -718,7 +722,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<import('webpack-dev-server').Configuration>} callback
      * @returns {Encore}
      */
     configureDevServerOptions(callback) {
@@ -794,7 +798,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Function} postCssLoaderOptionsCallback
+     * @param {OptionsCallback<object>} postCssLoaderOptionsCallback
      * @returns {Encore}
      */
     enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
@@ -834,7 +838,7 @@ class Encore {
      *              Options parameters for resolve-url-loader
      *              // https://www.npmjs.com/package/resolve-url-loader#options
      *
-     * @param {Function} sassLoaderOptionsCallback
+     * @param {OptionsCallback<object>} sassLoaderOptionsCallback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -861,7 +865,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} lessLoaderOptionsCallback
+     * @param {OptionsCallback<object>} lessLoaderOptionsCallback
      * @returns {Encore}
      */
     enableLessLoader(lessLoaderOptionsCallback = () => {}) {
@@ -886,7 +890,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} stylusLoaderOptionsCallback
+     * @param {OptionsCallback<object>} stylusLoaderOptionsCallback
      * @returns {Encore}
      */
     enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
@@ -966,7 +970,7 @@ class Encore {
      *              It should contain the version of core-js you added to your project
      *              if useBuiltIns isn't set to false.
      *
-     * @param {Function|null} callback
+     * @param {OptionsCallback<object>|null} callback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -992,7 +996,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
     configureBabelPresetEnv(callback) {
@@ -1013,7 +1017,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
     configureCssLoader(callback) {
@@ -1056,7 +1060,7 @@ class Encore {
      * ```
      *
      * @param {object} buildDependencies
-     * @param {Function} cacheCallback
+     * @param {OptionsCallback<webpack.FileCacheOptions>} cacheCallback
      * @returns {Encore}
      */
     enableBuildCache(buildDependencies, cacheCallback = (cache) => {}) {
@@ -1083,8 +1087,8 @@ class Encore {
      * );
      * ```
      *
-     * @param {Function} loaderOptionsCallback
-     * @param {Function} pluginOptionsCallback
+     * @param {OptionsCallback<import('mini-css-extract-plugin').LoaderOptions>} loaderOptionsCallback
+     * @param {OptionsCallback<import('mini-css-extract-plugin').PluginOptions>} pluginOptionsCallback
      * @returns {Encore}
      */
     configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback = () => {}) {
@@ -1149,7 +1153,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
     enableTypeScriptLoader(callback = () => {}) {
@@ -1164,7 +1168,7 @@ class Encore {
      *
      * This is a build optimization API to reduce build times.
      *
-     * @param {Function} forkedTypeScriptTypesCheckOptionsCallback
+     * @param {OptionsCallback<object>} forkedTypeScriptTypesCheckOptionsCallback
      * @returns {Encore}
      */
     enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
@@ -1252,7 +1256,7 @@ class Encore {
      *              Configure Babel to use the preset "@vue/babel-preset-jsx",
      *              in order to enable JSX usage in Vue components.
      *
-     * @param {Function} vueLoaderOptionsCallback
+     * @param {OptionsCallback<object>} vueLoaderOptionsCallback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -1279,7 +1283,7 @@ class Encore {
      * ```
      *
      * @param {boolean} enabled
-     * @param {Function} notifierPluginOptionsCallback
+     * @param {OptionsCallback<object>} notifierPluginOptionsCallback
      * @returns {Encore}
      */
     enableBuildNotifications(enabled = true, notifierPluginOptionsCallback = () => {}) {
@@ -1304,7 +1308,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
     enableHandlebarsLoader(callback = () => {}) {
@@ -1351,7 +1355,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {Function} callback
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
     configureStyleLoader(callback) {
@@ -1438,7 +1442,7 @@ class Encore {
      * ```
      *
      * @param {object} options
-     * @param {string|object|Function} ruleCallback
+     * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
      * @returns {Encore}
      */
     configureImageRule(options = {}, ruleCallback = (rule) => {}) {
@@ -1455,7 +1459,7 @@ class Encore {
      * See configureImageRule() for more details.
      *
      * @param {object} options
-     * @param {string|object|Function} ruleCallback
+     * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
      * @returns {Encore}
      */
     configureFontRule(options = {}, ruleCallback = (rule) => {}) {
@@ -1479,7 +1483,7 @@ class Encore {
      * ```
      *
      * @param {string} name
-     * @param {Function} callback
+     * @param {OptionsCallback<webpack.RuleSetRule>} callback
      * @returns {Encore}
      */
     configureLoaderRule(name, callback) {
@@ -1501,7 +1505,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Function} cleanOptionsCallback
+     * @param {OptionsCallback<Exclude<ConstructorParameters<typeof webpack.CleanPlugin>[0], undefined>>} cleanOptionsCallback
      * @returns {Encore}
      */
     cleanupOutputBeforeBuild(cleanOptionsCallback = () => {}) {
