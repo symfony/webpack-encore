@@ -326,7 +326,7 @@ class Encore {
      * Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
      * ```
      *
-     * @param {object} plugin
+     * @param {webpack.WebpackPluginInstance} plugin
      * @param {number} priority
      * @returns {Encore}
      */
@@ -339,7 +339,7 @@ class Encore {
     /**
      * Adds a custom loader config
      *
-     * @param {object} loader The loader config object
+     * @param {webpack.RuleSetRule} loader The loader config object
      * @returns {Encore}
      */
     addLoader(loader) {
@@ -351,7 +351,7 @@ class Encore {
     /**
      * Alias to addLoader
      *
-     * @param {object} rule
+     * @param {webpack.RuleSetRule} rule
      * @returns {Encore}
      */
     addRule(rule) {
@@ -414,7 +414,7 @@ class Encore {
      * ]);
      * ```
      *
-     * @param {*} externals
+     * @param {webpack.Externals} externals
      * @returns {Encore}
      */
     addExternals(externals) {
@@ -931,7 +931,7 @@ class Encore {
      * ```
      *
      * Supported options:
-     *      - {Condition} exclude (default=/(node_modules|bower_components)/)
+     *      - {webpack.RuleSetCondition} exclude (default=/(node_modules|bower_components)/)
      *              A Webpack Condition passed to the JS/JSX rule that
      *              determines which files and folders should not be
      *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
