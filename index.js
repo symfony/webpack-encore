@@ -17,6 +17,10 @@
  * @import { OptionsCallback } from './lib/utils/apply-options-callback.js'
  */
 
+/**
+ * @typedef {{from: string, pattern?: RegExp|string, to?: string|null, includeSubdirectories?: boolean, context?: string}} CopyFilesOptions
+ */
+
 const EncoreProxy = require('./lib/EncoreProxy');
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
@@ -588,7 +592,7 @@ class Encore {
      *      - {string} context (default: path of the source directory)
      *              The context to use as a root path when copying files.
      *
-     * @param {object|Array} configs
+     * @param {CopyFilesOptions|CopyFilesOptions[]} configs
      * @returns {Encore}
      */
     copyFiles(configs) {
@@ -839,7 +843,7 @@ class Encore {
      *              // https://www.npmjs.com/package/resolve-url-loader#options
      *
      * @param {OptionsCallback<object>} sassLoaderOptionsCallback
-     * @param {object} encoreOptions
+     * @param {{resolveUrlLoader?: boolean, resolveUrlLoaderOptions?: object}} encoreOptions
      * @returns {Encore}
      */
     enableSassLoader(sassLoaderOptionsCallback = () => {}, encoreOptions = {}) {
@@ -971,7 +975,7 @@ class Encore {
      *              if useBuiltIns isn't set to false.
      *
      * @param {OptionsCallback<object>|null} callback
-     * @param {object} encoreOptions
+     * @param {{exclude?: webpack.RuleSetCondition, includeNodeModules?: string[], useBuiltIns?: 'usage' | 'entry' | false, corejs?: number|string|{ version: string, proposals: boolean }|null}} encoreOptions
      * @returns {Encore}
      */
     configureBabel(callback, encoreOptions = {}) {
@@ -1059,7 +1063,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {object} buildDependencies
+     * @param {Record<string, string[]>} buildDependencies
      * @param {OptionsCallback<webpack.FileCacheOptions>} cacheCallback
      * @returns {Encore}
      */
@@ -1125,7 +1129,7 @@ class Encore {
      * Encore.enablePreactPreset({ preactCompat: true })
      * ```
      *
-     * @param {object} options
+     * @param {{preactCompat?: boolean}} options
      * @returns {Encore}
      */
     enablePreactPreset(options = {}) {
@@ -1257,7 +1261,7 @@ class Encore {
      *              in order to enable JSX usage in Vue components.
      *
      * @param {OptionsCallback<object>} vueLoaderOptionsCallback
-     * @param {object} encoreOptions
+     * @param {{useJsx?: boolean, version?: number, runtimeCompilerBuild?: boolean}} encoreOptions
      * @returns {Encore}
      */
     enableVueLoader(vueLoaderOptionsCallback = () => {}, encoreOptions = {}) {
@@ -1387,7 +1391,7 @@ class Encore {
      * which is overridden for both fonts and images. See configureImageRule()
      * and configureFontRule() to control those filenames.
      *
-     * @param {object} filenames
+     * @param {{js?: string, css?: string, images?: string, fonts?: string}} filenames
      * @returns {Encore}
      */
     configureFilenames(filenames) {
@@ -1441,7 +1445,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {object} options
+     * @param {{filename?: string, maxSize?: number|null, type?: string, enabled?: boolean}} options
      * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
      * @returns {Encore}
      */
@@ -1458,7 +1462,7 @@ class Encore {
      *
      * See configureImageRule() for more details.
      *
-     * @param {object} options
+     * @param {{filename?: string, maxSize?: number|null, type?: string, enabled?: boolean}} options
      * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
      * @returns {Encore}
      */
