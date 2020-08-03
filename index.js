@@ -223,10 +223,10 @@ class Encore {
      * If the JavaScript file imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
      *
-     * @param {string} name       The name (without extension) that will be used
-     *                            as the output filename (e.g. app will become app.js)
-     *                            in the output directory.
-     * @param {string|Array} src  The path to the source file (or files)
+     * @param {string} name          The name (without extension) that will be used
+     *                               as the output filename (e.g. app will become app.js)
+     *                               in the output directory.
+     * @param {string|string[]} src  The path to the source file (or files)
      * @returns {Encore}
      */
     addEntry(name, src) {
@@ -248,10 +248,10 @@ class Encore {
      * is to use addEntry() and then require/import your CSS files from
      * within your JavaScript files.
      *
-     * @param {string} name       The name (without extension) that will be used
-     *                            as the output filename (e.g. app will become app.css)
-     *                            in the output directory.
-     * @param {string|Array} src  The path to the source file (or files)
+     * @param {string} name          The name (without extension) that will be used
+     *                               as the output filename (e.g. app will become app.css)
+     *                               in the output directory.
+     * @param {string|string[]} src  The path to the source file (or files)
      * @returns {Encore}
      */
     addStyleEntry(name, src) {
@@ -1521,7 +1521,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Array} paths Paths that should be cleaned, relative to the "root" option
+     * @param {string[]} paths Paths that should be cleaned, relative to the "root" option
      * @param {function} cleanWebpackPluginOptionsCallback
      * @returns {Encore}
      */
@@ -1560,7 +1560,7 @@ class Encore {
      * ```
      *
      * @param {boolean} enabled
-     * @param {string|Array} algorithms
+     * @param {string|string[]} algorithms
      * @returns {Encore}
      */
     enableIntegrityHashes(enabled = true, algorithms = ['sha384']) {
