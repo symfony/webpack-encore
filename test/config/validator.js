@@ -34,6 +34,19 @@ describe('The validator function', () => {
         }).to.throw('No entries found!');
     });
 
+    it('should accept use with copyFiles() only', () => {
+        const config = createConfig();
+        config.setOutputPath('/tmp');
+        config.setPublicPath('/tmp');
+        config.copyFiles({ from: './' });
+
+        expect(() => {
+            validator(config);
+        }).not.throw();
+
+        expect(Object.keys(config.copyFilesConfigs).length).to.equal(1);
+    });
+
     it('throws an error if there is no output path', () => {
         const config = createConfig();
         config.publicPath = '/';
