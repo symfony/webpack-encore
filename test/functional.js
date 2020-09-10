@@ -2311,8 +2311,8 @@ module.exports = {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'entrypoints.json',
-                                'runtime.518d4a5c.js',
-                                'main.78f7d83e.js',
+                                'runtime.d94b3b43.js',
+                                'main.31fd3788.js',
                                 'manifest.json',
                                 'symfony_logo.91beba37.png',
                                 'symfony_logo_alt.f880ba14.png',
@@ -2320,7 +2320,7 @@ module.exports = {
 
                         webpackAssert.assertManifestPath(
                             'build/main.js',
-                            '/build/main.78f7d83e.js'
+                            '/build/main.31fd3788.js'
                         );
                     }
 
@@ -2697,12 +2697,12 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['/build/runtime.js', '/build/1.js', '/build/0.js', '/build/main.js'],
-                                css: ['/build/0.css']
+                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/main.js'],
+                                css: ['/build/1.css']
                             },
                             other: {
-                                js: ['/build/runtime.js', '/build/1.js', '/build/0.js', '/build/other.js'],
-                                css: ['/build/0.css']
+                                js: ['/build/runtime.js', '/build/0.js', '/build/1.js', '/build/other.js'],
+                                css: ['/build/1.css']
                             }
                         }
                     });
