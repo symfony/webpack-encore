@@ -757,7 +757,8 @@ class Encore {
      * ```
      * WebpackConfig.autoProvideVariables({
      *     $: 'jquery',
-     *     jQuery: 'jquery'
+     *     jQuery: 'jquery',
+     *     'window.jQuery': 'jquery'
      * });
      * ```
      *
