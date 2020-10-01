@@ -31,13 +31,13 @@ matrix:
       node_js: "10"
       env: JOB_PART=travis:lint
     - os: linux
-      node_js: "11"
-      env: JOB_PART=test
-    - os: linux
       node_js: "10"
       env: JOB_PART=test
     - os: linux
       node_js: "12"
+      env: JOB_PART=test
+    - os: linux
+      node_js: "13"
       env: JOB_PART=test
 
 script: npm run $JOB_PART

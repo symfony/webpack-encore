@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## 0.31.0
+
+ * [DEPENDENCY UPGRADE] `assets-webpack-plugin` was updated from `^3.9.7`
+   to `^5.1.1`, which should not affect most users.
+
+ * [DEPENDENCY UPGRADE] `less-loader` was updated from `^4.1.0`
+   to `^6.2.0`. This will likely not affect you unless you're passing
+   certain custom options in `enableLessLoader()`: [CHANGELOG](https://github.com/webpack-contrib/less-loader/blob/master/CHANGELOG.md)
+
+ * [DEPENDENCY UPGRADE] `sass-loader` was updated from `^8.0.0`
+   to `^9.0.1`, which has some options-related changes: [CHANGELOG](https://github.com/webpack-contrib/sass-loader/blob/master/CHANGELOG.md)
+
 ## 0.30.0
 
  * ~~[BC BREAK] The Vue "build" was changed from `vue.esm.js` (full build) to `vue.runtime.esm.js` (runtime build)~~

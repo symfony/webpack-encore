@@ -1,6 +1,6 @@
 {
   "name": "@symfony/webpack-encore",
-  "version": "0.30.2",
+  "version": "0.31.0",
   "description": "Webpack Encore is a simpler way to integrate Webpack into your application",
   "main": "index.js",
   "scripts": {
@@ -21,14 +21,14 @@
     "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
-    "node": ">= 10.13.0"
+    "node": "^10.13.0 || >=12.0.0"
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
     "@babel/core": "^7.7.0",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/preset-env": "^7.4.0",
-    "assets-webpack-plugin": "^3.9.7",
+    "assets-webpack-plugin": "^5.1.1",
     "babel-loader": "^8.0.0",
     "chalk": "^4.0.0",
     "clean-webpack-plugin": "^3.0.0",
@@ -78,15 +78,15 @@
     "handlebars-loader": "^1.7.0",
     "http-server": "^0.12.3",
     "image-webpack-loader": "^6.0.0",
-    "less": "^3.9.0",
-    "less-loader": "^4.1.0",
+    "less": "^3.11.3",
+    "less-loader": "^6.2.0",
     "mocha": "^7.1.2",
     "node-sass": "^4.5.3",
     "postcss-loader": "^3.0.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
     "sass": "^1.17.0",
-    "sass-loader": "^8.0.0",
+    "sass-loader": "^9.0.1",
     "sinon": "^9.0.2",
     "strip-ansi": "^6.0.0",
     "stylus": "^0.54.5",
