@@ -380,26 +380,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('createSharedEntry', () => {
-        it('Calling twice throws an error', () => {
-            const config = createConfig();
-            config.createSharedEntry('vendor', 'jquery');
-
-            expect(() => {
-                config.createSharedEntry('vendor2', './main');
-            }).to.throw('cannot be called multiple');
-        });
-
-        it('Calling with splitEntryChunks() is not supported', () => {
-            const config = createConfig();
-            config.splitEntryChunks();
-
-            expect(() => {
-                config.createSharedEntry('vendor', './main');
-            }).to.throw('together is not supported');
-        });
-    });
-
     describe('addCacheGroup', () => {
         it('Calling it adds cache groups', () => {
             const config = createConfig();
@@ -619,7 +599,7 @@ describe('WebpackConfig object', () => {
 
         it('Calling with "includeNodeModules" option', () => {
             const config = createConfig();
-            config.configureBabel(() => {}, { include_node_modules: ['foo', 'bar'] });
+            config.configureBabel(() => {}, { includeNodeModules: ['foo', 'bar'] });
 
             expect(config.babelOptions.exclude).to.be.a('Function');
 
@@ -768,6 +748,40 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('configureMiniCssExtractPlugin', () => {
+        it('Calling method with its first parameter sets the loader\'s options', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.configureMiniCssExtractPlugin(testCallback);
+            expect(config.miniCssExtractLoaderConfigurationCallback).to.equal(testCallback);
+        });
+
+        it('Calling method with its second parameter sets the plugin\'s options', () => {
+            const config = createConfig();
+            const testCallbackLoader = () => {};
+            const testCallbackPlugin = () => {};
+            config.configureMiniCssExtractPlugin(testCallbackLoader, testCallbackPlugin);
+            expect(config.miniCssExtractLoaderConfigurationCallback).to.equal(testCallbackLoader);
+            expect(config.miniCssExtractPluginConfigurationCallback).to.equal(testCallbackPlugin);
+        });
+
+        it('Calling with non-callback as 1st parameter throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureMiniCssExtractPlugin('FOO');
+            }).to.throw('must be a callback function');
+        });
+
+        it('Calling with non-callback as 2nd parameter throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureMiniCssExtractPlugin(() => {}, 'FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('configureSplitChunks', () => {
         it('Calling method sets it', () => {
             const config = createConfig();
@@ -782,15 +796,6 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureSplitChunks('FOO');
             }).to.throw('must be a callback function');
-        });
-
-        it('Calling with createdSharedEntry() is not supported', () => {
-            const config = createConfig();
-            config.createSharedEntry('vendor', './main');
-
-            expect(() => {
-                config.splitEntryChunks();
-            }).to.throw('together is not supported');
         });
     });
 
@@ -1127,7 +1132,10 @@ describe('WebpackConfig object', () => {
 
             expect(nbOfPlugins).to.equal(0);
 
-            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+            config.addPlugin(new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/
+            }));
 
             expect(config.plugins.length).to.equal(1);
             expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
@@ -1140,7 +1148,10 @@ describe('WebpackConfig object', () => {
 
             expect(nbOfPlugins).to.equal(0);
 
-            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), 10);
+            config.addPlugin(new webpack.IgnorePlugin({
+                resourceRegExp: /^\.\/locale$/,
+                contextRegExp: /moment$/
+            }), 10);
 
             expect(config.plugins.length).to.equal(1);
             expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
@@ -1154,7 +1165,10 @@ describe('WebpackConfig object', () => {
             expect(nbOfPlugins).to.equal(0);
 
             expect(() => {
-                config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/), 'foo');
+                config.addPlugin(new webpack.IgnorePlugin({
+                    resourceRegExp: /^\.\/locale$/,
+                    contextRegExp: /moment$/
+                }), 'foo');
             }).to.throw('must be a number');
         });
     });

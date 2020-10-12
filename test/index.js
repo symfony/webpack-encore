@@ -125,15 +125,6 @@ describe('Public API', () => {
 
     });
 
-    describe('createSharedEntry', () => {
-
-        it('must return the API object', () => {
-            const returnedValue = api.createSharedEntry('sharedEntry', 'vendor.js');
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
     describe('addCacheGroup', () => {
 
         it('must return the API object', () => {
@@ -429,6 +420,15 @@ describe('Public API', () => {
 
         it('should return the API object', () => {
             const returnedValue = api.configureOptimizeCssPlugin(() => {});
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureMiniCssExtractPlugin', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.configureMiniCssExtractPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 

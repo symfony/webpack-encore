@@ -45,4 +45,31 @@ describe('plugins/mini-css-extract', () => {
         expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
         expect(plugins[0].plugin.options.filename).to.equal('[name].[contenthash:8].css');
     });
+
+    it('with CSS extraction disabled', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.disableCssExtraction();
+
+        miniCssExtractPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(0);
+    });
+
+    it('with options callback', () => {
+        const config = createConfig();
+        const plugins = [];
+
+        config.configureMiniCssExtractPlugin(
+            () => {},
+            options => {
+                options.filename = '[name].css';
+            }
+        );
+
+        miniCssExtractPluginUtil(plugins, config);
+        expect(plugins.length).to.equal(1);
+        expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
+        expect(plugins[0].plugin.options.filename).to.equal('[name].css');
+    });
 });

@@ -455,28 +455,6 @@ class Encore {
     }
 
     /**
-     * Add a "commons" file that holds JS shared by multiple chunks/files.
-     *
-     * For example:
-     *
-     * ```
-     * Encore.createSharedEntry(
-     *     'vendor',
-     *     './src/shared.js'
-     * );
-     * ```
-     *
-     * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
-     * @param {string} file A file whose code & imports should be put into the shared file.
-     * @returns {Encore}
-     */
-    createSharedEntry(name, file) {
-        webpackConfig.createSharedEntry(name, file);
-
-        return this;
-    }
-
-    /**
      * Add a new cache group to Webpack's SplitChunksPlugin.
      * This can, for instance, be used to extract code that
      * is common to multiple entries into its own chunk.
@@ -1026,6 +1004,34 @@ class Encore {
      */
     enableStimulusBridge(controllerJsonPath) {
         webpackConfig.enableStimulusBridge(controllerJsonPath);
+
+        return this;
+    }
+
+    /**
+     * Configure the mini-css-extract-plugin.
+     *
+     * https://github.com/webpack-contrib/mini-css-extract-plugin#configuration
+     *
+     * ```
+     * Encore.configureMiniCssExtractPlugin(
+     *     function(loaderConfig) {
+     *         // change the loader's config
+     *         // loaderConfig.reloadAll = true;
+     *     },
+     *     function(pluginConfig) {
+     *         // change the plugin's config
+     *         // pluginConfig.chunkFilename = '[id].css';
+     *     }
+     * );
+     * ```
+     *
+     * @param {function} loaderOptionsCallback
+     * @param {function} pluginOptionsCallback
+     * @returns {Encore}
+     */
+    configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback = () => {}) {
+        webpackConfig.configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback);
 
         return this;
     }
@@ -1633,38 +1639,6 @@ class Encore {
     clearRuntimeEnvironment() {
         runtimeConfig = null;
         webpackConfig = null;
-    }
-
-    /**
-     * @deprecated
-     * @return {void}
-     */
-    configureExtractTextPlugin() {
-        throw new Error('The configureExtractTextPlugin() method was removed from Encore. The underlying plugin was removed from Webpack 4.');
-    }
-
-    /**
-     * @deprecated
-     * @return {void}
-     */
-    enableCoffeeScriptLoader() {
-        throw new Error('The enableCoffeeScriptLoader() method and CoffeeScript support was removed from Encore due to support problems with Webpack 4. If you are interested in this feature, please submit a pull request!');
-    }
-
-    /**
-     * @deprecated
-     * @return {void}
-     */
-    configureUglifyJsPlugin() {
-        throw new Error('The configureUglifyJsPlugin() method was removed from Encore due to uglify-js dropping ES6+ support in its latest version. Please use configureTerserPlugin() instead.');
-    }
-
-    /**
-     * @deprecated
-     * @return {void}
-     */
-    configureLoaderOptionsPlugin() {
-        throw new Error('The configureLoaderOptionsPlugin() method was removed from Encore. The underlying plugin should not be needed anymore unless you are using outdated loaders. If that\'s the case you can still add it using addPlugin().');
     }
 }
 

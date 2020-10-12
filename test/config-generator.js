@@ -37,7 +37,10 @@ function createConfig(runtimeConfig = null) {
         runtimeConfig.babelRcFileExists = false;
     }
 
-    return new WebpackConfig(runtimeConfig);
+    const config = new WebpackConfig(runtimeConfig);
+    config.enableSingleRuntimeChunk();
+
+    return config;
 }
 
 function findPlugin(pluginConstructor, plugins) {
@@ -220,7 +223,11 @@ describe('The config-generator function', () => {
             config.enableVersioning(true);
 
             const actualConfig = configGenerator(config);
-            expect(actualConfig.optimization.namedModules).to.be.true;
+
+            const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
+            expect(definePlugin.definitions['process.env'].NODE_ENV).to.equal('"development"');
+
+            expect(actualConfig.optimization.minimizer).to.be.undefined;
         });
 
         it('YES to production', () => {
@@ -232,10 +239,6 @@ describe('The config-generator function', () => {
             config.addEntry('main', './main');
 
             const actualConfig = configGenerator(config);
-
-            const moduleHashedIdsPlugin = findPlugin(webpack.HashedModuleIdsPlugin, actualConfig.plugins);
-            expect(moduleHashedIdsPlugin).to.not.be.undefined;
-            expect(actualConfig.optimization.namedModules).to.be.undefined;
 
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
             expect(definePlugin.definitions['process.env'].NODE_ENV).to.equal('"production"');
@@ -678,11 +681,11 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(actualConfig.watchOptions).to.deep.equals({
-                'ignored': /node_modules/,
+                'ignored': 'node_modules',
                 'poll': 250,
             });
             expect(actualConfig.devServer.watchOptions).to.deep.equals({
-                'ignored': /node_modules/,
+                'ignored': 'node_modules',
                 'poll': 250,
             });
         });
@@ -706,11 +709,11 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.watchOptions).to.deep.equals({
-                'ignored': /node_modules/,
+                'ignored': 'node_modules',
                 'poll': 250,
             });
             expect(actualConfig.devServer.watchOptions).to.deep.equals({
-                'ignored': /node_modules/,
+                'ignored': 'node_modules',
                 'poll': 500,
             });
         });
@@ -725,7 +728,10 @@ describe('The config-generator function', () => {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
-            config.addPlugin(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
+            config.addPlugin(new webpack.IgnorePlugin({
+                contextRegExp: /^\.\/locale$/,
+                resourceRegExp: /moment$/
+            }));
 
             const actualConfig = configGenerator(config);
 
@@ -1070,29 +1076,14 @@ describe('The config-generator function', () => {
     });
 
     describe('Test shouldSplitEntryChunks', () => {
-        it('Not production', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/public/build';
-            config.setPublicPath('/build/');
-            config.splitEntryChunks();
+        const config = createConfig();
+        config.outputPath = '/tmp/public/build';
+        config.setPublicPath('/build/');
+        config.splitEntryChunks();
 
-            const actualConfig = configGenerator(config);
-            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
-            expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
-        });
-
-        it('Yes production', () => {
-            const runtimeConfig = new RuntimeConfig();
-            runtimeConfig.environment = 'production';
-            const config = createConfig(runtimeConfig);
-            config.outputPath = '/tmp/public/build';
-            config.setPublicPath('/build/');
-            config.splitEntryChunks();
-
-            const actualConfig = configGenerator(config);
-            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
-            expect(actualConfig.optimization.splitChunks.name).to.be.false;
-        });
+        const actualConfig = configGenerator(config);
+        expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
+        expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
     });
 
     describe('Test shouldUseSingleRuntimeChunk', () => {
@@ -1127,25 +1118,13 @@ describe('The config-generator function', () => {
             expect(logger.getMessages().deprecation).to.be.empty;
         });
 
-        it('Not set + createSharedEntry()', () => {
+        it('Not set should throw an error', () => {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
-            config.setPublicPath('/build/');
-            config.createSharedEntry('foo', 'bar.js');
-
-            const actualConfig = configGenerator(config);
-            expect(actualConfig.optimization.runtimeChunk.name).to.equal('manifest');
-            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
-        });
-
-        it('Not set without createSharedEntry()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/public/build';
+            config.shouldUseSingleRuntimeChunk = null;
             config.setPublicPath('/build/');
 
-            const actualConfig = configGenerator(config);
-            expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
-            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('the recommended setting is Encore.enableSingleRuntimeChunk()');
+            expect(() => configGenerator(config)).to.throw('Either the Encore.enableSingleRuntimeChunk() or Encore.disableSingleRuntimeChunk() method should be called');
         });
     });
 
@@ -1160,7 +1139,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.watchOptions).to.deep.equals({
-                ignored: /node_modules/,
+                ignored: 'node_modules',
                 poll: 250,
             });
         });
