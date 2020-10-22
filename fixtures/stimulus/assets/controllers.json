@@ -1,0 +1,14 @@
+{
+    "controllers": {
+        "@symfony/mock-module": {
+            "mock": {
+                "webpackMode": "lazy",
+                "enabled": true,
+                "autoimport": {
+                    "@symfony/mock-module/dist/style.css": true
+                }
+            }
+        }
+    },
+    "entrypoints": []
+}

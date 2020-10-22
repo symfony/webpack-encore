@@ -2072,6 +2072,34 @@ module.exports = {
             });
         });
 
+        it('Symfony - Stimulus standard app is built correctly', () => {
+            const appDir = testSetup.createTestAppDir();
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './stimulus/assets/app.js');
+            config.enableStimulusBridge(__dirname + '/../fixtures/stimulus/assets/controllers.json');
+            config.configureBabel(function(config) {
+                config.plugins.push('@babel/plugin-proposal-class-properties');
+            });
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                // test controllers and style are shipped
+                webpackAssert.assertOutputFileContains('main.js', 'app-controller');
+                webpackAssert.assertOutputFileContains('main.js', 'mock-module-controller');
+                webpackAssert.assertOutputFileContains('main.css', 'body {}');
+            });
+        });
+
         describe('copyFiles() allows to copy files and folders', () => {
             it('Single file copy', (done) => {
                 const config = createWebpackConfig('www/build', 'production');
