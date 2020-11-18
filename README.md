@@ -1,6 +1,6 @@
 # Webpack Encore: A Simple & Powerful Webpack API
 
-[![Build Status](https://travis-ci.org/symfony/webpack-encore.svg?branch=master)](https://travis-ci.org/symfony/webpack-encore)
+[![Build Status](https://travis-ci.org/symfony/webpack-encore.svg?branch=main)](https://travis-ci.org/symfony/webpack-encore)
 [![NPM Version](https://badge.fury.io/js/%40symfony%2Fwebpack-encore.svg)](https://badge.fury.io/js/%40symfony%2Fwebpack-encore)
 ![Node](https://img.shields.io/node/v/@symfony/webpack-encore.svg)
 
