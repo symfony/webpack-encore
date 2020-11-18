@@ -322,21 +322,21 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureOptimizeCssPlugin', () => {
+    describe('configureCssMinimizerPlugin', () => {
         it('Setting callback', () => {
             const config = createConfig();
             const callback = () => {};
-            config.configureOptimizeCssPlugin(callback);
+            config.configureCssMinimizerPlugin(callback);
 
-            expect(config.optimizeCssPluginOptionsCallback).to.equal(callback);
+            expect(config.cssMinimizerPluginOptionsCallback).to.equal(callback);
         });
 
         it('Setting invalid callback argument', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureOptimizeCssPlugin('foo');
-            }).to.throw('Argument 1 to configureOptimizeCssPlugin() must be a callback function');
+                config.configureCssMinimizerPlugin('foo');
+            }).to.throw('Argument 1 to configureCssMinimizerPlugin() must be a callback function');
         });
     });
 

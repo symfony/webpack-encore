@@ -2291,13 +2291,13 @@ module.exports = {
                 config.setPublicPath('/build');
                 config.copyFiles({ from: './copy' });
 
-                // By default the optimize-css-assets-webpack-plugin will
+                // By default the css-minimizer-webpack-plugin will
                 // run on ALL emitted CSS files, which includes the ones
                 // handled by `Encore.copyFiles()`.
                 // We disable it for this test since our CSS file will
                 // not be valid and can't be handled by this plugin.
-                config.configureOptimizeCssPlugin(options => {
-                    options.assetNameRegExp = /^$/;
+                config.configureCssMinimizerPlugin(options => {
+                    options.include = /^$/;
                 });
 
                 // By default the terser-webpack-plugin will run on
@@ -2353,13 +2353,13 @@ module.exports = {
                     pattern: /\.(?!(css|js)$)([^.]+$)/
                 });
 
-                // By default the optimize-css-assets-webpack-plugin will
+                // By default the css-minimizer-webpack-plugin will
                 // run on ALL emitted CSS files, which includes the ones
                 // handled by `Encore.copyFiles()`.
                 // We disable it for this test since our CSS file will
                 // not be valid and can't be handled by this plugin.
-                config.configureOptimizeCssPlugin(options => {
-                    options.assetNameRegExp = /^$/;
+                config.configureCssMinimizerPlugin(options => {
+                    options.include = /^$/;
                 });
 
                 // By default the terser-webpack-plugin will run on
