@@ -31,7 +31,6 @@ describe('loaders/css-extract', () => {
 
         expect(loaders).to.have.lengthOf(2);
         expect(loaders[0].loader).to.equal(MiniCssExtractPlugin.loader);
-        expect(loaders[0].options.hmr).to.be.false;
     });
 
     it('prependLoaders() with CSS extraction disabled', () => {
@@ -48,13 +47,13 @@ describe('loaders/css-extract', () => {
     it('prependLoaders() options callback', () => {
         const config = createConfig();
         config.configureMiniCssExtractPlugin(options => {
-            options.hmr = true;
+            options.ignoreOrder = true;
         });
 
         const loaders = cssExtractLoader.prependLoaders(config, ['foo']);
 
         expect(loaders).to.have.lengthOf(2);
         expect(loaders[0].loader).to.equal(MiniCssExtractPlugin.loader);
-        expect(loaders[0].options.hmr).to.be.true;
+        expect(loaders[0].options.ignoreOrder).to.be.true;
     });
 });
