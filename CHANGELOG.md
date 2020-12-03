@@ -1,5 +1,32 @@
 # CHANGELOG
 
+## 0.33.0
+
+ * [disableCssExtraction()] Added boolean argument to `disableCssExtraction()`
+   to make it easier to dynamically disable extraction - #756 thanks
+   to @football2801.
+
+ * [DEPENDENCY UPGRADE] Vue 3 was already supported, but the dependencies
+   have been upgraded to explicitly support the stable version, instead
+   of beta versions - #869 thanks to @weaverryan
+
+ * [DEPENDENCY UPGRADE] Explicit support for `postcss-loader` v3 was
+   dropped but support for v4 was added - #854 thanks to @railto.
+
+ * [DEPENDENCY UPGRADE] Support for `sass-loader` v10 was added - #865
+   thanks to @shmshd.
+
+ * Allowed using `copyFiles()` even if you don't have any other
+   entrypoints - #831 thanks to @pszalko.
+
+ * [DEPENDENCY UPGRADE] Support for `ts-loader` was upgraded from
+   `^5.3` to `^8.0.1`. This means that only `^8.0.1` of `ts-loader`
+   is guaranteed to work - #800 thanks to @skmedix.
+
+ * [DEPENDENCY UPGRADE] Support for `eslint` v5 was removed but support
+   for v7 was added. Also, `eslint-loader` support for v3 was removed
+   but support for v4 was added - see #774 thanks to @Kocal.
+
 ## 0.32.1
 
  * Fixing a bug where the new Stimulus Bridge always required the
