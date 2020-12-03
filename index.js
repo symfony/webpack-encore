@@ -1021,6 +1021,7 @@ class Encore {
     /**
      * If enabled, the Stimulus bridge is used to load Stimulus controllers from PHP packages.
      *
+     * @param {string} controllerJsonPath Path to the controllers.json file.
      * @returns {Encore}
      */
     enableStimulusBridge(controllerJsonPath) {
