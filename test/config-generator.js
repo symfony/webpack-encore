@@ -14,7 +14,7 @@ const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
@@ -157,10 +157,10 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(actualConfig.output.publicPath).to.equal('/build/');
-            const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
+            const manifestPlugin = findPlugin(WebpackManifestPlugin, actualConfig.plugins);
             // basePath matches publicPath, *without* the opening slash
             // we do that by convention: keys do not start with /
-            expect(manifestPlugin.opts.basePath).to.equal('build/');
+            expect(manifestPlugin.options.basePath).to.equal('build/');
         });
 
         it('when manifestKeyPrefix is set, that is used instead', () => {
@@ -174,10 +174,10 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(actualConfig.output.publicPath).to.equal('/subdirectory/build/');
-            const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
+            const manifestPlugin = findPlugin(WebpackManifestPlugin, actualConfig.plugins);
             // base path matches manifestKeyPrefix + trailing slash
             // the opening slash is kept, since the user is overriding this setting
-            expect(manifestPlugin.opts.basePath).to.equal('/build/');
+            expect(manifestPlugin.options.basePath).to.equal('/build/');
         });
 
         it('manifestKeyPrefix can be empty', () => {
@@ -189,8 +189,8 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const manifestPlugin = findPlugin(ManifestPlugin, actualConfig.plugins);
-            expect(manifestPlugin.opts.basePath).to.equal('');
+            const manifestPlugin = findPlugin(WebpackManifestPlugin, actualConfig.plugins);
+            expect(manifestPlugin.options.basePath).to.equal('');
         });
     });
 

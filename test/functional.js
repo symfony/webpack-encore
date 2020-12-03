@@ -478,7 +478,7 @@ describe('Functional tests using webpack', function() {
 
             it('With source maps in production mode', (done) => {
                 const config = createWebpackConfig('web', 'production');
-                config.addEntry('main', './js/no_require');
+                config.addEntry('main', './js/arrow_function');
                 config.setPublicPath('/');
                 config.addStyleEntry('styles', './css/h1_style.css');
                 config.enableSourceMaps(true);
