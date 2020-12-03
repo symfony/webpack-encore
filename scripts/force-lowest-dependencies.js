@@ -15,8 +15,17 @@ const childProcess = require('child_process');
 const vueLowVersion = '2.5.0';
 const vueLoaderLowVersion = '15.0.11';
 
+/**
+ * @param {string} dependency
+ * @param {string} range
+ * @return {Promise}
+ */
 function getLowestVersion(dependency, range) {
     return new Promise((resolve, reject) => {
+        if (range.startsWith('file:')) {
+            resolve([dependency, range]);
+        }
+
         childProcess.exec(
             `npm view "${dependency}@${range}" version`,
             { encoding: 'utf-8' },
