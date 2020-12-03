@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.32.1
+
+ * Fixing a bug where the new Stimulus Bridge always required the
+   `@symfony/stimulus-bridge/webpack-helper` module, even if you
+   were not using this feature - #863 thanks to @Kocal
+
 ## 0.32.0
 
  * [enableStimulusBridge] The new `enableStimulusBridge()` method was
