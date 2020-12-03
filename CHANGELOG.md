@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.32.0
+
+ * Add Stimulus bridge configurator
+
 ## 0.31.0
 
  * [DEPENDENCY UPGRADE] `assets-webpack-plugin` was updated from `^3.9.7`
