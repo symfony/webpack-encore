@@ -2072,7 +2072,7 @@ module.exports = {
             });
         });
 
-        it('Symfony - Stimulus standard app is built correctly', () => {
+        it('Symfony - Stimulus standard app is built correctly', (done) => {
             const appDir = testSetup.createTestAppDir();
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
@@ -2097,6 +2097,8 @@ module.exports = {
                 webpackAssert.assertOutputFileContains('main.js', 'app-controller');
                 webpackAssert.assertOutputFileContains('main.js', 'mock-module-controller');
                 webpackAssert.assertOutputFileContains('main.css', 'body {}');
+
+                done();
             });
         });
 
