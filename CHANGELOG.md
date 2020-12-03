@@ -2,7 +2,15 @@
 
 ## 0.32.0
 
- * Add Stimulus bridge configurator
+ * [enableStimulusBridge] The new `enableStimulusBridge()` method was
+   added to enable the Stimulus bridge and Symfony UX features. See
+   https://symfony.com/ux for more details and #859 thanks to @tgalopin.
+
+## 0.31.1
+
+ * [DEPENDENCY UPGRADE] `resolve-url-loader` was updated from `^3.0.1`
+   to `^3.1.2`, which should not affect most users. See #848 thanks
+   to @Khartir.
 
 ## 0.31.0
 
