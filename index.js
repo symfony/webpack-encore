@@ -1019,6 +1019,17 @@ class Encore {
     }
 
     /**
+     * If enabled, the Stimulus bridge is used to load Stimulus controllers from PHP packages.
+     *
+     * @returns {Encore}
+     */
+    enableStimulusBridge(controllerJsonPath) {
+        webpackConfig.enableStimulusBridge(controllerJsonPath);
+
+        return this;
+    }
+
+    /**
      * If enabled, the react preset is added to Babel.
      *
      * https://babeljs.io/docs/plugins/preset-react/

@@ -1,0 +1,17 @@
+{
+    "name": "@symfony/mock-module",
+    "license": "MIT",
+    "version": "1.0.0",
+    "symfony": {
+        "controllers": {
+            "mock": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "enabled": true,
+                "autoimport": {
+                    "@symfony/mock-module/dist/style.css": true
+                }
+            }
+        }
+    }
+}
