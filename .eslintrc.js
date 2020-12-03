@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Symfony Webpack Encore package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 module.exports = {
     "root": true,
     "plugins": ["node", "header"],
@@ -39,7 +48,7 @@ module.exports = {
             "after": true
         }],
         "no-console": "off",
-        "valid-jsdoc": ["error", {"requireParamDescription": false, "requireReturnDescription": false}],
+        "valid-jsdoc": ["error", { "requireParamDescription": false, "requireReturnDescription": false }],
         "node/no-unsupported-features": ["error", { version: 8 }],
         "node/no-deprecated-api": "error",
         "node/no-missing-import": "error",
@@ -54,6 +63,14 @@ module.exports = {
         "node/no-unpublished-bin": "error",
         "node/no-unpublished-require": "error",
         "node/process-exit-as-throw": "error",
-        "header/header": [2, "block", {"pattern": "This file is part of the Symfony Webpack Encore package"}]
-    }
+        "header/header": [2, "block", { "pattern": "This file is part of the Symfony Webpack Encore package" }]
+    },
+    "overrides": [
+        {
+            "files": [".eslintrc.js"],
+            "rules": {
+                "quotes": ["error", "double"],
+            },
+        }
+    ],
 };

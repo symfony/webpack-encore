@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --reporter spec test --recursive",
-    "lint": "eslint lib test index.js",
+    "lint": "eslint lib test index.js .eslintrc.js",
     "travis:lint": "npm run lint"
   },
   "bin": {
@@ -72,8 +72,8 @@
     "chai-fs": "^2.0.0",
     "chai-subset": "^1.6.0",
     "core-js": "^3.0.0",
-    "eslint": "^5.15.2 || ^6.0.0",
-    "eslint-loader": "^3.0.0",
+    "eslint": "^6.0.0 || ^7.0.0",
+    "eslint-loader": "^4.0.0",
     "eslint-plugin-header": "^1.0.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-node": "^8.0.1",
