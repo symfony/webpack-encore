@@ -1325,6 +1325,14 @@ class Encore {
      * into a .css file. All your styles will then be injected
      * into the page by your JS code.
      *
+     * This can be useful when using the dev-server with hot
+     * module reload (so that CSS can benefit from HMR):
+     *
+     * ```
+     * // disable CSS only when using the dev-server
+     * Encore.disableCssExtraction(Encore.isDevServer())
+     * ```
+     *
      * Internally, this disables the mini-css-extract-plugin
      * and uses the style-loader instead.
      * @param {boolean} disabled
