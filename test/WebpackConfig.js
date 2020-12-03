@@ -1237,12 +1237,27 @@ describe('WebpackConfig object', () => {
             expect(config.extractCss).to.be.true;
         });
 
-        it('Calling it disables the CSS extraction', () => {
+        it('Calling it with no params disables the CSS extraction', () => {
             const config = createConfig();
             config.disableCssExtraction();
 
             expect(config.extractCss).to.be.false;
         });
+
+        it('Calling it with boolean set to true disables CSS extraction', () => {
+            const config = createConfig();
+            config.disableCssExtraction(true);
+
+            expect(config.extractCss).to.be.false;
+        });
+
+        it('Calling it with boolean set to false enables CSS extraction', () => {
+            const config = createConfig();
+            config.disableCssExtraction(false);
+
+            expect(config.extractCss).to.be.true;
+        });
+
     });
 
     describe('configureFilenames', () => {

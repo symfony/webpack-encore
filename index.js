@@ -1327,11 +1327,11 @@ class Encore {
      *
      * Internally, this disables the mini-css-extract-plugin
      * and uses the style-loader instead.
-     *
+     * @param {boolean} disabled
      * @returns {Encore}
      */
-    disableCssExtraction() {
-        webpackConfig.disableCssExtraction();
+    disableCssExtraction(disabled = true) {
+        webpackConfig.disableCssExtraction(disabled);
 
         return this;
     }
