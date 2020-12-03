@@ -421,7 +421,7 @@ describe('Functional tests using webpack', function() {
                     if (!process.env.DISABLE_UNSTABLE_CHECKS) {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
-                                'main.17fed796.js',
+                                'main.afbd5350.js',
                                 'styles.622a49c8.css',
                                 'manifest.json',
                                 'entrypoints.json',
@@ -524,14 +524,14 @@ describe('Functional tests using webpack', function() {
                 if (!process.env.DISABLE_UNSTABLE_CHECKS) {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
-                            'js_no_require_js-css_h1_style_css.d4b1e6ac.js', // chunks are also versioned
+                            'js_no_require_js-css_h1_style_css.141b339c.js', // chunks are also versioned
                             'js_no_require_js-css_h1_style_css.622a49c8.css',
-                            'main.9356157e.js',
+                            'main.fb2d11f3.js',
                             'h1.622a49c8.css',
                             'bg.b7945d2f.css',
                             'manifest.json',
                             'entrypoints.json',
-                            'runtime.50ac4bcd.js',
+                            'runtime.3f2b2a52.js',
                         ]);
                 }
 
