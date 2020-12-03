@@ -114,7 +114,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} definePluginOptionsCallback
+     * @param {Function} definePluginOptionsCallback
      * @returns {Encore}
      */
     configureDefinePlugin(definePluginOptionsCallback = () => {}) {
@@ -135,7 +135,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} friendlyErrorsPluginOptionsCallback
+     * @param {Function} friendlyErrorsPluginOptionsCallback
      * @returns {Encore}
      */
     configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
@@ -156,7 +156,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} manifestPluginOptionsCallback
+     * @param {Function} manifestPluginOptionsCallback
      * @returns {Encore}
      */
     configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
@@ -182,7 +182,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} terserPluginOptionsCallback
+     * @param {Function} terserPluginOptionsCallback
      * @returns {Encore}
      */
     configureTerserPlugin(terserPluginOptionsCallback = () => {}) {
@@ -203,7 +203,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} cssMinimizerPluginOptionsCallback
+     * @param {Function} cssMinimizerPluginOptionsCallback
      * @returns {Encore}
      */
     configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback = () => {}) {
@@ -347,7 +347,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {Object<string, string>} aliases
+     * @param {object<string, string>} aliases
      *
      * @returns {Encore}
      */
@@ -721,7 +721,7 @@ class Encore {
      *  This is useful for older packages, that might
      *  expect jQuery (or something else) to be a global variable.
      *
-     * @param {Object<string, string|string[]>} variables
+     * @param {object<string, string | string[]>} variables
      * @returns {Encore}
      */
     autoProvideVariables(variables) {
@@ -1031,7 +1031,7 @@ class Encore {
      * ```
      *
      * @param {object} buildDependencies
-     * @param {function} cacheCallback
+     * @param {Function} cacheCallback
      * @returns {Encore}
      */
     enableBuildCache(buildDependencies, cacheCallback = (cache) => {}) {
@@ -1058,8 +1058,8 @@ class Encore {
      * );
      * ```
      *
-     * @param {function} loaderOptionsCallback
-     * @param {function} pluginOptionsCallback
+     * @param {Function} loaderOptionsCallback
+     * @param {Function} pluginOptionsCallback
      * @returns {Encore}
      */
     configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback = () => {}) {
@@ -1271,7 +1271,6 @@ class Encore {
      * Supported options:
      *      * {boolean} lintVue (default=false)
      *              Configure the loader to lint `.vue` files
-     * ```
      *
      * @param {string|object|(function(object): object|void)} eslintLoaderOptionsOrCallback
      * @param {{lintVue?: boolean}} encoreOptions
@@ -1349,6 +1348,7 @@ class Encore {
      *
      * Internally, this disables the mini-css-extract-plugin
      * and uses the style-loader instead.
+     *
      * @param {boolean} disabled
      * @returns {Encore}
      */
@@ -1458,7 +1458,7 @@ class Encore {
      * ```
      *
      * @param {object} options
-     * @param {string|object|function} ruleCallback
+     * @param {string|object|Function} ruleCallback
      * @returns {Encore}
      */
     configureImageRule(options = {}, ruleCallback = (rule) => {}) {
@@ -1475,7 +1475,7 @@ class Encore {
      * See configureImageRule() for more details.
      *
      * @param {object} options
-     * @param {string|object|function} ruleCallback
+     * @param {string|object|Function} ruleCallback
      * @returns {Encore}
      */
     configureFontRule(options = {}, ruleCallback = (rule) => {}) {
@@ -1504,7 +1504,7 @@ class Encore {
      *
      * @param {string} name
      * @param {function(webpack.RuleSetRule): webpack.RuleSetRule|void} callback
-     * @return {Encore}
+     * @returns {Encore}
      */
     configureLoaderRule(name, callback) {
         webpackConfig.configureLoaderRule(name, callback);
@@ -1700,6 +1700,7 @@ class Encore {
 /**
  * Proxy the API in order to prevent calls to most of its methods
  * if the webpackConfig object hasn't been initialized yet.
+ *
  * @type {Encore}
  */
 module.exports = EncoreProxy.createProxy(new Encore());
