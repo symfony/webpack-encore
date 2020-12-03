@@ -1,0 +1,99 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-05-09T10:24:15Z
+
+Hi @football2801,
+
+Thank you for this PR, I renamed it since it isn't actually related to environment variables.
+
+We thought a while ago about adding something like this but didn't because it could be a bit confusing for the users (see the responses to https://github.com/symfony/webpack-encore/pull/564#issuecomment-501675290).
+
+If you look at the other methods with that kind of parameter you'll see that they are all named `enable<something>()`. For them having an "enable" parameter is not ambiguous at all: setting it to true will enable the related feature.
+
+Now for a `disable<something>()` method it is a bit different, especially if it is between other `enable<something>()` methods in your `webpack.config.js`...
+
+---------------------------------------------------------------------------
+
+by football2801 at 2020-05-11T16:35:18Z
+
+After reading everything in that comment that you tagged, @Lyrkan, I agree with the comments you were making. I don't find it the least bit confusing. I actually made this PR due to people that I work with that requested that this method have this optional param. I know it would make my config file that much prettier.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-05-11T16:45:39Z
+
+Ping @Kocal & @weaverryan
+
+---------------------------------------------------------------------------
+
+by JShilling4 at 2020-05-11T16:57:47Z
+
+I am in favor of this PR.  I agree with @Lyrkan comment in #564. This PR makes total sense to me and keeps the config clean and consistent.
+
+(do you want to disable CSS extraction?)
+.disableCssExtraction(true)                     =>  yes, disable
+.disableCssExtraction(false)                    => no, don't disable
+
+Even placed with enables, this does not confuse me at all:
+
+(do you want to enable source maps?)
+.enableSourceMaps(true)                        => yes, enable
+.enableSourceMaps(false)                       => no, don't enable
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-05-11T17:17:44Z
+
+I'm not a big fan of `.disable*()` methods, especially when it take an argument which is named `enabled` and can lead to confusion (do we enable or disable the functionnality?).
+
+IMO, the best option is to:
+- rename `disableCssExtraction()` to `enableCssExtraction`
+- it takes a new argument `enabled`, like other `.enable*()` methods
+- it should be documented as a breaking change, and update symfony-docs if needed
+
+---------------------------------------------------------------------------
+
+by football2801 at 2020-05-11T17:23:26Z
+
+@Kocal, enabling CSS extraction is the default behavior. The CSS extraction takes place without any `webpack.config.js` entries. This would not only be a breaking change for those who use the `.disableCssExtraction()` method, but wouldn't it also be a breaking change for everybody else too since their `webpack.config.js` file would not contain the new `.enableCssExtraction()`?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-05-12T14:41:30Z
+
+Okay it makes sense, but I think we need to update the parameter `enabled` to `disabled`, see https://github.com/symfony/webpack-encore/pull/756#discussion_r423191317.
+
+`Encore.disableCssExtraction(disabled = true)` to disable the feature, `Encore.disableCssExtraction(disabled = false)` to not disable the feature.
+
+What do you think?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-05-12T15:03:51Z
+
+Having an `enableCssExtraction()` that is mandatory for almost all projects wouldn't be a good thing in my opinion.
+
+> `Encore.disableCssExtraction(disabled = true)` to disable the feature,
+> `Encore.disableCssExtraction(disabled = false)` to not disable the feature.
+>
+> What do you think?
+
+I agree with that.
+
+---------------------------------------------------------------------------
+
+by football2801 at 2020-05-12T16:08:50Z
+
+> `Encore.disableCssExtraction(disabled = true)` to disable the feature, `Encore.disableCssExtraction(disabled = false)` to not disable the feature.
+>
+> What do you think?
+
+I can make this change. I see this as a valid change that may improve code readability and is not a breaking change.
+
+---------------------------------------------------------------------------
+
+by Rodrigo001-de at 2020-07-03T01:46:14Z
+
+Project made with TypeScript, react.Js, React-native. Recycling day design
+
+https://github.com/Rodrigo001-de/Projeto-Ecoleta-advanced
