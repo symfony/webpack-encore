@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by msheakoski at 2020-12-01T21:52:02Z
+
+Hopefully this gets merged soon! It supports PostCSS v8 while remaining backwards compatible with v7. It is holding back an upgrade to Tailwind CSS v2 because it only works with PostCSS v8.
