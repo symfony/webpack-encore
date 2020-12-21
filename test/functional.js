@@ -81,6 +81,20 @@ describe('Functional tests using webpack', function() {
     });
 
     describe('Basic scenarios.', () => {
+        it('Generates a correct manifest when images are imported from a js file', (done) => {
+            const config = createWebpackConfig('web/build', 'production');
+            config.addEntry('svg', './js/import_svg');
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertManifestPath(
+                    'build/images/symfony-logo.svg',
+                    '/build/images/symfony-logo.579acd4f.svg'
+                );
+
+                done();
+            });
+        });
 
         it('Builds a few simple entries file + manifest.json', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
@@ -2154,12 +2168,18 @@ module.exports = {
                             'main.js',
                             'manifest.json',
                             'symfony_logo.png',
+                            'symfony-logo.svg',
                             'symfony_logo_alt.png',
                         ]);
 
                     webpackAssert.assertManifestPath(
                         'build/main.js',
                         '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony-logo.svg',
+                        '/build/symfony-logo.svg'
                     );
 
                     webpackAssert.assertManifestPath(
@@ -2201,6 +2221,7 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
                         .with.files([
+                            'symfony-logo.svg',
                             'symfony_logo.png',
                             'symfony_logo_alt.png',
                             'Roboto.woff2',
@@ -2209,6 +2230,11 @@ module.exports = {
                     webpackAssert.assertManifestPath(
                         'build/main.js',
                         '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/assets/symfony-logo.svg',
+                        '/build/assets/symfony-logo.svg'
                     );
 
                     webpackAssert.assertManifestPath(
@@ -2251,6 +2277,7 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                         .with.files([
+                            'symfony-logo.579acd4f.svg',
                             'symfony_logo.91beba37.png',
                             'symfony_logo_alt.f880ba14.png',
                         ]);
@@ -2263,6 +2290,11 @@ module.exports = {
                     webpackAssert.assertManifestPath(
                         'build/main.js',
                         '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony-logo.svg',
+                        '/build/images/symfony-logo.579acd4f.svg'
                     );
 
                     webpackAssert.assertManifestPath(
@@ -2344,6 +2376,7 @@ module.exports = {
                                 'runtime.d94b3b43.js',
                                 'main.31fd3788.js',
                                 'manifest.json',
+                                'symfony-logo.579acd4f.svg',
                                 'symfony_logo.91beba37.png',
                                 'symfony_logo_alt.f880ba14.png',
                             ]);
@@ -2358,6 +2391,11 @@ module.exports = {
                         .with.files([
                             'Roboto.woff2',
                         ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony-logo.svg',
+                        '/build/symfony-logo.579acd4f.svg'
+                    );
 
                     webpackAssert.assertManifestPath(
                         'build/symfony_logo.png',
@@ -2437,6 +2475,7 @@ module.exports = {
 
                     expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                         .with.files([
+                            'symfony-logo.579acd4f.svg',
                             'symfony_logo.91beba37.png',
                             'symfony_logo_alt.f880ba14.png',
                         ]);
@@ -2449,6 +2488,11 @@ module.exports = {
                     webpackAssert.assertManifestPath(
                         'build/main.js',
                         '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/images/symfony-logo.svg',
+                        '/build/images/symfony-logo.579acd4f.svg'
                     );
 
                     webpackAssert.assertManifestPath(
