@@ -15,7 +15,7 @@ const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const logger = require('../lib/logger');
+const loggerAssert = require('./helpers/logger-assert');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -139,11 +139,9 @@ describe('WebpackConfig object', () => {
 
         it('You can omit the opening slash, but get a warning', () => {
             const config = createConfig();
-            logger.reset();
-            logger.quiet();
 
             config.setPublicPath('foo');
-            expect(logger.getMessages().warning).to.have.lengthOf(1);
+            loggerAssert.assertWarning('The value passed to setPublicPath() should *usually* start with "/" or be a full URL');
         });
     });
 
@@ -206,10 +204,8 @@ describe('WebpackConfig object', () => {
         it('You can use an opening slash, but get a warning', () => {
             const config = createConfig();
 
-            logger.reset();
-            logger.quiet();
             config.setManifestKeyPrefix('/foo/');
-            expect(logger.getMessages().warning).to.have.lengthOf(1);
+            loggerAssert.assertWarning('The value passed to setManifestKeyPrefix "/foo/" starts with "/". This is allowed, but since the key prefix does not normally start with a "/"');
         });
     });
 
@@ -384,6 +380,7 @@ describe('WebpackConfig object', () => {
         it('Calling twice throws an error', () => {
             const config = createConfig();
             config.createSharedEntry('vendor', 'jquery');
+            loggerAssert.assertDeprecation('Encore.createSharedEntry() is deprecated');
 
             expect(() => {
                 config.createSharedEntry('vendor2', './main');
@@ -593,15 +590,6 @@ describe('WebpackConfig object', () => {
     });
 
     describe('configureBabel', () => {
-        beforeEach(() => {
-            logger.reset();
-            logger.quiet();
-        });
-
-        afterEach(() => {
-            logger.quiet(false);
-        });
-
         it('Calling method sets it', () => {
             const config = createConfig();
             const testCallback = () => {};
@@ -619,7 +607,7 @@ describe('WebpackConfig object', () => {
 
         it('Calling with "includeNodeModules" option', () => {
             const config = createConfig();
-            config.configureBabel(() => {}, { include_node_modules: ['foo', 'bar'] });
+            config.configureBabel(() => {}, { includeNodeModules: ['foo', 'bar'] });
 
             expect(config.babelOptions.exclude).to.be.a('Function');
 
@@ -668,16 +656,13 @@ describe('WebpackConfig object', () => {
             config.runtimeConfig.babelRcFileExists = true;
             config.configureBabel(() => {});
 
-            const warnings = logger.getMessages().warning;
-            expect(warnings).to.have.lengthOf(1);
-            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+            loggerAssert.assertWarning('your app already provides an external Babel configuration');
         });
 
         it('Calling with a whitelisted option when .babelrc is present works fine', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
             config.configureBabel(null, { includeNodeModules: ['foo'] });
-            expect(logger.getMessages().warning).to.be.empty;
         });
 
         it('Calling with a non-whitelisted option when .babelrc is present displays a warning', () => {
@@ -685,9 +670,7 @@ describe('WebpackConfig object', () => {
             config.runtimeConfig.babelRcFileExists = true;
             config.configureBabel(null, { useBuiltIns: 'foo' });
 
-            const warnings = logger.getMessages().warning;
-            expect(warnings).to.have.lengthOf(1);
-            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+            loggerAssert.assertWarning('your app already provides an external Babel configuration');
         });
 
         it('Pass invalid config', () => {
@@ -716,15 +699,6 @@ describe('WebpackConfig object', () => {
     });
 
     describe('configureBabelPresetEnv', () => {
-        beforeEach(() => {
-            logger.reset();
-            logger.quiet();
-        });
-
-        afterEach(() => {
-            logger.quiet(false);
-        });
-
         it('Calling method sets it', () => {
             const config = createConfig();
             const testCallback = () => {};
@@ -1364,6 +1338,7 @@ describe('WebpackConfig object', () => {
 
             config.configureLoaderRule('eslint', callback);
             expect(config.loaderConfigurationCallbacks['eslint']).to.equal(callback);
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
         });
 
         it('Call method with a not supported loader', () => {
@@ -1372,6 +1347,7 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureLoaderRule('reason');
             }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars" and the aliases "js", "ts", "scss".');
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
         });
 
         it('Call method with not a valid callback', () => {
@@ -1380,10 +1356,12 @@ describe('WebpackConfig object', () => {
             expect(() => {
                 config.configureLoaderRule('eslint');
             }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
 
             expect(() => {
                 config.configureLoaderRule('eslint', {});
             }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+            loggerAssert.assertWarning('Be careful when using Encore.configureLoaderRule');
         });
     });
 

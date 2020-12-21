@@ -14,6 +14,7 @@ const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const pathUtil = require('../../lib/config/path-util');
 const process = require('process');
+const loggerAssert = require('../helpers/logger-assert');
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -54,6 +55,8 @@ describe('path-util getContentBase()', () => {
 
             const actualContentBase = pathUtil.getContentBase(config);
             expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
+
+            loggerAssert.assertWarning('The value passed to setManifestKeyPrefix "/build/" starts with "/". This is allowed, but');
         });
 
         it('contentBase is calculated correctly with no public path', function() {
