@@ -1075,6 +1075,22 @@ module.exports = {
             });
         });
 
+        it('Babel is executed on .js files', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/class-syntax');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the class
+                webpackAssert.assertOutputFileDoesNotContain(
+                    'main.js',
+                    'class A {}'
+                );
+
+                done();
+            });
+        });
+
         it('Babel can be configured via .babelrc', (done) => {
             // create the .babelrc file first, so we see it
             const appDir = testSetup.createTestAppDir();
