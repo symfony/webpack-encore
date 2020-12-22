@@ -1,6 +1,6 @@
 {
   "name": "@symfony/webpack-encore",
-  "version": "0.32.1",
+  "version": "0.33.0",
   "description": "Webpack Encore is a simpler way to integrate Webpack into your application",
   "main": "index.js",
   "scripts": {
@@ -85,7 +85,6 @@
     "less": "^3.11.3",
     "less-loader": "^6.2.0",
     "mocha": "^7.1.2",
-    "node-sass": "^4.5.3",
     "postcss-loader": "^4.0.0",
     "preact": "^8.2.1",
     "preact-compat": "^3.17.0",
