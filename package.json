@@ -91,7 +91,7 @@
     "sass": "^1.17.0",
     "sass-loader": "^9.0.1 || ^10.0.0",
     "sinon": "^9.0.2",
-    "stimulus": "^1.1.1",
+    "stimulus": "^2.0.0",
     "strip-ansi": "^6.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
