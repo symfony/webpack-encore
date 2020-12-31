@@ -681,11 +681,11 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(actualConfig.watchOptions).to.deep.equals({
-                'ignored': 'node_modules',
+                'ignored': /node_modules/,
                 'poll': 250,
             });
             expect(actualConfig.devServer.watchOptions).to.deep.equals({
-                'ignored': 'node_modules',
+                'ignored': /node_modules/,
                 'poll': 250,
             });
         });
@@ -709,11 +709,11 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.watchOptions).to.deep.equals({
-                'ignored': 'node_modules',
+                'ignored': /node_modules/,
                 'poll': 250,
             });
             expect(actualConfig.devServer.watchOptions).to.deep.equals({
-                'ignored': 'node_modules',
+                'ignored': /node_modules/,
                 'poll': 500,
             });
         });
@@ -1139,7 +1139,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.watchOptions).to.deep.equals({
-                ignored: 'node_modules',
+                ignored: /node_modules/,
                 poll: 250,
             });
         });
