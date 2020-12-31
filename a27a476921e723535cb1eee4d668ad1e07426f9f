@@ -1,0 +1,283 @@
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-10-05T23:17:24Z
+
+I fixed the failing Babel test which wasn't really related to Babel but to the new [`output.ecmaVersion`](https://github.com/webpack/webpack/commit/e507392094b373f993ad2124926912ca446966bb#diff-8588527c440c140a86b57694ee7a97bc) option of Webpack 5.
+
+This option tells Webpack which ES version it should use for the code it generates (for instance in JSONP callbacks) which is **not** transpiled by Babel.
+
+By default it is set to `2015`, meaning that it will use things like arrow functions, hence the failing test.
+
+Since some users may not want that behavior (IE11 does not support arrow functions) I changed the default value in Encore to 5.
+
+---
+
+Regarding the deprecation messages I confirm that they are all triggered by plugins (and maybe by the Webpack core itself for some of them):
+
+* `Compilation.hooks.normalModuleLoader was moved to NormalModule.getCompilationHooks(compilation).loader` => `mini-css-extract-plugin` / `vue-loader`
+* `Module.id: Use new ChunkGraph API` => `mini-css-extract-plugin`
+* `Module.updateHash: Use new ChunkGraph API` => `mini-css-extract-plugin`
+* `Chunk.modulesIterable: Use new ChunkGraph API` => `mini-css-extract-plugin`
+* `ChunkGroup.getModuleIndex2 was renamed to getModulePostOrderIndex` => `mini-css-extract-plugin`
+* `Compilation.chunks was changed from Array to Set (using Array method 'reduce' is deprecated)` => `mini-css-extract-plugin`
+* `chunk.files was changed from Array to Set (using Array method 'reduce' is deprecated)` => `webpack-manifest-plugin`
+
+---
+
+Not really related but I also removed *our* old deprecation messages since they have all been there for a while now.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-10-06T21:00:59Z
+
+It seems that the hack we are using for `Encore.createSharedEntry()` doesn't work anymore.
+
+The tests are currently failing because of the following change:
+
+> optimization.splitChunks test no longer matches chunk name
+> MIGRATION: Use a test function `(module, { chunkGraph }) => chunkGraph.getModuleChunks(module).some(chunk => chunk.name === "name")`
+
+Since we are directly checking if the chunk name matches `sharedCommonsEntryName` the cache group is never used and no real shared entry is created.
+
+Sadly, after fixing that part we get the following error message:
+
+> BREAKING CHANGE: webpack < 5 used to allow to use the entrypoint as splitChunk. This is no longer allowed. Remove this entrypoint and add modules to cache group's 'test' instead.
+> If you need modules to be evaluated on startup, add them to the existing entrypoints (make them arrays). See migration guide of more info.
+
+Which is exactly how `Encore.createSharedEntry()` works:
+
+https://github.com/symfony/webpack-encore/blob/5640271a87e63048b8ae261d210922b4972cab69/lib/config-generator.js#L517-L527
+
+---------------------------------------------------------------------------
+
+by Kocal at 2019-10-07T07:19:44Z
+
+Is there still a legitimate reason to use/have `Encore.createSharedEntry()`?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-10-07T08:09:20Z
+
+@Kocal I'd say that it's useful for people that are not using the Encore Bundle since they can't predict the names of the shared chunks Webpack will generate for them when using `splitEntryChunks()`.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2019-10-07T18:57:29Z
+
+About `createSharedEntry()`, I think we should try this (and see how it looks/feels):
+
+A) Remove `createSharedEntry()` (if we like the final solution, we can deprecate it in a Webpack4-supporting Encore release before releasing this)
+
+B) Replace it with some interface to make it easier/obvious to the user to add their own cache group - e.g. to get some end-config that looks similar to this: https://webpack.js.org/plugins/split-chunks-plugin/#split-chunks-example-3
+
+It could be something like:
+
+```
+.addCacheGroup('vendor', {
+    test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+})
+```
+
+That would be the lowest-level way to handle this. We might choose to instead/also add something more user-friendly:
+
+```
+.addCacheGroup('vendor', {
+    # could be an optional "key" we add... the user could use this *or* test (but not both)
+    node_modules: ['react', 'react-dom'],
+
+    # or another possibility, where we allow mixing "node_modules" modules and also specific paths
+    modules: ['react', 'react-dom', './assets/js/main'],
+})
+```
+
+Not sure how far we need to go. If we did the first and added good documentation with a "vendors" example, that will go a long way.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2019-10-24T20:49:32Z
+
+Updated the PR with `webpack@^5.0.0-beta` and `webpack-manifest-plugin@^3.0.0-rc`:
+
+* https://github.com/danethurber/webpack-manifest-plugin/issues/167 is now fixed and everything seems to be working fine with Webpack 5 :)
+* Webpack has bumped its minimum requirement for Node's version to `10.13.0`, I haven't changed our test matrix yet but I can't see a reason *not* to do it since Node 8 goes EOL at the end of the year anyway.
+* I opened an issue on `vue-loader`'s repository about the `webpack/lib/RuleSet` thing that makes it incompatible with Webpack 5 (https://github.com/vuejs/vue-loader/issues/1599)
+* I like the `addCacheGroup()` idea to replace `createSharedEntry()`, I might give it a shot soon
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-04-16T11:43:19Z
+
+PR updated:
+* I bumped the version of a few dependencies (including webpack and vue)
+* The issue we previously had with Vue.js has been fixed
+* I removed `createSharedEntry()` since we already deprecated it in `master`
+* Node 8 does not work anymore with some loaders, so I removed it from our test matrix
+
+There are some new failing tests, but they are all caused by the same thing and should be fixed in the next release of Webpack (see https://github.com/webpack/webpack/pull/10661).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-04-17T10:24:52Z
+
+Awesome @Lyrkan! Thanks for keeping this up to date - we should be able to get Encore released fast once Webpack gets here - whenever that is :).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-10-11T06:38:04Z
+
+Webpack 5 has been officially released https://webpack.js.org/blog/2020-10-10-webpack-5-release/ 🎉
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-10-12T16:02:13Z
+
+Updated with `webpack@5.0.0` and `webpack-cli@4.0.0`.
+
+Everything seems to work but it's still not done yet:
+
+* there are some deprecation notices left:
+  * `last-call-webpack-plugin` (used by `optimize-css-assets-webpack-plugin`): `DeprecationWarning: optimizeChunkAssets is deprecated (use Compilation.hook.processAssets instead and use one of Compilation.PROCESS_ASSETS_STAGE_* as stage option)`
+  * `webpack-manifest-plugin` (which doesn't seem to be maintained anymore): `DeprecationWarning: Compilation.hooks.normalModuleLoader was moved to NormalModule.getCompilationHooks(compilation).loader`
+  * `delete-unused-entries-js-plugin.js` (on our side but I don't know how to fix it yet): `DeprecationWarning: Compilation.assets will be frozen in future, all modifications are deprecated`
+
+* there are warnings when using Vue files with `<style>` tags in our tests, not sure why, for instance: `ModuleDependencyWarning: export 'default' (reexported as 'default') was not found in '-!../../../../node_modules/mini-css-extract-plugin/dist/loader.js??clonedRuleSet-93.use[0]!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-93.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./Hello.vue?vue&type=style&index=0&id=614f9072&scoped=true&lang=css' (possible exports: )`
+
+---------------------------------------------------------------------------
+
+by stof at 2020-10-12T16:13:29Z
+
+@Lyrkan given that webpack 5 supports non-JS chunks natively, do we even need the `delete-unused-entries-js-plugin.js` ? the solution could be to remove it.
+
+>     * `webpack-manifest-plugin` (which doesn't seem to be maintained anymore)
+
+Given that the plugin is unmaintained and that Encore needs to customize parts of it anyway (and is blocked from implementing https://github.com/symfony/webpack-encore/issues/573 due to the plugin implementation), wouldn't it be easier to move away from that plugin in favor of a dedicated plugin in Encore ?
+
+---------------------------------------------------------------------------
+
+by ankurk91 at 2020-10-18T08:16:55Z
+
+optimize-css-assets-webpack-plugin can be replaced by
+
+https://github.com/webpack-contrib/css-minimizer-webpack-plugin/
+
+---------------------------------------------------------------------------
+
+by stof at 2020-11-03T13:47:08Z
+
+@Lyrkan do you have any plan for when you will continue this work?
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-11-03T14:27:56Z
+
+@stof Currently waiting for a new version of the webpack-manifest-plugin to be released since there is a new maintainer (https://github.com/shellscape/webpack-manifest-plugin/issues/222). Having our own plugin could also be a solution but it would be one more thing to maintain from our side and I fear that we won't have enough people willing to do it.
+
+> given that webpack 5 supports non-JS chunks natively, do we even need the delete-unused-entries-js-plugin.js ? the solution could be to remove it.
+
+We may still need it for the hack used by `Encore.copyFiles(...)`... but I'll have to do some tests since there has been some improvements in Webpack 5 regarding empty chunks removals.
+
+> optimize-css-assets-webpack-plugin can be replaced by webpack-contrib/css-minimizer-webpack-plugin
+
+Thanks, I'll look into that.
+
+---------------------------------------------------------------------------
+
+by ankurk91 at 2020-11-03T16:38:19Z
+
+I would like to see cache to be implemented.
+
+https://github.com/webpack/changelog-v5/blob/master/guides/persistent-caching.md
+
+This can greatly improve build time.
+
+---------------------------------------------------------------------------
+
+by stof at 2020-11-03T16:40:36Z
+
+@ankurk91 this PR is focused on making existing Encore features work with webpack 5, to be able to migrate.
+Configuring the webpack cache would indeed be great, but to me, this can be left as a follow-up work as the cache is not mandatory to migrate from v4 to v5.
+
+---------------------------------------------------------------------------
+
+by mmarton at 2020-11-18T11:10:47Z
+
+Not sure if this needs any changes (but if it does this seems the right place)
+
+> LibSass and the packages built on top of it, including Node Sass, are deprecated https://sass-lang.com/blog/libsass-is-deprecated
+
+---------------------------------------------------------------------------
+
+by stof at 2020-11-18T11:19:35Z
+
+sass-loader is compatible with the `sass` package, not only with `node-sass`
+
+---------------------------------------------------------------------------
+
+by shellscape at 2020-12-02T03:44:09Z
+
+An update for you all here: https://github.com/shellscape/webpack-manifest-plugin/issues/222#issuecomment-736969974
+
+FWIW the 3.0 RC has basically been tossed out the window and I'm reapplying fixes in there atop the refactored codebase. New version dropping soon.
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-12-03T16:34:53Z
+
+Everything should be good now!
+
+The failing tests are unrelated (probably introduced by #865 since we use the `sass-loader` version in them).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-12-20T14:07:34Z
+
+@Lyrkan could you fix up the yarn.lock conflict one more time? Thanks!
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-12-22T07:05:12Z
+
+> There is one significant thing that I'm wondering about for Webpack 5 - Asset Modules - webpack.js.org/guides/asset-modules
+>
+> It seems like using file-loader, url-loader, etc for images, fonts, etc is now "non-standard", and instead we should use Asset Modules. If I'm correct, ideally we would refactor to use that immediately so that we can use the breaking changes in the release to remove file-loader, url-loader, etc. But, we could do this in a different PR.
+
+Hm, I kept `file-loader` and `url-loader` to avoid adding other sudden breaking changes.
+Both of them still work and we'll actually still need the `file-loader` for `Encore.copyFiles()`.
+I think we could try to progressively remove them later, maybe by using asset modules by default unless the user calls `configureUrlLoader(...)`.
+
+> A) I'm wondering if we could start using webpack-manifest-plugin also to generate the entrypoints.json file. I have no tried it yet, but the idea would be to use the useEntryKeys option. This would mean we would need to use the plugin 2 times... once for manifest.json and again for entrypoints.json... which I think is ok, but a bit non-standard. We might also (but not sure) need to remove or move the "sha-" checksums - I'm not sure if those could be done with webpack-manifest-plugin
+
+Hm, I haven't really thought about that to be honest, in my opinion both plugins do different things.
+For the checksums I know that it could now be done automatically by the `assets-webpack-plugin` (that wasn't the case when we added that feature), but not with the same format than the one we currently have.
+
+> B) A lot of defaults were changed on stats. We should revisit if we can remove much/all of our "overriding" and allow encore to have a more standard output.
+
+👍
+
+> C) Finally, it might be nice to have a new method for the persistent caching - maybe .enableBuildCache(), with some config to allow them to add more files / configure the cache. We could, by default, at least add webpack.config.js to the cache... so it "should" work out of the box for most users.
+
+Things can easily go wrong with persistent caching... even only enabling it for the config file could lead to some issues if not done properly (for instance if the config use values coming from environment variables, which is far from an edge case imo: https://github.com/webpack/changelog-v5/blob/master/guides/persistent-caching.md#version).
+
+I also think that we should provide some way to enable/configure it in Encore but that should probably be treated separately after thinking for a while about how we really want to handle that.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-12-31T20:09:31Z
+
+> Hm, I kept file-loader and url-loader to avoid adding other sudden breaking changes.
+Both of them still work and we'll actually still need the file-loader for Encore.copyFiles().
+
+The migration page - https://webpack.js.org/migrate/5/ - suggests that we should migrate away to use asset modules:
+
+> Several commonly-used loaders like raw-loader, url-loader, and file-loader should be replaced using the new built-in Asset Modules feature.
+
+So, I think we should make this change now (or at least try it). However, we can do it in another PR after we merge this. And we can keep using file-loader for `Encore.copyFiles()` - I don't see any issue with that.
+
+> Hm, I haven't really thought about that to be honest, in my opinion both plugins do different things.
+For the checksums I know that it could now be done automatically by the assets-webpack-plugin (that wasn't the case when we added that feature), but not with the same format than the one we currently have.
+
+It's something we can investigate after we merge this PR. If we can make Encore smaller and more standard, cool :)
+
+> I also think that we should provide some way to enable/configure it in Encore but that should probably be treated separately after thinking for a while about how we really want to handle that.
+
+Concerns heard! Let's definitely consider it in another PR. It would be a nice "sweet new feature!" to have when we release the Webpack5-powered Encore ;).
