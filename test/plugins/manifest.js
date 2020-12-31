@@ -10,7 +10,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const ManifestPlugin = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const manifestPluginUtil = require('../../lib/plugins/manifest');
@@ -32,8 +32,8 @@ describe('plugins/manifest', () => {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(ManifestPlugin);
-        expect(plugins[0].plugin.opts.fileName).to.equal('manifest.json');
+        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
+        expect(plugins[0].plugin.options.fileName).to.equal('manifest.json');
     });
 
     it('with options callback', () => {
@@ -46,10 +46,10 @@ describe('plugins/manifest', () => {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(ManifestPlugin);
+        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
 
         // Allows to override default options
-        expect(plugins[0].plugin.opts.fileName).to.equal('bar');
+        expect(plugins[0].plugin.options.fileName).to.equal('bar');
     });
 
     it('with options callback that returns an object', () => {
@@ -65,8 +65,8 @@ describe('plugins/manifest', () => {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(ManifestPlugin);
-        expect(plugins[0].plugin.opts.fileName).to.equal('manifest.json');
-        expect(plugins[0].plugin.opts.foo).to.equal(true);
+        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
+        expect(plugins[0].plugin.options.fileName).to.equal('manifest.json');
+        expect(plugins[0].plugin.options.foo).to.equal(true);
     });
 });

@@ -64,7 +64,7 @@ describe('plugins/terser', () => {
         });
 
         const plugin = terserPluginUtil(config);
-        expect(plugin.options.terserOptions.output.beautify).to.be.undefined;
+        expect(plugin.options.terserOptions.output).to.be.undefined;
         expect(plugin.options.cache).to.equal(true);
     });
 });

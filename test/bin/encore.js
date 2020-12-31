@@ -39,6 +39,7 @@ describe('bin/encore.js', function() {
             `
 const Encore = require('../../index.js');
 Encore
+    .enableSingleRuntimeChunk()
     .setOutputPath('build/')
     .setPublicPath('/build')
     .addEntry('main', './js/no_require')
@@ -54,7 +55,12 @@ module.exports = Encore.getWebpackConfig();
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
 
-            expect(stdout).to.not.contain('Webpack is already provided by Webpack Encore');
+            expect(stdout).to.contain('Compiled successfully');
+            expect(stdout).not.to.contain('Webpack is already provided by Webpack Encore');
+
+            expect(stdout).not.to.contain('Hash: ');
+            expect(stdout).not.to.contain('Version: ');
+            expect(stdout).not.to.contain('Time: ');
 
             done();
         });
@@ -69,6 +75,7 @@ module.exports = Encore.getWebpackConfig();
             `
 const Encore = require('../../index.js');
 Encore
+    .enableSingleRuntimeChunk()
     .setOutputPath('build/')
     .setPublicPath('/build')
     .addEntry('main', './js/no_require')
@@ -84,11 +91,22 @@ module.exports = Encore.getWebpackConfig();
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
 
-            const parsedOutput = JSON.parse(stdout);
+            let parsedOutput = null;
+            try {
+                parsedOutput = JSON.parse(stdout);
+            } catch (e) {
+                throw `Webpack output does not contain a valid JSON object: ${stdout}`;
+            }
 
             expect(parsedOutput).to.be.an('object');
             expect(parsedOutput.modules).to.be.an('array');
-            expect(parsedOutput.modules.length).to.equal(1);
+
+            // We expect 3 modules there:
+            // - webpack/runtime/jsonp chunk loading
+            // - webpack/runtime/hasOwnProperty shorthand
+            // - ./js/no_require.js
+            expect(parsedOutput.modules.length).to.equal(3);
+
 
             done();
         });
@@ -103,6 +121,7 @@ module.exports = Encore.getWebpackConfig();
             `
 const Encore = require('../../index.js');
 Encore
+    .enableSingleRuntimeChunk()
     .setOutputPath('build/')
     .setPublicPath('/build')
     .addEntry('main', './js/no_require')
@@ -118,9 +137,10 @@ module.exports = Encore.getWebpackConfig();
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
 
-            expect(stdout).to.contain('Hash: ');
-            expect(stdout).to.contain('Version: ');
-            expect(stdout).to.contain('Time: ');
+            expect(stdout).to.contain('resolving: ');
+            expect(stdout).to.contain('restoring: ');
+            expect(stdout).to.contain('integration: ');
+            expect(stdout).to.contain('building: ');
 
             done();
         });
@@ -135,6 +155,7 @@ module.exports = Encore.getWebpackConfig();
             `
 const Encore = require('../../index.js');
 Encore
+    .enableSingleRuntimeChunk()
     .setOutputPath('build/')
     .setPublicPath('/build')
     .addEntry('main', './js/no_require')
@@ -173,6 +194,7 @@ module.exports = Encore.getWebpackConfig();
             `
 const Encore = require('../../index.js');
 Encore
+    .enableSingleRuntimeChunk()
     .setOutputPath('build/')
     .setPublicPath('/build')
     .addEntry('main', './js/no_require')
@@ -212,6 +234,7 @@ module.exports = Encore.getWebpackConfig();
             `
 const Encore = require('../../index.js');
 Encore
+    .enableSingleRuntimeChunk()
     .setOutputPath('build/')
     .setPublicPath('/build')
     .enableSingleRuntimeChuck()
