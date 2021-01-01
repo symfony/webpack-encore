@@ -37,7 +37,7 @@ matrix:
       node_js: "12"
       env: JOB_PART=test
     - os: linux
-      node_js: "13"
+      node_js: "14"
       env: JOB_PART=test
 
 script: npm run $JOB_PART

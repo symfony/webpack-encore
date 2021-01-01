@@ -421,16 +421,16 @@ describe('Functional tests using webpack', function() {
                     if (!process.env.DISABLE_UNSTABLE_CHECKS) {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
-                                'main.afbd5350.js',
-                                'styles.622a49c8.css',
+                                'main.8b8ca4a9.js',
+                                'styles.79943add.css',
                                 'manifest.json',
                                 'entrypoints.json',
-                                'runtime.f18eb18e.js',
+                                'runtime.49688a3c.js',
                             ]);
                     }
 
                     webpackAssert.assertOutputFileContains(
-                        'styles.622a49c8.css',
+                        'styles.79943add.css',
                         'font-size: 50px;'
                     );
                     webpackAssert.assertManifestPathDoesNotExist(
@@ -438,7 +438,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.622a49c8.css'
+                        '/styles.79943add.css'
                     );
 
                     done();
@@ -469,7 +469,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?622a49c83650a792'
+                        '/styles.css?79943addbc894efe'
                     );
 
                     done();
@@ -524,14 +524,14 @@ describe('Functional tests using webpack', function() {
                 if (!process.env.DISABLE_UNSTABLE_CHECKS) {
                     expect(config.outputPath).to.be.a.directory()
                         .with.files([
-                            'js_no_require_js-css_h1_style_css.141b339c.js', // chunks are also versioned
-                            'js_no_require_js-css_h1_style_css.622a49c8.css',
-                            'main.fb2d11f3.js',
-                            'h1.622a49c8.css',
-                            'bg.b7945d2f.css',
+                            'js_no_require_js-css_h1_style_css.456c237a.js', // chunks are also versioned
+                            'js_no_require_js-css_h1_style_css.79943add.css',
+                            'main.04316e30.js',
+                            'h1.79943add.css',
+                            'bg.2eff0999.css',
                             'manifest.json',
                             'entrypoints.json',
-                            'runtime.3f2b2a52.js',
+                            'runtime.d0652ec8.js',
                         ]);
                 }
 
@@ -541,7 +541,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.b7945d2f.css',
+                    'bg.2eff0999.css',
                     '/build/images/symfony_logo.91beba37.png'
                 );
 
@@ -2172,7 +2172,7 @@ module.exports = {
                         expect(config.outputPath).to.be.a.directory()
                             .with.files([
                                 'entrypoints.json',
-                                'runtime.4f76f3db.js',
+                                'runtime.fbc90386.js',
                                 'main.06a6c20f.js',
                                 'manifest.json',
                                 'symfony_logo.91beba37.png',
@@ -2856,9 +2856,9 @@ module.exports = {
                     testSetup.runWebpack(config, () => {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
-                            '/build/runtime.js': 'sha384-p8aiVYzE72gFU9tbAEAWeKJ6VZRy/rNimQvHS2wmt7g8P0bpWep5mi7fHbopcq4q',
-                            '/build/main.js': 'sha384-lWnwnMxveuaL9u9aGsZK+d3ATMcuoBnniCpQjRmvIsdf3IpqBRJSXIwE4lYz9V2o',
-                            '/build/css_roboto_font_css.js': 'sha384-lHK1hVSXZOP/PriXKAfoTLCWrOt8hdzSd7oAP4Nck7oVCTwsrzdi4ucbT/F08go6',
+                            '/build/runtime.js': 'sha384-sWtvs9g2amKt9La790kUHfXRL3/D/4EVnpCBTGwhEnFk2qB5M6utpeyUG1iastim',
+                            '/build/main.js': 'sha384-T5WVgtgFWOxq1ht+51tv1dEyU9N9sd654EW4hkYTSe3Y0S6S0GsqT0vQqEqgXplJ',
+                            '/build/css_roboto_font_css.js': 'sha384-ezqcmKZI0XEQOrt/3ujcoi6QVOBXmwUTg3FaQrapMoCIfqcBR4UeA1VFFk/TC7pr',
                             '/build/css_roboto_font_css.css': 'sha384-CwxeOsagC0TZKZIMFU7gd1fQG1nbF7wHg/uLJSsU/5Soa9JwEOZcAzAFMmctn6kX',
                             '/build/other.js': 'sha384-7N+Gb+SIHbD7k6HUnvgewUaa5bsFMWAgT1W0JZfxRmapgmaWl/CjFBdflUIkHbN2',
 
@@ -2889,9 +2889,9 @@ module.exports = {
                     testSetup.runWebpack(config, () => {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
-                            'http://localhost:8090/assets/runtime.js': 'sha256-cYoqouDllgl1kNHvSud4dSR/flqOaVHy7AsT+NFsno4=',
-                            'http://localhost:8090/assets/main.js': 'sha256-dC3oNzx4D+im2fP3VerzmerPhl8v+PwY4/v/Si29AAE=',
-                            'http://localhost:8090/assets/css_roboto_font_css.js': 'sha256-WRRXgEBenC+Jq0wieUXHRPSk3eEbJOSprTSCAwtDmoo=',
+                            'http://localhost:8090/assets/runtime.js': 'sha256-w0M8cHCCwzEXG16d6iF4p8Lw5k/VdyTrAq11y7r1G6s=',
+                            'http://localhost:8090/assets/main.js': 'sha256-bQvagKObeH+zUckvtNx9iGP4H+6LfSLVulHU2W2lNiI=',
+                            'http://localhost:8090/assets/css_roboto_font_css.js': 'sha256-CF+O0Dp/km2nfjreZlnMSkZInJqzyU9Pyd0iw6d5jtE=',
                             'http://localhost:8090/assets/css_roboto_font_css.css': 'sha256-GyGOCV1nJYunb8s/DT5wICbruabZcqzDFJRnXIlZ9I4=',
                             'http://localhost:8090/assets/other.js': 'sha256-whQp2WqCTuFelVuYVjRY2aulbtVDlNhu8+FmsAYLTrs=',
 
@@ -2921,9 +2921,9 @@ module.exports = {
                     testSetup.runWebpack(config, () => {
                         const integrityData = getIntegrityData(config);
                         const expectedHashes = {
-                            '/build/runtime.js': 'sha256-cYoqouDllgl1kNHvSud4dSR/flqOaVHy7AsT+NFsno4= sha512-jSemykJUp8rsdyGuSTqLI8ucgU9/z7si0zGl05K1AS24J5PnVm70ARjI3xpgtuLTqtsIPj/c6EoYB7Zyr7aJcA==',
-                            '/build/main.js': 'sha256-dC3oNzx4D+im2fP3VerzmerPhl8v+PwY4/v/Si29AAE= sha512-ukzKOjdNhea8dzllJTSNwiqw4HUSrv71AOm3gf4oB4ciQ8SMVXZFCFg04TEeAscsnXOSsTSrTTCkpTA4rdg00Q==',
-                            '/build/css_roboto_font_css.js': 'sha256-WRRXgEBenC+Jq0wieUXHRPSk3eEbJOSprTSCAwtDmoo= sha512-uFFiXMiYSFeTKqkCDTKnIfRrwpSSRPZap+TxknjRMXOZl9UEWKOLKl8I+vW6HiNC/E9duy9lzGd9KpyotQOagw==',
+                            '/build/runtime.js': 'sha256-w0M8cHCCwzEXG16d6iF4p8Lw5k/VdyTrAq11y7r1G6s= sha512-cYIvzvPfRcY04V5yPYT3xFuPFgia8H/cdX5NHhWUXDNt9xoCooYAuodt69WT9R4OK4c9gYNY7tEaX2K+zMnpPw==',
+                            '/build/main.js': 'sha256-bQvagKObeH+zUckvtNx9iGP4H+6LfSLVulHU2W2lNiI= sha512-hoVM8C7Iuvv9I+tQ6VXR3i5EiSv1IUmcefJBYX6gfGNirdvLI7GbxohtqOkXLIOV2n56nVk3zVh3tLVmen5snQ==',
+                            '/build/css_roboto_font_css.js': 'sha256-CF+O0Dp/km2nfjreZlnMSkZInJqzyU9Pyd0iw6d5jtE= sha512-0MeLokYDlL6kv7nwE21SU0Rsa/om9+qXEkD2nCavkXx2y3usGO42dUjqnozwo4XSCs6TZnMsk61Me1vfnGyREA==',
                             '/build/css_roboto_font_css.css': 'sha256-bsTMZz4D7wBon35PnVm0dN51OH4EMq79NRecjZVoJ0A= sha512-kUbxtlmFlqBd+mB0P2HfsGoTZDGjdPz/BT9wc7l5fdSkML8CCNGg/ccrWXglUNIdgH10y92Jf8zIOHTRygXwxQ==',
                             '/build/other.js': 'sha256-whQp2WqCTuFelVuYVjRY2aulbtVDlNhu8+FmsAYLTrs= sha512-cCUSLiPQTh5YN3iNdkrac880//+i9mhgTT5CdGUfe8oBVR+WjeIOIqqTEsalGiFraaSKFfuRUSsMMoBhUpAdcw==',
 
