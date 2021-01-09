@@ -1,5 +1,38 @@
 # CHANGELOG
 
+## 1.0.0
+
+ * [DEPENDENCY UPGRADE] Webpack was upgraded from version 4 to 5.
+
+ * [BC BREAK] Image and font processing was changed from using `file-loader`
+   (and  optionally `url-loader` via `configureUrlLoader()`) to Webpack 5's
+   new [Asset Modules](https://webpack.js.org/guides/asset-modules/).
+   In practice, unless you have a highly-configured system, this should
+   not cause significant changes. You will notice that smaller images
+   and fonts (smaller than 8kb) will be "inlined" in CSS files instead
+   of being extracted to independent files for performance. This is
+   configurable - see the new `configureImageRule()` and `configureFontRule()`
+   methods.
+
+ * [BC BREAK] The `configureUrlLoader()` method was removed. See
+   `configureImageRule()` and `configureFontRule()` - specifically the
+   `maxSize` option. The `url-loader` is no longer used.
+
+ * [BC BREAK] The `disableImagesLoader()` and `disableFontsLoader()` methods
+   have been removed. See `configureImageRule()` and `configureFontRule()`
+   for a new option to disable these.
+
+ * [BC BREAK] The `configureFilenames()` method no longer accepts paths
+   for `images` or `fonts`. See `configureImageRule()` and `configureFontRule()`
+   for how to configure these filenames. The `configureFilenames()` method
+   *does* now accept an `assets` option, but out-of-the-box, this will not
+   result in any filename changes. See `configureFilenames()` for more details.
+
+* [BC BREAK] The `file-loader` package is no longer required by Encore. If
+   you use `copyFiles()`, you will need to install it manually (you
+   will receive a clear error about this).
+
+
 ## 0.33.0
 
  * [disableCssExtraction()] Added boolean argument to `disableCssExtraction()`

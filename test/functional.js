@@ -531,7 +531,7 @@ describe('Functional tests using webpack', function() {
                             'bg.2eff0999.css',
                             'manifest.json',
                             'entrypoints.json',
-                            'runtime.d0652ec8.js',
+                            'runtime.17e58ffe.js',
                         ]);
                 }
 
@@ -1470,7 +1470,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    'images/logo.26bd867d.png',
+                    // 'images/logo.26bd867d.png', logo.png is inlined
                     'manifest.json',
                     'entrypoints.json',
                     'runtime.js',
@@ -1535,7 +1535,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    'images/logo.26bd867d.png',
+                    // 'images/logo.26bd867d.png', logo.png is inlined
                     'manifest.json',
                     'entrypoints.json',
                     'runtime.js',
@@ -1745,14 +1745,13 @@ module.exports = {
             });
         });
 
-        it('configureUrlLoader() allows to use the URL loader for images/fonts', (done) => {
+        it('configureImageRule() allows configuring maxSize for inlining', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('url-loader', './css/url-loader.css');
-            config.configureUrlLoader({
-                images: { limit: 102400 },
-                fonts: { limit: 102400 }
-            });
+            // set a size so that they do NOT inline
+            config.configureImageRule({ maxSize: 102400 });
+            config.configureFontRule({ maxSize: 102400 });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()

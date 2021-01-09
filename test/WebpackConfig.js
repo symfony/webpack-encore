@@ -1226,24 +1226,6 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('disableImagesLoader', () => {
-        it('Disable default images loader', () => {
-            const config = createConfig();
-            config.disableImagesLoader();
-
-            expect(config.useImagesLoader).to.be.false;
-        });
-    });
-
-    describe('disableFontsLoader', () => {
-        it('Disable default fonts loader', () => {
-            const config = createConfig();
-            config.disableFontsLoader();
-
-            expect(config.useFontsLoader).to.be.false;
-        });
-    });
-
     describe('disableCssExtraction', () => {
         it('By default the CSS extraction is enabled', () => {
             const config = createConfig();
@@ -1280,15 +1262,13 @@ describe('WebpackConfig object', () => {
             config.configureFilenames({
                 js: '[name].[contenthash].js',
                 css: '[name].[contenthash].css',
-                images: 'images/[name].[hash:8].[ext]',
-                fonts: 'fonts/[name].[hash:8].[ext]'
+                assets: 'assets/[name].[hash:8][ext]',
             });
 
             expect(config.configuredFilenames).to.deep.equals({
                 js: '[name].[contenthash].js',
                 css: '[name].[contenthash].css',
-                images: 'images/[name].[hash:8].[ext]',
-                fonts: 'fonts/[name].[hash:8].[ext]'
+                assets: 'assets/[name].[hash:8][ext]',
             });
         });
 
@@ -1311,36 +1291,77 @@ describe('WebpackConfig object', () => {
         });
     });
 
-    describe('configureUrlLoader', () => {
-        it('Calling method sets it', () => {
+    describe('configureImageRule', () => {
+        it('Calling method sets options and callback', () => {
             const config = createConfig();
-            config.configureUrlLoader({
-                images: { limit: 8192 },
-                fonts: { limit: 4096 }
-            });
+            const callback = () => {};
+            config.configureImageRule({
+                maxSize: 1024,
+            }, callback);
 
-            expect(config.urlLoaderOptions).to.deep.equals({
-                images: { limit: 8192 },
-                fonts: { limit: 4096 }
-            });
+            expect(config.imageRuleOptions.maxSize).to.equals(1024);
+            expect(config.imageRuleCallback).to.equals(callback);
         });
 
-        it('Calling with non-object throws an error', () => {
+        it('Calling with invalid option throws error', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureUrlLoader('FOO');
-            }).to.throw('must be an object');
+                config.configureImageRule({ fake: true });
+            }).to.throw('Invalid option "fake" passed');
         });
 
-        it('Calling with an unknown key throws an error', () => {
+        it('Setting maxSize for type of not asset throws error', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureUrlLoader({
-                    foo: 'bar'
-                });
-            }).to.throw('"foo" is not a valid key');
+                config.configureImageRule({ type: 'asset/resource', maxSize: 1024 });
+            }).to.throw('this option is only valid when "type" is set to "asset"');
+        });
+
+        it('Passing non callback to 2nd arg throws error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureImageRule({}, {});
+            }).to.throw('Argument 2 to configureImageRule() must be a callback');
+        });
+    });
+
+    describe('configureFontRule', () => {
+        it('Calling method sets options and callback', () => {
+            const config = createConfig();
+            const callback = () => {};
+            config.configureFontRule({
+                maxSize: 1024,
+            }, callback);
+
+            expect(config.fontRuleOptions.maxSize).to.equals(1024);
+            expect(config.fontRuleCallback).to.equals(callback);
+        });
+
+        it('Calling with invalid option throws error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureFontRule({ fake: true });
+            }).to.throw('Invalid option "fake" passed');
+        });
+
+        it('Setting maxSize for type of not asset throws error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureFontRule({ type: 'asset/resource', maxSize: 1024 });
+            }).to.throw('this option is only valid when "type" is set to "asset"');
+        });
+
+        it('Passing non callback to 2nd arg throws error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureFontRule({}, {});
+            }).to.throw('Argument 2 to configureFontRule() must be a callback');
         });
     });
 
