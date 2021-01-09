@@ -28,10 +28,32 @@
    *does* now accept an `assets` option, but out-of-the-box, this will not
    result in any filename changes. See `configureFilenames()` for more details.
 
+* [BC BREAK] `css-minimizer-webpack-plugin` was replaced by
+  `css-minimizer-webpack-plugin` and the `optimizeCssPluginOptionsCallback()`
+  method was replaced by `cssMinimizerPluginOptionsCallback()`.
+
 * [BC BREAK] The `file-loader` package is no longer required by Encore. If
    you use `copyFiles()`, you will need to install it manually (you
    will receive a clear error about this).
 
+* [BC BREAK] All previously-deprecated methods & options were removed.
+
+* [DEPENDENCY UPGRADES] The following packages had major version upgrades:
+   * `css-loader` from 3 to 5
+   * `mini-css-extract-plugin` from 0.4 to 1
+   * `style-loader` from 1 to 2
+   * `terser-webpack-plugin` from 1 to 4
+   * `webpack-cli` from 3 to 4
+   * `webpack-manifest-plugin` from 2 to 3
+
+* [BEHAVIOR CHANGE] The `HashedModuleIdsPlugin` was previously used to
+  help name "modules" when building for production. This has been removed
+  and we now use Webpack's native `optimization.moduleIds` option, which
+  is set to `deterministic`.
+
+* [configureMiniCssExtractPlugin()] `configureMiniCssExtractPlugin()` was
+  added to allow the `MiniCssExtractPlugin.loader` and `MiniCssExtractPlugin`
+  to be configured.
 
 ## 0.33.0
 
