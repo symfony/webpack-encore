@@ -906,6 +906,40 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableBuildCache', () => {
+        it('Calling method enables it', () => {
+            const config = createConfig();
+            config.enableBuildCache({ config: ['foo.js'] });
+
+            expect(config.usePersistentCache).to.be.true;
+            expect(config.persistentCacheBuildDependencies).to.eql({ config: ['foo.js'] });
+        });
+
+        it('Calling with callback', () => {
+            const config = createConfig();
+            const callback = (cache) => {};
+            config.enableBuildCache({ config: ['foo.js'] }, callback);
+
+            expect(config.persistentCacheCallback).to.equal(callback);
+        });
+
+        it('Calling without config key throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableBuildCache({});
+            }).to.throw('should contain an object with at least a "config" key');
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableBuildCache({ config: ['foo.js'] }, 'FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('enablePreactPreset', () => {
         it('Without preact-compat', () => {
             const config = createConfig();

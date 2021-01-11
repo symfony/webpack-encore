@@ -52,6 +52,10 @@
   added to allow the `MiniCssExtractPlugin.loader` and `MiniCssExtractPlugin`
   to be configured.
 
+* [enableBuildCache()] Added `enableBuildCache()` to enable the new
+  Webpack 5 build caching. https://webpack.js.org/blog/2020-10-10-webpack-5-release/
+  This feature should be considered experimental.
+
 ## 0.33.0
 
  * [disableCssExtraction()] Added boolean argument to `disableCssExtraction()`
