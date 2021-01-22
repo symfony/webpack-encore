@@ -41,6 +41,7 @@
    * `terser-webpack-plugin` from 1 to 4
    * `webpack-cli` from 3 to 4
    * `webpack-manifest-plugin` from 2 to 3
+   * `less` from 3 to 4 and `less-loader` from 6 to 7
 
 * [BEHAVIOR CHANGE] The `HashedModuleIdsPlugin` was previously used to
   help name "modules" when building for production. This has been removed
