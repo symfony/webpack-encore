@@ -14,7 +14,7 @@ const api = require('../index');
 
 describe('Public API', () => {
     beforeEach(() => {
-        api.configureRuntimeEnvironment('dev');
+        api.configureRuntimeEnvironment('dev', {}, false);
     });
 
     describe('setOutputPath', () => {
@@ -317,24 +317,6 @@ describe('Public API', () => {
 
     });
 
-    describe('disableImagesLoader', () => {
-
-        it('must return the API object', () => {
-            const returnedValue = api.disableImagesLoader();
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
-    describe('disableFontsLoader', () => {
-
-        it('must return the API object', () => {
-            const returnedValue = api.disableFontsLoader();
-            expect(returnedValue).to.equal(api);
-        });
-
-    });
-
     describe('disableCssExtraction', () => {
 
         it('must return the API object', () => {
@@ -353,10 +335,19 @@ describe('Public API', () => {
 
     });
 
-    describe('configureUrlLoader', () => {
+    describe('configureImageRule', () => {
 
         it('must return the API object', () => {
-            const returnedValue = api.configureUrlLoader({});
+            const returnedValue = api.configureImageRule();
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('configureFontRule', () => {
+
+        it('must return the API object', () => {
+            const returnedValue = api.configureFontRule();
             expect(returnedValue).to.equal(api);
         });
 

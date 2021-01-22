@@ -1,5 +1,56 @@
 # CHANGELOG
 
+## 1.0.0
+
+ * [DEPENDENCY UPGRADE] Webpack was upgraded from version 4 to 5.
+
+ * [BC BREAK] Image and font processing was changed from using `file-loader`
+   (and  optionally `url-loader` via `configureUrlLoader()`) to Webpack 5's
+   new [Asset Modules](https://webpack.js.org/guides/asset-modules/).
+   In practice, unless you have a highly-configured system, this should
+   not cause significant changes.
+
+ * [BC BREAK] The `configureUrlLoader()` method was removed. See
+   `configureImageRule()` and `configureFontRule()` - specifically the
+   `maxSize` option and type: 'asset'. The `url-loader` is no longer used.
+
+ * [BC BREAK] The `disableImagesLoader()` and `disableFontsLoader()` methods
+   have been removed. See `configureImageRule()` and `configureFontRule()`
+   for a new option to disable these.
+
+ * [BC BREAK] The `configureFilenames()` method no longer accepts paths
+   for `images` or `fonts`. See `configureImageRule()` and `configureFontRule()`
+   for how to configure these filenames. The `configureFilenames()` method
+   *does* now accept an `assets` option, but out-of-the-box, this will not
+   result in any filename changes. See `configureFilenames()` for more details.
+
+* [BC BREAK] `css-minimizer-webpack-plugin` was replaced by
+  `css-minimizer-webpack-plugin` and the `optimizeCssPluginOptionsCallback()`
+  method was replaced by `cssMinimizerPluginOptionsCallback()`.
+
+* [BC BREAK] The `file-loader` package is no longer required by Encore. If
+   you use `copyFiles()`, you will need to install it manually (you
+   will receive a clear error about this).
+
+* [BC BREAK] All previously-deprecated methods & options were removed.
+
+* [DEPENDENCY UPGRADES] The following packages had major version upgrades:
+   * `css-loader` from 3 to 5
+   * `mini-css-extract-plugin` from 0.4 to 1
+   * `style-loader` from 1 to 2
+   * `terser-webpack-plugin` from 1 to 4
+   * `webpack-cli` from 3 to 4
+   * `webpack-manifest-plugin` from 2 to 3
+
+* [BEHAVIOR CHANGE] The `HashedModuleIdsPlugin` was previously used to
+  help name "modules" when building for production. This has been removed
+  and we now use Webpack's native `optimization.moduleIds` option, which
+  is set to `deterministic`.
+
+* [configureMiniCssExtractPlugin()] `configureMiniCssExtractPlugin()` was
+  added to allow the `MiniCssExtractPlugin.loader` and `MiniCssExtractPlugin`
+  to be configured.
+
 ## 0.33.0
 
  * [disableCssExtraction()] Added boolean argument to `disableCssExtraction()`

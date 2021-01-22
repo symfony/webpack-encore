@@ -13,6 +13,7 @@ const path = require('path');
 const fs = require('fs');
 const chai = require('chai');
 const expect = chai.expect;
+const regexEscaper = require('../../lib/utils/regexp-escaper');
 
 const loadManifest = function(webpackConfig) {
     return JSON.parse(
@@ -28,6 +29,27 @@ const readOutputFile = function(webpackConfig, filePath) {
     }
 
     return fs.readFileSync(fullPath, 'utf8');
+};
+
+/**
+ * Returns a regex to use to match this filename
+ *
+ * @param {string} filename Filename with possible [hash:8] wildcard
+ * @return {RegExp}
+ */
+const convertFilenameToMatcher = function(filename) {
+    const hashMatch = filename.match(/\[hash:(\d+)\]/);
+
+    if (hashMatch === null) {
+        return new RegExp(regexEscaper(filename));
+    }
+
+    const [hashString, hashLength] = hashMatch;
+
+    return new RegExp(
+        regexEscaper(filename)
+            .replace(regexEscaper(hashString), `([a-z0-9_-]){${hashLength}}`)
+    );
 };
 
 class Assert {
@@ -107,8 +129,10 @@ class Assert {
 
         this.assertManifestKeyExists(sourcePath);
 
-        if (manifestData[sourcePath] !== expectedDestinationPath) {
-            throw new Error(`source path ${sourcePath} expected to be set to ${expectedDestinationPath}, was actually ${manifestData[sourcePath]}`);
+        const expectedRegex = convertFilenameToMatcher(expectedDestinationPath);
+
+        if (!manifestData[sourcePath].match(expectedRegex)) {
+            throw new Error(`source path ${sourcePath} expected to match pattern ${expectedDestinationPath}, was actually ${manifestData[sourcePath]}`);
         }
     }
 
@@ -167,6 +191,57 @@ class Assert {
         const actualData = JSON.parse(actualContents);
 
         expect(JSON.stringify(actualData, null, 2)).to.equal(JSON.stringify(expectedData, null, 2));
+    }
+
+    /**
+     * Verifies that the directory contains the array of files.
+     *
+     * The expectedFiles can contain a [hash:8] syntax in case
+     * the file is versioned - e.g. main.[hash:8].js, which would
+     * match a real file like main.abcd1234.js.
+     *
+     * @param {Array} expectedFiles
+     * @param {string} directory relative to output to check
+     * @returns {void}
+     */
+    assertDirectoryContents(expectedFiles, directory = '') {
+        const targetDirectory = path.join(this.webpackConfig.outputPath, directory);
+
+        expect(targetDirectory).to.be.a.directory();
+
+        const expectedFileStrings = {};
+        expectedFiles.forEach((expectedFile) => {
+            expectedFileStrings[expectedFile] = convertFilenameToMatcher(expectedFile);
+        });
+
+        const actualFiles = fs.readdirSync(targetDirectory);
+        actualFiles.forEach((foundFile) => {
+            // filter out directories
+            if (fs.statSync(path.join(targetDirectory, foundFile)).isDirectory()) {
+                return;
+            }
+
+            let matchIsFound = false;
+
+            for (const originalFilename of Object.keys(expectedFileStrings)) {
+                const filenameRegex = expectedFileStrings[originalFilename];
+
+                if (foundFile.match(filenameRegex)) {
+                    matchIsFound = true;
+                    delete expectedFileStrings[originalFilename];
+
+                    break;
+                }
+            }
+
+            if (!matchIsFound) {
+                throw new Error(`File "${foundFile}" was found in directory but was not expected. Expected patterns where ${expectedFiles.join(', ')}`);
+            }
+        });
+
+        if (Object.keys(expectedFileStrings).length > 0) {
+            throw new Error(`Files ${Object.keys(expectedFileStrings).join(', ')} were expected to be found in the directory but were not. Actual files: ${actualFiles.join(', ')}`);
+        }
     }
 }
 

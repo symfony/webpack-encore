@@ -772,66 +772,6 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('disableImagesLoader() removes the default images loader', () => {
-        it('without disableImagesLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            // do not call disableImagesLoader
-
-            const actualConfig = configGenerator(config);
-
-            expect(function() {
-                findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            }).to.not.throw();
-        });
-
-        it('with disableImagesLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.disableImagesLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(function() {
-                findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            }).to.throw();
-        });
-    });
-
-    describe('disableFontsLoader() removes the default fonts loader', () => {
-        it('without disableFontsLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            // do not call disableFontsLoader
-
-            const actualConfig = configGenerator(config);
-
-            expect(function() {
-                findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            }).to.not.throw();
-        });
-
-        it('with disableFontsLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/output/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.disableFontsLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(function() {
-                findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            }).to.throw();
-        });
-    });
-
     describe('Test filenames changes', () => {
         it('without versioning', () => {
             const config = createConfig();
@@ -841,21 +781,16 @@ describe('The config-generator function', () => {
             config.configureFilenames({
                 js: '[name].foo.js',
                 css: '[name].foo.css',
-                images: '[name].foo.[ext]',
-                fonts: '[name].bar.[ext]'
+                assets: '[name].assets[ext]',
             });
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
+            expect(actualConfig.output.assetModuleFilename).to.equal('[name].assets[ext]');
+
             const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
             expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
-
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
-
-            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.options.name).to.equal('[name].bar.[ext]');
         });
 
         it('with versioning', () => {
@@ -867,26 +802,21 @@ describe('The config-generator function', () => {
             config.configureFilenames({
                 js: '[name].foo.js',
                 css: '[name].foo.css',
-                images: '[name].foo.[ext]',
-                fonts: '[name].bar.[ext]'
+                assets: '[name].assets[ext]',
             });
 
             const actualConfig = configGenerator(config);
             expect(actualConfig.output.filename).to.equal('[name].foo.js');
 
+            expect(actualConfig.output.assetModuleFilename).to.equal('[name].assets[ext]');
+
             const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
             expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
-
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
-
-            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.options.name).to.equal('[name].bar.[ext]');
         });
     });
 
-    describe('configureUrlLoader() allows to use the URL loader for fonts/images', () => {
-        it('without configureUrlLoader()', () => {
+    describe('configuration for assets (images and fonts)', () => {
+        it('no custom config', () => {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -895,53 +825,63 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.loader).to.contain('file-loader');
+            expect(imagesRule.type).to.equal('asset/resource');
+            expect(imagesRule.generator).to.eql({ filename: 'images/[name].[hash:8][ext]' });
+            expect(imagesRule.parser).to.eql({});
+            expect(imagesRule).to.include.keys('test', 'type', 'generator', 'parser');
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.loader).to.contain('file-loader');
+            expect(fontsRule.type).to.equal('asset/resource');
+            expect(fontsRule.generator).to.eql({ filename: 'fonts/[name].[hash:8][ext]' });
         });
 
-        it('with configureUrlLoader() and missing keys', () => {
+        it('with configureImageRule() custom options', () => {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
-            config.configureUrlLoader({});
-
-            const actualConfig = configGenerator(config);
-
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.loader).to.contain('file-loader');
-
-            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.loader).to.contain('file-loader');
-        });
-
-        it('with configureUrlLoader()', () => {
-            const config = createConfig();
-            config.outputPath = '/tmp/public-path';
-            config.publicPath = '/public-path';
-            config.addEntry('main', './main');
-            config.configureFilenames({
-                images: '[name].foo.[ext]',
-                fonts: '[name].bar.[ext]'
-            });
-            config.configureUrlLoader({
-                images: { limit: 8192 },
-                fonts: { limit: 4096 }
+            config.configureImageRule({
+                type: 'asset/resource',
+                filename: 'file.[hash][ext]'
             });
 
             const actualConfig = configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.loader).to.contain('url-loader');
-            expect(imagesRule.options.name).to.equal('[name].foo.[ext]');
-            expect(imagesRule.options.limit).to.equal(8192);
+            expect(imagesRule.type).to.equal('asset/resource');
+            expect(imagesRule.generator).to.eql({ filename: 'file.[hash][ext]' });
+        });
 
-            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.loader).to.contain('url-loader');
-            expect(fontsRule.options.limit).to.equal(4096);
-            expect(fontsRule.options.name).to.equal('[name].bar.[ext]');
+        it('with configureImageRule() and maxSize', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureImageRule({
+                type: 'asset',
+                maxSize: 3000,
+            });
+
+            const actualConfig = configGenerator(config);
+
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            expect(imagesRule.parser).to.eql({ dataUrlCondition: { maxSize: 3000 } });
+        });
+
+        it('with configureImageRule() disabled', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.configureImageRule({
+                enabled: false,
+            });
+
+            const actualConfig = configGenerator(config);
+
+            expect(function() {
+                findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            }).to.throw();
         });
     });
 
@@ -1196,24 +1136,24 @@ describe('The config-generator function', () => {
 
         it('configure rule for "images"', () => {
             config.configureLoaderRule('images', (loaderRule) => {
-                loaderRule.options.name = 'dirname-images/[hash:42].[ext]';
+                loaderRule.generator.filename = 'dirname-images/[hash:42][ext]';
             });
 
             const webpackConfig = configGenerator(config);
             const rule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, webpackConfig.module.rules);
 
-            expect(rule.options.name).to.equal('dirname-images/[hash:42].[ext]');
+            expect(rule.generator.filename).to.equal('dirname-images/[hash:42][ext]');
         });
 
         it('configure rule for "fonts"', () => {
             config.configureLoaderRule('fonts', (loader) => {
-                loader.options.name = 'dirname-fonts/[hash:42].[ext]';
+                loader.generator.filename = 'dirname-fonts/[hash:42][ext]';
             });
 
             const webpackConfig = configGenerator(config);
             const rule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, webpackConfig.module.rules);
 
-            expect(rule.options.name).to.equal('dirname-fonts/[hash:42].[ext]');
+            expect(rule.generator.filename).to.equal('dirname-fonts/[hash:42][ext]');
         });
 
         it('configure rule for "sass"', () => {
@@ -1355,7 +1295,6 @@ describe('The config-generator function', () => {
             config.publicPath = '/public-path';
             config.enableSingleRuntimeChunk();
             config.addEntry('main', './main');
-            // do not call disableImagesLoader
 
             const actualConfig = configGenerator(config);
 

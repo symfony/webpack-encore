@@ -418,16 +418,13 @@ describe('Functional tests using webpack', function() {
                 config.enableVersioning(true);
 
                 testSetup.runWebpack(config, (webpackAssert) => {
-                    if (!process.env.DISABLE_UNSTABLE_CHECKS) {
-                        expect(config.outputPath).to.be.a.directory()
-                            .with.files([
-                                'main.8b8ca4a9.js',
-                                'styles.79943add.css',
-                                'manifest.json',
-                                'entrypoints.json',
-                                'runtime.49688a3c.js',
-                            ]);
-                    }
+                    webpackAssert.assertDirectoryContents([
+                        'main.[hash:8].js',
+                        'styles.[hash:8].css',
+                        'manifest.json',
+                        'entrypoints.json',
+                        'runtime.[hash:8].js',
+                    ]);
 
                     webpackAssert.assertOutputFileContains(
                         'styles.79943add.css',
@@ -521,19 +518,16 @@ describe('Functional tests using webpack', function() {
             config.enableVersioning(true);
 
             testSetup.runWebpack(config, (webpackAssert) => {
-                if (!process.env.DISABLE_UNSTABLE_CHECKS) {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            'js_no_require_js-css_h1_style_css.456c237a.js', // chunks are also versioned
-                            'js_no_require_js-css_h1_style_css.79943add.css',
-                            'main.04316e30.js',
-                            'h1.79943add.css',
-                            'bg.2eff0999.css',
-                            'manifest.json',
-                            'entrypoints.json',
-                            'runtime.d0652ec8.js',
-                        ]);
-                }
+                webpackAssert.assertDirectoryContents([
+                    'js_no_require_js-css_h1_style_css.[hash:8].js', // chunks are also versioned
+                    'js_no_require_js-css_h1_style_css.[hash:8].css',
+                    'main.[hash:8].js',
+                    'h1.[hash:8].css',
+                    'bg.[hash:8].css',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.[hash:8].js',
+                ]);
 
                 expect(path.join(config.outputPath, 'images')).to.be.a.directory()
                     .with.files([
@@ -1745,14 +1739,13 @@ module.exports = {
             });
         });
 
-        it('configureUrlLoader() allows to use the URL loader for images/fonts', (done) => {
+        it('configureImageRule() allows configuring maxSize for inlining', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('url-loader', './css/url-loader.css');
-            config.configureUrlLoader({
-                images: { limit: 102400 },
-                fonts: { limit: 102400 }
-            });
+            // set a size so that they do NOT inline
+            config.configureImageRule({ type: 'asset', maxSize: 102400 });
+            config.configureFontRule({ type: 'asset', maxSize: 102400 });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()
@@ -2168,22 +2161,19 @@ module.exports = {
                 }]);
 
                 testSetup.runWebpack(config, (webpackAssert) => {
-                    if (!process.env.DISABLE_UNSTABLE_CHECKS) {
-                        expect(config.outputPath).to.be.a.directory()
-                            .with.files([
-                                'entrypoints.json',
-                                'runtime.fbc90386.js',
-                                'main.06a6c20f.js',
-                                'manifest.json',
-                                'symfony_logo.91beba37.png',
-                                'symfony_logo_alt.f880ba14.png',
-                            ]);
+                    webpackAssert.assertDirectoryContents([
+                        'entrypoints.json',
+                        'runtime.fbc90386.js',
+                        'main.06a6c20f.js',
+                        'manifest.json',
+                        'symfony_logo.91beba37.png',
+                        'symfony_logo_alt.f880ba14.png',
+                    ]);
 
-                        webpackAssert.assertManifestPath(
-                            'build/main.js',
-                            '/build/main.06a6c20f.js'
-                        );
-                    }
+                    webpackAssert.assertManifestPath(
+                        'build/main.js',
+                        '/build/main.[hash:8].js'
+                    );
 
                     expect(path.join(config.outputPath, 'assets')).to.be.a.directory()
                         .with.files([

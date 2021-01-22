@@ -1300,30 +1300,6 @@ class Encore {
     }
 
     /**
-     * Call this if you wish to disable the default
-     * images loader.
-     *
-     * @returns {Encore}
-     */
-    disableImagesLoader() {
-        webpackConfig.disableImagesLoader();
-
-        return this;
-    }
-
-    /**
-     * Call this if you wish to disable the default
-     * fonts loader.
-     *
-     * @returns {Encore}
-     */
-    disableFontsLoader() {
-        webpackConfig.disableFontsLoader();
-
-        return this;
-    }
-
-    /**
      * Call this if you don't want imported CSS to be extracted
      * into a .css file. All your styles will then be injected
      * into the page by your JS code.
@@ -1377,8 +1353,7 @@ class Encore {
      * Encore.configureFilenames({
      *     js: '[name].[contenthash].js',
      *     css: '[name].[contenthash].css',
-     *     images: 'images/[name].[hash:8].[ext]',
-     *     fonts: 'fonts/[name].[hash:8].[ext]'
+     *     assets: 'assets/[name].[hash:8][ext]',
      * });
      * ```
      *
@@ -1388,6 +1363,10 @@ class Encore {
      * If you are using Encore.enableVersioning()
      * make sure that your "js" and "css" filenames contain
      * "[contenthash]".
+     *
+     * The "assets" key is used for the output.assetModuleFilename option,
+     * which is overridden for both fonts and images. See configureImageRule()
+     * and configureFontRule() to control those filenames.
      *
      * @param {object} filenames
      * @returns {Encore}
@@ -1399,30 +1378,73 @@ class Encore {
     }
 
     /**
-     * Allows to configure the URL loader.
+     * Configure how images are loaded/processed under module.rules.
      *
-     * https://github.com/webpack-contrib/url-loader
+     * https://webpack.js.org/guides/asset-modules/
+     *
+     * The most important things can be controlled by passing
+     * an options object to the first argument:
      *
      * ```
-     * Encore.configureUrlLoader({
-     *     images: {
-     *         limit: 8192,
-     *         mimetype: 'image/png'
-     *     },
-     *     fonts: {
-     *         limit: 4096
-     *     }
+     * Encore.configureImageRule({
+     *     // common values: asset, asset/resource, asset/inline
+     *     // Using "asset" will allow smaller images to be "inlined"
+     *     // instead of copied.
+     *     // javascript/auto caan be used to disable asset images (see next example)
+     *     type: 'asset/resource',
+     *
+     *     // applicable when for "type: asset": files smaller than this
+     *     // size will be "inlined" into CSS, larer files will be extracted
+     *     // into independent files
+     *     maxSize: 4 * 1024, // 4 kb
+     *
+     *     // control the output filename of images
+     *     filename: 'images/[name].[hash:8][ext]',
+     *
+     *     // you can also fully disable the image rule if you want
+     *     // to control things yourself
+     *     enabled: true,
      * });
      * ```
      *
-     * If a key (e.g. fonts) doesn't exists or contains a
-     * falsy value the file-loader will be used instead.
+     * If you need more control, you can also pass a callback to the
+     * 2nd argument. This will be passed the specific Rule object,
+     * which you can modify:
      *
-     * @param {object} urlLoaderOptions
-     * @return {Encore}
+     * https://webpack.js.org/configuration/module/#rule
+     *
+     * ```
+     * Encore.configureImageRule({}, function(rule) {
+     *     // if you set "type: 'javascript/auto'" in the first argument,
+     *     // then you can now specify a loader manually
+     *     // rule.loader = 'file-loader';
+     *     // rule.options = { filename: 'images/[name].[hash:8][ext]' }
+     * });
+     * ```
+     *
+     * @param {object} options
+     * @param {string|object|function} ruleCallback
+     * @returns {Encore}
      */
-    configureUrlLoader(urlLoaderOptions = {}) {
-        webpackConfig.configureUrlLoader(urlLoaderOptions);
+    configureImageRule(options = {}, ruleCallback = (rule) => {}) {
+        webpackConfig.configureImageRule(options, ruleCallback);
+
+        return this;
+    }
+
+    /**
+     * Configure how fonts are processed/loaded under module.rules.
+     *
+     * https://webpack.js.org/guides/asset-modules/
+     *
+     * See configureImageRule() for more details.
+     *
+     * @param {object} options
+     * @param {string|object|function} ruleCallback
+     * @returns {Encore}
+     */
+    configureFontRule(options = {}, ruleCallback = (rule) => {}) {
+        webpackConfig.configureFontRule(options, ruleCallback);
 
         return this;
     }
@@ -1597,9 +1619,10 @@ class Encore {
      *
      * @param {string} environment
      * @param {object} options
+     * @param {boolean} enablePackageJsonCheck
      * @returns {Encore}
      */
-    configureRuntimeEnvironment(environment, options = {}) {
+    configureRuntimeEnvironment(environment, options = {}, enablePackageJsonCheck = true) {
         runtimeConfig = parseRuntime(
             Object.assign(
                 {},
@@ -1609,7 +1632,7 @@ class Encore {
             process.cwd()
         );
 
-        webpackConfig = new WebpackConfig(runtimeConfig, true);
+        webpackConfig = new WebpackConfig(runtimeConfig, enablePackageJsonCheck);
 
         return this;
     }
