@@ -18,6 +18,8 @@ const path = require('path');
 const testSetup = require('./helpers/setup');
 const fs = require('fs-extra');
 const getVueVersion = require('../lib/utils/get-vue-version');
+const packageHelper = require('../lib/package-helper');
+const semver = require('semver');
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     const webpackConfig = testSetup.createWebpackConfig(
@@ -427,7 +429,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                     webpackAssert.assertOutputFileContains(
-                        'styles.79943add.css',
+                        'styles.[hash:8].css',
                         'font-size: 50px;'
                     );
                     webpackAssert.assertManifestPathDoesNotExist(
@@ -435,7 +437,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.79943add.css'
+                        '/styles.[hash:8].css'
                     );
 
                     done();
@@ -466,7 +468,7 @@ describe('Functional tests using webpack', function() {
                     );
                     webpackAssert.assertManifestPath(
                         'styles.css',
-                        '/styles.css?79943addbc894efe'
+                        '/styles.css?[hash:16]'
                     );
 
                     done();
@@ -535,7 +537,7 @@ describe('Functional tests using webpack', function() {
                     ]);
 
                 webpackAssert.assertOutputFileContains(
-                    'bg.2eff0999.css',
+                    'bg.[hash:8].css',
                     '/build/images/symfony_logo.91beba37.png'
                 );
 
@@ -1913,8 +1915,16 @@ module.exports = {
             });
         });
 
-        it('Symfony - Stimulus standard app is built correctly', (done) => {
+        it('Symfony - Stimulus standard app is built correctly', function(done) {
             const appDir = testSetup.createTestAppDir();
+
+            const version = packageHelper.getPackageVersion('@symfony/stimulus-bridge');
+            if (!semver.satisfies(version, '^1.2.0')) {
+                // we support the old version, but it's not tested
+                this.skip();
+
+                return;
+            }
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
@@ -1930,13 +1940,14 @@ module.exports = {
                     'main.js',
                     'main.css',
                     'manifest.json',
+                    'node_modules_symfony_mock-module_dist_controller_js.js',
                     'entrypoints.json',
                     'runtime.js',
                 ]);
 
                 // test controllers and style are shipped
                 webpackAssert.assertOutputFileContains('main.js', 'app-controller');
-                webpackAssert.assertOutputFileContains('main.js', 'mock-module-controller');
+                webpackAssert.assertOutputFileContains('node_modules_symfony_mock-module_dist_controller_js.js', 'mock-module-controller');
                 webpackAssert.assertOutputFileContains('main.css', 'body {}');
 
                 done();

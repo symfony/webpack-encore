@@ -31,6 +31,23 @@ const readOutputFile = function(webpackConfig, filePath) {
     return fs.readFileSync(fullPath, 'utf8');
 };
 
+const getMatchedFilename = function(targetDirectory, filenameRegex) {
+    const actualFiles = fs.readdirSync(targetDirectory);
+    let foundFile = false;
+    actualFiles.forEach((actualFile) => {
+        // filter out directories
+        if (fs.statSync(path.join(targetDirectory, actualFile)).isDirectory()) {
+            return;
+        }
+
+        if (actualFile.match(filenameRegex)) {
+            foundFile = actualFile;
+        }
+    });
+
+    return foundFile;
+};
+
 /**
  * Returns a regex to use to match this filename
  *
@@ -61,11 +78,16 @@ class Assert {
     }
 
     assertOutputFileContains(filePath, expectedContents) {
-        const fullPath = path.join(this.webpackConfig.outputPath, filePath);
+        const actualFilename = getMatchedFilename(
+            this.webpackConfig.outputPath,
+            convertFilenameToMatcher(filePath)
+        );
 
-        if (!fs.existsSync(fullPath)) {
+        if (false === actualFilename) {
             throw new Error(`Output file "${filePath}" does not exist.`);
         }
+
+        const fullPath = path.join(this.webpackConfig.outputPath, actualFilename);
 
         const actualContents = fs.readFileSync(fullPath, 'utf8');
         if (!actualContents.includes(expectedContents)) {
