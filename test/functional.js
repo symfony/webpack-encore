@@ -1464,7 +1464,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    // 'images/logo.26bd867d.png', logo.png is inlined
+                    'images/logo.26bd867d.png',
                     'manifest.json',
                     'entrypoints.json',
                     'runtime.js',
@@ -1529,7 +1529,7 @@ module.exports = {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([
                     'main.js',
                     'main.css',
-                    // 'images/logo.26bd867d.png', logo.png is inlined
+                    'images/logo.26bd867d.png',
                     'manifest.json',
                     'entrypoints.json',
                     'runtime.js',
@@ -1744,8 +1744,8 @@ module.exports = {
             config.setPublicPath('/build');
             config.addStyleEntry('url-loader', './css/url-loader.css');
             // set a size so that they do NOT inline
-            config.configureImageRule({ maxSize: 102400 });
-            config.configureFontRule({ maxSize: 102400 });
+            config.configureImageRule({ type: 'asset', maxSize: 102400 });
+            config.configureFontRule({ type: 'asset', maxSize: 102400 });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory()

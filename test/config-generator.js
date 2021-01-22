@@ -825,13 +825,13 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
-            expect(imagesRule.type).to.equal('asset');
+            expect(imagesRule.type).to.equal('asset/resource');
             expect(imagesRule.generator).to.eql({ filename: 'images/[name].[hash:8][ext]' });
             expect(imagesRule.parser).to.eql({});
             expect(imagesRule).to.include.keys('test', 'type', 'generator', 'parser');
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
-            expect(fontsRule.type).to.equal('asset');
+            expect(fontsRule.type).to.equal('asset/resource');
             expect(fontsRule.generator).to.eql({ filename: 'fonts/[name].[hash:8][ext]' });
         });
 
@@ -858,6 +858,7 @@ describe('The config-generator function', () => {
             config.publicPath = '/public-path';
             config.addEntry('main', './main');
             config.configureImageRule({
+                type: 'asset',
                 maxSize: 3000,
             });
 

@@ -1388,8 +1388,10 @@ class Encore {
      * ```
      * Encore.configureImageRule({
      *     // common values: asset, asset/resource, asset/inline
-     *     // or javascript/auto to disable asset images (see next example)
-     *     type: 'asset',
+     *     // Using "asset" will allow smaller images to be "inlined"
+     *     // instead of copied.
+     *     // javascript/auto caan be used to disable asset images (see next example)
+     *     type: 'asset/resource',
      *
      *     // applicable when for "type: asset": files smaller than this
      *     // size will be "inlined" into CSS, larer files will be extracted

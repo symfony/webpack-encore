@@ -1296,6 +1296,7 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
             const callback = () => {};
             config.configureImageRule({
+                type: 'asset',
                 maxSize: 1024,
             }, callback);
 
@@ -1333,6 +1334,7 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
             const callback = () => {};
             config.configureFontRule({
+                type: 'asset',
                 maxSize: 1024,
             }, callback);
 

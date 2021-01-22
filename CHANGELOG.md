@@ -8,15 +8,11 @@
    (and  optionally `url-loader` via `configureUrlLoader()`) to Webpack 5's
    new [Asset Modules](https://webpack.js.org/guides/asset-modules/).
    In practice, unless you have a highly-configured system, this should
-   not cause significant changes. You will notice that smaller images
-   and fonts (smaller than 8kb) will be "inlined" in CSS files instead
-   of being extracted to independent files for performance. This is
-   configurable - see the new `configureImageRule()` and `configureFontRule()`
-   methods.
+   not cause significant changes.
 
  * [BC BREAK] The `configureUrlLoader()` method was removed. See
    `configureImageRule()` and `configureFontRule()` - specifically the
-   `maxSize` option. The `url-loader` is no longer used.
+   `maxSize` option and type: 'asset'. The `url-loader` is no longer used.
 
  * [BC BREAK] The `disableImagesLoader()` and `disableFontsLoader()` methods
    have been removed. See `configureImageRule()` and `configureFontRule()`
