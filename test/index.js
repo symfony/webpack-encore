@@ -429,7 +429,7 @@ describe('Public API', () => {
     describe('enableBuildCache', () => {
 
         it('should return the API object', () => {
-            const returnedValue = api.enableBuildCache({config: [__filename]});
+            const returnedValue = api.enableBuildCache({ config: [__filename] });
             expect(returnedValue).to.equal(api);
         });
 
