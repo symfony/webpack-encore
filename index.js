@@ -1006,6 +1006,37 @@ class Encore {
     }
 
     /**
+     * Enables & configures persistent build caching.
+     *
+     * https://webpack.js.org/blog/2020-10-10-webpack-5-release/#persistent-caching
+     *
+     * ```
+     * Encore.enableBuildCache({
+     *     // object of "buildDependencies"
+     *     // https://webpack.js.org/configuration/other-options/#cachebuilddependencies
+     *     // __filename means that changes to webpack.config.js should invalidate the cache
+     *     config: [__filename],
+     * });
+     **
+     * // also configure other options the Webpack "cache" key
+     * Encore.enableBuildCache({ config: [__filename] }, (cache) => {
+     *     cache.version: `${process.env.GIT_REV}`;
+     *
+     *     cache.name: `${env.target}`
+     * });
+     * ```
+     *
+     * @param {object} buildDependencies
+     * @param {function} cacheCallback
+     * @returns {Encore}
+     */
+    enableBuildCache(buildDependencies, cacheCallback = (cache) => {}) {
+        webpackConfig.enableBuildCache(buildDependencies, cacheCallback);
+
+        return this;
+    }
+
+    /**
      * Configure the mini-css-extract-plugin.
      *
      * https://github.com/webpack-contrib/mini-css-extract-plugin#configuration

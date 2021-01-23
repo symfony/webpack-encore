@@ -11,6 +11,7 @@
 
 const expect = require('chai').expect;
 const api = require('../index');
+const path = require('path');
 
 describe('Public API', () => {
     beforeEach(() => {
@@ -415,6 +416,25 @@ describe('Public API', () => {
         });
 
     });
+
+    describe('enableStimulusBridge', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.enableStimulusBridge(path.resolve(__dirname, '../', 'package.json'));
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
+    describe('enableBuildCache', () => {
+
+        it('should return the API object', () => {
+            const returnedValue = api.enableBuildCache({ config: [__filename] });
+            expect(returnedValue).to.equal(api);
+        });
+
+    });
+
 
     describe('configureMiniCssExtractPlugin', () => {
 

@@ -913,6 +913,38 @@ describe('The config-generator function', () => {
         });
     });
 
+    describe('Test enableBuildCache()', () => {
+        it('with full arguments', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.enableBuildCache({ config: ['foo.js'] }, (cache) => {
+                cache.version = 5;
+            });
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.cache).to.eql({
+                type: 'filesystem',
+                buildDependencies: { config: ['foo.js'] },
+                version: 5
+            });
+        });
+
+        it('with sourcemaps', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public-path';
+            config.publicPath = '/public-path';
+            config.addEntry('main', './main');
+            config.useSourceMaps = true;
+
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.devtool).to.equal('inline-source-map');
+
+            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":true');
+        });
+    });
+
     describe('Test configureBabel()', () => {
         it('without configureBabel()', () => {
             const config = createConfig();
