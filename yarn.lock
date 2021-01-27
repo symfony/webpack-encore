@@ -970,16 +970,10 @@
   resolved "https://registry.yarnpkg.com/@stimulus/webpack-helpers/-/webpack-helpers-2.0.0.tgz#54296d2a2dffd4f962d2e802d99a3fdd84b8845f"
   integrity sha512-D6tJWsAC024MwGEIKlUVYU8Ln87mlrmiwHvYAjipg+s8H4eLxUMQ3PZkWyPevfipH+oR3leuHsjYsK1gN5ViQA==
 
-"@symfony/autoimport@file:fixtures/stimulus/autoimport":
-  version "1.0.0"
-
-"@symfony/controllers@file:fixtures/stimulus/controllers":
-  version "1.0.0"
-
 "@symfony/mock-module@file:fixtures/stimulus/mock-module":
   version "1.0.0"
 
-"@symfony/stimulus-bridge@^1.0.0":
+"@symfony/stimulus-bridge@^1.1.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@symfony/stimulus-bridge/-/stimulus-bridge-1.1.0.tgz#34548c633fe49bcda84cc812939f63640e698af7"
   integrity sha512-Sz8iwKQHBjrgCnxCGwH87S/J/Min0gX3EuXJaHi4vpibY3BjVm+WYuP8+OYPkMIROPyNZKYgTffFfJLBAFLwFQ==
