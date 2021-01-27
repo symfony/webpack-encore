@@ -4,7 +4,7 @@
 
  * [DEPENDENCY UPGRADE] Webpack was upgraded from version 4 to 5.
 
-* [DEPENDENCY UPGRADES] The following packages had major version upgrades:
+ * [DEPENDENCY UPGRADES] The following packages had major version upgrades:
    * `css-loader` from 3 to 5
    * `assets-webpack-plugin` from 5 to 7
    * `mini-css-extract-plugin` from 0.4 to 1
@@ -14,7 +14,7 @@
    * `webpack-manifest-plugin` from 2 to 3
    * `webpack-manifest-plugin` from 3 to 4-beta
 
-* [DEPENDENCY SUPPORT CHANGES] Encore has changed what versions it supports
+ * [DEPENDENCY SUPPORT CHANGES] Encore has changed what versions it supports
    of the following packages:
    * `less` from 3 to 4 and `less-loader` from 6 to 7
    * `fork-ts-checker-webpack-plugin` from 4 to 5 or 6
@@ -39,28 +39,28 @@
    *does* now accept an `assets` option, but out-of-the-box, this will not
    result in any filename changes. See `configureFilenames()` for more details.
 
-* [BC BREAK] `css-minimizer-webpack-plugin` was replaced by
-  `css-minimizer-webpack-plugin` and the `optimizeCssPluginOptionsCallback()`
-  method was replaced by `cssMinimizerPluginOptionsCallback()`.
+ * [BC BREAK] `css-minimizer-webpack-plugin` was replaced by
+   `css-minimizer-webpack-plugin` and the `optimizeCssPluginOptionsCallback()`
+   method was replaced by `cssMinimizerPluginOptionsCallback()`.
 
-* [BC BREAK] The `file-loader` package is no longer required by Encore. If
+ * [BC BREAK] The `file-loader` package is no longer required by Encore. If
    you use `copyFiles()`, you will need to install it manually (you
    will receive a clear error about this).
 
-* [BC BREAK] All previously-deprecated methods & options were removed.
+ * [BC BREAK] All previously-deprecated methods & options were removed.
 
-* [BEHAVIOR CHANGE] The `HashedModuleIdsPlugin` was previously used to
-  help name "modules" when building for production. This has been removed
-  and we now use Webpack's native `optimization.moduleIds` option, which
-  is set to `deterministic`.
+ * [BEHAVIOR CHANGE] The `HashedModuleIdsPlugin` was previously used to
+   help name "modules" when building for production. This has been removed
+   and we now use Webpack's native `optimization.moduleIds` option, which
+   is set to `deterministic`.
 
-* [configureMiniCssExtractPlugin()] `configureMiniCssExtractPlugin()` was
-  added to allow the `MiniCssExtractPlugin.loader` and `MiniCssExtractPlugin`
-  to be configured.
+ * [configureMiniCssExtractPlugin()] `configureMiniCssExtractPlugin()` was
+   added to allow the `MiniCssExtractPlugin.loader` and `MiniCssExtractPlugin`
+   to be configured.
 
-* [enableBuildCache()] Added `enableBuildCache()` to enable the new
-  Webpack 5 build caching. https://webpack.js.org/blog/2020-10-10-webpack-5-release/
-  This feature should be considered experimental.
+ * [enableBuildCache()] Added `enableBuildCache()` to enable the new
+   Webpack 5 build caching. https://webpack.js.org/blog/2020-10-10-webpack-5-release/
+   This feature should be considered experimental.
 
 ## 0.33.0
 
