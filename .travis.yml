@@ -13,7 +13,6 @@ matrix:
       node_js: "10"
       env:
         - JOB_PART=test
-        - DISABLE_UNSTABLE_CHECKS=1
       install:
         - rm yarn.lock
         - node ./scripts/force-lowest-dependencies
@@ -23,7 +22,6 @@ matrix:
       node_js: "12"
       env:
         - JOB_PART=test
-        - DISABLE_UNSTABLE_CHECKS=1
       install:
         - rm yarn.lock
         - yarn

@@ -44,7 +44,7 @@ describe('plugins/forkedtypecheck', () => {
         const config = createConfig();
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking(function(options) {
-            options.silent = true;
+            options.async = true;
         });
 
         expect(config.plugins).to.have.lengthOf(0);
@@ -52,7 +52,7 @@ describe('plugins/forkedtypecheck', () => {
         tsTypeChecker(config);
         expect(config.plugins).to.have.lengthOf(1);
         expect(config.plugins[0].plugin).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
-        expect(config.plugins[0].plugin.options.silent).to.equal(true);
+        expect(config.plugins[0].plugin.options.async).to.equal(true);
     });
 
     it('getPlugins() with options callback that returns an object', () => {
@@ -62,7 +62,7 @@ describe('plugins/forkedtypecheck', () => {
             options.silent = true;
 
             // This should override the original config
-            return { foo: true };
+            return { async: true };
         });
 
         expect(config.plugins).to.have.lengthOf(0);
@@ -71,6 +71,6 @@ describe('plugins/forkedtypecheck', () => {
         expect(config.plugins).to.have.lengthOf(1);
         expect(config.plugins[0].plugin).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
         expect(config.plugins[0].plugin.options.silent).to.be.undefined;
-        expect(config.plugins[0].plugin.options.foo).to.equal(true);
+        expect(config.plugins[0].plugin.options.async).to.equal(true);
     });
 });

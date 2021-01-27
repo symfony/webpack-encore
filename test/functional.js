@@ -1365,16 +1365,17 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/render.ts', './js/index.ts']);
             config.enableTypeScriptLoader();
-            // test should fail if `config.tsconfig` is not set up properly
+            // test should fail if `config.typescript.configFile` is not set up properly
             config.enableForkedTypeScriptTypesChecking((config) => {
-                config.silent = true; // remove to get output on terminal
+
             });
 
             expect(function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     done();
                 });
-            }).to.throw('wrong `tsconfig` path in fork plugin configuration (should be a relative or absolute path)');
+                // Cannot find the "/path/to/tsconfig.json" file
+            }).to.throw('Cannot find the');
         });
 
         it('TypeScript can be compiled by Babel', (done) => {
@@ -2858,105 +2859,100 @@ module.exports = {
             });
         });
 
-        if (!process.env.DISABLE_UNSTABLE_CHECKS) {
-            describe('enableIntegrityHashes() adds hashes to the entrypoints.json file', () => {
-                it('Using default algorithm', (done) => {
-                    const config = createWebpackConfig('web/build', 'dev');
-                    config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
-                    config.addEntry('other', ['./css/roboto_font.css', 'vue']);
-                    config.setPublicPath('/build');
-                    config.configureSplitChunks((splitChunks) => {
-                        splitChunks.chunks = 'all';
-                        splitChunks.minSize = 0;
-                    });
-                    config.enableIntegrityHashes();
-
-                    testSetup.runWebpack(config, () => {
-                        const integrityData = getIntegrityData(config);
-                        const expectedHashes = {
-                            '/build/runtime.js': 'sha384-sWtvs9g2amKt9La790kUHfXRL3/D/4EVnpCBTGwhEnFk2qB5M6utpeyUG1iastim',
-                            '/build/main.js': 'sha384-T5WVgtgFWOxq1ht+51tv1dEyU9N9sd654EW4hkYTSe3Y0S6S0GsqT0vQqEqgXplJ',
-                            '/build/css_roboto_font_css.js': 'sha384-ezqcmKZI0XEQOrt/3ujcoi6QVOBXmwUTg3FaQrapMoCIfqcBR4UeA1VFFk/TC7pr',
-                            '/build/css_roboto_font_css.css': 'sha384-CwxeOsagC0TZKZIMFU7gd1fQG1nbF7wHg/uLJSsU/5Soa9JwEOZcAzAFMmctn6kX',
-                            '/build/other.js': 'sha384-7N+Gb+SIHbD7k6HUnvgewUaa5bsFMWAgT1W0JZfxRmapgmaWl/CjFBdflUIkHbN2',
-
-                            // /build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js's hash is not
-                            // tested since its content seems to change based on the build environment.
-                        };
-
-                        for (const file in expectedHashes) {
-                            expect(integrityData[file]).to.equal(expectedHashes[file]);
-                        }
-
-                        done();
-                    });
+        describe('enableIntegrityHashes() adds hashes to the entrypoints.json file', () => {
+            it('Using default algorithm', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('/build');
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.chunks = 'all';
+                    splitChunks.minSize = 0;
                 });
+                config.enableIntegrityHashes();
 
-                it('Using another algorithm and a different public path', (done) => {
-                    const config = createWebpackConfig('web/build', 'dev');
-                    config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
-                    config.addEntry('other', ['./css/roboto_font.css', 'vue']);
-                    config.setPublicPath('http://localhost:8090/assets');
-                    config.setManifestKeyPrefix('assets');
-                    config.configureSplitChunks((splitChunks) => {
-                        splitChunks.chunks = 'all';
-                        splitChunks.minSize = 0;
+                testSetup.runWebpack(config, () => {
+                    const integrityData = getIntegrityData(config);
+                    const expectedFilesWithHashes = [
+                        '/build/runtime.js',
+                        '/build/main.js',
+                        '/build/css_roboto_font_css.js',
+                        '/build/css_roboto_font_css.css',
+                        '/build/other.js',
+                        '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                    ];
+
+                    expectedFilesWithHashes.forEach((file) => {
+                        expect(integrityData[file]).to.contain('sha384-');
+                        expect(integrityData[file]).to.have.length(71);
                     });
-                    config.enableIntegrityHashes(true, 'sha256');
 
-                    testSetup.runWebpack(config, () => {
-                        const integrityData = getIntegrityData(config);
-                        const expectedHashes = {
-                            'http://localhost:8090/assets/runtime.js': 'sha256-w0M8cHCCwzEXG16d6iF4p8Lw5k/VdyTrAq11y7r1G6s=',
-                            'http://localhost:8090/assets/main.js': 'sha256-bQvagKObeH+zUckvtNx9iGP4H+6LfSLVulHU2W2lNiI=',
-                            'http://localhost:8090/assets/css_roboto_font_css.js': 'sha256-CF+O0Dp/km2nfjreZlnMSkZInJqzyU9Pyd0iw6d5jtE=',
-                            'http://localhost:8090/assets/css_roboto_font_css.css': 'sha256-GyGOCV1nJYunb8s/DT5wICbruabZcqzDFJRnXIlZ9I4=',
-                            'http://localhost:8090/assets/other.js': 'sha256-whQp2WqCTuFelVuYVjRY2aulbtVDlNhu8+FmsAYLTrs=',
-
-                            // /build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js's hash is not
-                            // tested since its content seems to change based on the build environment.
-                        };
-
-                        for (const file in expectedHashes) {
-                            expect(integrityData[file]).to.equal(expectedHashes[file]);
-                        }
-
-                        done();
-                    });
-                });
-
-                it('Using multiple algorithms', (done) => {
-                    const config = createWebpackConfig('web/build', 'dev');
-                    config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
-                    config.addEntry('other', ['./css/roboto_font.css', 'vue']);
-                    config.setPublicPath('/build');
-                    config.configureSplitChunks((splitChunks) => {
-                        splitChunks.chunks = 'all';
-                        splitChunks.minSize = 0;
-                    });
-                    config.enableIntegrityHashes(true, ['sha256', 'sha512']);
-
-                    testSetup.runWebpack(config, () => {
-                        const integrityData = getIntegrityData(config);
-                        const expectedHashes = {
-                            '/build/runtime.js': 'sha256-w0M8cHCCwzEXG16d6iF4p8Lw5k/VdyTrAq11y7r1G6s= sha512-cYIvzvPfRcY04V5yPYT3xFuPFgia8H/cdX5NHhWUXDNt9xoCooYAuodt69WT9R4OK4c9gYNY7tEaX2K+zMnpPw==',
-                            '/build/main.js': 'sha256-bQvagKObeH+zUckvtNx9iGP4H+6LfSLVulHU2W2lNiI= sha512-hoVM8C7Iuvv9I+tQ6VXR3i5EiSv1IUmcefJBYX6gfGNirdvLI7GbxohtqOkXLIOV2n56nVk3zVh3tLVmen5snQ==',
-                            '/build/css_roboto_font_css.js': 'sha256-CF+O0Dp/km2nfjreZlnMSkZInJqzyU9Pyd0iw6d5jtE= sha512-0MeLokYDlL6kv7nwE21SU0Rsa/om9+qXEkD2nCavkXx2y3usGO42dUjqnozwo4XSCs6TZnMsk61Me1vfnGyREA==',
-                            '/build/css_roboto_font_css.css': 'sha256-bsTMZz4D7wBon35PnVm0dN51OH4EMq79NRecjZVoJ0A= sha512-kUbxtlmFlqBd+mB0P2HfsGoTZDGjdPz/BT9wc7l5fdSkML8CCNGg/ccrWXglUNIdgH10y92Jf8zIOHTRygXwxQ==',
-                            '/build/other.js': 'sha256-whQp2WqCTuFelVuYVjRY2aulbtVDlNhu8+FmsAYLTrs= sha512-cCUSLiPQTh5YN3iNdkrac880//+i9mhgTT5CdGUfe8oBVR+WjeIOIqqTEsalGiFraaSKFfuRUSsMMoBhUpAdcw==',
-
-                            // /build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js's hash is not
-                            // tested since its content seems to change based on the build environment.
-                        };
-
-                        for (const file in expectedHashes) {
-                            expect(integrityData[file]).to.equal(expectedHashes[file]);
-                        }
-
-                        done();
-                    });
+                    done();
                 });
             });
-        }
+
+            it('Using another algorithm and a different public path', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('http://localhost:8090/assets');
+                config.setManifestKeyPrefix('assets');
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.chunks = 'all';
+                    splitChunks.minSize = 0;
+                });
+                config.enableIntegrityHashes(true, 'sha256');
+
+                testSetup.runWebpack(config, () => {
+                    const integrityData = getIntegrityData(config);
+                    const expectedFilesWithHashes = [
+                        'http://localhost:8090/assets/runtime.js',
+                        'http://localhost:8090/assets/main.js',
+                        'http://localhost:8090/assets/css_roboto_font_css.js',
+                        'http://localhost:8090/assets/css_roboto_font_css.css',
+                        'http://localhost:8090/assets/other.js',
+                    ];
+
+                    expectedFilesWithHashes.forEach((file) => {
+                        expect(integrityData[file]).to.contain('sha256-');
+                        expect(integrityData[file]).to.have.length(51);
+                    });
+
+                    done();
+                });
+            });
+
+            it('Using multiple algorithms', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
+                config.addEntry('other', ['./css/roboto_font.css', 'vue']);
+                config.setPublicPath('/build');
+                config.configureSplitChunks((splitChunks) => {
+                    splitChunks.chunks = 'all';
+                    splitChunks.minSize = 0;
+                });
+                config.enableIntegrityHashes(true, ['sha256', 'sha512']);
+
+                testSetup.runWebpack(config, () => {
+                    const integrityData = getIntegrityData(config);
+                    const expectedFilesWithHashes = [
+                        '/build/runtime.js',
+                        '/build/main.js',
+                        '/build/css_roboto_font_css.js',
+                        '/build/css_roboto_font_css.css',
+                        '/build/other.js',
+                        '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                    ];
+
+                    expectedFilesWithHashes.forEach((file) => {
+                        expect(integrityData[file]).to.contain('sha256-');
+                        expect(integrityData[file]).to.contain('sha512-');
+                        expect(integrityData[file]).to.have.length(147);
+                    });
+
+                    done();
+                });
+            });
+        });
     });
 });

@@ -4,6 +4,21 @@
 
  * [DEPENDENCY UPGRADE] Webpack was upgraded from version 4 to 5.
 
+* [DEPENDENCY UPGRADES] The following packages had major version upgrades:
+   * `css-loader` from 3 to 5
+   * `assets-webpack-plugin` from 5 to 7
+   * `mini-css-extract-plugin` from 0.4 to 1
+   * `style-loader` from 1 to 2
+   * `terser-webpack-plugin` from 1 to 5
+   * `webpack-cli` from 3 to 4
+   * `webpack-manifest-plugin` from 2 to 3
+   * `webpack-manifest-plugin` from 3 to 4-beta
+
+* [DEPENDENCY SUPPORT CHANGES] Encore has changed what versions it supports
+   of the following packages:
+   * `less` from 3 to 4 and `less-loader` from 6 to 7
+   * `fork-ts-checker-webpack-plugin` from 4 to 5 or 6
+
  * [BC BREAK] Image and font processing was changed from using `file-loader`
    (and  optionally `url-loader` via `configureUrlLoader()`) to Webpack 5's
    new [Asset Modules](https://webpack.js.org/guides/asset-modules/).
@@ -33,15 +48,6 @@
    will receive a clear error about this).
 
 * [BC BREAK] All previously-deprecated methods & options were removed.
-
-* [DEPENDENCY UPGRADES] The following packages had major version upgrades:
-   * `css-loader` from 3 to 5
-   * `mini-css-extract-plugin` from 0.4 to 1
-   * `style-loader` from 1 to 2
-   * `terser-webpack-plugin` from 1 to 4
-   * `webpack-cli` from 3 to 4
-   * `webpack-manifest-plugin` from 2 to 3
-   * `less` from 3 to 4 and `less-loader` from 6 to 7
 
 * [BEHAVIOR CHANGE] The `HashedModuleIdsPlugin` was previously used to
   help name "modules" when building for production. This has been removed

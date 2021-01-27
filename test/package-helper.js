@@ -124,7 +124,7 @@ describe('package-helper', () => {
         it('Check package that *is* the correct version', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
                 { name: 'stimulus', version: '^2.0.0' },
-                { name: 'preact', version: '^8.2.0' }
+                { name: 'preact', version: '^8.2.0 || ^10.0.0' }
             ]);
 
             expect(versionProblems).to.be.empty;
