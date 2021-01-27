@@ -39,7 +39,7 @@
    *does* now accept an `assets` option, but out-of-the-box, this will not
    result in any filename changes. See `configureFilenames()` for more details.
 
- * [BC BREAK] `css-minimizer-webpack-plugin` was replaced by
+ * [BC BREAK] `optimize-css-assets-webpack-plugin` was replaced by
    `css-minimizer-webpack-plugin` and the `optimizeCssPluginOptionsCallback()`
    method was replaced by `cssMinimizerPluginOptionsCallback()`.
 
