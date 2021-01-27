@@ -30,7 +30,7 @@ describe('plugins/terser', () => {
 
         const plugin = terserPluginUtil(config);
         expect(plugin).to.be.instanceof(TerserPlugin);
-        expect(plugin.options.sourceMap).to.equal(false);
+        expect(plugin.options.parallel).to.equal(true);
     });
 
     it('with options callback', () => {
@@ -48,7 +48,7 @@ describe('plugins/terser', () => {
         expect(plugin.options.terserOptions.output.beautify).to.equal(true);
 
         // Doesn't remove default options
-        expect(plugin.options.sourceMap).to.equal(false);
+        expect(plugin.options.parallel).to.equal(true);
     });
 
     it('with options callback that returns an object', () => {
@@ -60,11 +60,11 @@ describe('plugins/terser', () => {
             };
 
             // This should override the original config
-            return { cache: true };
+            return { parallel: false };
         });
 
         const plugin = terserPluginUtil(config);
         expect(plugin.options.terserOptions.output).to.be.undefined;
-        expect(plugin.options.cache).to.equal(true);
+        expect(plugin.options.parallel).to.equal(false);
     });
 });
