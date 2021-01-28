@@ -454,6 +454,55 @@ describe('Public API', () => {
 
     });
 
+    describe('ifProduction', () => {
+        it('callback IS executed in production mode', () => {
+            api.configureRuntimeEnvironment('production', {}, false);
+            let wasExecuted = false;
+            api.ifProduction((Encore) => {
+                wasExecuted = true;
+            });
+            expect(wasExecuted).to.be.true;
+        });
+
+        it('callback is NOT executed in dev mode', () => {
+            api.configureRuntimeEnvironment('dev', {}, false);
+            let wasExecuted = false;
+            api.ifProduction((Encore) => {
+                wasExecuted = true;
+            });
+            expect(wasExecuted).to.be.false;
+        });
+    });
+
+    describe('ifDev', () => {
+        it('callback IS executed in dev mode', () => {
+            api.configureRuntimeEnvironment('dev', {}, false);
+            let wasExecuted = false;
+            api.ifDev((Encore) => {
+                wasExecuted = true;
+            });
+            expect(wasExecuted).to.be.true;
+        });
+
+        it('callback IS executed in dev-server mode', () => {
+            api.configureRuntimeEnvironment('dev-server', {}, false);
+            let wasExecuted = false;
+            api.ifDev((Encore) => {
+                wasExecuted = true;
+            });
+            expect(wasExecuted).to.be.true;
+        });
+
+        it('callback is NOT executed in production mode', () => {
+            api.configureRuntimeEnvironment('production', {}, false);
+            let wasExecuted = false;
+            api.ifDev((Encore) => {
+                wasExecuted = true;
+            });
+            expect(wasExecuted).to.be.false;
+        });
+    });
+
     describe('isRuntimeEnvironmentConfigured', () => {
 
         it('should return true if the runtime environment has been configured', () => {

@@ -1597,6 +1597,46 @@ class Encore {
     }
 
     /**
+     * Use to conditionally configure or enable features only in production.
+     *
+     * ```
+     * Encore
+     *     // ...
+     *     .ifProduction((Encore) => Encore.enableVersioning()))
+     * ```
+     *
+     * @param {function} callback
+     * @return {Encore}
+     */
+    ifProduction(callback) {
+        if (this.isProduction()) {
+            callback(this);
+        }
+
+        return this;
+    }
+
+    /**
+     * Use to conditionally configure or enable features for dev only.
+     *
+     * ```
+     * Encore
+     *     // ...
+     *     .ifDev((Encore) => Encore.enableBuildCache({ config: [__filename] }))
+     * ```
+     *
+     * @param {function} callback
+     * @return {Encore}
+     */
+    ifDev(callback) {
+        if (!this.isProduction()) {
+            callback(this);
+        }
+
+        return this;
+    }
+
+    /**
      * Use this at the bottom of your webpack.config.js file:
      *
      * ```
