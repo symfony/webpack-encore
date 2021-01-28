@@ -12,7 +12,7 @@
    * `terser-webpack-plugin` from 1 to 5
    * `webpack-cli` from 3 to 4
    * `webpack-manifest-plugin` from 2 to 3
-   * `webpack-manifest-plugin` from 3 to 4-beta
+   * `webpack-dev-server` from 3 to 4-beta [CHANGELOG](https://github.com/webpack/webpack-dev-server/blob/master/CHANGELOG.md#400-beta0-2020-11-27)
 
  * [DEPENDENCY SUPPORT CHANGES] Encore has changed what versions it supports
    of the following packages:
