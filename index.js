@@ -1421,11 +1421,11 @@ class Encore {
      *     // common values: asset, asset/resource, asset/inline
      *     // Using "asset" will allow smaller images to be "inlined"
      *     // instead of copied.
-     *     // javascript/auto caan be used to disable asset images (see next example)
+     *     // javascript/auto can be used to disable asset images (see next example)
      *     type: 'asset/resource',
      *
      *     // applicable when for "type: asset": files smaller than this
-     *     // size will be "inlined" into CSS, larer files will be extracted
+     *     // size will be "inlined" into CSS, larger files will be extracted
      *     // into independent files
      *     maxSize: 4 * 1024, // 4 kb
      *
