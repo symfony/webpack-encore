@@ -41,7 +41,7 @@ describe('plugins/clean', () => {
         cleanPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
-        expect(plugins[0].plugin.cleanOnceBeforeBuildPatterns).to.deep.equal(['**/*']);
+        expect(plugins[0].plugin.cleanOnceBeforeBuildPatterns).to.deep.equal(['**/*', '!manifest.json']);
         expect(plugins[0].plugin.dry).to.equal(false);
     });
 
@@ -56,7 +56,7 @@ describe('plugins/clean', () => {
         cleanPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(CleanWebpackPlugin);
-        expect(plugins[0].plugin.cleanOnceBeforeBuildPatterns).to.deep.equal(['**/*.js', '**/*.css']);
+        expect(plugins[0].plugin.cleanOnceBeforeBuildPatterns).to.deep.equal(['**/*.js', '**/*.css', '!manifest.json']);
         expect(plugins[0].plugin.dry).to.equal(true);
     });
 
