@@ -1920,7 +1920,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             const version = packageHelper.getPackageVersion('@symfony/stimulus-bridge');
-            if (!semver.satisfies(version, '^1.2.0')) {
+            if (!semver.satisfies(version, '^2.0.0')) {
                 // we support the old version, but it's not tested
                 this.skip();
 
