@@ -995,12 +995,12 @@
 "@symfony/mock-module@file:fixtures/stimulus/mock-module":
   version "1.0.0"
 
-"@symfony/stimulus-bridge@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@symfony/stimulus-bridge/-/stimulus-bridge-1.1.0.tgz#34548c633fe49bcda84cc812939f63640e698af7"
-  integrity sha512-Sz8iwKQHBjrgCnxCGwH87S/J/Min0gX3EuXJaHi4vpibY3BjVm+WYuP8+OYPkMIROPyNZKYgTffFfJLBAFLwFQ==
+"@symfony/stimulus-bridge@^1.1.0 || ^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@symfony/stimulus-bridge/-/stimulus-bridge-2.0.0.tgz#52cbf5c8524dec1a6c154a535bc82fedf1987b06"
+  integrity sha512-sq8FMQDmG5rtcmXwK+SQ2o5dEEqjaxpFjP/EYzl3qbGnED099XxOQDPnbrtVSIRRPlWEsuoTalD9B1fAdeFp0Q==
   dependencies:
-    webpack-virtual-modules "^0.3.2"
+    acorn "^8.0.5"
 
 "@types/anymatch@*":
   version "1.3.1"
@@ -1473,7 +1473,7 @@ acorn@^7.4.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-7.4.1.tgz#feaed255973d2e77555b83dbc08851a6c63520fa"
   integrity sha512-nQyp0o1/mNdbTO1PO6kHkwSrmgZ0MT/jCCpNiwbUjGoRN4dlBhqJtoQuCnEOKzgTVwg0ZWiCoQy6SxMebQVh8A==
 
-acorn@^8.0.4:
+acorn@^8.0.4, acorn@^8.0.5:
   version "8.0.5"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.0.5.tgz#a3bfb872a74a6a7f661bc81b9849d9cac12601b7"
   integrity sha512-v+DieK/HJkJOpFBETDJioequtc3PfxsWMaxIdIwujtF7FEV/MAyDQLlm6/zPvr7Mix07mLh6ccVwIsloceodlg==
@@ -2616,7 +2616,7 @@ debug@4.2.0:
   dependencies:
     ms "2.1.2"
 
-debug@^3.0.0, debug@^3.1.1, debug@^3.2.6:
+debug@^3.1.1, debug@^3.2.6:
   version "3.2.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.7.tgz#72580b7e9145fb39b6676f9c5e5fb100b934179a"
   integrity sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==
@@ -7578,13 +7578,6 @@ webpack-sources@^2.1.1, webpack-sources@^2.2.0:
   dependencies:
     source-list-map "^2.0.1"
     source-map "^0.6.1"
-
-webpack-virtual-modules@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/webpack-virtual-modules/-/webpack-virtual-modules-0.3.2.tgz#b7baa30971a22d99451f897db053af48ec29ad2c"
-  integrity sha512-RXQXioY6MhzM4CNQwmBwKXYgBs6ulaiQ8bkNQEl2J6Z+V+s7lgl/wGvaI/I0dLnYKB8cKsxQc17QOAVIphPLDw==
-  dependencies:
-    debug "^3.0.0"
 
 webpack@^5.12:
   version "5.18.0"

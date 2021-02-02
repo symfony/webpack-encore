@@ -2,7 +2,7 @@
     "controllers": {
         "@symfony/mock-module": {
             "mock": {
-                "webpackMode": "lazy",
+                "fetch": "lazy",
                 "enabled": true,
                 "autoimport": {
                     "@symfony/mock-module/dist/style.css": true
