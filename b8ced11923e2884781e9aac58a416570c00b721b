@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by jdreesen at 2021-02-03T11:39:25Z
+
+Note that Node 10 EOLs at 2021-04-30: https://nodejs.org/en/about/releases/
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2021-02-03T11:42:00Z
+
+That's the EOL date from node maintainers. There are other ppl that take over maintenance after them, eg from Ubuntu LTS or RHEL.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-02-03T11:45:29Z
+
+An indirect dependency of Encore (webpack-manifest-plugin) doesn't support 10.19 anymore, I guess that's the reason behind the bump.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-02-03T12:01:54Z
+
+I don't think using nodejs (or php, python, ...) binaries from Ubuntu (or other any OS) official repositories is a good idea.
+Using a versions managing tool, like [nvm](https://github.com/nvm-sh/nvm), would allow you to use any Node.js versions you want (latest 10, latest 12, etc..).
+
+Also, I'm not a big fan for lowering the version range "just for you", because of your OS constraints. IMO, this is not a problem Encore should have to deal with.
+
+And as @tgalopin said, [webpack-manifest-plugin](https://github.com/shellscape/webpack-manifest-plugin/blob/master/package.json#L12) requires at least Node 10.22.1.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2021-02-03T13:08:08Z
+
+Thanks for spotting the dep that triggered the bump. Here is a PR to fix it too: https://github.com/shellscape/webpack-manifest-plugin/pull/247
+
+We don't have to wait for this other PR to merge this one.
+
+Bumping when there is no technical reason to do so is doing DRM and forcing ppl (not just me this time) to spend more time doing extra work. We can definitely be more friendly towards our communities by relaxing minimum versions too.
