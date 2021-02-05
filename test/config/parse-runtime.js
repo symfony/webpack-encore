@@ -67,8 +67,10 @@ describe('parse-runtime', () => {
 
         expect(config.environment).to.equal('dev');
         expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('http://localhost:8080/');
+        expect(config.devServerHost).to.equal('localhost');
+        expect(config.devServerPort).to.equal('8080');
         expect(config.devServerKeepPublicPath).to.be.false;
+        expect(config.devServerPublic).to.be.null;
     });
 
     it('dev-server command with options', () => {
@@ -76,8 +78,9 @@ describe('parse-runtime', () => {
         const config = parseArgv(createArgv(['dev-server', '--bar', '--host', 'foohost.l', '--port', '9999']), testDir);
 
         expect(config.environment).to.equal('dev');
-        expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('http://foohost.l:9999/');
+        expect(config.devServerHost).to.equal('foohost.l');
+        expect(config.devServerPort).to.equal(9999);
+        expect(config.devServerHttps).to.be.undefined;
     });
 
     it('dev-server command https', () => {
@@ -85,7 +88,16 @@ describe('parse-runtime', () => {
         const config = parseArgv(createArgv(['dev-server', '--https', '--host', 'foohost.l', '--port', '9999']), testDir);
 
         expect(config.useDevServer).to.be.true;
-        expect(config.devServerUrl).to.equal('https://foohost.l:9999/');
+        expect(config.devServerHost).to.equal('foohost.l');
+        expect(config.devServerPort).to.equal(9999);
+        expect(config.devServerHttps).to.equal(true);
+    });
+
+    it('dev-server command public', () => {
+        const testDir = createTestDirectory();
+        const config = parseArgv(createArgv(['dev-server', '--public', 'https://my-domain:8080']), testDir);
+
+        expect(config.devServerPublic).to.equal('https://my-domain:8080');
     });
 
     it('--context is parsed correctly', () => {

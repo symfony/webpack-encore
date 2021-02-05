@@ -616,11 +616,42 @@ describe('The config-generator function', () => {
         it('devServer with custom options', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.devServerPort = 9090;
             config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
             config.setPublicPath('/');
             config.addEntry('main', './main');
 
+            const actualConfig = configGenerator(config);
+
+            expect(actualConfig.devServer).to.containSubset({
+                static: {
+                    directory: isWindows ? 'C:\\tmp\\public' : '/tmp/public',
+                },
+            });
+
+            // this should be set when running the config generator
+            expect(config.runtimeConfig.devServerFinalIsHttps).is.false;
+        });
+
+        it('devServer enabled only at the command line', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerHttps = true;
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+
+            configGenerator(config);
+            // this should be set when running the config generator
+            expect(config.runtimeConfig.devServerFinalIsHttps).is.true;
+        });
+
+        it('devServer enabled only via config', () => {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
             config.configureDevServerOptions(options => {
                 options.https = {
                     key: 'https.key',
@@ -636,6 +667,9 @@ describe('The config-generator function', () => {
                     cert: 'https.cert',
                 },
             });
+
+            // this should be set when running the config generator
+            expect(config.runtimeConfig.devServerFinalIsHttps).is.true;
         });
     });
 
