@@ -31,7 +31,6 @@ describe('path-util getContentBase()', () => {
         it('contentBase is calculated correctly', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.outputPath = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
             config.setPublicPath('/build/');
             config.addEntry('main', './main');
@@ -45,7 +44,6 @@ describe('path-util getContentBase()', () => {
         it('contentBase works ok with manifestKeyPrefix', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.outputPath = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
             config.setPublicPath('/subdirectory/build');
             // this "fixes" the incompatibility between outputPath and publicPath
@@ -59,7 +57,6 @@ describe('path-util getContentBase()', () => {
         it('contentBase is calculated correctly with no public path', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
             config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
             config.setPublicPath('/');
             config.addEntry('main', './main');
@@ -121,6 +118,52 @@ describe('path-util getContentBase()', () => {
 
             const actualPath = pathUtil.getRelativeOutputPath(config);
             expect(actualPath).to.equal(isWindows ? 'public\\build' : 'public/build');
+        });
+    });
+
+    describe('calculateDevServerUrl', () => {
+        it('no https, no public', function() {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.devServerFinalIsHttps = false;
+            runtimeConfig.devServerPublic = false;
+            runtimeConfig.devServerHost = 'localhost';
+            runtimeConfig.devServerPort = '8080';
+
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('http://localhost:8080');
+        });
+
+        it('yes https, no public', function() {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.devServerFinalIsHttps = true;
+            runtimeConfig.devServerPublic = false;
+            runtimeConfig.devServerHost = 'localhost';
+            runtimeConfig.devServerPort = '8080';
+
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('https://localhost:8080');
+        });
+
+        it('no https, yes public not absolute', function() {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.devServerFinalIsHttps = false;
+            runtimeConfig.devServerPublic = 'myhost.local:9090';
+
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('http://myhost.local:9090');
+        });
+
+        it('yes https, yes public not absolute', function() {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.devServerFinalIsHttps = true;
+            runtimeConfig.devServerPublic = 'myhost.local:9090';
+
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('https://myhost.local:9090');
+        });
+
+        it('yes public and is absolute', function() {
+            const runtimeConfig = new RuntimeConfig();
+            runtimeConfig.devServerFinalIsHttps = false;
+            runtimeConfig.devServerPublic = 'https://myhost.local:9090';
+
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('https://myhost.local:9090');
         });
     });
 });

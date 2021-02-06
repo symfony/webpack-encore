@@ -158,7 +158,9 @@ describe('WebpackConfig object', () => {
         it('Prefix when using devServer', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.devServerHost = 'localhost';
+            config.runtimeConfig.devServerPort = 8080;
+            config.runtimeConfig.devServerFinalIsHttps = false;
             config.setPublicPath('/public');
 
             expect(config.getRealPublicPath()).to.equal('http://localhost:8080/public/');
@@ -167,7 +169,9 @@ describe('WebpackConfig object', () => {
         it('No prefix with devServer & devServerKeepPublicPath option', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.devServerHost = 'localhost';
+            config.runtimeConfig.devServerPort = 8080;
+            config.runtimeConfig.devServerFinalIsHttps = false;
             config.runtimeConfig.devServerKeepPublicPath = true;
             config.setPublicPath('/public');
 
@@ -177,7 +181,9 @@ describe('WebpackConfig object', () => {
         it('devServer does not prefix if publicPath is absolute', () => {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerUrl = 'http://localhost:8080/';
+            config.runtimeConfig.devServerHost = 'localhost';
+            config.runtimeConfig.devServerPort = 8080;
+            config.runtimeConfig.devServerFinalIsHttps = false;
             config.setPublicPath('http://coolcdn.com/public');
             config.setManifestKeyPrefix('/public/');
 
