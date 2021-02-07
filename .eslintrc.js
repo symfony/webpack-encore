@@ -16,6 +16,7 @@ module.exports = {
         "es6": true,
     },
     "parserOptions": { "ecmaVersion": 2017 },
+    "ignorePatterns": ["lib/webpack-manifest-plugin"],
     "rules": {
         "quotes": ["error", "single"],
         "no-undef": "error",
