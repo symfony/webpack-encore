@@ -19,8 +19,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
-    - name: checkout master
-      run: git branch -f master origin/master
     - name: yarn install
       run: yarn install
     - name: run tests
