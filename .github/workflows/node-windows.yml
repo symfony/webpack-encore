@@ -1,0 +1,27 @@
+name: Node
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: windows-2019
+
+    strategy:
+      matrix:
+        node: [ '14', '12', '10' ]
+
+    name: ${{ matrix.node }} (Windows)
+    steps:
+    - name: Checkout Commit
+      uses: actions/checkout@v1
+    - name: Setup Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node }}
+    - name: checkout master
+      run: git branch -f master origin/master
+    - name: yarn install
+      run: yarn install
+    - name: run tests
+      run: yarn test
