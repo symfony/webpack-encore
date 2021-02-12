@@ -2480,6 +2480,48 @@ module.exports = {
                     done();
                 });
             });
+
+            it('Does not prevent from setting the map option of the manifest plugin', (done) => {
+                const config = createWebpackConfig('www/build', 'production');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.copyFiles({
+                    from: './images',
+                    pattern: /symfony_logo\.png/,
+                    includeSubdirectories: false
+                });
+
+                config.configureManifestPlugin(options => {
+                    options.map = (file) => {
+                        return Object.assign({}, file, {
+                            name: `${file.name}.test`,
+                        });
+                    };
+                });
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    expect(config.outputPath).to.be.a.directory()
+                        .with.files([
+                            'entrypoints.json',
+                            'runtime.js',
+                            'main.js',
+                            'manifest.json',
+                            'symfony_logo.png'
+                        ]);
+
+                    webpackAssert.assertManifestPath(
+                        'build/main.js.test',
+                        '/build/main.js'
+                    );
+
+                    webpackAssert.assertManifestPath(
+                        'build/symfony_logo.png.test',
+                        '/build/symfony_logo.png'
+                    );
+
+                    done();
+                });
+            });
         });
 
         describe('entrypoints.json & splitChunks()', () => {
