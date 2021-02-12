@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by minimit at 2021-02-08T09:48:32Z
+
+Works great on mac, can't test on windows
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-02-08T18:31:39Z
+
+Thanks @shellscape for keeping an eye on that ;). I did include it in the new `webpack-manifest-plugin` directory - I grabbed the LICENSE file from `master` and put it there - https://github.com/symfony/webpack-encore/pull/921/files#diff-1422c8fd28cafc7a2c9bb9bfba27c0a1598d225ced0644653c1226bbd48604e7 - but let me know if it needs to be somewhere else.
+
+Btw, this embedding I hope is temporary, at best :). I want to get the fix out to our users ASAP because I don't want users to start relying on the new incorrect paths... only for us to change them back later.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-02-09T02:44:23Z
+
+This is now ready to go. We may never merge it - it depends on https://github.com/shellscape/webpack-manifest-plugin/pull/249 - I'd like to merge and tag a fix ASAP for people. We could always remove this "embedded" plugin easily and re-add the real one.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-02-11T02:04:06Z
+
+I've fully embedded the fix from https://github.com/shellscape/webpack-manifest-plugin/pull/249
+
+I'm confident that I now have the problem solved correctly there. I'd like to get this fix to our users, so I'm planning to merge this PR and temporarily embed the plugin so we can get it released :).
+
+Cheers!
