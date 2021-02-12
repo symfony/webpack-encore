@@ -10,7 +10,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require('../../lib/webpack-manifest-plugin');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const manifestPluginUtil = require('../../lib/plugins/manifest');

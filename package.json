@@ -48,7 +48,6 @@
     "webpack": "^5.12",
     "webpack-cli": "^4",
     "webpack-dev-server": "^4.0.0-beta.0",
-    "webpack-manifest-plugin": "^3",
     "yargs-parser": "^20.2.4"
   },
   "devDependencies": {
@@ -67,7 +66,7 @@
     "chai-fs": "^2.0.0",
     "chai-subset": "^1.6.0",
     "core-js": "^3.0.0",
-    "eslint": "^6.0.0 || ^7.0.0",
+    "eslint": "^6.7.0 || ^7.0.0",
     "eslint-loader": "^4.0.0",
     "eslint-plugin-header": "^3.0.0",
     "eslint-plugin-import": "^2.8.0",

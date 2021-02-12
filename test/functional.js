@@ -152,6 +152,26 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('Check manifest.json with node_module includes', (done) => {
+            const config = createWebpackConfig('web/build', 'dev');
+            config.addEntry('main', './js/import_node_modules_image');
+            config.setPublicPath('/build');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // should have a main.js file
+                // should have a manifest.json with public/main.js
+
+                webpackAssert.assertOutputJsonFileMatches('manifest.json', {
+                    'build/main.js': '/build/main.js',
+                    'build/runtime.js': '/build/runtime.js',
+                    'build/images/symfony_logo.png': '/build/images/symfony_logo.91beba37.png',
+                    'build/images/ok.png': '/build/images/ok.c3f4e113.png',
+                });
+
+                done();
+            });
+        });
+
         it('Use "all" splitChunks & look at entrypoints.json', (done) => {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
@@ -2377,7 +2397,7 @@ module.exports = {
                 // and be versioned
                 config.copyFiles({
                     from: './copy',
-                    to: './[path][name]-[hash].[ext]',
+                    to: './[path][name]-[hash:8].[ext]',
                     pattern: /\.(css|js)$/,
                 });
 
@@ -2407,21 +2427,20 @@ module.exports = {
                 });
 
                 testSetup.runWebpack(config, (webpackAssert) => {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            'entrypoints.json',
-                            'runtime.js',
-                            'main.js',
-                            'manifest.json',
+                    webpackAssert.assertDirectoryContents([
+                        'entrypoints.json',
+                        'runtime.js',
+                        'main.js',
+                        'manifest.json',
 
-                            // 1st rule
-                            'foo-5d76c098640df1edecc7ca66ee62b1ea.css',
-                            'foo-5d76c098640df1edecc7ca66ee62b1ea.js',
+                        // 1st rule
+                        'foo-[hash:8].css',
+                        'foo-[hash:8].js',
 
-                            // 2nd rule
-                            'foo.json',
-                            'foo.png',
-                        ]);
+                        // 2nd rule
+                        'foo.json',
+                        'foo.png',
+                    ]);
 
                     done();
                 });
