@@ -778,13 +778,13 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules).oneOf[1];
             expect(imagesRule.type).to.equal('asset/resource');
             expect(imagesRule.generator).to.eql({ filename: 'images/[name].[hash:8][ext]' });
             expect(imagesRule.parser).to.eql({});
-            expect(imagesRule).to.include.keys('test', 'type', 'generator', 'parser');
+            expect(imagesRule).to.include.keys('type', 'generator', 'parser');
 
-            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules);
+            const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules).oneOf[1];
             expect(fontsRule.type).to.equal('asset/resource');
             expect(fontsRule.generator).to.eql({ filename: 'fonts/[name].[hash:8][ext]' });
         });
@@ -801,7 +801,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules).oneOf[1];
             expect(imagesRule.type).to.equal('asset/resource');
             expect(imagesRule.generator).to.eql({ filename: 'file.[hash][ext]' });
         });
@@ -818,7 +818,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules).oneOf[1];
             expect(imagesRule.parser).to.eql({ dataUrlCondition: { maxSize: 3000 } });
         });
 
@@ -1122,22 +1122,22 @@ describe('The config-generator function', () => {
 
         it('configure rule for "images"', () => {
             config.configureLoaderRule('images', (loaderRule) => {
-                loaderRule.generator.filename = 'dirname-images/[hash:42][ext]';
+                loaderRule.oneOf[1].generator.filename = 'dirname-images/[hash:42][ext]';
             });
 
             const webpackConfig = configGenerator(config);
-            const rule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, webpackConfig.module.rules);
+            const rule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, webpackConfig.module.rules).oneOf[1];
 
             expect(rule.generator.filename).to.equal('dirname-images/[hash:42][ext]');
         });
 
         it('configure rule for "fonts"', () => {
             config.configureLoaderRule('fonts', (loader) => {
-                loader.generator.filename = 'dirname-fonts/[hash:42][ext]';
+                loader.oneOf[1].generator.filename = 'dirname-fonts/[hash:42][ext]';
             });
 
             const webpackConfig = configGenerator(config);
-            const rule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, webpackConfig.module.rules);
+            const rule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, webpackConfig.module.rules).oneOf[1];
 
             expect(rule.generator.filename).to.equal('dirname-fonts/[hash:42][ext]');
         });
