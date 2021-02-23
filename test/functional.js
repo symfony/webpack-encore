@@ -2212,11 +2212,11 @@ module.exports = {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     webpackAssert.assertDirectoryContents([
                         'entrypoints.json',
-                        'runtime.fbc90386.js',
-                        'main.06a6c20f.js',
+                        'runtime.[hash:8].js',
+                        'main.[hash:8].js',
                         'manifest.json',
-                        'symfony_logo.91beba37.png',
-                        'symfony_logo_alt.f880ba14.png',
+                        'symfony_logo.[hash:8].png',
+                        'symfony_logo_alt.[hash:8].png',
                     ]);
 
                     webpackAssert.assertManifestPath(
