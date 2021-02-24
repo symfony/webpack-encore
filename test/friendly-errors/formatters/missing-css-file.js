@@ -39,7 +39,7 @@ describe('formatters/missing-css-file', () => {
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).to.contain('/some/file.css contains a reference to the file ../images/foo.png');
+            expect(JSON.stringify(actualErrors)).to.contain('\\"/some/file.css\\" contains a reference to the file \\"../images/foo.png\\"');
             expect(JSON.stringify(actualErrors)).to.contain('This file can not be found, please check it for typos or update it if the file got moved.');
             // all needed packages will be present when running tests
             expect(JSON.stringify(actualErrors)).to.not.contain('yarn add');
