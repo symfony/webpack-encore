@@ -52,7 +52,7 @@ describe('formatters/missing-loader', () => {
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).to.contain('To load /some/file.jpg');
+            expect(JSON.stringify(actualErrors)).to.contain('To load \\"/some/file.jpg\\"');
             expect(JSON.stringify(actualErrors)).to.contain('You may need to install and configure a special loader');
         });
 
