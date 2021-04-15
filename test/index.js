@@ -10,6 +10,7 @@
 'use strict';
 
 const expect = require('chai').expect;
+const sinon = require('sinon');
 const api = require('../index');
 const path = require('path');
 
@@ -452,6 +453,21 @@ describe('Public API', () => {
             expect(returnedValue).to.equal(api);
         });
 
+    });
+
+    describe('when', () => {
+        it('should call or not callbacks depending of the conditions', () => {
+            api.configureRuntimeEnvironment('dev', {}, false);
+
+            const spy = sinon.spy();
+            api
+                .when((Encore) => Encore.isDev(), (Encore) => spy('is dev'))
+                .when((Encore) => Encore.isProduction(), (Encore) => spy('is production'))
+                .when(true, (Encore) => spy('true'));
+            expect(spy.calledWith('is dev'), 'callback for "is dev" should be called').to.be.true;
+            expect(spy.calledWith('is production'), 'callback for "is production" should NOT be called').to.be.false;
+            expect(spy.calledWith('true'), 'callback for "true" should be called').to.be.true;
+        });
     });
 
     describe('isRuntimeEnvironmentConfigured', () => {
