@@ -2651,7 +2651,7 @@ module.exports = {
                 });
             });
 
-            it.only('Use splitChunks in production mode', (done) => {
+            it('Use splitChunks in production mode', (done) => {
                 const config = createWebpackConfig('web/build', 'production');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -2666,18 +2666,18 @@ module.exports = {
                     webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                         entrypoints: {
                             main: {
-                                js: ['/build/runtime.js', '/build/[id].js', '/build/[id].js', '/build/main.js'],
-                                css: ['/build/[id].css']
+                                js: ['/build/runtime.js', '/build/961.js', '/build/38.js', '/build/main.js'],
+                                css: ['/build/38.css']
                             },
                             other: {
-                                js: ['/build/runtime.js', '/build/[id].js', '/build/[id].js', '/build/other.js'],
-                                css: ['/build/[id].css']
+                                js: ['/build/runtime.js', '/build/961.js', '/build/38.js', '/build/other.js'],
+                                css: ['/build/38.css']
                             }
                         }
                     });
 
                     // make split chunks are correct in manifest
-                    webpackAssert.assertManifestPath('build/[id].js', '/build/[id].[hash:8].js');
+                    webpackAssert.assertManifestKeyExists('build/961.js');
 
                     done();
                 });
