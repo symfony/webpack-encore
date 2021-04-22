@@ -1597,6 +1597,29 @@ class Encore {
     }
 
     /**
+     * Use to conditionally configure or enable features only in when the first parameter results to "true".
+     *
+     * ```
+     * Encore
+     *     // passing a callback
+     *     .when((Encore) => Encore.isProduction(), (Encore) => Encore.enableVersioning())
+     *     // passing a boolean
+     *     .when(process.argv.includes('--analyze'), (Encore) => Encore.addPlugin(new BundleAnalyzerPlugin()))
+     * ```
+     *
+     * @param {(function(Encore): boolean) | boolean} condition
+     * @param {function(Encore): void} callback
+     * @return {Encore}
+     */
+    when(condition, callback) {
+        if (typeof condition === 'function' && condition(this) || typeof condition === 'boolean' && condition) {
+            callback(this);
+        }
+
+        return this;
+    }
+
+    /**
      * Use this at the bottom of your webpack.config.js file:
      *
      * ```
