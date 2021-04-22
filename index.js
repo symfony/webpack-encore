@@ -1597,7 +1597,7 @@ class Encore {
     }
 
     /**
-     * Use to conditionally configure or enable features only in when the first parameter results to "true".
+     * Use to conditionally configure or enable features only when the first parameter results to "true".
      *
      * ```
      * Encore
