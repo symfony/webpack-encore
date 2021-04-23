@@ -45,7 +45,7 @@
     "style-loader": "^2.0.0",
     "terser-webpack-plugin": "^5.1.1",
     "tmp": "^0.2.1",
-    "webpack": "^5.12",
+    "webpack": "^5.35",
     "webpack-cli": "^4",
     "webpack-dev-server": "^4.0.0-beta.0",
     "yargs-parser": "^20.2.4"
