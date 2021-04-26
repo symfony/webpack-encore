@@ -32,7 +32,7 @@ describe('plugins/define', () => {
         definePluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
-        expect(plugins[0].plugin.definitions['process.env'].NODE_ENV).to.equal(JSON.stringify('development'));
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('development'));
     });
 
     it('production environment with default settings', () => {
@@ -42,7 +42,7 @@ describe('plugins/define', () => {
         definePluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
-        expect(plugins[0].plugin.definitions['process.env'].NODE_ENV).to.equal(JSON.stringify('production'));
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('production'));
     });
 
     it('production environment with options callback', () => {
@@ -51,7 +51,7 @@ describe('plugins/define', () => {
 
         config.configureDefinePlugin((options) => {
             options['foo'] = true;
-            options['process.env'].bar = true;
+            options['process.env.bar'] = true;
         });
 
         definePluginUtil(plugins, config);
@@ -60,10 +60,10 @@ describe('plugins/define', () => {
 
         // Allows to add new definitions
         expect(plugins[0].plugin.definitions.foo).to.equal(true);
-        expect(plugins[0].plugin.definitions['process.env'].bar).to.equal(true);
+        expect(plugins[0].plugin.definitions['process.env.bar']).to.equal(true);
 
         // Doesn't remove default definitions
-        expect(plugins[0].plugin.definitions['process.env'].NODE_ENV).to.equal(JSON.stringify('production'));
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('production'));
     });
 
     it('production environment with options callback that returns an object', () => {
