@@ -2663,21 +2663,21 @@ module.exports = {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     // in production, we hash the chunk names to avoid exposing any extra details
-                    webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
-                        entrypoints: {
-                            main: {
-                                js: ['/build/runtime.js', '/build/843.js', '/build/38.js', '/build/main.js'],
-                                css: ['/build/38.css']
-                            },
-                            other: {
-                                js: ['/build/runtime.js', '/build/843.js', '/build/38.js', '/build/other.js'],
-                                css: ['/build/38.css']
-                            }
-                        }
-                    });
+                    const entrypointsData = JSON.parse(webpackAssert.readOutputFile('entrypoints.json'));
+                    const mainJsFiles = entrypointsData.entrypoints.main.js;
+                    expect(mainJsFiles).to.have.length(4);
+                    expect(mainJsFiles[0]).equals('/build/runtime.js');
+                    // keys 1 and 2 are "split files" with an integer name that sometimes changes
+                    expect(mainJsFiles[3]).equals('/build/main.js');
+
+                    expect(entrypointsData.entrypoints.main.css[0]).equals('/build/38.css');
 
                     // make split chunks are correct in manifest
-                    webpackAssert.assertManifestKeyExists('build/843.js');
+                    const manifestData = JSON.parse(webpackAssert.readOutputFile('manifest.json'));
+                    mainJsFiles.forEach((file) => {
+                        // file.substring(1) => /build/main.js -> build/main.js
+                        expect(Object.keys(manifestData)).includes(file.substring(1));
+                    });
 
                     done();
                 });

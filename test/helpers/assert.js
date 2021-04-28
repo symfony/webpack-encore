@@ -265,6 +265,16 @@ class Assert {
             throw new Error(`Files ${Object.keys(expectedFileStrings).join(', ')} were expected to be found in the directory but were not. Actual files: ${actualFiles.join(', ')}`);
         }
     }
+
+    /**
+     * Return the contents of a built file.
+     *
+     * @param {string} filePath
+     * @return {string}
+     */
+    readOutputFile(filePath) {
+        return readOutputFile(this.webpackConfig, filePath);
+    }
 }
 
 module.exports = function(webpackConfig) {
