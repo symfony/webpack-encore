@@ -101,11 +101,12 @@ module.exports = Encore.getWebpackConfig();
             expect(parsedOutput).to.be.an('object');
             expect(parsedOutput.modules).to.be.an('array');
 
-            // We expect 3 modules there:
+            // We expect 4 modules there:
+            // - webpack/runtime/chunk loaded
             // - webpack/runtime/jsonp chunk loading
             // - webpack/runtime/hasOwnProperty shorthand
             // - ./js/no_require.js
-            expect(parsedOutput.modules.length).to.equal(3);
+            expect(parsedOutput.modules.length).to.equal(4);
 
 
             done();
