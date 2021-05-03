@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.1.0
+## 1.2.0
 
  * [DEPENDENCY UPGRADE] `css-minimizer-webpack-plugin` was upgraded from version 1
    to version 2. This should not affect you directly, unless you were passing
@@ -16,6 +16,14 @@
    has now been disabled and you will get an error instead. This was done
    because there is no way for Encore to detect this change and update its
    config properly - #943 thanks to @weaverryan.
+
+## 1.1.0
+
+ * [DEPENDENCY UPGRADES] The following packages now *allow* new major versions:
+   * Allow postcss-loader 5
+   * Allow less-loader 8
+   * Allow sass-loader 11
+   * Allow stylus-loader 5
 
 ## 1.0.0
 
