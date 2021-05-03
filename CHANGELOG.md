@@ -1,5 +1,22 @@
 # CHANGELOG
 
+## 1.1.0
+
+ * [DEPENDENCY UPGRADE] `css-minimizer-webpack-plugin` was upgraded from version 1
+   to version 2. This should not affect you directly, unless you were passing
+   custom options to this plugin (e.g. via `configureCssMinimizerPlugin()`). #966
+   thanks to @stof.
+
+ * [FEATURE] Added `Encore.when()`, which can be used to easily add conditional code
+   (e.g. code that should be run only in "dev"). See the `index.js` file for
+   more details - #963 thanks to @Kocal.
+
+ * [BUG] When using `webpack-dev-server`, if the target port (e.g. 8080) was
+   unavailable, previously, a different port would be fine (e.g. 8081). This
+   has now been disabled and you will get an error instead. This was done
+   because there is no way for Encore to detect this change and update its
+   config properly - #943 thanks to @weaverryan.
+
 ## 1.0.0
 
  * [DEPENDENCY UPGRADE] Webpack was upgraded from version 4 to 5.
