@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2021-05-07T12:28:42Z
+
+And resync the `yarn.lock` for applying your last changes on the `package.json`! :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-07T12:38:47Z
+
+Hi!
+
+Just a clarification for anyone else: this is a `require-dev` dependency - there is no security issue with Encore. If you are  using `handlebars` in your app, then you have it installed directly and need to manage its version independent of Encore :).
+
+But I will merge this (when it's ready - the lock file needs to be updated and recommitted) - it will help recommend to people that their version is lower than what we support.
+
+---------------------------------------------------------------------------
+
+by elghailani at 2021-05-07T13:35:10Z
+
+Thanks @Kocal & @weaverryan for the feedbacks.
+The lock file is synched.
