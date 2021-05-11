@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 1.3.0
+
+ * [DEPENDENCY CHANGE] `friendly-errors-webpack-plugin` was replaced by
+   `@nuxt/friendly-errors-webpack-plugin` - the previous package was abandoned.
+   There should be no noticeable changes, unless you are using
+   `Encore.configureFriendlyErrorsPlugin()` and happen to configure some
+   feature that differs between these libraries (the new library is a fork
+   of the old)
+
 ## 1.2.0
 
  * [DEPENDENCY UPGRADE] `css-minimizer-webpack-plugin` was upgraded from version 1
