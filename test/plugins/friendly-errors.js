@@ -10,7 +10,7 @@
 'use strict';
 
 const expect = require('chai').expect;
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('@nuxt/friendly-errors-webpack-plugin');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const friendlyErrorsPluginUtil = require('../../lib/plugins/friendly-errors');

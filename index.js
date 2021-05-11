@@ -124,8 +124,8 @@ class Encore {
     }
 
     /**
-     * Allows you to configure the options passed to the friendly-errors-webpack-plugin.
-     * A list of available options can be found at https://github.com/geowarin/friendly-errors-webpack-plugin
+     * Allows you to configure the options passed to the @nuxt/friendly-errors-webpack-plugin.
+     * A list of available options can be found at https://github.com/nuxt/friendly-errors-webpack-plugin
      *
      * For example:
      *
