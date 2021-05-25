@@ -1269,6 +1269,7 @@ class Encore {
      *              Configure the loader to lint `.vue` files
      * ```
      *
+     * @deprecated Prefer using "Encore.enableEslintPlugin()" instead.
      * @param {string|object|function} eslintLoaderOptionsOrCallback
      * @param {object} encoreOptions
      * @returns {Encore}
