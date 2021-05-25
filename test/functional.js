@@ -1962,7 +1962,7 @@ module.exports = {
 
             expect(() => {
                 testSetup.runWebpack(config, (webpackAssert, stats) => {});
-            }).to.throw('No ESLint configration has been found.');
+            }).to.throw('No ESLint configuration has been found.');
         });
 
         it('When enabled and without any configuration, ESLint will throw an error and a nice message should be displayed (eslint-webpack-plugin)', (done) => {
