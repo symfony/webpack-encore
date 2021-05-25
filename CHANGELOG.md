@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v1.7.1](https://github.com/symfony/webpack-encore/releases/tag/v1.7.0)
+
+*Jan 20th, 2022*
+
+### Bug Fix
+
+- [#1069](https://github.com/symfony/webpack-encore/pull/1069) - Increased webpack-cli version constraint to v.4.9.1 - *@nspyke*
+
 ## [v1.7.0](https://github.com/symfony/webpack-encore/releases/tag/v1.7.0)
 
 *Dec 2nd, 2021*
@@ -7,7 +15,7 @@
 Dependency changes:
 
 * Official support for `ts-loader` 8 was dropped.
-* Official support for `typescript` 8 was dropped and minimum increased to 4.2.2.
+* Official support for `typescript` 3 was dropped and minimum increased to 4.2.2.
 * Official support for `vue` was bumped to 3.2.14 or higher.
 * Official support for `vue-loader` was bumped to 16.7.0 or higher.
 
