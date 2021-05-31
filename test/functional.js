@@ -753,23 +753,6 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Persistent caching does not cause problems', (done) => {
-            const config = createWebpackConfig('www/build', 'dev');
-            config.setPublicPath('/build');
-            config.addEntry('main', './js/code_splitting');
-            config.enableBuildCache({ config: [__filename] });
-
-            testSetup.runWebpack(config, (webpackAssert) => {
-                // sanity check
-                webpackAssert.assertManifestPath(
-                    'build/main.js',
-                    '/build/main.js'
-                );
-
-                done();
-            });
-        });
-
         describe('addCacheGroup()', () => {
             it('addCacheGroup() to extract a vendor into its own chunk', (done) => {
                 const config = createWebpackConfig('www/build', 'dev');
@@ -1294,7 +1277,6 @@ module.exports = {
                 done();
             });
         });
-
 
         it('When enabled, react JSX is transformed!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
