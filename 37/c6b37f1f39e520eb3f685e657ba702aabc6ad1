@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-21T15:45:02Z
+
+You're correct - there's no problem with allowing less-loader 9, as we still allow versions that support Node 10.
+
+However, it's definitely made a mess for the tests. I've just pushed what will hopefully be a workaround.
+
+---------------------------------------------------------------------------
+
+by bobvandevijver at 2021-05-21T18:37:30Z
+
+Well, Node 10 is no longer supported since the beginning of this month, so we could consider dropping support for it altogether if that makes it easier 😀
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-21T21:42:31Z
+
+I’m concerned about ubuntu 20.04 LTS, which I believe comes with node 10. And to bump to 12 just for this reason would be unfortunate :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-21T21:43:30Z
+
+Plus, I think my last commit fixed things. Appveyor is broken still, but I’m not sure we need to anymore, as we have windows tested by GH actions.
+
+---------------------------------------------------------------------------
+
+by bobvandevijver at 2021-05-31T10:13:38Z
+
+@weaverryan Is there anything left to do for me before this can be merged and released?
