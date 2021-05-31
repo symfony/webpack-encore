@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.4.0
+
+* [FEATURE] Allow less-loader v9 - #983 thanks to @bobvandevijver
+* [BUG] Fix manifest key problem when using copy files - #936 thanks to @bobvandevijver
+
 ## 1.3.0
 
  * [DEPENDENCY CHANGE] `friendly-errors-webpack-plugin` was replaced by
