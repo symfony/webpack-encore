@@ -26,11 +26,15 @@ matrix:
         - rm yarn.lock
         - yarn
     - os: linux
-      node_js: "10"
+      node_js: "14"
       env: JOB_PART=travis:lint
     - os: linux
       node_js: "10"
       env: JOB_PART=test
+      # needed so that Node 10 downloads a compatible less-loader version
+      install:
+        - rm yarn.lock
+        - yarn --ignore-engines
     - os: linux
       node_js: "12"
       env: JOB_PART=test

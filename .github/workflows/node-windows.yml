@@ -19,7 +19,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node }}
+    # needed so that Node 10 downloads a compatible less-loader version
+    - name: Clear lock file
+      run: del yarn.lock
     - name: yarn install
-      run: yarn install
+      run: yarn --ignore-engines
     - name: run tests
       run: yarn test
