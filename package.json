@@ -99,6 +99,8 @@
     "vue-loader": "^16.1.0",
     "vue-template-compiler": "^2.5",
     "webpack-notifier": "^1.6.0",
+    "svelte": "^3.23.0",
+    "svelte-loader": "^2.13.6",
     "zombie": "^6.1.4"
   },
   "files": [
