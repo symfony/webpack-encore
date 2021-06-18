@@ -1,264 +1,262 @@
 # CHANGELOG
 
-## 1.4.0
-
-* [FEATURE] Allow less-loader v9 - #983 thanks to @bobvandevijver
-* [BUG] Fix manifest key problem when using copy files - #936 thanks to @bobvandevijver
-
-## 1.3.0
-
- * [DEPENDENCY CHANGE] `friendly-errors-webpack-plugin` was replaced by
-   `@nuxt/friendly-errors-webpack-plugin` - the previous package was abandoned.
-   There should be no noticeable changes, unless you are using
-   `Encore.configureFriendlyErrorsPlugin()` and happen to configure some
-   feature that differs between these libraries (the new library is a fork
-   of the old)
-
-## 1.2.0
-
- * [DEPENDENCY UPGRADE] `css-minimizer-webpack-plugin` was upgraded from version 1
-   to version 2. This should not affect you directly, unless you were passing
-   custom options to this plugin (e.g. via `configureCssMinimizerPlugin()`). #966
-   thanks to @stof.
+## [v1.5.0](https://github.com/symfony/webpack-encore/releases/tag/v1.5.0)
 
- * [FEATURE] Added `Encore.when()`, which can be used to easily add conditional code
-   (e.g. code that should be run only in "dev"). See the `index.js` file for
-   more details - #963 thanks to @Kocal.
+*June 18th, 2021*
 
- * [BUG] When using `webpack-dev-server`, if the target port (e.g. 8080) was
-   unavailable, previously, a different port would be fine (e.g. 8081). This
-   has now been disabled and you will get an error instead. This was done
-   because there is no way for Encore to detect this change and update its
-   config properly - #943 thanks to @weaverryan.
+### Feature
 
-## 1.1.0
+- [#1000](https://github.com/symfony/webpack-encore/pull/1000) - Allow ts-loader ^9.0.0, close #993 - *@Kocal*
+- [#999](https://github.com/symfony/webpack-encore/pull/999) - Allow sass-loader ^12.0.0, close #996 - *@Kocal*
 
- * [DEPENDENCY UPGRADES] The following packages now *allow* new major versions:
-   * Allow postcss-loader 5
-   * Allow less-loader 8
-   * Allow sass-loader 11
-   * Allow stylus-loader 5
+## [v1.4.0](https://github.com/symfony/webpack-encore/releases/tag/v1.4.0)
 
-## 1.0.0
+*May 31st, 2021*
 
- * [DEPENDENCY UPGRADE] Webpack was upgraded from version 4 to 5.
+### Feature
 
- * [DEPENDENCY UPGRADES] The following packages had major version upgrades:
-   * `css-loader` from 3 to 5
-   * `assets-webpack-plugin` from 5 to 7
-   * `mini-css-extract-plugin` from 0.4 to 1
-   * `style-loader` from 1 to 2
-   * `terser-webpack-plugin` from 1 to 5
-   * `webpack-cli` from 3 to 4
-   * `webpack-manifest-plugin` from 2 to 3
-   * `webpack-dev-server` from 3 to 4-beta [CHANGELOG](https://github.com/webpack/webpack-dev-server/blob/master/CHANGELOG.md#400-beta0-2020-11-27)
+- [#983](https://github.com/symfony/webpack-encore/pull/983) - Allow less-loader v9 - *@bobvandevijver*
 
- * [DEPENDENCY SUPPORT CHANGES] Encore has changed what versions it supports
-   of the following packages:
-   * `less` from 3 to 4 and `less-loader` from 6 to 7
-   * `fork-ts-checker-webpack-plugin` from 4 to 5 or 6
+### Bug Fix
 
- * [BC BREAK] Image and font processing was changed from using `file-loader`
-   (and  optionally `url-loader` via `configureUrlLoader()`) to Webpack 5's
-   new [Asset Modules](https://webpack.js.org/guides/asset-modules/).
-   In practice, unless you have a highly-configured system, this should
-   not cause significant changes.
+- [#979](https://github.com/symfony/webpack-encore/pull/979) - #936: Fix manifest key problem when using copy files - *@bobvandevijver*
 
- * [BC BREAK] The `configureUrlLoader()` method was removed. See
-   `configureImageRule()` and `configureFontRule()` - specifically the
-   `maxSize` option and type: 'asset'. The `url-loader` is no longer used.
+## [v1.3.0](https://github.com/symfony/webpack-encore/releases/tag/v1.3.0)
 
- * [BC BREAK] The `disableImagesLoader()` and `disableFontsLoader()` methods
-   have been removed. See `configureImageRule()` and `configureFontRule()`
-   for a new option to disable these.
+*May 11th, 2021*
 
- * [BC BREAK] The `configureFilenames()` method no longer accepts paths
-   for `images` or `fonts`. See `configureImageRule()` and `configureFontRule()`
-   for how to configure these filenames. The `configureFilenames()` method
-   *does* now accept an `assets` option, but out-of-the-box, this will not
-   result in any filename changes. See `configureFilenames()` for more details.
+### Feature
 
- * [BC BREAK] `optimize-css-assets-webpack-plugin` was replaced by
-   `css-minimizer-webpack-plugin` and the `optimizeCssPluginOptionsCallback()`
-   method was replaced by `cssMinimizerPluginOptionsCallback()`.
+- [#976](https://github.com/symfony/webpack-encore/pull/976) - Change friendly-errors-webpack-plugin to `@nuxt`/friendly-errors-webpack-plugin - *@hailwood*
 
- * [BC BREAK] The `file-loader` package is no longer required by Encore. If
-   you use `copyFiles()`, you will need to install it manually (you
-   will receive a clear error about this).
+### Bug Fix
 
- * [BC BREAK] All previously-deprecated methods & options were removed.
+- [#975](https://github.com/symfony/webpack-encore/pull/975) - Resolve security issue CVE-2021-23369 - *@elghailani*
 
- * [BEHAVIOR CHANGE] The `HashedModuleIdsPlugin` was previously used to
-   help name "modules" when building for production. This has been removed
-   and we now use Webpack's native `optimization.moduleIds` option, which
-   is set to `deterministic`.
+## [v1.2.0](https://github.com/symfony/webpack-encore/releases/tag/v1.2.0)
 
- * [configureMiniCssExtractPlugin()] `configureMiniCssExtractPlugin()` was
-   added to allow the `MiniCssExtractPlugin.loader` and `MiniCssExtractPlugin`
-   to be configured.
+*May 3rd, 2021*
 
- * [enableBuildCache()] Added `enableBuildCache()` to enable the new
-   Webpack 5 build caching. https://webpack.js.org/blog/2020-10-10-webpack-5-release/
-   This feature should be considered experimental.
+### Feature
 
-## 0.33.0
+- [#968](https://github.com/symfony/webpack-encore/pull/968) - Locking assets-webpack-plugin to less than 7.1.0 - *@weaverryan*
+- [#966](https://github.com/symfony/webpack-encore/pull/966) - Upgrade to css-minimize-webpack-plugin 2.0 - *@stof*
+- [#963](https://github.com/symfony/webpack-encore/pull/963) - feat: add Encore.when() - *@Kocal*
 
- * [disableCssExtraction()] Added boolean argument to `disableCssExtraction()`
-   to make it easier to dynamically disable extraction - #756 thanks
-   to @football2801.
+### Bug Fix
 
- * [DEPENDENCY UPGRADE] Vue 3 was already supported, but the dependencies
-   have been upgraded to explicitly support the stable version, instead
-   of beta versions - #869 thanks to @weaverryan
+- [#943](https://github.com/symfony/webpack-encore/pull/943) - Do not allow webpack-dev-server to find an open port - *@weaverryan*
 
- * [DEPENDENCY UPGRADE] Explicit support for `postcss-loader` v3 was
-   dropped but support for v4 was added - #854 thanks to @railto.
+## [v1.1.2](https://github.com/symfony/webpack-encore/releases/tag/v1.1.2)
 
- * [DEPENDENCY UPGRADE] Support for `sass-loader` v10 was added - #865
-   thanks to @shmshd.
+*March 1st, 2021*
 
- * Allowed using `copyFiles()` even if you don't have any other
-   entrypoints - #831 thanks to @pszalko.
+### Bug Fix
 
- * [DEPENDENCY UPGRADE] Support for `ts-loader` was upgraded from
-   `^5.3` to `^8.0.1`. This means that only `^8.0.1` of `ts-loader`
-   is guaranteed to work - #800 thanks to @skmedix.
+- [#939](https://github.com/symfony/webpack-encore/pull/939) - fixing 2 issues related to webpack-dev-server and HMR - *@weaverryan*
+- [#938](https://github.com/symfony/webpack-encore/pull/938) - Require vue-loader 15.9.5 to work with Encore 1.0 - *@weaverryan*
 
- * [DEPENDENCY UPGRADE] Support for `eslint` v5 was removed but support
-   for v7 was added. Also, `eslint-loader` support for v3 was removed
-   but support for v4 was added - see #774 thanks to @Kocal.
+## [v1.1.1](https://github.com/symfony/webpack-encore/releases/tag/v1.1.1)
 
-## 0.32.1
+*February 19th, 2021*
 
- * Fixing a bug where the new Stimulus Bridge always required the
-   `@symfony/stimulus-bridge/webpack-helper` module, even if you
-   were not using this feature - #863 thanks to @Kocal
+### Bug Fix
 
-## 0.32.0
+- [#930](https://github.com/symfony/webpack-encore/pull/930) - Fix Encore.copyFiles() when copying images/fonts - *@Lyrkan*
 
- * [enableStimulusBridge] The new `enableStimulusBridge()` method was
-   added to enable the Stimulus bridge and Symfony UX features. See
-   https://symfony.com/ux for more details and #859 thanks to @tgalopin.
+## [v1.1.0](https://github.com/symfony/webpack-encore/releases/tag/v1.1.0)
 
-## 0.31.1
+*February 12th, 2021*
 
- * [DEPENDENCY UPGRADE] `resolve-url-loader` was updated from `^3.0.1`
-   to `^3.1.2`, which should not affect most users. See #848 thanks
-   to @Khartir.
+### Feature
 
-## 0.31.0
+- [#929](https://github.com/symfony/webpack-encore/pull/929) - Allowing stylus-loader 5 - *@weaverryan*
+- [#928](https://github.com/symfony/webpack-encore/pull/928) - allowing sass-loader 11 - *@weaverryan*
+- [#918](https://github.com/symfony/webpack-encore/pull/918) - Allowing new postcss-loader and less-loader - *@weaverryan*
 
- * [DEPENDENCY UPGRADE] `assets-webpack-plugin` was updated from `^3.9.7`
-   to `^5.1.1`, which should not affect most users.
+## [v1.0.6](https://github.com/symfony/webpack-encore/releases/tag/v1.0.6)
 
- * [DEPENDENCY UPGRADE] `less-loader` was updated from `^4.1.0`
-   to `^6.2.0`. This will likely not affect you unless you're passing
-   certain custom options in `enableLessLoader()`: [CHANGELOG](https://github.com/webpack-contrib/less-loader/blob/master/CHANGELOG.md)
+*February 12th, 2021*
 
- * [DEPENDENCY UPGRADE] `sass-loader` was updated from `^8.0.0`
-   to `^9.0.1`, which has some options-related changes: [CHANGELOG](https://github.com/webpack-contrib/sass-loader/blob/master/CHANGELOG.md)
+### Bug Fix
 
-## 0.30.0
+- [#921](https://github.com/symfony/webpack-encore/pull/921) - Fixing manifest paths (by temporarily embedding webpack-manifest-plugin fix) - *@weaverryan*
 
- * ~~[BC BREAK] The Vue "build" was changed from `vue.esm.js` (full build) to `vue.runtime.esm.js` (runtime build)~~
-   This was reverted in Encore 0.30.1.
+## [v1.0.5](https://github.com/symfony/webpack-encore/releases/tag/v1.0.5)
 
- * [DEPENDENCY UPGRADE] `sass-loader` was upgraded from version 7 to 8.
-   See the [CHANGELOG](https://github.com/webpack-contrib/sass-loader/blob/master/CHANGELOG.md#800-2019-08-29)
-   for breaking changes. This likely will not affect you unless pass
-   custom options to `Encore.enableSassLoader()`: several options were
-   moved or renamed - #758 thanks to @Kocal.
+*February 6th, 2021*
 
- * [BEHAVIOR CHANGE] Encore now resolves loaders directly from its
-   `node_modules/`, instead of by name. This change will cause a behavior
-   change if you do any of the following:
+### Bug Fix
 
-   * Add a different version of a loader (that Encore embeds) into your
-     `package.json`: the different loader won't be used anymore.
+- [#917](https://github.com/symfony/webpack-encore/pull/917) - Re-working dev-server and https detection - *@weaverryan*
 
-   * Require a package that also included one of our embedded loaders:
-     depending on which one was hoisted it could result in a different
-     behavior.
+## [v1.0.4](https://github.com/symfony/webpack-encore/releases/tag/v1.0.4)
 
-   * Manipulate the generated config and filter loaders based on their
-     names: the comparison won't be the same anymore
+*February 2nd, 2021*
 
-   See #739 thanks to @Lyrkan.
+### Bug Fix
 
- * [DEPENDENCY UPGRADE] Webpack minimum version was changed from
-   `4.20.0` to `4.36.0` - see #746 and #758.
+- [#910](https://github.com/symfony/webpack-encore/pull/910) - Fix stimulus version bug - *@weaverryan*
 
- * [DEPENDENCY UPGRADE] Upgraded `clean-webpack-plugin` from `^0.1.19` to `^3.0.0`.
-   You should not notice significant changes unless you use
-   `Encore.cleanupOutputBeforeBuild()` and pass custom options.
-   For more info, see [v1 to v2 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/issues/106)
-   and [v2 to v3 upgrade notes](https://github.com/johnagan/clean-webpack-plugin/releases/tag/v3.0.0).
-   There were no changes from `0.1.19` to `1.0.0`. See #760 thanks to @weaverryan.
+## [v1.0.3](https://github.com/symfony/webpack-encore/releases/tag/v1.0.3)
 
- * Encore will now correctly recognize a project-wide `babel.config.js` file - #738
-   thanks to @jdreesen.
+*January 31st, 2021*
 
- * [DEPENDENCY UPGRADE] The `fork-ts-checker-webpack-plugin` package was upgraded for the tests
-   from `^0.4.1` to `^4.0.0`. If you're using `enableForkedTypeScriptTypesChecking()`,
-   you control the `fork-ts-checker-webpack-plugin` version in your
-   `package.json` file. You should upgrade to `^4.0.0` to ensure
-   that the plugin works correctly with Encore. See
-   [fork-ts-checker-webpack-plugin](https://github.com/TypeStrong/fork-ts-checker-webpack-plugin)
-   for details about the changes. See #759 thanks to @weaverryan.
+### Bug Fix
 
- * Added support for Vue3 - #746 thanks to @weaverryan.
+- [#905](https://github.com/symfony/webpack-encore/pull/905) - Omit cache key entirely when build cache is disabled - *@weaverryan*
 
-## 0.29.0
+## [v1.0.2](https://github.com/symfony/webpack-encore/releases/tag/v1.0.2)
 
- * Support for Node 8 was dropped.
+*January 29th, 2021*
 
- * [BC BREAK] Several loader dependencies we upgraded across major versions.
-   These won't affect most users, but could affect you if you have custom
-   configuration for those loaders that changed between versions:
+### Bug Fix
 
-   * `css-loader` upgraded from version 2 to 3 - #729 thanks to @weaverryan.
-     [CHANGELOG](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#300-2019-06-11)
-     This shouldn't affect most users - you are most likely to be affected
-     if you're using `Encore.configureCssLoader()`.
+- [#902](https://github.com/symfony/webpack-encore/pull/902) - next stimulus-bridge will actually be 2.0 - *@weaverryan*
+- [#901](https://github.com/symfony/webpack-encore/pull/901) - Working around missing manifest.json bug - *@weaverryan*
 
-   * `style-loader` upgraded from 0.21 to 1.1  - #710 thanks to @Grafikart.
-     [CHANGELOG](https://github.com/webpack-contrib/style-loader/blob/master/CHANGELOG.md#100-2019-08-06)
-     Unless you're doing custom configuration, it's unlikely you're affected.
+## [v1.0.1](https://github.com/symfony/webpack-encore/releases/tag/v1.0.1)
 
-   * `file-loader` upgraded from 1.1 to 6  - #731 thanks to @weaverryan.
-     [CHANGELOG](https://github.com/webpack-contrib/file-loader/blob/master/CHANGELOG.md#600-2020-03-17)
-     If you are importing images/fonts using the CommonJS syntax (`require('foo.png')`),
-     you will now need to explicitely retrieve the default export (`require('foo.png').default`)
-     in order to get the path of the file.
-     Imports done using the `import` keyword should not be affected.
+*January 29th, 2021*
 
-   * `url-loader` upgraded from allowing version 1 or 2 to allowing version 4 - #731 thanks to @weaverryan.
-     [CHANGELOG](https://github.com/webpack-contrib/url-loader/blob/master/CHANGELOG.md#400-2020-03-17)
-     Unless you're doing custom configuration, it's unlikely you're affected.
+### Bug Fix
 
- * [BC BREAK] If you're using `enableEslintLoader()`, Encore no longer
-   configures eslint for you: you now *must* configure your own
-   `.eslintrc.js` file. If this is missing, you'll now get a nice
-   error about this telling you how to fix it - #687 thanks to @Kocal.
+- [#899](https://github.com/symfony/webpack-encore/pull/899) - Fixing support for webpack-dev-server v4 - *@weaverryan*
 
- * Added `Encore.enableBabelTypeScriptPreset()` to "compile" TypeScript with
-   Babel, which is a more performant option than `ts-loader` - #694
-   thanks to @Kocal.
+## [v1.0.0](https://github.com/symfony/webpack-encore/releases/tag/v1.0.0)
 
- * Added `Encore.configureDevServerOptions()` as an easy way to configure
-   dev-server options - #693 thanks to @Kocal.
+*January 27th, 2021*
 
- * Added `Encore.addCacheGroup()` method as an easy way to add custom
-   caching groups - #680 thanks to @Lyrkan.
+### Feature
 
- * Include the .pcss extension for PostCSS files - #718 thanks to @opdavies
+- [#892](https://github.com/symfony/webpack-encore/pull/892) - Prep for 1.0: upgrading all outdated dependencies - *@weaverryan*
+- [#889](https://github.com/symfony/webpack-encore/pull/889) - bumping preset-env to version that depends on @babel/plugin-proposal-class-properties - *@weaverryan*
+- [#888](https://github.com/symfony/webpack-encore/pull/888) - updating stimulus-bridge plugin to work with proposed new loader - *@weaverryan*
+- [#887](https://github.com/symfony/webpack-encore/pull/887) - Bump less 4 and less loader 7 - *@VincentLanglet*
+- [#884](https://github.com/symfony/webpack-encore/pull/884) - [Webpack 5] Adding new enableBuildCache() method for Webpack 5 persistent caching - *@weaverryan*
+- [#883](https://github.com/symfony/webpack-encore/pull/883) - Updating images and fonts to use Webpack 5 Asset modules - *@weaverryan*
+- [#878](https://github.com/symfony/webpack-encore/pull/878) - [Webpack5] Using old watchOptions regexp & removing Node 13 support - *@weaverryan*
+- [#645](https://github.com/symfony/webpack-encore/pull/645) - Update Webpack to v5 (+ other dependencies) - *@Lyrkan*
 
- * Added `Encore.configureStyleLoader()` to configure the `style-loader` - #715
-   thanks to @tooltonix.
+## [v0.33.0](https://github.com/symfony/webpack-encore/releases/tag/v0.33.0)
 
- * Added `lintVue: true` option to `Encore.enableEslintLoader()` to explicitly
-   turn on linting of Vue files (which requires  the `vue-eslint-parser`
-   package) - #574 thanks to @Kocal.
+*December 3rd, 2020*
+
+### Feature
+
+- [#870](https://github.com/symfony/webpack-encore/pull/870) - Prefer sass over node-sass - *@weaverryan*
+- [#869](https://github.com/symfony/webpack-encore/pull/869) - Upgrade Vue3 deps beyond beta - *@weaverryan*
+- [#865](https://github.com/symfony/webpack-encore/pull/865) - Bump sass-loader to ^10.0.0  - *@weaverryan*
+- [#854](https://github.com/symfony/webpack-encore/pull/854) - Updates postcss loader to v4 - *@railto*
+- [#831](https://github.com/symfony/webpack-encore/pull/831) - Validator should allow copyFiles() without other entries. - *@pszalko*
+- [#800](https://github.com/symfony/webpack-encore/pull/800) - ⬆️ Upgraded ts-loader to ^8.0.1 - *@skmedix*
+- [#774](https://github.com/symfony/webpack-encore/pull/774) - feat: add support for ESLint 7, drop support ESLint 5 - *@Kocal*
+- [#756](https://github.com/symfony/webpack-encore/pull/756) - Add a boolean parameter to Encore.disableCssExtraction() - *@football2801*
+
+## [v0.32.1](https://github.com/symfony/webpack-encore/releases/tag/v0.32.1)
+
+*December 3rd, 2020*
+
+### Bug Fix
+
+- [#863](https://github.com/symfony/webpack-encore/pull/863) - fix(stimulus): don't require an optional dependency if it's not used - *@Kocal*
+
+## [v0.32.0](https://github.com/symfony/webpack-encore/releases/tag/v0.32.0)
+
+*December 3rd, 2020*
+
+### Feature
+
+- [#859](https://github.com/symfony/webpack-encore/pull/859) - Implement Stimulus bridge configurator - *@tgalopin*
+
+## [v0.31.1](https://github.com/symfony/webpack-encore/releases/tag/v0.31.1)
+
+*December 3rd, 2020*
+
+### Bug Fix
+
+- [#848](https://github.com/symfony/webpack-encore/pull/848) - Update resolve-url-loader to fix prototype pollution - *@Khartir*
+
+## [v0.31.0](https://github.com/symfony/webpack-encore/releases/tag/v0.31.0)
+
+*September 10th, 2020*
+
+### Bug Fix
+
+- [#832](https://github.com/symfony/webpack-encore/pull/832) - Update assets-webpack-plugin to ^5.1.1 - *@cilefen*
+
+## [v0.30.2](https://github.com/symfony/webpack-encore/releases/tag/v0.30.2)
+
+*May 14th, 2020*
+
+### Bug Fix
+
+- [#772](https://github.com/symfony/webpack-encore/pull/772) - Setting CleanWebpackPlugin's cleanStaleWebpackAssets: false - *@weaverryan*
+
+## [v0.30.1](https://github.com/symfony/webpack-encore/releases/tag/v0.30.1)
+
+*May 13th, 2020*
+
+### Bug Fix
+
+- [#769](https://github.com/symfony/webpack-encore/pull/769) - Reverting change to only package vue runtime loader - *@weaverryan*
+
+## [v0.30.0](https://github.com/symfony/webpack-encore/releases/tag/v0.30.0)
+
+*May 11th, 2020*
+
+### Feature
+
+- [#763](https://github.com/symfony/webpack-encore/pull/763) - Removing vue2 alias to use the full build - *@weaverryan*
+- [#760](https://github.com/symfony/webpack-encore/pull/760) - upgrading to clean-webpack-plugin 3.0 - *@weaverryan*
+- [#759](https://github.com/symfony/webpack-encore/pull/759) - upgrading fork-ts-checker-webpack-plugin to test 4.0 - *@weaverryan*
+- [#758](https://github.com/symfony/webpack-encore/pull/758) - Feat/sass loader 8 - *@weaverryan*
+- [#746](https://github.com/symfony/webpack-encore/pull/746) - Added Vue3 support - *@weaverryan*
+
+### Bug Fix
+
+- [#765](https://github.com/symfony/webpack-encore/pull/765) - Fixing babel.config.js filename in message - *@weaverryan*
+- [#752](https://github.com/symfony/webpack-encore/pull/752) - Upgrade yargs-parser - *@stof*
+- [#739](https://github.com/symfony/webpack-encore/pull/739) - Resolve loaders directly from Encore instead of using their names - *@Lyrkan*
+- [#738](https://github.com/symfony/webpack-encore/pull/738) - Fix babel config file detection - *@jdreesen*
+
+## [v0.29.1](https://github.com/symfony/webpack-encore/releases/tag/v0.29.1)
+
+*April 18th, 2020*
+
+### Bug Fix
+
+- [#732](https://github.com/symfony/webpack-encore/pull/732) - feat: add ESLint 6 support - *@Kocal*
+
+## [v0.29.0](https://github.com/symfony/webpack-encore/releases/tag/v0.29.0)
+
+*April 17th, 2020*
+
+### Feature
+
+- [#731](https://github.com/symfony/webpack-encore/pull/731) - Upgrade file-loader and allowed version for url-loader, drop Node 8 support - *@weaverryan*
+- [#729](https://github.com/symfony/webpack-encore/pull/729) - bumping to css-loader v3 - *@weaverryan*
+- [#718](https://github.com/symfony/webpack-encore/pull/718) - Include the .pcss extension for PostCSS files - *@opdavies*
+- [#715](https://github.com/symfony/webpack-encore/pull/715) - Added the possibility to configure the StyleLoader via the method Enc… - *@tooltonix*
+- [#710](https://github.com/symfony/webpack-encore/pull/710) - bump: style-loader version 1.X - *@Grafikart*
+- [#694](https://github.com/symfony/webpack-encore/pull/694) - Add Encore.enableBabelTypeScriptPreset() to "compile" TypeScript with Babel - *@Kocal*
+- [#693](https://github.com/symfony/webpack-encore/pull/693) - Add a way to configure devServer options - *@Kocal*
+- [#687](https://github.com/symfony/webpack-encore/pull/687) - Remove ESLint user-related config - *@Kocal*
+- [#680](https://github.com/symfony/webpack-encore/pull/680) - Add Encore.addCacheGroup() method and depreciate Encore.createSharedEntry() - *@Lyrkan*
+- [#574](https://github.com/symfony/webpack-encore/pull/574) - Proposal to replace #504 (ESLint/Vue) - *@Kocal*
+
+### Bug Fix
+
+- [#649](https://github.com/symfony/webpack-encore/pull/649) - Allow to use the [N] placeholder in copyFiles() - *@Lyrkan*
+
+## [v0.28.3](https://github.com/symfony/webpack-encore/releases/tag/v0.28.3)
+
+*February 24th, 2020*
+
+### Bug Fix
+
+- [#697](https://github.com/symfony/webpack-encore/pull/697) - Fix source maps being generated by default in dev - *@Lyrkan*
+
 
 ## 0.28.0
 
