@@ -1512,5 +1512,24 @@ describe('WebpackConfig object', () => {
                 });
             }).to.throw('"notExisting" is not a valid key for enableEslintLoader(). Valid keys: lintVue.');
         });
+
+        it('ESLint loader can not be enabled if ESLint Webpack Plugin is already enabled', () => {
+            const config = createConfig();
+            config.enableEslintPlugin();
+
+            expect(function() {
+                config.enableEslintLoader();
+            }).to.throw('Encore.enableEslintLoader() can not be called when Encore.enableEslintPlugin() has been called.');
+        });
+    });
+    describe('enableEslintPlugin', () => {
+        it('ESLint loader can not be enabled if ESLint Webpack Plugin is already enabled', () => {
+            const config = createConfig();
+            config.enableEslintLoader();
+
+            expect(function() {
+                config.enableEslintPlugin();
+            }).to.throw('Encore.enableEslintPlugin() can not be called when Encore.enableEslintLoader() has been called.');
+        });
     });
 });
