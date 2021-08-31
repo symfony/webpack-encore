@@ -1,0 +1,22 @@
+name: ESLint
+on: [push, pull_request]
+
+jobs:
+    eslint:
+        name: ESLint
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2.0.0
+
+            -   name: Node ${{matrix.node-versions}}
+                uses: actions/setup-node@v2
+                with:
+                    node-version: '14'
+
+            -   name: Install Yarn Dependencies
+                run: yarn install
+
+            -   name: Run ESLint
+                run: yarn lint
