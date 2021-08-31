@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## [v2.0.0](https://github.com/symfony/webpack-encore/releases/tag/v2.0.0)
+
+*TBD, 2022*
+
+This is a new major version that contains several backwards-compatibility breaks.
+
+### BC Breaks
+
+The following dependencies were upgraded a major version. It's unlikely
+these will cause problems, unless you were further configuring this part
+of Encore:
+
+* `clean-webpack-plugin` Version `3` to `4`: dropped old Node & Webpack version support
+* `css-loader` Version `5` to `6`: dropped old Node version support & [CHANGELOG](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#-breaking-changes)
+* `css-minimizer-webpack-plugin` Version `2` to `3`: dropped old Node version support
+* `loader-utils` REMOVED
+* `mini-css-extract-plugin` Version `1.5` to `2.2.1`: dropped old Node & Webpack version support & [CHANGELOG](https://github.com/webpack-contrib/mini-css-extract-plugin/blob/master/CHANGELOG.md#-breaking-changes)
+* `pretty-error` Version `3.0` to `4.0`: dropped old Node version support 
+* `resolve-url-loader` Version `3.0` to `5.0`: dropped old Node version support, requires postcss `^8.0`, remove `rework` engine & [CHANGELOG](https://github.com/bholloway/resolve-url-loader/blob/v4-maintenance/packages/resolve-url-loader/CHANGELOG.md)
+* `style-loader` Version `2` to `3`: dropped old Node and Webpack version support & [CHANGELOG](https://github.com/webpack-contrib/style-loader/blob/master/CHANGELOG.md#-breaking-changes)
+* `yargs-parser` Version `20.2` to `21`: dropped old Node version support
+
+Additionally, Encore changed the supported versions of the following packages,
+which you may have installed to enable extra features:
+
+* `eslint` Minimum version increased from `7` to `8`
+* `eslint-webpack-plugin` Minimum version increased from `2.5` to `3`
+* `fork-ts-checker-webpack-plugin` Minimum version increased from `5` to `6` [CHANGELOG](https://github.com/TypeStrong/fork-ts-checker-webpack-plugin/releases/tag/v6.0.0)
+* `less-loader` Minimum version increased from `7` to `10`
+* `postcss-loader` Minimum version increased from `4` to `6`
+* `preact` Minimum version increased from `8` to `10` [CHANGELOG](https://github.com/preactjs/preact/releases/tag/10.0.0)
+* `sass-loader` Minimum version increased from `9` to `12`
+* `stylus` Minimum version increased from `0.54` to `0.56`
+* `stylus-loader` Minimum version increased from `3` to `6` [CHANGELOG](https://github.com/webpack-contrib/stylus-loader/blob/master/CHANGELOG.md#400-2020-09-29)
+* `vue-loader` Minimum version increased from `16` to `17` [CHANGELOG](https://github.com/vuejs/vue-loader/blob/next/CHANGELOG.md#1700-2021-12-12)
+
 ## [v1.8.2](https://github.com/symfony/webpack-encore/releases/tag/v1.8.2)
 
 *Mar 17th, 2022*
