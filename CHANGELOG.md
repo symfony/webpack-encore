@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## [v1.6.0](https://github.com/symfony/webpack-encore/releases/tag/v1.6.0)
+
+*Aug 31st, 2021*
+
+### Feature
+
+- [#1008](https://github.com/symfony/webpack-encore/pull/1008) - Allow postcss-loader 6  - *@bobvandevijver*
+- [#1009](https://github.com/symfony/webpack-encore/pull/1009) - Allow less-loader 10 - *@bobvandevijver*
+
 ## [v1.5.0](https://github.com/symfony/webpack-encore/releases/tag/v1.5.0)
 
 *June 18th, 2021*
