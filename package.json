@@ -94,7 +94,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2 || ^4.0.0 || ^5.0.0",
     "ts-loader": "^8.0.1 || ^9.0.0",
-    "typescript": ">=3.6.3",
+    "typescript": ">=3.7.2",
     "vue": "^3.0.2",
     "vue-loader": "^16.1.0",
     "vue-template-compiler": "^2.5",
