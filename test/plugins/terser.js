@@ -37,15 +37,13 @@ describe('plugins/terser', () => {
         const config = createConfig();
 
         config.configureTerserPlugin((options) => {
-            options.terserOptions = {
-                output: { beautify: true }
-            };
+            options.test = 'custom_test';
         });
 
         const plugin = terserPluginUtil(config);
 
         // Allows to override default options
-        expect(plugin.options.terserOptions.output.beautify).to.equal(true);
+        expect(plugin.options.test).to.equal('custom_test');
 
         // Doesn't remove default options
         expect(plugin.options.parallel).to.equal(true);
@@ -55,16 +53,14 @@ describe('plugins/terser', () => {
         const config = createConfig();
 
         config.configureTerserPlugin((options) => {
-            options.terserOptions = {
-                output: { beautify: true }
-            };
+            options.test = 'custom_test';
 
             // This should override the original config
             return { parallel: false };
         });
 
         const plugin = terserPluginUtil(config);
-        expect(plugin.options.terserOptions.output).to.be.undefined;
+        expect(plugin.options.test).to.not.equal('custom_test');
         expect(plugin.options.parallel).to.equal(false);
     });
 });
