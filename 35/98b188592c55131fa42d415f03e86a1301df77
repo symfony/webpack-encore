@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by bobvandevijver at 2021-08-31T18:59:19Z
+
+Would it be possible for you to create a beta release on npm so it is easy to install and test for me tomorrow?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-09-01T08:43:38Z
+
+@bobvandevijver you can run the following commands instead of waiting for a release:
+```
+$ yarn remove @symfony/webpack-encore
+$ yarn add -D symfony/webpack-encore#1031/head
+```
+
+---------------------------------------------------------------------------
+
+by bobvandevijver at 2021-09-01T10:26:31Z
+
+@Kocal You're absolutely right!
+
+So, I made the following adjustment:
+
+```git
+-    .configureDevServerOptions(options => {
+-      options.disableHostCheck = true;
+-    })
+-
+     .configureDevServerOptions(options => {
+       options.allowedHosts = 'all';
+       options.https = {
+         cert: '/etc/apache2/ssl/domain.dev/fullchain.pem',
+         key: '/etc/apache2/ssl/domain.dev/privkey.pem',
+       };
+-
+-      delete options.client.host;
+     })
+```
+
+It still seems to work as it should in my environment (except for https://github.com/vuejs/vue-loader/issues/1795, but that is unrelated to #1017).
