@@ -49,7 +49,7 @@
     "tmp": "^0.2.1",
     "webpack": "^5.35",
     "webpack-cli": "^4",
-    "webpack-dev-server": "^4.0.0-beta.0",
+    "webpack-dev-server": "^4.0.0",
     "yargs-parser": "^20.2.4"
   },
   "devDependencies": {
