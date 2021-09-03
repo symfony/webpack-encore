@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v1.6.1](https://github.com/symfony/webpack-encore/releases/tag/v1.6.0)
+
+*Sep 3rd, 2021*
+
+### Bug Fix
+
+- [#1031](https://github.com/symfony/webpack-encore/pull/1031) - changing position of host option for webpack-dev-server - *@weaverryan*
+
 ## [v1.6.0](https://github.com/symfony/webpack-encore/releases/tag/v1.6.0)
 
 *Aug 31st, 2021*
