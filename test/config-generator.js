@@ -778,7 +778,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules).oneOf[1];
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, actualConfig.module.rules).oneOf[1];
             expect(imagesRule.type).to.equal('asset/resource');
             expect(imagesRule.generator).to.eql({ filename: 'images/[name].[hash:8][ext]' });
             expect(imagesRule.parser).to.eql({});
