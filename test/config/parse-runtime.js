@@ -93,9 +93,9 @@ describe('parse-runtime', () => {
         expect(config.devServerHttps).to.equal(true);
     });
 
-    it('dev-server command public', () => {
+    it('dev-server command client-web-socket-url', () => {
         const testDir = createTestDirectory();
-        const config = parseArgv(createArgv(['dev-server', '--public', 'https://my-domain:8080']), testDir);
+        const config = parseArgv(createArgv(['dev-server', '--client-web-socket-url', 'https://my-domain:8080']), testDir);
 
         expect(config.devServerPublic).to.equal('https://my-domain:8080');
     });
