@@ -1,6 +1,25 @@
 # CHANGELOG
 
-## [v1.6.1](https://github.com/symfony/webpack-encore/releases/tag/v1.6.0)
+## [v1.7.0](https://github.com/symfony/webpack-encore/releases/tag/v1.7.0)
+
+*Dec 2nd, 2021*
+
+Dependency changes:
+
+* Official support for `ts-loader` 8 was dropped.
+* Official support for `typescript` 8 was dropped and minimum increased to 4.2.2.
+* Official support for `vue` was bumped to 3.2.14 or higher.
+* Official support for `vue-loader` was bumped to 16.7.0 or higher.
+
+### Feature
+
+- [#1062](https://github.com/symfony/webpack-encore/pull/1062) - Allowing @hotwired/stimulus, allowing @symfony/stimulus-bridge 3, dropping v1. - *@weaverryan*
+
+### Bug Fix
+
+- [#1058](https://github.com/symfony/webpack-encore/pull/1058) - Fix deprecated public option failure for webpack-dev-server - *@atesca09*
+
+## [v1.6.1](https://github.com/symfony/webpack-encore/releases/tag/v1.6.1)
 
 *Sep 3rd, 2021*
 
