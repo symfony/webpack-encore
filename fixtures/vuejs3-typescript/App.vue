@@ -1,12 +1,13 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <img :src="logoPath">
     <hello></hello>
   </div>
 </template>
 
 <script lang="ts">
 import Hello from './components/Hello.vue'
+import logoPath from './assets/logo.png';
 
 class TestClassSyntax {
 
@@ -16,6 +17,9 @@ export default {
   name: 'app',
   components: {
     Hello
+  },
+  computed: {
+    logoPath: () => logoPath
   }
 }
 </script>

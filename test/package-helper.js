@@ -123,7 +123,7 @@ describe('package-helper', () => {
     describe('The getInvalidPackageVersionRecommendations correctly checks installed versions', () => {
         it('Check package that *is* the correct version', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
-                { name: 'stimulus', version: '^2.0.0' },
+                { name: '@hotwired/stimulus', version: '^3.0.0' },
                 { name: 'preact', version: '^8.2.0 || ^10.0.0' }
             ]);
 
@@ -132,7 +132,7 @@ describe('package-helper', () => {
 
         it('Check package with a version too low', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
-                { name: 'stimulus', version: '^3.0.0' },
+                { name: '@hotwired/stimulus', version: '^4.0.0' },
                 { name: 'preact', version: '9.0.0' }
             ]);
 
@@ -142,7 +142,7 @@ describe('package-helper', () => {
 
         it('Check package with a version too new', () => {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
-                { name: 'stimulus', version: '^1.6' },
+                { name: '@hotwired/stimulus', version: '^2.0' },
                 { name: 'preact', version: '8.1.0' }
             ]);
 
