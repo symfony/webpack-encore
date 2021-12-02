@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by stof at 2021-12-01T10:15:16Z
+
+tests are broken, because the tests are written expecting v3 of the bridge (as they use stimulus 3) while the yarn.lock contains v2 of the bridge.
+
+---------------------------------------------------------------------------
+
+by stof at 2021-12-01T18:07:27Z
+
+given that `@symfony/stimulus-bridge` 3 is not released yet, the CI is just skipping the tests now
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-12-01T18:08:29Z
+
+> given that @symfony/stimulus-bridge 3 is not released yet, the CI is just skipping the tests now
+
+You're too fast Stof! I was typing the below message when your message popped up :).
+
+I've just skipped the test for stimulus-bridge 2.0 (we COULD create a completely separate test for `stimulus` v2, but it would require duplicating a fixtures directory and adding another "fake" package to `package.json` - I don't think it's worth it). Locally, I temporarily forced the latest (eventually v3) version of stimulus-bridge and the test passes.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-12-01T20:19:28Z
+
+This is ready to go now
