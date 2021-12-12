@@ -7,7 +7,7 @@
 Dependency changes:
 
 * Official support for `ts-loader` 8 was dropped.
-* Official support for `typescript` 8 was dropped and minimum increased to 4.2.2.
+* Official support for `typescript` 3 was dropped and minimum increased to 4.2.2.
 * Official support for `vue` was bumped to 3.2.14 or higher.
 * Official support for `vue-loader` was bumped to 16.7.0 or higher.
 
