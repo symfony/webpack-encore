@@ -105,6 +105,53 @@ describe('The config-generator function', () => {
             }));
         });
 
+        it('addEntry and addEntries expectations are merged', () => {
+            const config = createConfig();
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.addEntry('main', './main');
+            config.addEntries({ main2: './main2' });
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
+                main: './main',
+                main2: './main2',
+            }));
+        });
+
+        it('addStyleEntry and addEntries expectations are merged', () => {
+            const config = createConfig();
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.addStyleEntry('style', ['./bootstrap.css', './main.css']);
+            config.addEntries({ main: './main' });
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
+                main: './main',
+                style: ['./bootstrap.css', './main.css'],
+            }));
+        });
+
+        it('addEntry, addStyleEntry and addEntries expectations are merged', () => {
+            const config = createConfig();
+            config.publicPath = '/';
+            config.outputPath = '/tmp';
+            config.addEntry('main', './main');
+            config.addStyleEntry('style', ['./bootstrap.css', './main.css']);
+            config.addEntries({ main2: './main2' });
+
+            const actualConfig = configGenerator(config);
+
+            expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
+                main: './main',
+                main2: './main2',
+                style: ['./bootstrap.css', './main.css'],
+            }));
+        });
+
         it('basic output', () => {
             const config = createConfig();
 

@@ -236,11 +236,38 @@ class Encore {
     }
 
     /**
+     * Adds a collection of JavaScript files that should be webpacked:
+     *
+     * ```
+     * // final output file will be main.js in the output directory
+     * Encore.addEntries({
+     *   main: './path/to/some_file.js',
+     *   secondary: './path/to/another_file.js',
+     * });
+     * ```
+     *
+     * If the JavaScript files imports/requires CSS/Sass/LESS files,
+     * then a CSS file (e.g. main.css) will also be output.
+     *
+     * @param {Object.<string, string|array>} entries where the Keys are the
+     *                            names (without extension) that will be used
+     *                            as the output filename (e.g. app will become app.js)
+     *                            in the output directory. The values are the path(s)
+     *                            to the source file(s).
+     * @returns {Encore}
+     */
+    addEntries(entries) {
+        webpackConfig.addEntries(entries);
+
+        return this;
+    }
+
+    /**
      * Adds a CSS/SASS/LESS file that should be webpacked:
      *
      * ```
      *  // final output file will be main.css in the output directory
-     *  Encore.addEntry('main', './path/to/some_file.css');
+     *  Encore.addStyleEntry('main', './path/to/some_file.css');
      * ```
      *
      * This is actually not something Webpack does natively, and you

@@ -347,13 +347,13 @@ describe('WebpackConfig object', () => {
     });
 
     describe('addEntry', () => {
-        it('Calling with a duplicate name throws an error', () => {
+        it('Calling with a duplicate entrypoint name throws an error', () => {
             const config = createConfig();
             config.addEntry('entry_foo', './foo.js');
 
             expect(() => {
                 config.addEntry('entry_foo', './bar.js');
-            }).to.throw('Duplicate name');
+            }).to.throw('already exists as an Entrypoint');
         });
 
         it('Calling with a duplicate of addStyleEntry', () => {
@@ -362,18 +362,56 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.addEntry('main', './main.js');
-            }).to.throw('conflicts with a name passed to addStyleEntry');
+            }).to.throw('already exists as a Style Entrypoint');
+        });
+
+        it('Calling with a duplicate of addEntries', () => {
+            const config = createConfig();
+            config.addEntries({ main: './foo.js' });
+
+            expect(() => {
+                config.addEntry('main', './bar.js');
+            }).to.throw('already exists as an Entrypoint');
+        });
+    });
+
+    describe('addEntries', () => {
+        it('Calling with a duplicate entrypoint name throws an error', () => {
+            const config = createConfig();
+            config.addEntry('entry_foo', './foo.js');
+
+            expect(() => {
+                config.addEntries({ entry_foo: './bar.js' });
+            }).to.throw('already exists as an Entrypoint');
+        });
+
+        it('Calling with a duplicate of addStyleEntry', () => {
+            const config = createConfig();
+            config.addStyleEntry('main', './main.scss');
+
+            expect(() => {
+                config.addEntries({ main: './main.js' });
+            }).to.throw('already exists as a Style Entrypoint');
+        });
+
+        it('Calling with a duplicate of addEntries', () => {
+            const config = createConfig();
+            config.addEntries({ main: './foo.js' });
+
+            expect(() => {
+                config.addEntries({ main: './bar.js' });
+            }).to.throw('already exists as an Entrypoint');
         });
     });
 
     describe('addStyleEntry', () => {
-        it('Calling with a duplicate name throws an error', () => {
+        it('Calling with a duplicate style entrypoint name throws an error', () => {
             const config = createConfig();
             config.addStyleEntry('entry_foo', './foo.css');
 
             expect(() => {
                 config.addStyleEntry('entry_foo', './bar.css');
-            }).to.throw('Duplicate name');
+            }).to.throw('already exists as a Style Entrypoint');
         });
 
         it('Calling with a duplicate of addEntry', () => {
@@ -382,7 +420,16 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.addStyleEntry('main', './main.js');
-            }).to.throw('conflicts with a name passed to addEntry');
+            }).to.throw('already exists as an Entrypoint');
+        });
+
+        it('Calling with a duplicate of addEntries', () => {
+            const config = createConfig();
+            config.addEntries({ main: './main.js' });
+
+            expect(() => {
+                config.addStyleEntry('main', './main.scss');
+            }).to.throw('already exists as an Entrypoint');
         });
     });
 
@@ -1530,6 +1577,35 @@ describe('WebpackConfig object', () => {
             expect(function() {
                 config.enableEslintPlugin();
             }).to.throw('Encore.enableEslintPlugin() can not be called when Encore.enableEslintLoader() has been called.');
+        });
+    });
+
+    describe('validateNameIsNewEntry', () => {
+        it('Providing a new name does not throw an error', () => {
+            const config = createConfig();
+            config.addEntry('entry_foo', './foo.js');
+
+            expect(() => {
+                config.validateNameIsNewEntry('unused_name');
+            }).to.not.throw;
+        });
+
+        it('Providing a name exists within Entries does throw an error', () => {
+            const config = createConfig();
+            config.addEntry('entry_foo', './foo.js');
+
+            expect(() => {
+                config.validateNameIsNewEntry('entry_foo');
+            }).to.throw('already exists as an Entrypoint');
+        });
+
+        it('Providing a name exists within Style Entries does throw an error', () => {
+            const config = createConfig();
+            config.addStyleEntry('entry_foo', './foo.js');
+
+            expect(() => {
+                config.validateNameIsNewEntry('entry_foo');
+            }).to.throw('already exists as a Style Entrypoint');
         });
     });
 });
