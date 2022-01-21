@@ -4,6 +4,8 @@
 
 *Jan 20th, 2022*
 
+### Feature
+
 - [#985](https://github.com/symfony/webpack-encore/pull/985) - Move from eslint-loader to eslint-webpack-plugin - *@Kocal*
 - [#1070](https://github.com/symfony/webpack-encore/pull/1070) - New Encore method for adding multiple entries at once - *@shmolf*
 - [#1074](https://github.com/symfony/webpack-encore/pull/1074) - Support AVIF images - *@benbankes*
