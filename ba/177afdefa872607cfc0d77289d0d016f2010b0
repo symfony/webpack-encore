@@ -1,0 +1,165 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-25T00:32:29Z
+
+Hey @Kocal!
+
+Thanks for jumping on this. Biggest concerns are about the BC stuff. Could we keep `enableEslintLoader()` and deprecate it (and then add in the new method + functionality)?
+
+> BC ESLint <7 support has been dropped, since the plugin requires ESLint >= 7.
+
+I'm ok with that.
+
+I'm also not sure about the test failure unfortunately :/
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-05-25T05:35:04Z
+
+I've recreated the pull request, `.enableEslintLoader()` is back again and `.enableEslintPlugin` has been implemented.
+
+For the failing tests, the funny thing is that they pass when running them one by one... :grimacing:
+![image](https://user-images.githubusercontent.com/2103975/119446505-d8e58d80-bd2e-11eb-88d8-3016eca0f0e7.png)
+
+Something wrong must happens before them.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-05-25T16:18:29Z
+
+Okay I got it.
+
+The issues were caused by my weird trick which check if an ESLint configuration exists or not (don't ask me why lol):
+```js
+try {
+    (async function() {
+        await eslint.calculateConfigForFile('webpack.config.js');
+    })();
+} catch (e) {
+    // ...
+}
+```
+
+It looks like I can't do that netheir use the form `(async() { try { await ... } catch() {} })()`, and due to the 1st form or 2nd form, the exception won't be rejected properly.
+
+So I had three options:
+1. Make this plugin function async, but I have to modify all the functions tree between `Encore.getWebpackConfig()` and this function (adding async/await where needed), but that's a lot of work and I don't think going full async should be part of this PR
+2. Re-use the deprecated `require('eslint').CLIEngine` API, but... that's deprecated
+3. find a way to force `eslint.calculateConfigForFile()` to be synchronous, thanks to [sync-rpc](https://github.com/ForbesLindesay/sync-rpc). I'm not super fan of this solution, but I think this is the best here. We could remove it later if we plan to make `Encore.getWebpackConfig()` async
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-31T15:54:18Z
+
+Hmmm. So normally, it's impossible to use an async function in Encore, because we need Encore to run synchronously (we can't wait for some async process to finish before returning the Webpack config via `Encore.getWebpackConfig()`.
+
+But, in your case, this is just to trigger a warning/error, right? It seems to me that we *could* run that async, sort if "in the background". If I'm picturing everything correctly, the result would be that Webpack builds... then a short time after, an error is thrown. But I'm doing some guessing here :).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-05-31T16:24:44Z
+
+> Hmmm. So normally, it's impossible to use an async function in Encore, because we need Encore to run synchronously (we can't wait for some async process to finish before returning the Webpack config via Encore.getWebpackConfig().
+
+Considering webpack supports a Promise for configuration, we can make `getWebpackConfig()` async without breaking things to the end-user. The end-user won't have to modify anything in its configuration.
+
+![image](https://user-images.githubusercontent.com/2103975/120219483-998dd400-c23b-11eb-925d-7cd0de886de5.png)
+
+> But, in your case, this is just to trigger a warning/error, right? It seems to me that we could run that async, sort if "in the background". If I'm picturing everything correctly, the result would be that Webpack builds... then a short time after, an error is thrown. But I'm doing some guessing here :).
+
+Yeah it's for triggering a warning/error, but also to add the ESLintPlugin to the webpack plugins. We need to run that sync otherwise the plugin won't be added (or added later, after webpack started to run... :thinking:).
+
+Also, since the "node.js packages" tends to be async more and more, I'm afraid this will cause more and more issues to Encore.
+For example we use Babel in `parse-runtime.js` to check if a `.babelrc` exists. Currently their API is sync, but maybe in the future this will be async.
+This mode of reasoning also applies for all external dependencies we load inside Encore, like `crypto`, some `webpack` API, `tmp`, `url`, etc...
+
+WDYT about:
+1. keep the ESLint check sync, thanks to sync-rpc
+2. when this PR is merged, I start to work on making `Encore.getWebpackConfig()` async?
+
+---------------------------------------------------------------------------
+
+by stof at 2021-05-31T16:28:31Z
+
+> Considering webpack supports a Promise for configuration, we can make `getWebpackConfig()` async without breaking things to the end-user. The end-user won't have to modify anything in its configuration.
+
+That's only true if the user does not customize the generated config before returning it. So that would still require a semver-major.
+
+Also, this will likely break the `Encore.reset()` API meant to allow generating multiple configs (once the config generation is asynchronous, we need to be careful about concurrency issues)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-05-31T16:37:16Z
+
+Oh yeah, totally forgot about this... :disappointed_relieved:
+
+Well... idk.
+The ESLint configuration check can not be done async, or maybe you want to **always** push the ESLintWebpackPlugin even if there is no ESLint configuration, and check async if a configuration exists? Won't it be a mess with webpack output in the CLI?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-31T16:37:30Z
+
+Yep - we can try rpc
+
+I was going to say the same thing as Stof, but he already said it better. I think we can still do it (though, I haven’t thought about the reset part), but it would need to be opt in until the next major version (with a deprecation of that flash is not set).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-05-31T16:47:05Z
+
+Just my opinion, but for me, in a new major release, it would be really nice if we stop exporting `new Encore()` but `Encore`  class instead. This way, end users would have the hability to create multiple Encore instances/webpack configurations without calling `Encore.reset()`.
+
+For the async `getWebpackConfig()`, maybe we can wait to supports Node.js 14+ which adds top-level await. This way end users could write something like this:
+```js
+const Encore = require('@symfony/webpack-encore');
+
+Encore.addEntry(...);
+
+const config = await Encore.getWebpackConfig();
+// do something with config
+
+module.exports = config;
+```
+
+---------------------------------------------------------------------------
+
+by stof at 2021-05-31T17:08:51Z
+
+@Kocal top-level await works only in ES modules, not in CommonJS files.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-05-31T17:19:41Z
+
+Ah yes that's true...
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-06-23T16:44:59Z
+
+Hi guys :wave:
+
+Is there anything else to do here? Using `sync-rpc` to make `eslint.calculateConfigForFile()` call sync is alright for you?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-09-03T18:51:11Z
+
+The PR has been successfully rebased, and a deprecation log has been added!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2021-09-21T19:52:55Z
+
+(friendly ping @weaverryan 🙂 )
+
+---------------------------------------------------------------------------
+
+by antonio-masotti at 2022-01-14T17:30:29Z
+
+Looking forward for this PR to be merged :)
