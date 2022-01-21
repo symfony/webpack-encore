@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v1.7.1](https://github.com/symfony/webpack-encore/releases/tag/v1.7.0)
+
+*Jan 20th, 2022*
+
+### Bug Fix
+
+- [#1069](https://github.com/symfony/webpack-encore/pull/1069) - Increased webpack-cli version constraint to v.4.9.1 - *@nspyke*
+
 ## [v1.7.0](https://github.com/symfony/webpack-encore/releases/tag/v1.7.0)
 
 *Dec 2nd, 2021*
