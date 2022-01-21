@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v1.8.1](https://github.com/symfony/webpack-encore/releases/tag/v1.8.1)
+
+*Jan 21st, 2022*
+
+### Bug Fix
+
+- [#1076](https://github.com/symfony/webpack-encore/pull/1076) - fix: lazy-load ESLint plugin dependency, fix #1075 - *@Kocal*
+
 ## [v1.8.0](https://github.com/symfony/webpack-encore/releases/tag/v1.8.0)
 
 *Jan 20th, 2022*
