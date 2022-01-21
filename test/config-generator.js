@@ -904,7 +904,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules).oneOf[1];
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, actualConfig.module.rules).oneOf[1];
             expect(imagesRule.type).to.equal('asset/resource');
             expect(imagesRule.generator).to.eql({ filename: 'file.[hash][ext]' });
         });
@@ -921,7 +921,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules).oneOf[1];
+            const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, actualConfig.module.rules).oneOf[1];
             expect(imagesRule.parser).to.eql({ dataUrlCondition: { maxSize: 3000 } });
         });
 
@@ -937,7 +937,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(function() {
-                findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, actualConfig.module.rules);
+                findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, actualConfig.module.rules);
             }).to.throw();
         });
     });
@@ -1229,7 +1229,7 @@ describe('The config-generator function', () => {
             });
 
             const webpackConfig = configGenerator(config);
-            const rule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp)$/, webpackConfig.module.rules).oneOf[1];
+            const rule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, webpackConfig.module.rules).oneOf[1];
 
             expect(rule.generator.filename).to.equal('dirname-images/[hash:42][ext]');
         });
