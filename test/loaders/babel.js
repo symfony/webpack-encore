@@ -193,7 +193,7 @@ describe('loaders/babel', () => {
         const config = createConfig();
 
         const actualTest = babelLoader.getTest(config);
-        expect(actualTest.toString()).to.equals(/\.(jsx?)$/.toString());
+        expect(actualTest.toString()).to.equals(/\.(m?jsx?)$/.toString());
     });
 
     it('getTest() with TypeScript', () => {
@@ -201,6 +201,6 @@ describe('loaders/babel', () => {
         config.enableBabelTypeScriptPreset();
 
         const actualTest = babelLoader.getTest(config);
-        expect(actualTest.toString()).to.equals(/\.(jsx?|tsx?)$/.toString());
+        expect(actualTest.toString()).to.equals(/\.(m?jsx?|tsx?)$/.toString());
     });
 });
