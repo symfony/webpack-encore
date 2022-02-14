@@ -51,6 +51,7 @@
     "webpack": "^5.35",
     "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.0.0",
+    "webpack-manifest-plugin": "^4.1.1",
     "yargs-parser": "^20.2.4"
   },
   "devDependencies": {
