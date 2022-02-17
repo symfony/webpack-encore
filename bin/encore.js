@@ -33,6 +33,12 @@ process.argv.splice(2, 1);
 const encoreOnlyArguments = new Set(['--keep-public-path']);
 process.argv = process.argv.filter(arg => !encoreOnlyArguments.has(arg));
 
+// remove argument --public not supported by webpack/dev-server
+const indexPublicArgument = process.argv.indexOf('--public');
+if (indexPublicArgument !== -1) {
+    process.argv.splice(indexPublicArgument, 2);
+}
+
 if (!runtimeConfig.isValidCommand) {
     if (runtimeConfig.command) {
         console.log(chalk.bgRed.white(`Invalid command "${runtimeConfig.command}"`));
@@ -78,6 +84,7 @@ function showUsageInstructions() {
     console.log(`       - ${chalk.yellow('--host')} The hostname/ip address the webpack-dev-server will bind to`);
     console.log(`       - ${chalk.yellow('--port')} The port the webpack-dev-server will bind to`);
     console.log(`       - ${chalk.yellow('--keep-public-path')} Do not change the public path (it is usually prefixed by the dev server URL)`);
+    console.log(`       - ${chalk.yellow('--public')} The public url for entry asset in entrypoints.json`);
     console.log('       - Supports any webpack-dev-server options');
     console.log();
     console.log(`    ${chalk.green('production')} : runs webpack for production`);
