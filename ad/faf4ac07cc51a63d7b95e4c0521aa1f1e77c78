@@ -1,0 +1,73 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-25T01:37:52Z
+
+Thanks for the PR. This stuff is very complex, and I am not an expert on it: I haven't had time to dig deeply enough.
+
+But, we have a problem :). This PR (as you know) reverts #1058. So #1058 was purposely done to fix an issue... and now we're reversing it. It makes me think that we're not understanding the full story and that the correct solution might be some combination of the two.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by louismariegaborit at 2022-02-25T12:01:09Z
+
+Yes, I will try to explain the problem that I encounter.
+
+The PR #1058 replace the public option with the client-web-socket-url option like it was described in the webpack-dev-server upgrade doc.
+
+If I run webpack-dev-server with `--client-web-socket-url http://app.domain:8080` the entrypoints.json file content is ok and assets are loaded but HMR not working.
+The url generated for the websocket is `ws://app.domain:8080/` and is not working.
+
+When I remove the option and I set the parameter `options.client={webSocketUrl: ws://app.domain:8080/ws}` in webpack-config.js file (note that /ws is important) HMR works but entrypoints.json is malformed because `--client-web-socket-url` was not used for encore and only webpack-dev-server.
+I was succeed to run correctly my projet with HMR and entrypoints.json by defining hard the runtimeConfig.devServerPublic var with my url http://app.domain:8080 (without /ws) in runtime.js file.
+
+The target of my PR is that --client-web-socket-url is a webpack-dev-server option which protocol start with auto://, ws:// or wss:// and in encore is override with an url start with http:// or https://.
+The idea is to let `--client-web-socket-url` to webpack-dev-server and integrate `--public` as an encore option like `--keep-public-path` to define the url used for entrypoints.json that is an internal mechanisme of encore.
+
+I hope I was clear...
+
+I'm open for any other solutions to solve the usage of HMR with a custom domain.
+
+---------------------------------------------------------------------------
+
+by shadowc at 2022-02-28T16:25:32Z
+
+I too think that webpack should not use the `--client-web-socket-url` to set the host in the manifest file. However, I don't think reverting #1058 is the way to go, honestly.
+
+Encore is already looking at `--host` to set the host for the manifest file. This is somehow overriden when `--client-web-socket-url` is specified. This should NOT happen.
+
+However, listening to the `--host` option is also problematic! If running under docker, the host would need to be '0.0.0.0' for example. This won't work in the manifest.
+
+I think what we need is some kind of functionality to allow us to override the host used in the manifest from the config js file.
+
+Something like: `.setManifestBaseUrl('http://localhost/')` or something similar.
+
+---------------------------------------------------------------------------
+
+by louismariegaborit at 2022-03-02T12:37:11Z
+
+Thanks @shadowc for your interest.
+
+Add an option in webpack_config.js can be a solution but I don't think that is the best because the base url depends on the environment where you execute webpack-dev-server.
+An another developer on the same projet can decide to use another url for his environment.
+
+@weaverryan an opinion ?
+
+---------------------------------------------------------------------------
+
+by louismariegaborit at 2022-03-16T17:24:05Z
+
+I just fixed the error I had at the build.
+It's ready for a review and a possible merge.
+Always available to discuss the subject which seems quite blocking to me.
+
+---------------------------------------------------------------------------
+
+by shadowc at 2022-03-16T17:44:13Z
+
+Hey @weaverryan ! What do you think? I believe that while this is not how I proposed it, it's now using the `--public` option internally from encore to set the `runtimeConfig.devServerPublic` variable (and I believe it no longer pass this option to webpack, right?).
+
+So, I believe this would be a working solution.
+
+We can *also* add (in another PR) an option to set this up in a function from `webpack.config.js`
