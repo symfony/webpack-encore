@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v1.8.2](https://github.com/symfony/webpack-encore/releases/tag/v1.8.2)
+
+*Mar 17th, 2022*
+
+### Bug Fix
+
+- [#1095](https://github.com/symfony/webpack-encore/pull/1095) - bug #1095 Revert removing public option from dev-server - *@louismariegaborit*
+
 ## [v1.8.1](https://github.com/symfony/webpack-encore/releases/tag/v1.8.1)
 
 *Jan 21st, 2022*
