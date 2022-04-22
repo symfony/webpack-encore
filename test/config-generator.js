@@ -273,7 +273,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
-            expect(definePlugin.definitions['process.env'].NODE_ENV).to.equal('"development"');
+            expect(definePlugin.definitions['process.env.NODE_ENV']).to.equal('"development"');
 
             expect(actualConfig.optimization.minimizer).to.be.undefined;
         });
@@ -289,7 +289,7 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
-            expect(definePlugin.definitions['process.env'].NODE_ENV).to.equal('"production"');
+            expect(definePlugin.definitions['process.env.NODE_ENV']).to.equal('"production"');
 
             expect(actualConfig.optimization.minimizer[0]).to.not.be.undefined;
         });
