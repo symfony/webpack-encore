@@ -77,10 +77,6 @@ describe('Functional tests using webpack', function() {
     // being functional tests, these can take quite long
     this.timeout(10000);
 
-    before(() => {
-        testSetup.emptyTmpDir();
-    });
-
     describe('Basic scenarios.', () => {
 
         it('Builds a few simple entries file + manifest.json', (done) => {
@@ -1841,11 +1837,27 @@ module.exports = {
                 path.join(appDir, '.eslintrc.js'),
                 `
 module.exports = {
-    parser: 'babel-eslint',
+    parser: '@babel/eslint-parser',
     rules: {
         'indent': ['error', 2],
         'no-unused-vars': ['error', { 'args': 'all' }]
     }
+}                            `
+            );
+
+            fs.writeFileSync(
+                path.join(appDir, 'babel.config.js'),
+                `
+module.exports = {
+    presets: [
+        ['@babel/preset-env', {
+                modules: false,
+                targets: {},
+                useBuiltIns: 'usage',
+                corejs: 3,
+        }]
+    ],
+    plugins: ['@babel/plugin-syntax-dynamic-import']
 }                            `
             );
 

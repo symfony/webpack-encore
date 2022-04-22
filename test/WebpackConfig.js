@@ -696,14 +696,13 @@ describe('WebpackConfig object', () => {
             }).to.throw('must be a callback function');
         });
 
-        it('Calling with a callback when .babelrc is present displays a warning', () => {
+        it('Calling with a callback when .babelrc is present throws an error', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
-            config.configureBabel(() => {});
 
-            const warnings = logger.getMessages().warning;
-            expect(warnings).to.have.lengthOf(1);
-            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+            expect(() => {
+                config.configureBabel(() => {});
+            }).to.throw('your app already provides an external Babel configuration');
         });
 
         it('Calling with a whitelisted option when .babelrc is present works fine', () => {

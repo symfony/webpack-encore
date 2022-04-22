@@ -38,6 +38,11 @@ which you may have installed to enable extra features:
 
 * Removed `Encore.enableEslintLoader()`: use `Encore.enableEslintPlugin()`.
 
+* If using `enableEslintPlugin()` with the `@babel/eslint-parser` parser,
+  you may now need to create an external Babel configuration file. To see
+  an example, temporarily delete your `.eslintrc.js` file and run Encore.
+  The error will show you a Babel configuration file you can use.
+
 ## [v1.8.2](https://github.com/symfony/webpack-encore/releases/tag/v1.8.2)
 
 *Mar 17th, 2022*
