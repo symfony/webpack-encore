@@ -43,6 +43,17 @@ which you may have installed to enable extra features:
   an example, temporarily delete your `.eslintrc.js` file and run Encore.
   The error will show you a Babel configuration file you can use.
 
+* With `configureDefinePlugin()`, the `options['process.env']` key format
+  passed to the callback has changed (see #960). If you are using `configureDefinePlugin()`
+  to add more items to `process.env`, your code will need to change:
+
+```diff
+Encore.configureDefinePlugin((options) => {
+-    options['process.env']['SOME_VAR'] = JSON.stringify('the value');
++    options['process.env.SOME_VAR'] = JSON.stringify('the value');
+})
+````
+
 ## [v1.8.2](https://github.com/symfony/webpack-encore/releases/tag/v1.8.2)
 
 *Mar 17th, 2022*
