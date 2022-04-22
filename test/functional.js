@@ -1792,33 +1792,6 @@ module.exports = {
             });
         });
 
-        it('When enabled, eslint checks for linting errors (eslint-loader)', (done) => {
-            const config = createWebpackConfig('www/build', 'dev');
-            config.setPublicPath('/build');
-            config.addEntry('main', './js/eslint');
-            config.enableEslintLoader({
-                // Force eslint-loader to output errors instead of sometimes
-                // using warnings (see: https://github.com/MoOx/eslint-loader#errors-and-warning)
-                emitError: true,
-                rules: {
-                    // That is not really needed since it'll use the
-                    // .eslintrc.js file at the root of the project, but
-                    // it'll avoid breaking this test if we change these
-                    // rules later on.
-                    'indent': ['error', 2],
-                    'no-unused-vars': ['error', { 'args': 'all' }]
-                }
-            });
-
-            testSetup.runWebpack(config, (webpackAssert, stats) => {
-                const eslintErrors = stats.toJson().errors[0].message;
-                expect(eslintErrors).to.contain('Expected indentation of 0 spaces but found 2');
-                expect(eslintErrors).to.contain('\'a\' is assigned a value but never used');
-
-                done();
-            }, true);
-        });
-
         it('When enabled, eslint checks for linting errors (eslint-webpack-plugin)', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -1843,51 +1816,6 @@ module.exports = {
                 const eslintErrors = stats.toJson().errors[0].message;
                 expect(eslintErrors).to.contain('Expected indentation of 0 spaces but found 2');
                 expect(eslintErrors).to.contain('\'a\' is assigned a value but never used');
-
-                done();
-            }, true);
-        });
-
-        it('When enabled, eslint checks for linting errors by using configuration from file (eslint-loader)', (done) => {
-            const cwd = process.cwd();
-            after(() => {
-                process.chdir(cwd);
-            });
-
-            const appDir = testSetup.createTestAppDir();
-            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
-            config.enableSingleRuntimeChunk();
-            config.setPublicPath('/build');
-            config.addEntry('main', './js/eslint-es2018');
-            config.enableEslintLoader({
-                // Force eslint-loader to output errors instead of sometimes
-                // using warnings (see: https://github.com/MoOx/eslint-loader#errors-and-warning)
-                emitError: true,
-            });
-            fs.writeFileSync(
-                path.join(appDir, '.eslintrc.js'),
-                `
-module.exports = {
-    parser: 'babel-eslint',
-    rules: {
-        'indent': ['error', 2],
-        'no-unused-vars': ['error', { 'args': 'all' }]
-    }
-}                            `
-            );
-
-            process.chdir(appDir);
-
-            testSetup.runWebpack(config, (webpackAssert, stats) => {
-                const errors = stats.toJson().errors;
-                expect(errors).to.have.lengthOf(1);
-                expect(errors[0].message).to.exist;
-
-                const eslintErrors = errors[0].message;
-                expect(eslintErrors).not.to.contain('Parsing error: Unexpected token ..');
-                expect(eslintErrors).to.contain('Expected indentation of 0 spaces but found 2');
-                expect(eslintErrors).to.contain('\'x\' is assigned a value but never used');
-                expect(eslintErrors).to.contain('\'b\' is assigned a value but never used');
 
                 done();
             }, true);
@@ -1936,33 +1864,6 @@ module.exports = {
 
                 done();
             }, true);
-        });
-
-        it('When enabled and without any configuration, ESLint will throw an error and a nice message should be displayed (eslint-loader)', (done) => {
-            const cwd = process.cwd();
-
-            this.timeout(5000);
-            setTimeout(() => {
-                process.chdir(cwd);
-                done();
-            }, 4000);
-
-            const appDir = testSetup.createTestAppDir(os.tmpdir()); // to prevent issue with Encore's .eslintrc.js
-            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
-            config.enableSingleRuntimeChunk();
-            config.setPublicPath('/build');
-            config.addEntry('main', './js/eslint');
-            config.enableEslintLoader({
-                // Force eslint-loader to output errors instead of sometimes
-                // using warnings (see: https://github.com/MoOx/eslint-loader#errors-and-warning)
-                emitError: true,
-            });
-
-            process.chdir(appDir);
-
-            expect(() => {
-                testSetup.runWebpack(config, (webpackAssert, stats) => {});
-            }).to.throw('No ESLint configuration has been found.');
         });
 
         it('When enabled and without any configuration, ESLint will throw an error and a nice message should be displayed (eslint-webpack-plugin)', (done) => {

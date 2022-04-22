@@ -398,93 +398,6 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enableEslintLoader() adds the eslint-loader', () => {
-        it('without enableEslintLoader()', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('eslint-loader');
-        });
-
-        it('enableEslintLoader()', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintLoader();
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
-        });
-
-        it('enableEslintLoader("extends-name")', () => {
-            before(() => {
-                logger.reset();
-            });
-
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintLoader('extends-name');
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(logger.getMessages().deprecation)).to.contain('enableEslintLoader: Extending from a configuration is deprecated, please use a configuration file instead. See https://eslint.org/docs/user-guide/configuring for more information.');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
-        });
-
-        it('enableEslintLoader({extends: "extends-name"})', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintLoader({ extends: 'extends-name' });
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
-        });
-
-        it('enableEslintLoader((options) => ...)', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintLoader((options) => {
-                options.extends = 'extends-name';
-            });
-
-            const actualConfig = configGenerator(config);
-
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('extends-name');
-        });
-
-        it('enableEslintLoader(() => {}, {lintVue: true})', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintLoader(() => {}, {
-                lintVue: true,
-            });
-
-            const actualConfig = configGenerator(config);
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('eslint-loader');
-
-            const eslintRule = findRule(/\.(jsx?|vue)$/, actualConfig.module.rules);
-            expect(eslintRule.test.toString()).to.equal(/\.(jsx?|vue)$/.toString());
-        });
-    });
-
     describe('enableEslintPlugin() adds the eslint-webpack-plugin', () => {
         it('without enableEslintPlugin()', () => {
             const config = createConfig();
@@ -1312,23 +1225,6 @@ describe('The config-generator function', () => {
 
             expect(rule.use[0].options.shadowMode).to.be.true;
             expect(rule.use[0].options.prettify).to.be.false;
-        });
-
-        it('configure rule for "eslint"', () => {
-            config.enableEslintLoader((options) => {
-                options.extends = 'airbnb';
-            });
-            config.configureLoaderRule('eslint', (loaderRule) => {
-                loaderRule.test = /\.(jsx?|vue)/;
-            });
-
-            const webpackConfig = configGenerator(config);
-            const rule = findRule(/\.(jsx?|vue)/, webpackConfig.module.rules);
-
-            expect(rule.options.extends).to.equal('airbnb');
-            expect('file.js').to.match(rule.test);
-            expect('file.jsx').to.match(rule.test);
-            expect('file.vue').to.match(rule.test);
         });
 
         it('configure rule for "typescript" and "ts"', () => {

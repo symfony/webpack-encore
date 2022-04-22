@@ -36,6 +36,8 @@ which you may have installed to enable extra features:
 * `stylus-loader` Minimum version increased from `3` to `6` [CHANGELOG](https://github.com/webpack-contrib/stylus-loader/blob/master/CHANGELOG.md#400-2020-09-29)
 * `vue-loader` Minimum version increased from `16` to `17` [CHANGELOG](https://github.com/vuejs/vue-loader/blob/next/CHANGELOG.md#1700-2021-12-12)
 
+* Removed `Encore.enableEslintLoader()`: use `Encore.enableEslintPlugin()`.
+
 ## [v1.8.2](https://github.com/symfony/webpack-encore/releases/tag/v1.8.2)
 
 *Mar 17th, 2022*
