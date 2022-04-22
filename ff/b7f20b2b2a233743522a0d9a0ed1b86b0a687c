@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2021-04-23T06:49:26Z
+
+Should be this considered as a breaking change? Or at least being documented in a changelog?
+
+At work we use the following code to inject `SENTRY_DSN` and `SENTRY_ENVIRONMENT` env vars in the bundle (from a `.env` file or from `process.env`):
+```js
+Encore
+  .configureDefinePlugin((options) => {
+    const dotenvEnv = dotenv.config();
+    if (dotenvEnv.error) {
+      throw dotenvEnv.error;
+    }
+
+    const env = { ...dotenvEnv.parsed, ...process.env };
+
+    ['SENTRY_DSN', 'SENTRY_ENVIRONMENT'].forEach((envVar) => {
+      options['process.env'][envVar] = JSON.stringify(env[envVar]);
+    });
+  })
+```
+
+And I guess it won't works until we change `options['process.env'][envVar]` to `options['process.env.' + envVar]` right?
+WDYT?
+
+Thanks
+
+---------------------------------------------------------------------------
+
+by drazik at 2021-04-26T14:38:38Z
+
+@weaverryan I fixed most of the test. One of them is still failing but I don't understand if it's related to my changes or not. And if it is related to my changes, what can I do about it?
+
+@Kocal you are totally right, this is a breaking change for people that customize the DefinePlugin like you do. And you are also right about the changes it requires in your case.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-21T01:09:52Z
+
+Due to the breaking change (good catch), I'd love to stuff this into a new major release instead of a minor.
