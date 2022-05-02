@@ -1,0 +1,53 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-05-09T21:17:26Z
+
+Thanks for this @Grafikart! One test is failing, with an easy failure.
+
+But I'm a little concerned: this would mean now that Encore *only* works with preact 10, correct? If so, then we need to update the `devDependency` for Preact to version 10 - the tests are currently using version 8. And that makes me wonder something else: if you've updated the code for preact 10, but the tests are using version 8, why aren't more significant tests failing? It makes me wonder if the preact functional test - which builds this directory https://github.com/symfony/webpack-encore/tree/master/fixtures/preact - is not "good enough". In theory, that test should be failing right now because of your patch but because the tests are still using Preact 8 right?
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by Lyrkan at 2020-05-09T23:15:57Z
+
+> if you've updated the code for preact 10, but the tests are using version 8, why aren't more significant tests failing?
+
+I don't think we've functional tests using `preact-compat` (which is a compatibility layer to use "real" React libraries from your preact app), the one you linked directly uses `preact`. I guess we could add some but it could be a bit tricky to know they are working properly since we also have `react`/`react-dom` in our dev dependencies.
+
+I agree that we should bump the version in our dev dependencies though: if we don't people will be asked to install v8 and then get the wrong aliases for `preact-compat` if they enable that feature.
+
+---------------------------------------------------------------------------
+
+by Grafikart at 2020-05-10T14:50:17Z
+
+> this would mean now that Encore only works with preact 10, correct?
+
+You are correct. I want input on how you want to handle this situation. We could parse the user package.json (hard way) or we could add a new option within enablePreactPreset.
+
+```
+enablePreactPreset({preactCompat: 10})
+```
+
+In my opinion the build should target the currentVersion. If someone chooses to work with an older version he can setup the aliases manually.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2020-05-10T17:23:42Z
+
+I would say that we should either:
+
+A) Only allow version 10 (I have no idea if 8 & 9 have LTS or something like that - I'm not familiar with preact)
+
+B) Allow 8 or 10 and check their installed version to choose which alias to add. We do something similar for Vue 3 in #746. In that, we also have an option to force v2 or v3, but I did that mostly because v2 will be around for an LTS for a long time and because Vue is such a widely-used library.
+
+Btw, my preference would be to only support 10. But if, for some reason, many people will continue to use 8 for a long time, then we could allow both.
+
+---------------------------------------------------------------------------
+
+by Rodrigo001-de at 2020-07-03T01:45:23Z
+
+Project made with TypeScript, react.Js, React-native. Recycling day design
+
+https://github.com/Rodrigo001-de/Projeto-Ecoleta-advanced
