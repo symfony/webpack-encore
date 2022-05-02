@@ -540,7 +540,7 @@ describe('The config-generator function', () => {
                 'foo': 'bar',
                 'vue$': 'new-vue$',
                 'react-dom': 'new-react-dom',
-                'react': 'preact-compat' // Keeps predefined aliases that are not overwritten
+                'react': 'preact/compat' // Keeps predefined aliases that are not overwritten
             });
         });
     });
