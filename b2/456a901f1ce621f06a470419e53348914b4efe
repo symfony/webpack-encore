@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by tropicalraisel at 2021-09-01T15:42:39Z
+
+Based on [Webpack's changelogs](https://github.com/webpack/webpack/releases?after=v5.38.1), there shouldn't be anything that stops jumping from `v5.35` to `v5.51.1`.
+
+---------------------------------------------------------------------------
+
+by stof at 2022-01-21T09:02:48Z
+
+@weaverryan what is the state of this ?
+
+---------------------------------------------------------------------------
+
+by shadowc at 2022-03-21T17:50:03Z
+
+Adding some more info about packages:
+
+- `mini-css-extract-plugin`: `1.5->2.2.1` Min node to 12.13.0, Webpack to 5.0.0, other changes: [CHANGELOG](https://github.com/webpack-contrib/mini-css-extract-plugin/blob/master/CHANGELOG.md#-breaking-changes)
+- ~`pkg-up`~: Keeping version `3.1` because `4` requires esm.
+- `pretty-error`: `3.0->4.0` Min node to 12.0
+- `resolve-url-loader` `3.0->5.0` Min node to 12.0, postcss ^8.0, remove `rework` engine,  other changes: [CHANGELOG](https://github.com/bholloway/resolve-url-loader/blob/v4-maintenance/packages/resolve-url-loader/CHANGELOG.md)
+- `style-loader`: `2->3` Min node to 12.13, Min webpack to 5.0 other changes: [CHANGELOG](https://github.com/webpack-contrib/style-loader/blob/master/CHANGELOG.md#-breaking-changes)
+- `yargs-parser`: `20.2->21` Min node to 12.0
+
+---------------------------------------------------------------------------
+
+by shadowc at 2022-03-22T23:10:01Z
+
+More info about `devDependencies`:
+
+- `eslint`: `7->8` Min node to `12.22`
+- `eslint-webpack-plugin`: `2.5->3` min node to `12`. Min webpack `5`
+- `fork-ts-checker-webpack-plugin`: `5->6` [CHANGELOG](https://github.com/TypeStrong/fork-ts-checker-webpack-plugin/releases/tag/v6.0.0)
+- `fs-extra`: `9->10` Min node to `12`. Potentially breaking changes: [CHANGELOG](https://github.com/jprichardson/node-fs-extra/blob/master/CHANGELOG.md#breaking-changes****)
+- `http-server`: `0.12->14` Min node to `12`.
+- `less-loader`: `7->10`: Min node to `12`. Min webpack to `5`. `less.webpackLoaderContext` was removed, please use `pluginManager.webpackLoaderContext`
+- `mocha`: `8->9`: min node to `12`. [CHANGELOG](https://github.com/mochajs/mocha/blob/master/CHANGELOG.md#boom-breaking-changes)
+- `postcss-loader`: `4-5->6`: min node to `12`. min webpack to `5`.
+- `preact`: `8->10`: [CHANGELOG](https://github.com/preactjs/preact/releases/tag/10.0.0)
+- `sass-loader`: `9-10-11->12` min node to `12.13`. Min webpack to `5`
+- `sinon`: `9->12`
+- ~`strip-ansi`~: Need to keep `6` because `7` is esm only. Min node to `12`
+- `stylus`: `0.54->0.56`
+- `stylus-loader`: `3-4-5->6`: Min node to `12.13`. Min webpack to `5`. Other breaking changes: [CHANGELOG](https://github.com/webpack-contrib/stylus-loader/blob/master/CHANGELOG.md#400-2020-09-29)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-04-22T18:56:03Z
+
+This is now ready!
