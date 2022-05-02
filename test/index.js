@@ -16,6 +16,7 @@ const path = require('path');
 
 describe('Public API', () => {
     beforeEach(() => {
+        process.chdir(path.join(__dirname, '..'));
         api.configureRuntimeEnvironment('dev', {}, false);
     });
 

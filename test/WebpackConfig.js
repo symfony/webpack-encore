@@ -696,14 +696,13 @@ describe('WebpackConfig object', () => {
             }).to.throw('must be a callback function');
         });
 
-        it('Calling with a callback when .babelrc is present displays a warning', () => {
+        it('Calling with a callback when .babelrc is present throws an error', () => {
             const config = createConfig();
             config.runtimeConfig.babelRcFileExists = true;
-            config.configureBabel(() => {});
 
-            const warnings = logger.getMessages().warning;
-            expect(warnings).to.have.lengthOf(1);
-            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+            expect(() => {
+                config.configureBabel(() => {});
+            }).to.throw('your app already provides an external Babel configuration');
         });
 
         it('Calling with a whitelisted option when .babelrc is present works fine', () => {
@@ -1546,37 +1545,6 @@ describe('WebpackConfig object', () => {
             expect(() => config.enableIntegrityHashes(true, [1])).to.throw('must be a string or an array of strings');
             expect(() => config.enableIntegrityHashes(true, 'foo')).to.throw('Invalid hash algorithm "foo"');
             expect(() => config.enableIntegrityHashes(true, ['sha1', 'foo', 'sha256'])).to.throw('Invalid hash algorithm "foo"');
-        });
-    });
-
-    describe('enableEslintLoader', () => {
-        it('Should validate Encore-specific options', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.enableEslintLoader(() => {}, {
-                    notExisting: false,
-                });
-            }).to.throw('"notExisting" is not a valid key for enableEslintLoader(). Valid keys: lintVue.');
-        });
-
-        it('ESLint loader can not be enabled if ESLint Webpack Plugin is already enabled', () => {
-            const config = createConfig();
-            config.enableEslintPlugin();
-
-            expect(function() {
-                config.enableEslintLoader();
-            }).to.throw('Encore.enableEslintLoader() can not be called when Encore.enableEslintPlugin() has been called.');
-        });
-    });
-    describe('enableEslintPlugin', () => {
-        it('ESLint loader can not be enabled if ESLint Webpack Plugin is already enabled', () => {
-            const config = createConfig();
-            config.enableEslintLoader();
-
-            expect(function() {
-                config.enableEslintPlugin();
-            }).to.throw('Encore.enableEslintPlugin() can not be called when Encore.enableEslintLoader() has been called.');
         });
     });
 

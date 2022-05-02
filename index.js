@@ -1261,53 +1261,6 @@ class Encore {
     }
 
     /**
-     * If enabled, the eslint-loader is enabled.
-     *
-     * https://github.com/MoOx/eslint-loader
-     *
-     * ```
-     * // enables the eslint loaded using the default eslint configuration.
-     * Encore.enableEslintLoader();
-     *
-     * // You can also pass in an object of options
-     * // that will be passed on to the eslint-loader
-     * Encore.enableEslintLoader({
-     *     emitWarning: false
-     * });
-     *
-     * // For a more advanced usage you can pass in a callback
-     * // https://github.com/webpack-contrib/eslint-loader#options
-     * Encore.enableEslintLoader((options) => {
-     *      options.extends = 'airbnb';
-     *      options.emitWarning = false;
-     * });
-     *
-     * // configure Encore-specific options
-     * Encore.enableEslintLoader(() => {}, {
-     *     // set optional Encore-specific options, for instance:
-     *
-     *     // lint `.vue` files
-     *     lintVue: true
-     * });
-     * ```
-     *
-     * Supported options:
-     *      * {boolean} lintVue (default=false)
-     *              Configure the loader to lint `.vue` files
-     * ```
-     *
-     * @deprecated Prefer using "Encore.enableEslintPlugin()" instead.
-     * @param {string|object|function} eslintLoaderOptionsOrCallback
-     * @param {object} encoreOptions
-     * @returns {Encore}
-     */
-    enableEslintLoader(eslintLoaderOptionsOrCallback = () => {}, encoreOptions = {}) {
-        webpackConfig.enableEslintLoader(eslintLoaderOptionsOrCallback, encoreOptions);
-
-        return this;
-    }
-
-    /**
      * If enabled, the eslint-webpack-plugin is enabled.
      *
      * https://github.com/webpack-contrib/eslint-webpack-plugin
@@ -1546,15 +1499,11 @@ class Encore {
      *
      * https://webpack.js.org/concepts/loaders/#configuration
      *
-     * For example, if you are using Vue and ESLint loader,
-     * this is how you can configure ESLint to lint Vue files:
-     *
      * ```
      * Encore
-     *     .enableEslintLoader()
      *     .enableVueLoader()
-     *     .configureLoaderRule('eslint', (loaderRule) => {
-     *          loaderRule.test = /\.(jsx?|vue)/;
+     *     .configureLoaderRule('vue', (loaderRule) => {
+     *         // some custom config for vue-loader
      *     });
      * ```
      *
