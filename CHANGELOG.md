@@ -2,7 +2,7 @@
 
 ## [v2.0.0](https://github.com/symfony/webpack-encore/releases/tag/v2.0.0)
 
-*TBD, 2022*
+*May 3rd, 2022*
 
 This is a new major version that contains several backwards-compatibility breaks.
 
