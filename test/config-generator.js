@@ -877,8 +877,8 @@ describe('The config-generator function', () => {
 
                 const actualConfig = configGenerator(config);
                 expect(actualConfig.resolve.alias).to.include.keys('react', 'react-dom');
-                expect(actualConfig.resolve.alias['react']).to.equal('preact-compat');
-                expect(actualConfig.resolve.alias['react-dom']).to.equal('preact-compat');
+                expect(actualConfig.resolve.alias['react']).to.equal('preact/compat');
+                expect(actualConfig.resolve.alias['react-dom']).to.equal('preact/compat');
             });
         });
     });
