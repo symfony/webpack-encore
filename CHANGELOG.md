@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [v2.1.0](https://github.com/symfony/webpack-encore/releases/tag/v2.1.0)
+
+*May 5th, 2022*
+
+### Feature
+
+- [#1093](https://github.com/symfony/webpack-encore/pull/1093) - Allow sass-embedded - *@IonBazan*
+
 ## [v2.0.0](https://github.com/symfony/webpack-encore/releases/tag/v2.0.0)
 
 *May 3rd, 2022*
