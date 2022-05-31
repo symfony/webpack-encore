@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by jmsche at 2022-05-23T14:50:46Z
+
+Hi @weaverryan, I know why the builds fail; however what am I supposed to do? Revert the change in yarn.lock?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-05-24T16:05:20Z
+
+Lol, yup, I expected this. Node packages drop support for old Node versions quite aggressively.
+
+Bump our (Encore's) minimum Node version to 14. And then we'll do a 3.0 release. Ref: https://github.com/symfony/webpack-encore/issues/1079#issuecomment-1109744828
+
+---------------------------------------------------------------------------
+
+by jmsche at 2022-05-25T07:54:08Z
+
+Done :)
+
+By the way do you want me to add node 18 to the workflows?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-05-26T13:32:44Z
+
+Hmm, yes! That would be great - good catch!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-05-31T15:13:49Z
+
+Hmm. Node 18 tests fail... even using the "locked" dependencies. And the failure is weird... I'm not sure what's going on...
+
+---------------------------------------------------------------------------
+
+by jmsche at 2022-05-31T15:23:40Z
+
+Just ran tests for node 18 locally (thank you nvm), aaaaand... they all pass.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-05-31T16:49:59Z
+
+Grrrr. Those are the worst! I'm going to merge... and hope that the issue just solves itself.
