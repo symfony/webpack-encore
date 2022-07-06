@@ -161,7 +161,7 @@ describe('Functional tests using webpack', function() {
                     'build/main.js': '/build/main.js',
                     'build/runtime.js': '/build/runtime.js',
                     'build/images/symfony_logo.png': '/build/images/symfony_logo.91beba37.png',
-                    'build/images/ok.png': '/build/images/ok.c3f4e113.png',
+                    'build/images/logo.png': '/build/images/logo.cb197657.png',
                 });
 
                 done();
