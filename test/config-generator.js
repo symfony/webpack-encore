@@ -669,18 +669,24 @@ describe('The config-generator function', () => {
             config.setPublicPath('/');
             config.addEntry('main', './main');
             config.configureDevServerOptions(options => {
-                options.https = {
-                    key: 'https.key',
-                    cert: 'https.cert',
+                options.server = {
+                    'type': 'https',
+                    options: {
+                        key: 'https.key',
+                        cert: 'https.cert',
+                    }
                 };
             });
 
             const actualConfig = configGenerator(config);
 
             expect(actualConfig.devServer).to.containSubset({
-                https: {
-                    key: 'https.key',
-                    cert: 'https.cert',
+                server: {
+                    type: 'https',
+                    options: {
+                        key: 'https.key',
+                        cert: 'https.cert',
+                    }
                 },
             });
 

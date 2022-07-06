@@ -709,9 +709,12 @@ class Encore {
      * ```
      * Encore.configureDevServerOptions(function(options) {
      *     // change the configuration
-     *     options.https = {
-     *         key: '<your SSL cert key content>',
-     *         cert: '<your SSL cert content>',
+     *     options.server = {
+     *         type: 'https',
+     *         options: {
+     *             key: '<your SSL cert key content or path>',
+     *             cert: '<your SSL cert content or path>',
+     *         }
      *     };
      * });
      * ```
