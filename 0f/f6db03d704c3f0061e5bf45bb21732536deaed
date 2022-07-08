@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2022-07-07T09:21:34Z
+
+@weaverryan any reason to lock `assets-webpack-plugin` to `7.0.*` instead of using the 7.1 version ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-07-07T18:28:23Z
+
+Yes, fair question - it's this: https://github.com/symfony/webpack-encore/issues/969
+
+I haven't looked into it since then to see what we can do.
