@@ -1,5 +1,38 @@
 # CHANGELOG
 
+## [v3.0.0](https://github.com/symfony/webpack-encore/releases/tag/v3.0.0)
+
+*July 8th, 2022*
+
+This major release drops support for Node 12 (minimum is now Node 14) and
+also bumps some dependencies up a new major version.
+
+## BC Breaks
+
+* In #1122 support for Node 12 was dropped.
+
+* In #1133, the following dependencies were bumped a major version:
+
+  * `css-minimizer-webpack-plugin` 3.4 -> 4.0 (4.0 just drops Node 12 support)
+  * `less-loader` 10 -> 11
+  * `postcss-loader` 6 -> 7
+  * `sass-loader` 12 -> 13
+  * `stylus` 0.57 -> 0.58
+  * `stylus-loader` 6 -> 7
+
+If you're using any of these (all are optional except for `css-minimizer-webpack-plugin`
+and are extended them with custom configuration, check the CHANGELOG of each for
+any possible BC breaks).
+
+### Feature
+
+- [#1133](https://github.com/symfony/webpack-encore/pull/1133) - Increasing dependencies - *@weaverryan*
+- [#1125](https://github.com/symfony/webpack-encore/pull/1125) - Changing to support the "server" options object for webpack-dev-server - *@weaverryan*
+- [#1122](https://github.com/symfony/webpack-encore/pull/1122) - Allow sass-loader:^13.0.0, require node >= 14 - *@jmsche*
+- [#1118](https://github.com/symfony/webpack-encore/pull/1118) - Use cli param server-type to define devServer https mode - *@thegillou*
+
+
+
 ## [v2.1.0](https://github.com/symfony/webpack-encore/releases/tag/v2.1.0)
 
 *May 5th, 2022*
