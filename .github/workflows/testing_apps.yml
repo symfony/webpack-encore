@@ -1,0 +1,58 @@
+name: Testing apps
+on: [push, pull_request]
+
+jobs:
+  testing_app:
+    strategy:
+      fail-fast: false
+      matrix:
+        test_app:
+          - name: npm
+            working_directory: test_apps/npm
+            script: |
+              npm install --ci
+              npm add --save-dev ../../webpack-encore.tgz
+              npm run encore dev
+              npm run encore production
+
+          - name: pnpm
+            working_directory: test_apps/pnpm
+            script: |
+              pnpm install --frozen-lockfile
+              pnpm add --save-dev ../../webpack-encore.tgz
+              pnpm run encore dev
+              pnpm run encore production
+
+          - name: Yarn Plug'n'Play
+            working_directory: test_apps/yarn_pnp
+            script: |
+              yarn set version berry
+              yarn install --frozen-lockfile
+              yarn add --dev ../../webpack-encore.tgz
+              yarn run encore dev
+              yarn run encore production
+
+    name: ${{ matrix.test_app.name }}
+    runs-on: ubuntu-latest
+
+    steps:
+      -   name: Checkout
+          uses: actions/checkout@v2.0.0
+
+      -   name: Node ${{matrix.node-versions}}
+          uses: actions/setup-node@v2
+          with:
+            node-version: '14'
+
+      -   if: matrix.test_app.name == 'pnpm'
+          name: Install pnpm
+          uses: pnpm/action-setup@v2
+          with:
+            version: latest
+
+      -   name: Packing Encore
+          run: yarn pack --filename webpack-encore.tgz
+
+      -   name: Running script
+          working-directory: ${{ matrix.test_app.working_directory }}
+          run: ${{ matrix.test_app.script }}
