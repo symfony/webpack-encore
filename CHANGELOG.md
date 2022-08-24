@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [v3.1.0](https://github.com/symfony/webpack-encore/releases/tag/v3.0.0)
+
+*August 24th, 2022*
+
+* Add vue 2.7 feature to allow dropping `vue-template-compiler` - #1134 thanks to @billyct
+
 ## [v3.0.0](https://github.com/symfony/webpack-encore/releases/tag/v3.0.0)
 
 *July 8th, 2022*
@@ -30,8 +36,6 @@ any possible BC breaks).
 - [#1125](https://github.com/symfony/webpack-encore/pull/1125) - Changing to support the "server" options object for webpack-dev-server - *@weaverryan*
 - [#1122](https://github.com/symfony/webpack-encore/pull/1122) - Allow sass-loader:^13.0.0, require node >= 14 - *@jmsche*
 - [#1118](https://github.com/symfony/webpack-encore/pull/1118) - Use cli param server-type to define devServer https mode - *@thegillou*
-
-
 
 ## [v2.1.0](https://github.com/symfony/webpack-encore/releases/tag/v2.1.0)
 
