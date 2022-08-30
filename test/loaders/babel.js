@@ -75,7 +75,7 @@ describe('loaders/babel', () => {
 
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
-        expect(actualLoaders[0].options.presets).to.include('@babel/react');
+        expect(actualLoaders[0].options.presets).to.include(require.resolve('@babel/preset-react'));
         // foo is also still there, not overridden
         expect(actualLoaders[0].options.presets).to.include('foo');
     });
@@ -91,8 +91,8 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            '@babel/plugin-syntax-dynamic-import',
-            ['@babel/plugin-transform-react-jsx', { pragma: 'h' }],
+            require.resolve('@babel/plugin-syntax-dynamic-import'),
+            [require.resolve('@babel/plugin-transform-react-jsx'), { pragma: 'h' }],
             'foo'
         ]);
     });
@@ -108,8 +108,8 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            '@babel/plugin-syntax-dynamic-import',
-            ['@babel/plugin-transform-react-jsx'],
+            require.resolve('@babel/plugin-syntax-dynamic-import'),
+            [require.resolve('@babel/plugin-transform-react-jsx')],
             'foo'
         ]);
     });
@@ -142,7 +142,7 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.presets).to.deep.include.members([
-            '@vue/babel-preset-jsx',
+            require.resolve('@vue/babel-preset-jsx'),
             'foo'
         ]);
     });
@@ -179,12 +179,12 @@ describe('loaders/babel', () => {
 
         const actualLoaders = babelLoader.getLoaders(config);
 
-        expect(actualLoaders[0].options.presets[0][0]).to.equal('@babel/preset-env');
-        expect(actualLoaders[0].options.presets[1][0]).to.equal('@babel/preset-typescript');
+        expect(actualLoaders[0].options.presets[0][0]).to.equal(require.resolve('@babel/preset-env'));
+        expect(actualLoaders[0].options.presets[1][0]).to.equal(require.resolve('@babel/preset-typescript'));
         expect(actualLoaders[0].options.presets[1][1]).to.equal(presetTypeScriptOptions);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            '@babel/plugin-syntax-dynamic-import',
-            '@babel/plugin-proposal-class-properties',
+            require.resolve('@babel/plugin-syntax-dynamic-import'),
+            require.resolve('@babel/plugin-proposal-class-properties'),
             'foo'
         ]);
     });

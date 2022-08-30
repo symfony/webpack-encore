@@ -586,7 +586,7 @@ describe('The config-generator function', () => {
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(JSON.stringify(jsRule.use[0].options.presets)).contains('@babel/preset-env');
+            expect(jsRule.use[0].options.presets[0]).contains(require.resolve('@babel/preset-env'));
         });
     });
 
@@ -934,7 +934,7 @@ describe('The config-generator function', () => {
             expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
 
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
 
@@ -984,7 +984,7 @@ describe('The config-generator function', () => {
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
             expect(babelEnvPreset[1].corejs).to.equal(3);
         });
@@ -1001,7 +1001,7 @@ describe('The config-generator function', () => {
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
 
@@ -1018,7 +1018,7 @@ describe('The config-generator function', () => {
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === '@babel/preset-env');
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
         });
     });

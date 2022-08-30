@@ -45,10 +45,9 @@
     "semver": "^7.3.2",
     "style-loader": "^3.3.0",
     "sync-rpc": "^1.3.6",
+    "tapable": "^2.2.1",
     "terser-webpack-plugin": "^5.3.0",
     "tmp": "^0.2.1",
-    "webpack": "^5.72",
-    "webpack-cli": "^4.9.1",
     "webpack-dev-server": "^4.8.0",
     "yargs-parser": "^21.0.0"
   },
@@ -98,8 +97,134 @@
     "vue": "^3.2.14",
     "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.5",
+    "webpack": "^5.72",
+    "webpack-cli": "^4.9.1",
     "webpack-notifier": "^1.15.0",
     "zombie": "^6.1.4"
+  },
+  "peerDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-transform-react-jsx": "^7.12.11",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.0.0",
+    "@symfony/stimulus-bridge": "^3.0.0",
+    "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+    "@vue/babel-preset-jsx": "^1.0.0",
+    "@vue/compiler-sfc": "^3.0.2",
+    "eslint": "^8.0.0",
+    "eslint-webpack-plugin": "^3.1.0",
+    "file-loader": "^6.0.0",
+    "fork-ts-checker-webpack-plugin": "^7.0.0",
+    "handlebars": "^4.7.7",
+    "handlebars-loader": "^1.7.0",
+    "less": "^4.0.0",
+    "less-loader": "^11.0.0",
+    "postcss": "^8.3.0",
+    "postcss-loader": "^7.0.0",
+    "sass": "^1.17.0",
+    "sass-loader": "^13.0.0",
+    "stylus": "^0.58.1",
+    "stylus-loader": "^7.0.0",
+    "ts-loader": "^9.0.0",
+    "typescript": "^4.2.2",
+    "vue": "^3.2.14",
+    "vue-loader": "^17.0.0",
+    "vue-template-compiler": "^2.5",
+    "webpack": "^5.72",
+    "webpack-cli": "^4.9.1",
+    "webpack-notifier": "^1.15.0"
+  },
+  "peerDependenciesMeta": {
+    "@babel/plugin-proposal-class-properties": {
+      "optional": true
+    },
+    "@babel/plugin-transform-react-jsx": {
+      "optional": true
+    },
+    "@babel/preset-react": {
+      "optional": true
+    },
+    "@babel/preset-typescript": {
+      "optional": true
+    },
+    "@symfony/stimulus-bridge": {
+      "optional": true
+    },
+    "@vue/babel-helper-vue-jsx-merge-props": {
+      "optional": true
+    },
+    "@vue/babel-preset-jsx": {
+      "optional": true
+    },
+    "@vue/compiler-sfc": {
+      "optional": true
+    },
+    "eslint": {
+      "optional": true
+    },
+    "eslint-webpack-plugin": {
+      "optional": true
+    },
+    "file-loader": {
+      "optional": true
+    },
+    "fork-ts-checker-webpack-plugin": {
+      "optional": true
+    },
+    "handlebars": {
+      "optional": true
+    },
+    "handlebars-loader": {
+      "optional": true
+    },
+    "less": {
+      "optional": true
+    },
+    "less-loader": {
+      "optional": true
+    },
+    "postcss": {
+      "optional": true
+    },
+    "postcss-loader": {
+      "optional": true
+    },
+    "sass": {
+      "optional": true
+    },
+    "sass-loader": {
+      "optional": true
+    },
+    "stylus": {
+      "optional": true
+    },
+    "stylus-loader": {
+      "optional": true
+    },
+    "ts-loader": {
+      "optional": true
+    },
+    "typescript": {
+      "optional": true
+    },
+    "vue": {
+      "optional": true
+    },
+    "vue-loader": {
+      "optional": true
+    },
+    "vue-template-compiler": {
+      "optional": true
+    },
+    "webpack": {
+      "optional": false
+    },
+    "webpack-cli": {
+      "optional": false
+    },
+    "webpack-notifier": {
+      "optional": true
+    }
   },
   "files": [
     "lib/",
