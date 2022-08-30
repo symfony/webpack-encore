@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2022-08-02T20:04:35Z
+
+Fixing tests for windows is making me crazy 🤯
+
+---------------------------------------------------------------------------
+
+by arderyp at 2022-08-18T20:11:02Z
+
+Thanks for doing all of this @Kocal, looks like you're almost there!
+
+---------------------------------------------------------------------------
+
+by stof at 2022-08-27T13:49:35Z
+
+Note that due to the new required peer dependency, this requires releasing it as a new major version.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-29T14:17:40Z
+
+> Note that due to the new required peer dependency, this requires releasing it as a new major version
+
+I was thinking the same, which is ok. To be clear, the new peer dependency is `webpack` itself.
+
+So I'm still wondering about `webpack-cli`. This is NOT currently listed as a `peerDependency`. However, in all of the "test apps", it IS installed. Why isn't this a required peer dependency?
+
+---------------------------------------------------------------------------
+
+by stof at 2022-08-29T14:54:03Z
+
+It is an optional peer dependency of `webpack`, that must be installed to be able to use webpack in the CLI (rather than using it programmatically). And so, in Encore, we need it.
+
+I suggest adding `webpack-cli` as a mandatory peer dependency of Encore, instead of having the first usage of Encore failing and asking the user to install webpack-cli.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-08-29T20:47:31Z
+
+Re-added `webpack-cli` as a required peer dependency.
