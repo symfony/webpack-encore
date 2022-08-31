@@ -1858,7 +1858,6 @@ module.exports = {
                 corejs: 3,
         }]
     ],
-    plugins: ['@babel/plugin-syntax-dynamic-import']
 }                            `
             );
 
@@ -1950,9 +1949,6 @@ module.exports = {
             config.setPublicPath('/build');
             config.addEntry('main', './stimulus/assets/app.js');
             config.enableStimulusBridge(__dirname + '/../fixtures/stimulus/assets/controllers.json');
-            config.configureBabel(function(config) {
-                config.plugins.push('@babel/plugin-proposal-class-properties');
-            });
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([

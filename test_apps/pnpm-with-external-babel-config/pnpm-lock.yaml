@@ -2,12 +2,14 @@ lockfileVersion: 5.4
 
 specifiers:
   '@babel/core': ^7.17.0
+  '@babel/plugin-proposal-partial-application': ^7.18.9
   '@babel/preset-env': ^7.16.0
   webpack: ^5.74.0
   webpack-cli: ^4.10.0
 
 devDependencies:
   '@babel/core': 7.18.13
+  '@babel/plugin-proposal-partial-application': 7.18.9_@babel+core@7.18.13
   '@babel/preset-env': 7.18.10_@babel+core@7.18.13
   webpack: 5.74.0_webpack-cli@4.10.0
   webpack-cli: 4.10.0_webpack@5.74.0
@@ -479,6 +481,17 @@ packages:
       '@babel/plugin-syntax-optional-chaining': 7.8.3_@babel+core@7.18.13
     dev: true
 
+  /@babel/plugin-proposal-partial-application/7.18.9_@babel+core@7.18.13:
+    resolution: {integrity: sha512-+q+bOVHlU+4QAb6h8S3UNL2x52/bcTiGTktUj+WYIFtqueqbQBU7AqnMs79TPz7hRdj6rWiQDInuVMz/fsxwdQ==}
+    engines: {node: '>=6.9.0'}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.18.13
+      '@babel/helper-plugin-utils': 7.18.9
+      '@babel/plugin-syntax-partial-application': 7.18.6_@babel+core@7.18.13
+    dev: true
+
   /@babel/plugin-proposal-private-methods/7.18.6_@babel+core@7.18.13:
     resolution: {integrity: sha512-nutsvktDItsNn4rpGItSNV2sz1XwS+nfU0Rg8aCx3W3NOKVzdMjJRu0O5OkgDp3ZGICSTbgRpxZoWsxoKRvbeA==}
     engines: {node: '>=6.9.0'}
@@ -630,6 +643,16 @@ packages:
 
   /@babel/plugin-syntax-optional-chaining/7.8.3_@babel+core@7.18.13:
     resolution: {integrity: sha512-KoK9ErH1MBlCPxV0VANkXW2/dw4vlbGDrFgz8bmUsBGYkFRcbRwMh6cIJubdPrkxRwuGdtCk0v/wPTKbQgBjkg==}
+    peerDependencies:
+      '@babel/core': ^7.0.0-0
+    dependencies:
+      '@babel/core': 7.18.13
+      '@babel/helper-plugin-utils': 7.18.9
+    dev: true
+
+  /@babel/plugin-syntax-partial-application/7.18.6_@babel+core@7.18.13:
+    resolution: {integrity: sha512-jEy7lXLt01S/Hp3egTsiqNaeCH+n38iMm33dJ158Cr9JdCef/qR3GB3FrEB6+n7UpmlJ8StiV6Y7aXnjfyBs9w==}
+    engines: {node: '>=6.9.0'}
     peerDependencies:
       '@babel/core': ^7.0.0-0
     dependencies:

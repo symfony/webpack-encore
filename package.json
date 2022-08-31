@@ -27,9 +27,6 @@
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
-    "@babel/core": "^7.17.0",
-    "@babel/plugin-syntax-dynamic-import": "^7.8.0",
-    "@babel/preset-env": "^7.16.0",
     "@nuxt/friendly-errors-webpack-plugin": "^2.5.1",
     "assets-webpack-plugin": "7.0.*",
     "babel-loader": "^8.2.5",
@@ -52,9 +49,10 @@
     "yargs-parser": "^21.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.17.0",
     "@babel/eslint-parser": "^7.17.0",
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
     "@babel/plugin-transform-react-jsx": "^7.12.11",
+    "@babel/preset-env": "^7.16.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
     "@hotwired/stimulus": "^3.0.0",
@@ -103,8 +101,9 @@
     "zombie": "^6.1.4"
   },
   "peerDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/core": "^7.17.0",
     "@babel/plugin-transform-react-jsx": "^7.12.11",
+    "@babel/preset-env": "^7.16.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
     "@symfony/stimulus-bridge": "^3.0.0",
@@ -135,11 +134,14 @@
     "webpack-notifier": "^1.15.0"
   },
   "peerDependenciesMeta": {
-    "@babel/plugin-proposal-class-properties": {
-      "optional": true
+    "@babel/core": {
+      "optional": false
     },
     "@babel/plugin-transform-react-jsx": {
       "optional": true
+    },
+    "@babel/preset-env":  {
+      "optional": false
     },
     "@babel/preset-react": {
       "optional": true
