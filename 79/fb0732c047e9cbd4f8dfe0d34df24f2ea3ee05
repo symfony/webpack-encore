@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by stof at 2022-08-31T15:36:25Z
+
+We should check for their presence when you enable babel. IIRC, they are currently not checked as they were installed as dependencies of Encore.
