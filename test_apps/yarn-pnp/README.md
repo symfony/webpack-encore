@@ -1,4 +1,4 @@
-# Testing app: npm 
+# Testing app: Yarn Plug'n'Play 
 
 This testing app is used to test how Encore installation and usage work when using the [**Yarn** package manager](https://yarnpkg.com/) 
 with the [Plug'N'Play feature](https://yarnpkg.com/features/pnp) enabled.

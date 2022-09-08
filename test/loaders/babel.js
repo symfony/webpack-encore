@@ -91,7 +91,6 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            require.resolve('@babel/plugin-syntax-dynamic-import'),
             [require.resolve('@babel/plugin-transform-react-jsx'), { pragma: 'h' }],
             'foo'
         ]);
@@ -108,7 +107,6 @@ describe('loaders/babel', () => {
         const actualLoaders = babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            require.resolve('@babel/plugin-syntax-dynamic-import'),
             [require.resolve('@babel/plugin-transform-react-jsx')],
             'foo'
         ]);
@@ -183,8 +181,6 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options.presets[1][0]).to.equal(require.resolve('@babel/preset-typescript'));
         expect(actualLoaders[0].options.presets[1][1]).to.equal(presetTypeScriptOptions);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            require.resolve('@babel/plugin-syntax-dynamic-import'),
-            require.resolve('@babel/plugin-proposal-class-properties'),
             'foo'
         ]);
     });

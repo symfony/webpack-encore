@@ -1,4 +1,4 @@
-name: Testing apps
+name: Testing in real apps
 on: [push, pull_request]
 
 jobs:
@@ -6,9 +6,25 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        test_app:
+        app:
           - name: npm
             working_directory: test_apps/npm
+            script: |
+              npm install --ci
+              npm add --save-dev ../../webpack-encore.tgz
+              npm run encore dev
+              npm run encore production
+
+          - name: npm (with Babel)
+            working_directory: test_apps/npm-with-babel
+            script: |
+              npm install --ci
+              npm add --save-dev ../../webpack-encore.tgz
+              npm run encore dev
+              npm run encore production
+
+          - name: npm (with external Babel configuration file)
+            working_directory: test_apps/npm-with-external-babel-config
             script: |
               npm install --ci
               npm add --save-dev ../../webpack-encore.tgz
@@ -23,8 +39,24 @@ jobs:
               pnpm run encore dev
               pnpm run encore production
 
+          - name: pnpm (with Babel)
+            working_directory: test_apps/pnpm-with-babel
+            script: |
+              pnpm install --frozen-lockfile
+              pnpm add --save-dev ../../webpack-encore.tgz
+              pnpm run encore dev
+              pnpm run encore production
+
+          - name: pnpm (with external Babel configuration file)
+            working_directory: test_apps/pnpm-with-external-babel-config
+            script: |
+              pnpm install --frozen-lockfile
+              pnpm add --save-dev ../../webpack-encore.tgz
+              pnpm run encore dev
+              pnpm run encore production
+
           - name: Yarn Plug'n'Play
-            working_directory: test_apps/yarn_pnp
+            working_directory: test_apps/yarn-pnp
             script: |
               yarn set version berry
               yarn install --frozen-lockfile
@@ -32,7 +64,25 @@ jobs:
               yarn run encore dev
               yarn run encore production
 
-    name: ${{ matrix.test_app.name }}
+          - name: Yarn Plug'n'Play (with Babel)
+            working_directory: test_apps/yarn-pnp-with-babel
+            script: |
+              yarn set version berry
+              yarn install --frozen-lockfile
+              yarn add --dev ../../webpack-encore.tgz
+              yarn run encore dev
+              yarn run encore production
+
+          - name: Yarn Plug'n'Play (with external Babel configuration file)
+            working_directory: test_apps/yarn-pnp-with-external-babel-config
+            script: |
+              yarn set version berry
+              yarn install --frozen-lockfile
+              yarn add --dev ../../webpack-encore.tgz
+              yarn run encore dev
+              yarn run encore production
+
+    name: ${{ matrix.app.name }}
     runs-on: ubuntu-latest
 
     steps:
@@ -44,7 +94,7 @@ jobs:
           with:
             node-version: '14'
 
-      -   if: matrix.test_app.name == 'pnpm'
+      -   if: ${{ contains(matrix.app.name, 'pnpm') }}
           name: Install pnpm
           uses: pnpm/action-setup@v2
           with:
@@ -54,5 +104,5 @@ jobs:
           run: yarn pack --filename webpack-encore.tgz
 
       -   name: Running script
-          working-directory: ${{ matrix.test_app.working_directory }}
-          run: ${{ matrix.test_app.script }}
+          working-directory: ${{ matrix.app.working_directory }}
+          run: ${{ matrix.app.script }}
