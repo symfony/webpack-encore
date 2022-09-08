@@ -1,5 +1,36 @@
 # CHANGELOG
 
+## [v4.0.0](https://github.com/symfony/webpack-encore/releases/tag/v4.0.0)
+
+This major release makes Encore compatible with [Yarn Plug'n'Play](https://yarnpkg.com/features/pnp) and [pnpm](https://pnpm.io/).
+
+### BC Breaks
+
+* The following dependencies **must be added** in your `package.json`: `webpack webpack-cli @babel/core @babel/preset-env` (#1142 and #1150):
+```shell
+npm install webpack webpack-cli @babel/core @babel/preset-env --save-dev
+
+# or via yarn
+yarn add webpack webpack-cli @babel/core @babel/preset-env --dev
+```
+
+* The following dependencies **must be removed** from your `package.json` and Babel configuration: `@babel/plugin-syntax-dynamic-import @babel/plugin-proposal-class-properties`, 
+since they are already included in `@babel/preset-env` (#1150):
+```shell
+npm remove @babel/plugin-syntax-dynamic-import @babel/plugin-proposal-class-properties
+
+# or via yarn
+yarn remove @babel/plugin-syntax-dynamic-import @babel/plugin-proposal-class-properties
+```
+
+and remove it from your Encore configuration:
+```diff
+Encore.configureBabel((options) => {
+-    config.plugins.push('@babel/plugin-proposal-class-properties');
++    
+})
+```
+
 ## [v3.1.0](https://github.com/symfony/webpack-encore/releases/tag/v3.0.0)
 
 *August 24th, 2022*
@@ -13,7 +44,7 @@
 This major release drops support for Node 12 (minimum is now Node 14) and
 also bumps some dependencies up a new major version.
 
-## BC Breaks
+### BC Breaks
 
 * In #1122 support for Node 12 was dropped.
 

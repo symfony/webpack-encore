@@ -1,6 +1,6 @@
 # Testing app: pnpm (with external Babel configuration file)
 
-This testing app is used to test how Encore installation and usage work when using the [**pnpm** package manager](https://pnpm.io/fr/).
+This testing app is used to test how Encore installation and usage work when using the [**pnpm** package manager](https://pnpm.io/).
 
 ## Installation
 
