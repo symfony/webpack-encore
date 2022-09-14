@@ -1,6 +1,6 @@
 {
   "name": "@symfony/webpack-encore",
-  "version": "3.1.0",
+  "version": "4.0.0",
   "description": "Webpack Encore is a simpler way to integrate Webpack into your application",
   "main": "index.js",
   "scripts": {
@@ -140,7 +140,7 @@
     "@babel/plugin-transform-react-jsx": {
       "optional": true
     },
-    "@babel/preset-env":  {
+    "@babel/preset-env": {
       "optional": false
     },
     "@babel/preset-react": {
