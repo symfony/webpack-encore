@@ -1300,12 +1300,12 @@ describe('WebpackConfig object', () => {
 
             expect(config.externals).to.deep.equals([]);
 
-            config.addExternals({ 'jquery': 'jQuery', 'react': 'react' });
+            config.addExternals({ 'jquery': 'jQuery', 'react': 'react', 'svelte': 'svelte' });
             config.addExternals({ 'lodash': 'lodash' });
             config.addExternals(/^(jquery|\$)$/i);
 
             expect(config.externals).to.deep.equals([
-                { 'jquery': 'jQuery', 'react': 'react' },
+                { 'jquery': 'jQuery', 'react': 'react', 'svelte': 'svelte' },
                 { 'lodash': 'lodash' },
                 /^(jquery|\$)$/i
             ]);
@@ -1494,7 +1494,7 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.configureLoaderRule('reason');
-            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars" and the aliases "js", "ts", "scss".');
+            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars", "svelte" and the aliases "js", "ts", "scss".');
         });
 
         it('Call method with not a valid callback', () => {

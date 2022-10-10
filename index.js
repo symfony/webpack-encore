@@ -1726,6 +1726,19 @@ class Encore {
         runtimeConfig = null;
         webpackConfig = null;
     }
+
+    /**
+     * If enabled, the SvelteJs loader is enabled.
+     *
+     * https://github.com/sveltejs/svelte-loader
+     *
+     * @returns {Encore}
+     */
+    enableSvelte() {
+        webpackConfig.enableSvelte();
+
+        return this;
+    }
 }
 
 /**

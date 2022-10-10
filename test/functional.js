@@ -1309,6 +1309,23 @@ module.exports = {
             });
         });
 
+        it('When enabled, svelte is transformed', (done) => {
+            const config = createWebpackConfig('www/build', 'dev');
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/hello_world.svelte');
+            config.enableSvelte();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // check that babel transformed the svelte files
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
+                    'SvelteComponent'
+                );
+
+                done();
+            });
+        });
+
         it('When enabled, preact JSX is transformed with preact-compat!', (done) => {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
