@@ -1,0 +1,71 @@
+---------------------------------------------------------------------------
+
+by Rodrigo001-dev at 2020-07-03T01:44:32Z
+
+Project made with TypeScript, react.Js, React-native. Recycling day design
+
+https://github.com/Rodrigo001-de/Projeto-Ecoleta-advanced
+
+---------------------------------------------------------------------------
+
+by Volubyl at 2020-12-21T16:25:50Z
+
+Hey @zairigimad!
+
+Do you need a hand with that PR?
+
+It would be great to have Svelte's support in webpack encore.
+
+If I can help in any way, let me know!
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2020-12-21T18:26:26Z
+
+@Volubyl yes it will be great if you can help :)
+
+---------------------------------------------------------------------------
+
+by Volubyl at 2020-12-22T07:29:19Z
+
+> @Volubyl yes it will be great if you can help :)
+
+Nice!
+
+Can you tell me what remains to be done with this PR and how I can help?
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2020-12-22T18:26:24Z
+
+> > @Volubyl yes it will be great if you can help :)
+>
+> Nice!
+>
+> Can you tell me what remains to be done with this PR and how I can help?
+
+when I've added this, it was working, maybe if you can test it and see if something missing or if you have and idea you can add it :)
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2021-04-23T15:20:01Z
+
+> Sorry for letting this sit for SO long without any attention :/.
+>
+> The only thing I can see that this is missing is a test in `functional.js`. It would probably include adding a "hello world" type of svelte file into the fixtures, then booting up an Encore setup, executing Encore and asserting that the result works. We have plenty of examples of that sort of thing in that `functional.js` file - React or Vue might be especially good examples to pull from.
+>
+> Cheers!
+
+no problem, I will make the test ASAP.
+
+---------------------------------------------------------------------------
+
+by zairigimad at 2021-04-28T20:55:07Z
+
+Hey @weaverryan I've added the functional test for svelte :)
+
+---------------------------------------------------------------------------
+
+by CrazyHackGUT at 2021-07-09T08:29:45Z
+
+Any chances to be merged in near future?
