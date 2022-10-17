@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [v4.1.0](https://github.com/symfony/webpack-encore/releases/tag/v4.1.0)
+
+*October 17th, 2022*
+
+### Features
+
+* Add support for Svelte - #781 thanks to @zairigimad
+
+### Bug Fixes
+
+* Support for Vue 2 was accidentally dropped in 4.0.0, and was re-added - #157 thanks to @Kocal.
+
 ## [v4.0.0](https://github.com/symfony/webpack-encore/releases/tag/v4.0.0)
 
 This major release makes Encore compatible with [Yarn Plug'n'Play](https://yarnpkg.com/features/pnp) and [pnpm](https://pnpm.io/).
@@ -14,7 +26,7 @@ npm install webpack webpack-cli @babel/core @babel/preset-env --save-dev
 yarn add webpack webpack-cli @babel/core @babel/preset-env --dev
 ```
 
-* The following dependencies **must be removed** from your `package.json` and Babel configuration: `@babel/plugin-syntax-dynamic-import @babel/plugin-proposal-class-properties`, 
+* The following dependencies **must be removed** from your `package.json` and Babel configuration: `@babel/plugin-syntax-dynamic-import @babel/plugin-proposal-class-properties`,
 since they are already included in `@babel/preset-env` (#1150):
 ```shell
 npm remove @babel/plugin-syntax-dynamic-import @babel/plugin-proposal-class-properties
@@ -31,7 +43,7 @@ Encore.configureBabel((options) => {
 })
 ```
 
-## [v3.1.0](https://github.com/symfony/webpack-encore/releases/tag/v3.0.0)
+## [v3.1.0](https://github.com/symfony/webpack-encore/releases/tag/v3.1.0)
 
 *August 24th, 2022*
 
@@ -93,7 +105,7 @@ of Encore:
 * `css-minimizer-webpack-plugin` Version `2` to `3`: dropped old Node version support
 * `loader-utils` REMOVED
 * `mini-css-extract-plugin` Version `1.5` to `2.2.1`: dropped old Node & Webpack version support & [CHANGELOG](https://github.com/webpack-contrib/mini-css-extract-plugin/blob/master/CHANGELOG.md#-breaking-changes)
-* `pretty-error` Version `3.0` to `4.0`: dropped old Node version support 
+* `pretty-error` Version `3.0` to `4.0`: dropped old Node version support
 * `resolve-url-loader` Version `3.0` to `5.0`: dropped old Node version support, requires postcss `^8.0`, remove `rework` engine & [CHANGELOG](https://github.com/bholloway/resolve-url-loader/blob/v4-maintenance/packages/resolve-url-loader/CHANGELOG.md)
 * `style-loader` Version `2` to `3`: dropped old Node and Webpack version support & [CHANGELOG](https://github.com/webpack-contrib/style-loader/blob/master/CHANGELOG.md#-breaking-changes)
 * `yargs-parser` Version `20.2` to `21`: dropped old Node version support
@@ -753,7 +765,7 @@ for a full description of all of the valid browser descriptions.
 ## 0.15.0
 
  * Add support for [Preact](https://preactjs.com/) - #144 via @Lyrkan
- 
+
  * Added `Encore.configureManifestPlugin()` method - #142 via @Seikyo
 
  * Added 5 new methods to configure plugins! #152 via @Lyrkan
