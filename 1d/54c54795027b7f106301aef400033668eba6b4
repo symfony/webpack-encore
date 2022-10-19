@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-10-19T14:39:15Z
+
+This is already merged and tagged - not sure why the PR didn't close :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-10-19T15:07:50Z
+
+@weaverryan this is a new PR to fix #1158, after https://github.com/symfony/webpack-encore/releases/tag/v4.1.0 has been released.
+
+---------------------------------------------------------------------------
+
+by IonBazan at 2022-10-19T15:23:48Z
+
+I confirm, without this fix, the package cannot be installed:
+```
+$ npm upgrade @symfony/webpack-encore
+npm ERR! code EINVALIDTAGNAME
+npm ERR! Invalid tag name "^2.6|^3.2.14" of package "vue@^2.6|^3.2.14": Tags may not have any characters that encodeURIComponent encodes.
+```
