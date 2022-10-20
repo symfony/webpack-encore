@@ -10,7 +10,7 @@
 
 ### Bug Fixes
 
-* Support for Vue 2 was accidentally dropped in 4.0.0, and was re-added - #157 thanks to @Kocal.
+* Support for Vue 2 was accidentally dropped in 4.0.0, and was re-added - #1157 thanks to @Kocal.
 
 ## [v4.0.0](https://github.com/symfony/webpack-encore/releases/tag/v4.0.0)
 
