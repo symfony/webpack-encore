@@ -1,0 +1,50 @@
+---------------------------------------------------------------------------
+
+by stof at 2022-11-21T09:25:53Z
+
+Why making it a draft PR ?
+
+---------------------------------------------------------------------------
+
+by dmaicher at 2022-11-21T09:28:37Z
+
+Do I need to fix the yarn fails?
+
+---------------------------------------------------------------------------
+
+by stof at 2022-11-21T09:38:49Z
+
+@Kocal any idea what those failures are about ? To me, it seems like yarn says it fails with errors without actually showing those errors.
+
+---------------------------------------------------------------------------
+
+by dmaicher at 2022-11-21T09:40:05Z
+
+Yeah I cannot fix those.
+
+I tried
+
+```
+yarn set version berry
+yarn install
+```
+
+generates a huge yarn.lock diff and still fails
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-11-21T10:15:16Z
+
+Yarn lockfiles from the following testing apps must be updated, since the root package.json has been updated:
+- https://github.com/symfony/webpack-encore/tree/main/test_apps/yarn-pnp
+- https://github.com/symfony/webpack-encore/tree/main/test_apps/yarn-pnp-with-babel
+- https://github.com/symfony/webpack-encore/tree/main/test_apps/yarn-pnp-with-external-babel-config
+
+as shown in the Yarn's post-resolution validation process:
+<img width="1497" alt="image" src="https://user-images.githubusercontent.com/2103975/203024698-ca040651-8e9a-48bb-aa6d-d84d2c721a4c.png">
+
+---------------------------------------------------------------------------
+
+by stof at 2022-11-21T10:25:26Z
+
+ah indeed. I missed that one of those symbols was a GHA group and not the Yarn prefix...
