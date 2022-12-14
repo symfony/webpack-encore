@@ -90,16 +90,16 @@
     "strip-ansi": "^6.0.0",
     "stylus": "^0.58.1",
     "stylus-loader": "^7.0.0",
+    "svelte": "^3.50.0",
+    "svelte-loader": "^3.1.0",
     "ts-loader": "^9.0.0",
     "typescript": "^4.2.2",
     "vue": "^3.2.14",
     "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.5",
     "webpack": "^5.72",
-    "webpack-cli": "^4.9.1",
+    "webpack-cli": "^4.9.1 || ^5.0.1",
     "webpack-notifier": "^1.15.0",
-    "svelte": "^3.50.0",
-    "svelte-loader": "^3.1.0",
     "zombie": "^6.1.4"
   },
   "peerDependencies": {
@@ -132,7 +132,7 @@
     "vue-loader": "^15.0.11 || ^17.0.0",
     "vue-template-compiler": "^2.5",
     "webpack": "^5.72",
-    "webpack-cli": "^4.9.1",
+    "webpack-cli": "^4.9.1 || ^5.0.1",
     "webpack-notifier": "^1.15.0"
   },
   "peerDependenciesMeta": {
