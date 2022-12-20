@@ -1206,7 +1206,7 @@ class Encore {
      * @param {object} options
      * @returns {Encore}
      */
-    enableBabelTypeScriptPreset(options) {
+    enableBabelTypeScriptPreset(options = {}) {
         webpackConfig.enableBabelTypeScriptPreset(options);
 
         return this;
