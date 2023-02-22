@@ -1400,7 +1400,7 @@ class Encore {
      * Encore.configureFilenames({
      *     js: '[name].[contenthash].js',
      *     css: '[name].[contenthash].css',
-     *     assets: 'assets/[name].[hash:8][ext]',
+     *     assets: 'assets/[name].[hash:8].[ext]',
      * });
      * ```
      *
@@ -1446,7 +1446,7 @@ class Encore {
      *     maxSize: 4 * 1024, // 4 kb
      *
      *     // control the output filename of images
-     *     filename: 'images/[name].[hash:8][ext]',
+     *     filename: 'images/[name].[hash:8].[ext]',
      *
      *     // you can also fully disable the image rule if you want
      *     // to control things yourself
@@ -1465,7 +1465,7 @@ class Encore {
      *     // if you set "type: 'javascript/auto'" in the first argument,
      *     // then you can now specify a loader manually
      *     // rule.loader = 'file-loader';
-     *     // rule.options = { filename: 'images/[name].[hash:8][ext]' }
+     *     // rule.options = { filename: 'images/[name].[hash:8].[ext]' }
      * });
      * ```
      *
