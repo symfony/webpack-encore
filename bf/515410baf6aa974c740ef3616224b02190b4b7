@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by stof at 2023-02-28T10:40:31Z
+
+This dev dependency should stay compatible with the range allowed in the peer dependency.
+
+And reducing a peer dependency range is a BC break, so support for eslint-webpack-plugin v3 must be kept until the next major version of Encore.
