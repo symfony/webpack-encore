@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by TomaszGasior at 2023-02-17T23:42:11Z
+
+I confirm that when I apply change from this PR in my app, error when building assets is resolved: https://github.com/TomaszGasior/RadioLista-v3/issues/218 ("Timed out waiting for sync-rpc server to start (it should respond with "pong" when sent "ping""). However, the thing is: I just don't use Eslint. If I would use Eslint integration, the error would happen again because just the environment I use does not allow to use _any random port_; I can use only already set up defined ports. The thing inside `forceSync` function tries to reserve some random port which is not allowed in my environment. It would be nice if the thing you are trying to achieve in this code would be done without requiring usage of random ports. This is not possible in some environments.
+
+(However, I must admit I don't know whether that integration makes sense outside development environment and what it does. If this is only for dev env, then the fix in the PR is just fine.)
