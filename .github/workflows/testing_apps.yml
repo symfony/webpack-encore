@@ -98,7 +98,8 @@ jobs:
           name: Install pnpm
           uses: pnpm/action-setup@v2
           with:
-            version: latest
+            # The latest version of pnpm does not support node 14.x anymore.
+            version: 7.x
 
       -   name: Packing Encore
           run: yarn pack --filename webpack-encore.tgz
