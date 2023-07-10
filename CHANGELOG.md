@@ -1,5 +1,28 @@
 # CHANGELOG
 
+## [v4.4.0](https://github.com/symfony/webpack-encore/releases/tag/v4.4.0)
+
+### Features
+
+* #1203 upgrade css-minimizer-webpack-plugin from 5 to 6
+
+## [v4.3.0](https://github.com/symfony/webpack-encore/releases/tag/v4.3.0)
+
+### Features
+
+* #1200 Allow TypeScript 5 (@jmsche)
+* #1190 Allow eslint-webpack-plugin ^4.0 (@evertharmeling)
+
+### Bugs
+
+* #1175 Delay force sync until needed (@wesoledi, @weaverryan)
+
+## [v4.2.0](https://github.com/symfony/webpack-encore/releases/tag/v4.2.0)
+
+### Features
+
+* Allow webpack-cli version 5 to be used in your package.json file
+
 ## [v4.1.0](https://github.com/symfony/webpack-encore/releases/tag/v4.1.0)
 
 *October 17th, 2022*
