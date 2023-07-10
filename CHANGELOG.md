@@ -4,7 +4,7 @@
 
 ### Features
 
-* #1203 upgrade css-minimizer-webpack-plugin from 5 to 6
+* #1203 upgrade css-minimizer-webpack-plugin from 4 to 5
 
 ## [v4.3.0](https://github.com/symfony/webpack-encore/releases/tag/v4.3.0)
 
