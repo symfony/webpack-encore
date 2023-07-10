@@ -33,7 +33,7 @@
     "chalk": "^4.0.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.0",
-    "css-minimizer-webpack-plugin": "^4.0.0",
+    "css-minimizer-webpack-plugin": "^5.0.0",
     "fast-levenshtein": "^3.0.0",
     "mini-css-extract-plugin": "^2.6.0",
     "pkg-up": "^3.1.0",
