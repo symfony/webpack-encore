@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-20T18:35:45Z
+
+Hi @dppanteon!
+
+I don't believe `babel-loader` needs to be updated for this. Their "fix" was just bumping their `yarn.lock`, which doesn't affect anyone who uses that library. However, we're super overdue for upgrading to babel-loader 9 anyway, so the PR makes sense :)
+
+Cheers!
