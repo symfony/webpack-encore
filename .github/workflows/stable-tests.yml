@@ -14,7 +14,7 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-latest, windows-2019]
-                node-versions: ['14', '16', '18']
+                node-versions: ['16', '18', '20']
 
         steps:
             -   name: Checkout

@@ -92,14 +92,13 @@ jobs:
       -   name: Node ${{matrix.node-versions}}
           uses: actions/setup-node@v3
           with:
-            node-version: '14'
+            node-version: '18'
 
       -   if: ${{ contains(matrix.app.name, 'pnpm') }}
           name: Install pnpm
           uses: pnpm/action-setup@v2
           with:
-            # The latest version of pnpm does not support node 14.x anymore.
-            version: 7.x
+            version: 8.x
 
       -   name: Packing Encore
           run: yarn pack --filename webpack-encore.tgz

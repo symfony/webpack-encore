@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## [v4.4.0](https://github.com/symfony/webpack-encore/releases/tag/v4.5.0)
+
+### Features
+
+* #1235 Dropping support for Node 14 (16 is new min) and allowing `svelte` 4 (@weaverryan) 
+
+* #1185 Bump `babel-loader` from 8.2.5 to 9.1.2 (@dppanteon) - the
+  [CHANGELOG for babel 9](https://github.com/babel/babel-loader/releases/tag/v9.0.0)
+  does not list any breaking changes besides increasing the minimum Node version.
+
+* #1224 Allow fork-ts-checker-webpack-plugin ^8.0 and ^9.0 (@buffcode)
+
 ## [v4.4.0](https://github.com/symfony/webpack-encore/releases/tag/v4.4.0)
 
 ### Features
