@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by buffcode at 2023-10-19T00:24:28Z
+
+Failing test seems to be unrelated to this MR:
+```
+  1) The config-generator function
+       enableEslintPlugin() adds the eslint-webpack-plugin
+         enableEslintPlugin():
+     Error: Timeout of 2000ms exceeded. For async tests and hooks, ensure "done()" is called; if returning a Promise, ensure it resolves. (D:\a\webpack-encore\webpack-encore\test\config-generator.js)
+      at processImmediate (node:internal/timers:466:21)
+```
