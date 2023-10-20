@@ -29,7 +29,7 @@
   "dependencies": {
     "@nuxt/friendly-errors-webpack-plugin": "^2.5.1",
     "assets-webpack-plugin": "7.0.*",
-    "babel-loader": "^8.2.5",
+    "babel-loader": "^9.1.2",
     "chalk": "^4.0.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.0",
