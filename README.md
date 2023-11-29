@@ -10,6 +10,10 @@ for bundling JavaScript modules, pre-processing CSS & JS and compiling
 and minifying assets. Encore gives you a professional asset system
 that's a *delight* to use.
 
+> [!TIP]
+> Symfony released an [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html) component, a production-ready simpler alternative to Webpack Encore
+> that runs entirely in PHP.
+
 Encore is inspired by [Webpacker](https://github.com/rails/webpacker) and
 [Mix](https://laravel.com/docs/mix), but stays in the spirit of
 Webpack: using its features, concepts and naming conventions for a familiar
@@ -20,5 +24,4 @@ feel. It aims to solve the most common Webpack use cases.
 
 ## Documentation
 
-[Read the Documentation on symfony.com](https://symfony.com/doc/current/frontend.html)
-or view a demo application: [symfony/demo](https://github.com/symfony/demo).
+[Read the Documentation on symfony.com](https://symfony.com/doc/current/frontend.html).
