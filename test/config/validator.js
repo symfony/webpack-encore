@@ -24,6 +24,8 @@ function createConfig() {
 }
 
 describe('The validator function', () => {
+    function CustomPlugin1() {}
+
     it('throws an error if there are no entries', () => {
         const config = createConfig();
         config.publicPath = '/';
@@ -45,6 +47,17 @@ describe('The validator function', () => {
         }).not.throw();
 
         expect(Object.keys(config.copyFilesConfigs).length).to.equal(1);
+    });
+
+    it('should accept use with addPlugin() only', () => {
+        const config = createConfig();
+        config.setOutputPath('/tmp');
+        config.setPublicPath('/tmp');
+        config.addPlugin(new CustomPlugin1());
+
+        expect(() => {
+            validator(config);
+        }).not.throw();
     });
 
     it('throws an error if there is no output path', () => {
