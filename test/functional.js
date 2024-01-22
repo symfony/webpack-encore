@@ -1037,7 +1037,7 @@ module.exports = {
                 // check that the autoprefixer did its work!
                 webpackAssert.assertOutputFileContains(
                     'styles.css',
-                    '-webkit-full-screen'
+                    '-webkit-backdrop-filter'
                 );
 
                 // check that the .postcss file was also processed
@@ -1045,7 +1045,7 @@ module.exports = {
                 // file)
                 webpackAssert.assertOutputFileContains(
                     'postcss.css',
-                    '-webkit-full-screen'
+                    '-webkit-backdrop-filter'
                 );
 
                 done();

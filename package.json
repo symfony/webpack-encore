@@ -23,7 +23,7 @@
     "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=20.0.0"
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
