@@ -59,7 +59,7 @@ jobs:
             working_directory: test_apps/yarn-pnp
             script: |
               yarn set version berry
-              yarn install --frozen-lockfile
+              yarn install --immutable
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
               yarn run encore production
@@ -68,7 +68,7 @@ jobs:
             working_directory: test_apps/yarn-pnp-with-babel
             script: |
               yarn set version berry
-              yarn install --frozen-lockfile
+              yarn install --immutable
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
               yarn run encore production
@@ -77,7 +77,7 @@ jobs:
             working_directory: test_apps/yarn-pnp-with-external-babel-config
             script: |
               yarn set version berry
-              yarn install --frozen-lockfile
+              yarn install --immutable
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
               yarn run encore production
