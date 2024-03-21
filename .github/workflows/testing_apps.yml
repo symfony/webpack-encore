@@ -58,7 +58,7 @@ jobs:
           - name: Yarn Plug'n'Play
             working_directory: test_apps/yarn-pnp
             script: |
-              yarn set version berry
+              yarn set version 4.1.1
               yarn install --frozen-lockfile
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
@@ -67,7 +67,7 @@ jobs:
           - name: Yarn Plug'n'Play (with Babel)
             working_directory: test_apps/yarn-pnp-with-babel
             script: |
-              yarn set version berry
+              yarn set version 4.1.1
               yarn install --frozen-lockfile
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
@@ -76,7 +76,7 @@ jobs:
           - name: Yarn Plug'n'Play (with external Babel configuration file)
             working_directory: test_apps/yarn-pnp-with-external-babel-config
             script: |
-              yarn set version berry
+              yarn set version 4.1.1
               yarn install --frozen-lockfile
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
