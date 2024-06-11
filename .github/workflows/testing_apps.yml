@@ -58,8 +58,8 @@ jobs:
           - name: Yarn Plug'n'Play
             working_directory: test_apps/yarn-pnp
             script: |
-              yarn set version 4.1.1
-              yarn install --frozen-lockfile
+              yarn set version 4.3.0
+              yarn install --immutable
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
               yarn run encore production
@@ -67,8 +67,8 @@ jobs:
           - name: Yarn Plug'n'Play (with Babel)
             working_directory: test_apps/yarn-pnp-with-babel
             script: |
-              yarn set version 4.1.1
-              yarn install --frozen-lockfile
+              yarn set version 4.3.0
+              yarn install --immutable
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
               yarn run encore production
@@ -76,8 +76,8 @@ jobs:
           - name: Yarn Plug'n'Play (with external Babel configuration file)
             working_directory: test_apps/yarn-pnp-with-external-babel-config
             script: |
-              yarn set version 4.1.1
-              yarn install --frozen-lockfile
+              yarn set version 4.3.0
+              yarn install --immutable
               yarn add --dev ../../webpack-encore.tgz
               yarn run encore dev
               yarn run encore production
