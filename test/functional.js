@@ -1707,25 +1707,20 @@ module.exports = {
 
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
 
-            if (getVueVersion(config) === 3) {
-                // not supported for vue3 at this time
-                this.skip();
-
-                return;
-            }
-
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
             config.addEntry('main', `./vuejs-jsx/main_v${getVueVersion(config)}`);
             config.enableVueLoader(() => {}, {
                 useJsx: true,
+                version: getVueVersion(config),
             });
             config.enableSassLoader();
             config.enableLessLoader();
             config.configureBabel(function(config) {
-                expect(config.presets[0][0]).to.equal('@babel/preset-env');
+                // throw new Error(JSON.stringify(config));
+                expect(config.presets[0][0]).to.equal(require.resolve('@babel/preset-env'));
                 config.presets[0][1].targets = {
-                    chrome: 52
+                    chrome: 109
                 };
             });
 

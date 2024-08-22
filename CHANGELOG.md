@@ -1,6 +1,35 @@
 # CHANGELOG
 
-## v4.6.0
+## UNRELEASED
+
+* #1295 Add JSX support for Vue 3 (@Kocal)
+
+Enabling JSX support for Vue 3 is done with the `Encore.enableVueLoader()`: 
+```js
+Encore.enableVueLoader(() => {}, { 
+    useJsx: true,
+    version: 3,
+});
+```
+
+If you don't have a custom Babel configuration, then you're all set!
+But if you do, you may need to adjust it 
+to add [`@vue/babel-plugin-jsx`](https://github.com/vuejs/babel-plugin-jsx) plugin to your Babel configuration:
+```js
+// babel.config.js
+module.exports = {
+    plugins: [
+        '@vue/babel-plugin-jsx'
+    ]
+};
+```
+
+
+## [v4.6.1](https://github.com/symfony/webpack-encore/releases/tag/v4.6.1)
+
+* #1256 Re-adding node 18 support (@weaverryan)
+
+## [v4.6.0](https://github.com/symfony/webpack-encore/releases/tag/v4.6.0)
 
 * #1254 Increased minimum Node version to 20 (@weaverryan)
 
@@ -8,17 +37,7 @@
 
 * #1247 Allow only configuring a plugin (@gimler)
 
-## v4.5.0
-
-* #1235 Dropping support for Node 14 (16 is new min) and allowing `svelte` 4 (@weaverryan) 
-
-* #1185 Bump `babel-loader` from 8.2.5 to 9.1.2 (@dppanteon) - the
-  [CHANGELOG for babel 9](https://github.com/babel/babel-loader/releases/tag/v9.0.0)
-  does not list any breaking changes besides increasing the minimum Node version.
-
-* #1224 Allow fork-ts-checker-webpack-plugin ^8.0 and ^9.0 (@buffcode)
-
-## [v4.4.0](https://github.com/symfony/webpack-encore/releases/tag/v4.5.0)
+## [v4.5.0](https://github.com/symfony/webpack-encore/releases/tag/v4.5.0)
 
 ### Features
 
