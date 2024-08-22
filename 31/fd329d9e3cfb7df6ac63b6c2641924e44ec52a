@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-22T20:35:57Z
+
+Those failing checks (Vue.js 3 + typescript) are now green because I've updated Vue from 3.4.15 to 3.4.38:
+<img width="559" alt="image" src="https://github.com/user-attachments/assets/1ab5330d-9f6f-465a-b3a7-055d86375182">
