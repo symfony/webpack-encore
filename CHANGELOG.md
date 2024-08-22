@@ -2,6 +2,18 @@
 
 ## UNRELEASED
 
+* #1259 Update yarn used for test_apps to latest version (@karpilin)
+
+* #1275 Update some dev-dependencies to fix vulnerability issues (@Kocal)
+
+* #1278 Deprecate ESLint integration (@Kocal)
+
+* #1284 Improve ESLint and Babel help messages, when enabling ESLint integration (@Kocal)
+
+* #1285 Add support for PNPM for installation commands (@Kocal)
+
+* #1286 Add support for Node.js 22 (@Kocal)
+
 * #1295 Add JSX support for Vue 3 (@Kocal)
 
 Enabling JSX support for Vue 3 is done with the `Encore.enableVueLoader()`: 
