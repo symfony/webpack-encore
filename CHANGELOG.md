@@ -36,6 +36,7 @@ module.exports = {
 };
 ```
 
+* #1297 Upgrade GitHub Actions in CI (@Kocal)
 
 ## [v4.6.1](https://github.com/symfony/webpack-encore/releases/tag/v4.6.1)
 
