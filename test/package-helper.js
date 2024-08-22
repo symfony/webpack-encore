@@ -29,7 +29,7 @@ describe('package-helper', () => {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
+            expect(packageRecommendations.installCommand).to.contain('npm install foo bar');
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
@@ -51,12 +51,30 @@ describe('package-helper', () => {
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
+        it('missing packages with pnpm-lock.yaml only', () => {
+            process.chdir(path.join(__dirname, '../fixtures/package-helper/pnpm'));
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
+            ]);
+            expect(packageRecommendations.installCommand).to.contain('pnpm add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+        });
+
         it('missing packages with both package-lock.json and yarn.lock', () => {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn-npm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+        });
+
+        it('missing packages with package-lock.json, yarn.lock and pnpm-lock.yaml', () => {
+            process.chdir(path.join(__dirname, '../fixtures/package-helper/pnpm-yarn-npm'));
+            const packageRecommendations = packageHelper.getMissingPackageRecommendations([
+                { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
+            ]);
+            expect(packageRecommendations.installCommand).to.contain('pnpm add foo bar');
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
