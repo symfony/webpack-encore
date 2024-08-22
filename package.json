@@ -59,6 +59,7 @@
     "@symfony/mock-module": "file:fixtures/stimulus/mock-module",
     "@symfony/stimulus-bridge": "^3.0.0",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+    "@vue/babel-plugin-jsx": "^1.0.0",
     "@vue/babel-preset-jsx": "^1.0.0",
     "@vue/compiler-sfc": "^3.0.2",
     "autoprefixer": "^10.2.0",
@@ -110,6 +111,7 @@
     "@babel/preset-typescript": "^7.0.0",
     "@symfony/stimulus-bridge": "^3.0.0",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
+    "@vue/babel-plugin-jsx": "^1.0.0",
     "@vue/babel-preset-jsx": "^1.0.0",
     "@vue/compiler-sfc": "^2.6 || ^3.0.2",
     "eslint": "^8.0.0",
@@ -155,6 +157,9 @@
       "optional": true
     },
     "@vue/babel-helper-vue-jsx-merge-props": {
+      "optional": true
+    },
+    "@vue/babel-plugin-jsx": {
       "optional": true
     },
     "@vue/babel-preset-jsx": {
