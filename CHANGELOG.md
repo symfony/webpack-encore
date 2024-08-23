@@ -2,11 +2,7 @@
 
 ## UNRELEASED
 
-* #1259 Update yarn used for test_apps to latest version (@karpilin)
-
-* #1275 Update some dev-dependencies to fix vulnerability issues (@Kocal)
-
-* #1278 Deprecate ESLint integration (@Kocal)
+### Features
 
 * #1284 Improve ESLint and Babel help messages, when enabling ESLint integration (@Kocal)
 
@@ -16,7 +12,7 @@
 
 * #1295 Add JSX support for Vue 3 (@Kocal)
 
-Enabling JSX support for Vue 3 is done with the `Encore.enableVueLoader()`: 
+Enabling JSX support for Vue 3 is done with the `Encore.enableVueLoader()`:
 ```js
 Encore.enableVueLoader(() => {}, { 
     useJsx: true,
@@ -25,7 +21,7 @@ Encore.enableVueLoader(() => {}, {
 ```
 
 If you don't have a custom Babel configuration, then you're all set!
-But if you do, you may need to adjust it 
+But if you do, you may need to adjust it
 to add [`@vue/babel-plugin-jsx`](https://github.com/vuejs/babel-plugin-jsx) plugin to your Babel configuration:
 ```js
 // babel.config.js
@@ -35,6 +31,18 @@ module.exports = {
     ]
 };
 ```
+
+### Deprecations
+
+* #1278 Deprecate ESLint integration (@Kocal)
+
+* #1298 Deprecate Vue 2 support (@Kocal)
+
+### Internal
+
+* #1275 Update some dev-dependencies to fix vulnerability issues (@Kocal)
+
+* #1259 Update yarn used for test_apps to latest version (@karpilin)
 
 * #1297 Upgrade GitHub Actions in CI (@Kocal)
 
