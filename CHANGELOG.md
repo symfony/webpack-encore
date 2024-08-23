@@ -10,6 +10,10 @@
 
 * #1286 Add support for Node.js 22 (@Kocal)
 
+* #1299 Add support for less-loader 12 (@Kocal)
+
+* #1301 Add support for postcss-loader 8 (@Kocal)
+
 * #1295 Add JSX support for Vue 3 (@Kocal)
 
 Enabling JSX support for Vue 3 is done with the `Encore.enableVueLoader()`:
