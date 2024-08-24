@@ -36,7 +36,6 @@
     "css-minimizer-webpack-plugin": "^5.0.0",
     "fastest-levenshtein": "^1.0.16",
     "mini-css-extract-plugin": "^2.6.0",
-    "pkg-up": "^3.1.0",
     "pretty-error": "^4.0.0",
     "resolve-url-loader": "^5.0.0",
     "semver": "^7.3.2",

@@ -54,6 +54,8 @@ module.exports = {
 
 * #1304 Replace `fast-levenshtein` by `fastest-levenshtein` (@Kocal)
 
+* #1303 Replace `pkg-up` by an inlined solution (@Kocal)
+
 ## [v4.6.1](https://github.com/symfony/webpack-encore/releases/tag/v4.6.1)
 
 * #1256 Re-adding node 18 support (@weaverryan)
