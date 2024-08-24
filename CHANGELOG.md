@@ -52,6 +52,8 @@ module.exports = {
 
 * #1297 Upgrade GitHub Actions in CI (@Kocal)
 
+* #1304 Replace `fast-levenshtein` by `fastest-levenshtein` (@Kocal)
+
 ## [v4.6.1](https://github.com/symfony/webpack-encore/releases/tag/v4.6.1)
 
 * #1256 Re-adding node 18 support (@weaverryan)
