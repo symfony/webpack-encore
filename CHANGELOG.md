@@ -14,6 +14,8 @@
 
 * #1301 Add support for postcss-loader 8 (@Kocal)
 
+* #1302 Add support for stylus-loader 8 (@Kocal)
+
 * #1295 Add JSX support for Vue 3 (@Kocal)
 
 Enabling JSX support for Vue 3 is done with the `Encore.enableVueLoader()`:
