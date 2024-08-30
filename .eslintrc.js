@@ -9,8 +9,8 @@
 
 module.exports = {
     "root": true,
-    "plugins": ["node", "header"],
-    "extends": ["eslint:recommended", "plugin:node/recommended"],
+    "plugins": ["node", "header", "jsdoc"],
+    "extends": ["eslint:recommended", "plugin:node/recommended", "plugin:jsdoc/recommended"],
     "env": {
         "node": true,
         "es6": true,
@@ -49,7 +49,13 @@ module.exports = {
             "after": true
         }],
         "no-console": "off",
-        "valid-jsdoc": ["error", { "requireParamDescription": false, "requireReturnDescription": false }],
+        "jsdoc/require-jsdoc": "off",
+        "jsdoc/require-param-description": "off",
+        "jsdoc/require-property-description": "off",
+        "jsdoc/require-returns-description": "off",
+        "jsdoc/tag-lines": ["warn", "never", {
+            "startLines": 1
+        }],
         "node/no-unsupported-features": ["error", { version: 8 }],
         "node/no-deprecated-api": "error",
         "node/no-missing-import": "error",
@@ -65,6 +71,11 @@ module.exports = {
         "node/no-unpublished-require": "error",
         "node/process-exit-as-throw": "error",
         "header/header": [2, "block", { "pattern": "This file is part of the Symfony Webpack Encore package" }]
+    },
+    "settings": {
+        "jsdoc": {
+            "mode": "typescript"
+        }
     },
     "overrides": [
         {
