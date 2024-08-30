@@ -2,6 +2,14 @@
 
 ## UNRELEASED
 
+This is a new major version that contains several backwards-compatibility breaks.
+
+### BC Breaks
+
+* #1307 Drop `webpack-cli` 4 support, only `webpack-cli` ^5.1.4 is supported (@Kocal)
+
+## 4.7.0
+
 ### Features
 
 * #1284 Improve ESLint and Babel help messages, when enabling ESLint integration (@Kocal)
