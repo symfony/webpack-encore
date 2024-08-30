@@ -1264,38 +1264,6 @@ class Encore {
     }
 
     /**
-     * If enabled, the eslint-webpack-plugin is enabled.
-     *
-     * https://github.com/webpack-contrib/eslint-webpack-plugin
-     *
-     * ```
-     * // enables the eslint plugin using the default eslint configuration.
-     * Encore.enableEslintPlugin();
-     *
-     * // You can also pass in an object of options
-     * // that will be passed on to the eslint-webpack-plugin
-     * Encore.enableEslintPlugin({
-     *     emitWarning: false
-     * });
-     *
-     * // For a more advanced usage you can pass in a callback
-     * // https://github.com/webpack-contrib/eslint-webpack-plugin#options
-     * Encore.enableEslintPlugin((options) => {
-     *      options.extensions.push('vue'); // to lint Vue files
-     *      options.emitWarning = false;
-     * });
-     * ```
-     *
-     * @param {string|object|function} eslintPluginOptionsOrCallback
-     * @returns {Encore}
-     */
-    enableEslintPlugin(eslintPluginOptionsOrCallback = () => {}) {
-        webpackConfig.enableEslintPlugin(eslintPluginOptionsOrCallback);
-
-        return this;
-    }
-
-    /**
      * If enabled, display build notifications using
      * webpack-notifier.
      *

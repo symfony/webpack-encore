@@ -16,7 +16,6 @@ const configGenerator = require('../lib/config-generator');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('../lib/webpack-manifest-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const ESLintWebpackPlugin = require('eslint-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 const logger = require('../lib/logger');
@@ -395,61 +394,6 @@ describe('The config-generator function', () => {
             const actualConfig = configGenerator(config);
 
             expect(JSON.stringify(actualConfig.module.rules)).to.contain('handlebars-loader');
-        });
-    });
-
-    describe('enableEslintPlugin() adds the eslint-webpack-plugin', () => {
-        it('without enableEslintPlugin()', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-
-            const actualConfig = configGenerator(config);
-
-            const eslintPlugin = findPlugin(ESLintWebpackPlugin, actualConfig.plugins);
-            expect(eslintPlugin).to.be.undefined;
-        });
-
-        it('enableEslintPlugin()', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintPlugin();
-
-            const actualConfig = configGenerator(config);
-
-            const eslintPlugin = findPlugin(ESLintWebpackPlugin, actualConfig.plugins);
-            expect(eslintPlugin).to.not.be.undefined;
-        });
-
-        it('enableEslintPlugin({baseConfig: {extends: "extends-name"}})', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintPlugin({ baseConfig: { extends: 'extends-name' } });
-
-            const actualConfig = configGenerator(config);
-
-            const eslintPlugin = findPlugin(ESLintWebpackPlugin, actualConfig.plugins);
-            expect(eslintPlugin.options.baseConfig.extends).to.equal('extends-name');
-        });
-
-        it('enableEslintPlugin((options) => ...)', () => {
-            const config = createConfig();
-            config.addEntry('main', './main');
-            config.publicPath = '/';
-            config.outputPath = '/tmp';
-            config.enableEslintPlugin((options) => {
-                options.extensions.push('vue');
-            });
-
-            const actualConfig = configGenerator(config);
-
-            const eslintPlugin = findPlugin(ESLintWebpackPlugin, actualConfig.plugins);
-            expect(eslintPlugin.options.extensions).to.deep.equal(['js', 'jsx', 'vue']);
         });
     });
 

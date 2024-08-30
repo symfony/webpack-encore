@@ -1483,10 +1483,10 @@ describe('WebpackConfig object', () => {
             const config = createConfig();
             const callback = (loader) => {};
 
-            expect(config.loaderConfigurationCallbacks['eslint']).to.not.equal(callback);
+            expect(config.loaderConfigurationCallbacks['javascript']).to.not.equal(callback);
 
-            config.configureLoaderRule('eslint', callback);
-            expect(config.loaderConfigurationCallbacks['eslint']).to.equal(callback);
+            config.configureLoaderRule('javascript', callback);
+            expect(config.loaderConfigurationCallbacks['javascript']).to.equal(callback);
         });
 
         it('Call method with a not supported loader', () => {
@@ -1494,18 +1494,18 @@ describe('WebpackConfig object', () => {
 
             expect(() => {
                 config.configureLoaderRule('reason');
-            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "eslint", "typescript", "handlebars", "svelte" and the aliases "js", "ts", "scss".');
+            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "typescript", "handlebars", "svelte" and the aliases "js", "ts", "scss".');
         });
 
         it('Call method with not a valid callback', () => {
             const config = createConfig();
 
             expect(() => {
-                config.configureLoaderRule('eslint');
+                config.configureLoaderRule('javascript');
             }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
 
             expect(() => {
-                config.configureLoaderRule('eslint', {});
+                config.configureLoaderRule('javascript', {});
             }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
         });
     });
