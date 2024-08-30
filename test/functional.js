@@ -762,28 +762,25 @@ describe('Functional tests using webpack', function() {
                 config.addEntry('page2', './preact/main');
 
                 // Move Vue.js code into its own chunk
-                const isVue2 = getVueVersion(config) === 2;
                 config.addCacheGroup('vuejs', {
-                    test: isVue2 ?
-                        /[\\/]node_modules[\\/]vue[\\/]/ :
-                        /[\\/]node_modules[\\/]@vue[\\/]/
+                    test: /[\\/]node_modules[\\/]@vue[\\/]/
                 });
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     // Vue.js code should be present in common.js but not in page1.js/page2.js
                     webpackAssert.assertOutputFileContains(
                         'vuejs.js',
-                        `/***/ "../../node_modules/${isVue2 ? 'vue' : '@vue'}/`
+                        '/***/ "../../node_modules/@vue/'
                     );
 
                     webpackAssert.assertOutputFileDoesNotContain(
                         'page1.js',
-                        `/***/ "../../node_modules/${isVue2 ? 'vue' : '@vue'}/`
+                        '/***/ "../../node_modules/@vue/'
                     );
 
                     webpackAssert.assertOutputFileDoesNotContain(
                         'page2.js',
-                        `/***/ "../../node_modules/${isVue2 ? 'vue' : '@vue'}/`
+                        '/***/ "../../node_modules/@vue/'
                     );
 
                     // Preact code should be present in page2.js only
@@ -842,10 +839,9 @@ describe('Functional tests using webpack', function() {
                 config.addEntry('page2', './preact/main');
 
                 // Move both vue.js and preact code into their own chunk
-                const isVue2 = getVueVersion(config) === 2;
                 config.addCacheGroup('common', {
                     node_modules: [
-                        isVue2 ? 'vue' : '@vue',
+                        '@vue',
                         'preact'
                     ]
                 });
@@ -854,17 +850,17 @@ describe('Functional tests using webpack', function() {
                     // Vue.js code should be present in common.js but not in page1.js/page2.js
                     webpackAssert.assertOutputFileContains(
                         'common.js',
-                        `/***/ "../../node_modules/${isVue2 ? 'vue' : '@vue'}/`
+                        '/***/ "../../node_modules/@vue/'
                     );
 
                     webpackAssert.assertOutputFileDoesNotContain(
                         'page1.js',
-                        `/***/ "../../node_modules/${isVue2 ? 'vue' : '@vue'}/`
+                        '/***/ "../../node_modules/@vue/'
                     );
 
                     webpackAssert.assertOutputFileDoesNotContain(
                         'page2.js',
-                        `/***/ "../../node_modules/${isVue2 ? 'vue' : '@vue'}/`
+                        '/***/ "../../node_modules/@vue/'
                     );
 
                     // Preact code should be present in common.js but not in page1.js/page2.js

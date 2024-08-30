@@ -526,7 +526,7 @@ describe('The config-generator function', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
-            config.enableVueLoader(() => {}, { version: 2 }); // Adds the 'vue$' alias
+            config.enableVueLoader(() => {}, { version: 3 }); // Adds the 'vue$' alias
             config.enablePreactPreset({ preactCompat: true }); // Adds the 'react' and 'react-dom' aliases
             config.addAliases({
                 'foo': 'bar',
