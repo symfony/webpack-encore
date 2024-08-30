@@ -10,6 +10,8 @@ This is a new major version that contains several backwards-compatibility breaks
 
 * #1308 Drop Vue 2 support (End-Of-Life), only Vue 3 is supported (@Kocal)
 
+* #1309 Drop ESLint integration (@Kocal) 
+
 ## 4.7.0
 
 ### Features
