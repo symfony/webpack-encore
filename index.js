@@ -114,7 +114,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} definePluginOptionsCallback
+     * @param {Function} definePluginOptionsCallback
      * @returns {Encore}
      */
     configureDefinePlugin(definePluginOptionsCallback = () => {}) {
@@ -135,7 +135,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} friendlyErrorsPluginOptionsCallback
+     * @param {Function} friendlyErrorsPluginOptionsCallback
      * @returns {Encore}
      */
     configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
@@ -156,7 +156,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} manifestPluginOptionsCallback
+     * @param {Function} manifestPluginOptionsCallback
      * @returns {Encore}
      */
     configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
@@ -182,7 +182,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} terserPluginOptionsCallback
+     * @param {Function} terserPluginOptionsCallback
      * @returns {Encore}
      */
     configureTerserPlugin(terserPluginOptionsCallback = () => {}) {
@@ -203,7 +203,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} cssMinimizerPluginOptionsCallback
+     * @param {Function} cssMinimizerPluginOptionsCallback
      * @returns {Encore}
      */
     configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback = () => {}) {
@@ -249,7 +249,7 @@ class Encore {
      * If the JavaScript files imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
      *
-     * @param {Object.<string, string|array>} entries where the Keys are the
+     * @param {Record<string, string|Array>} entries where the Keys are the
      *                            names (without extension) that will be used
      *                            as the output filename (e.g. app will become app.js)
      *                            in the output directory. The values are the path(s)
@@ -337,7 +337,6 @@ class Encore {
      * Adds a custom loader config
      *
      * @param {object} loader The loader config object
-     *
      * @returns {Encore}
      */
     addLoader(loader) {
@@ -350,7 +349,6 @@ class Encore {
      * Alias to addLoader
      *
      * @param {object} rule
-     *
      * @returns {Encore}
      */
     addRule(rule) {
@@ -374,8 +372,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {object} aliases
-     *
+     * @param {Record<string, string>} aliases
      * @returns {Encore}
      */
     addAliases(aliases) {
@@ -415,7 +412,6 @@ class Encore {
      * ```
      *
      * @param {*} externals
-     *
      * @returns {Encore}
      */
     addExternals(externals) {
@@ -496,7 +492,7 @@ class Encore {
      * You can pass all the options supported by the SplitChunksPlugin
      * but also the following shorthand provided by Encore:
      *
-     * * `node_modules`: An array of `node_modules` packages names
+     * - `node_modules`: An array of `node_modules` packages names
      *
      * For example:
      *
@@ -511,9 +507,9 @@ class Encore {
      *
      * By default, the new cache group will be created with the
      * following options:
-     * * `chunks` set to `"all"`
-     * * `enforce` set to `true`
-     * * `name` set to the value of the "name" parameter
+     * - `chunks` set to `"all"`
+     * - `enforce` set to `true`
+     * - `name` set to the value of the "name" parameter
      *
      * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
      * @param {object} options Cache group option
@@ -567,22 +563,22 @@ class Encore {
      * ```
      *
      * Notes:
-     *      * No transformation is applied to the copied files (for instance
+     *      No transformation is applied to the copied files (for instance
      *        copying a CSS file won't minify it)
      *
      * Supported options:
-     *      * {string} from (mandatory)
+     *      - {string} from (mandatory)
      *              The path of the source directory (mandatory)
-     *      * {RegExp|string} pattern (default: all files)
+     *      - {RegExp|string} pattern (default: all files)
      *              A regular expression (or a string containing one) that
      *              the filenames must match in order to be copied
-     *      * {string} to (default: [path][name].[ext])
+     *      - {string} to (default: [path][name].[ext])
      *              Where the files must be copied to. You can add all the
      *              placeholders supported by the file-loader.
      *              https://github.com/webpack-contrib/file-loader#placeholders
-     *      * {boolean} includeSubdirectories (default: true)
+     *      - {boolean} includeSubdirectories (default: true)
      *              Whether or not the copy should include subdirectories.
-     *      * {string} context (default: path of the source directory)
+     *      - {string} context (default: path of the source directory)
      *              The context to use as a root path when copying files.
      *
      * @param {object|Array} configs
@@ -670,7 +666,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     configureSplitChunks(callback) {
@@ -692,7 +688,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     configureWatchOptions(callback) {
@@ -719,7 +715,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     configureDevServerOptions(callback) {
@@ -747,7 +743,7 @@ class Encore {
      *  This is useful for older packages, that might
      *  expect jQuery (or something else) to be a global variable.
      *
-     * @param {object} variables
+     * @param {Record<string, string|string[]>} variables
      * @returns {Encore}
      */
     autoProvideVariables(variables) {
@@ -795,7 +791,7 @@ class Encore {
      * })
      * ```
      *
-     * @param {function} postCssLoaderOptionsCallback
+     * @param {Function} postCssLoaderOptionsCallback
      * @returns {Encore}
      */
     enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
@@ -824,18 +820,18 @@ class Encore {
      * ```
      *
      * Supported options:
-     *      * {boolean} resolveUrlLoader (default=true)
+     *      - {boolean} resolveUrlLoader (default=true)
      *              Whether or not to use the resolve-url-loader.
      *              Setting to false can increase performance in some
      *              cases, especially when using bootstrap_sass. But,
      *              when disabled, all url()'s are resolved relative
      *              to the original entry file... not whatever file
      *              the url() appears in.
-     *      * {object} resolveUrlLoaderOptions (default={})
+     *      - {object} resolveUrlLoaderOptions (default={})
      *              Options parameters for resolve-url-loader
      *              // https://www.npmjs.com/package/resolve-url-loader#options
      *
-     * @param {function} sassLoaderOptionsCallback
+     * @param {Function} sassLoaderOptionsCallback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -862,7 +858,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} lessLoaderOptionsCallback
+     * @param {Function} lessLoaderOptionsCallback
      * @returns {Encore}
      */
     enableLessLoader(lessLoaderOptionsCallback = () => {}) {
@@ -887,7 +883,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} stylusLoaderOptionsCallback
+     * @param {Function} stylusLoaderOptionsCallback
      * @returns {Encore}
      */
     enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
@@ -932,7 +928,7 @@ class Encore {
      * ```
      *
      * Supported options:
-     *      * {Condition} exclude (default=/(node_modules|bower_components)/)
+     *      - {Condition} exclude (default=/(node_modules|bower_components)/)
      *              A Webpack Condition passed to the JS/JSX rule that
      *              determines which files and folders should not be
      *              processed by Babel (https://webpack.js.org/configuration/module/#condition).
@@ -943,7 +939,7 @@ class Encore {
      *              they are not excluded anymore.
      *              Cannot be used if the "includeNodeModules" option is
      *              also set.
-     *      * {string[]} includeNodeModules
+     *      - {string[]} includeNodeModules
      *              If set that option will include the given Node modules to
      *              the files that are processed by Babel.
      *              Can be used even if you have an external Babel configuration
@@ -951,7 +947,7 @@ class Encore {
      *              Warning: .babelrc config files don't apply to node_modules. Use
      *              babel.config.json instead to apply the same config to these modules.
      *              Cannot be used if the "exclude" option is also set
-     *      * {'usage'|'entry'|false} useBuiltIns (default=false)
+     *      - {'usage'|'entry'|false} useBuiltIns (default=false)
      *              Set the "useBuiltIns" option of @babel/preset-env that changes
      *              how it handles polyfills (https://babeljs.io/docs/en/babel-preset-env#usebuiltins)
      *              Using it with 'entry' will require you to import core-js
@@ -962,12 +958,12 @@ class Encore {
      *              Cannot be used if you have an external Babel configuration (a .babelrc
      *              file for instance). In this case you can set the option directly into
      *              that configuration file.
-     *      * {number|string|object} corejs (default=not set)
+     *      - {number|string|object} corejs (default=not set)
      *              Set the "corejs" option of @babel/preset-env.
      *              It should contain the version of core-js you added to your project
      *              if useBuiltIns isn't set to false.
      *
-     * @param {function|null} callback
+     * @param {Function|null} callback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -993,7 +989,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     configureBabelPresetEnv(callback) {
@@ -1014,7 +1010,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     configureCssLoader(callback) {
@@ -1047,7 +1043,7 @@ class Encore {
      *     // __filename means that changes to webpack.config.js should invalidate the cache
      *     config: [__filename],
      * });
-     **
+     *
      * // also configure other options the Webpack "cache" key
      * Encore.enableBuildCache({ config: [__filename] }, (cache) => {
      *     cache.version: `${process.env.GIT_REV}`;
@@ -1057,7 +1053,7 @@ class Encore {
      * ```
      *
      * @param {object} buildDependencies
-     * @param {function} cacheCallback
+     * @param {Function} cacheCallback
      * @returns {Encore}
      */
     enableBuildCache(buildDependencies, cacheCallback = (cache) => {}) {
@@ -1084,8 +1080,8 @@ class Encore {
      * );
      * ```
      *
-     * @param {function} loaderOptionsCallback
-     * @param {function} pluginOptionsCallback
+     * @param {Function} loaderOptionsCallback
+     * @param {Function} pluginOptionsCallback
      * @returns {Encore}
      */
     configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback = () => {}) {
@@ -1150,7 +1146,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     enableTypeScriptLoader(callback = () => {}) {
@@ -1165,7 +1161,7 @@ class Encore {
      *
      * This is a build optimization API to reduce build times.
      *
-     * @param {function} forkedTypeScriptTypesCheckOptionsCallback
+     * @param {Function} forkedTypeScriptTypesCheckOptionsCallback
      * @returns {Encore}
      */
     enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
@@ -1249,11 +1245,11 @@ class Encore {
      * ```
      *
      * Supported options:
-     *      * {boolean} useJsx (default=false)
+     *      - {boolean} useJsx (default=false)
      *              Configure Babel to use the preset "@vue/babel-preset-jsx",
      *              in order to enable JSX usage in Vue components.
      *
-     * @param {function} vueLoaderOptionsCallback
+     * @param {Function} vueLoaderOptionsCallback
      * @param {object} encoreOptions
      * @returns {Encore}
      */
@@ -1280,7 +1276,7 @@ class Encore {
      * ```
      *
      * @param {boolean} enabled
-     * @param {function} notifierPluginOptionsCallback
+     * @param {Function} notifierPluginOptionsCallback
      * @returns {Encore}
      */
     enableBuildNotifications(enabled = true, notifierPluginOptionsCallback = () => {}) {
@@ -1305,7 +1301,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     enableHandlebarsLoader(callback = () => {}) {
@@ -1329,6 +1325,7 @@ class Encore {
      *
      * Internally, this disables the mini-css-extract-plugin
      * and uses the style-loader instead.
+     *
      * @param {boolean} disabled
      * @returns {Encore}
      */
@@ -1351,7 +1348,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {function} callback
+     * @param {Function} callback
      * @returns {Encore}
      */
     configureStyleLoader(callback) {
@@ -1438,7 +1435,7 @@ class Encore {
      * ```
      *
      * @param {object} options
-     * @param {string|object|function} ruleCallback
+     * @param {string|object|Function} ruleCallback
      * @returns {Encore}
      */
     configureImageRule(options = {}, ruleCallback = (rule) => {}) {
@@ -1455,7 +1452,7 @@ class Encore {
      * See configureImageRule() for more details.
      *
      * @param {object} options
-     * @param {string|object|function} ruleCallback
+     * @param {string|object|Function} ruleCallback
      * @returns {Encore}
      */
     configureFontRule(options = {}, ruleCallback = (rule) => {}) {
@@ -1479,8 +1476,8 @@ class Encore {
      * ```
      *
      * @param {string} name
-     * @param {function} callback
-     * @return {Encore}
+     * @param {Function} callback
+     * @returns {Encore}
      */
     configureLoaderRule(name, callback) {
         webpackConfig.configureLoaderRule(name, callback);
@@ -1502,7 +1499,7 @@ class Encore {
      * ```
      *
      * @param {Array} paths Paths that should be cleaned, relative to the "root" option
-     * @param {function} cleanWebpackPluginOptionsCallback
+     * @param {Function} cleanWebpackPluginOptionsCallback
      * @returns {Encore}
      */
     cleanupOutputBeforeBuild(paths = ['**/*'], cleanWebpackPluginOptionsCallback = () => {}) {
@@ -1589,7 +1586,7 @@ class Encore {
      *
      * @param {(function(Encore): boolean) | boolean} condition
      * @param {function(Encore): void} callback
-     * @return {Encore}
+     * @returns {Encore}
      */
     when(condition, callback) {
         if (typeof condition === 'function' && condition(this) || typeof condition === 'boolean' && condition) {
@@ -1712,6 +1709,7 @@ class Encore {
 /**
  * Proxy the API in order to prevent calls to most of its methods
  * if the webpackConfig object hasn't been initialized yet.
+ *
  * @type {Encore}
  */
 module.exports = EncoreProxy.createProxy(new Encore());

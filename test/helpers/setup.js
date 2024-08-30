@@ -145,7 +145,7 @@ function stopAllServers() {
  * @param {string} webRootDir Directory path (e.g. /path/to/public) where the web server should be rooted
  * @param {Array} scriptSrcs  Used to create <script src=""> tags.
  * @param {Function} callback Called after the page was requested.
- * @return {void}
+ * @returns {void}
  */
 function requestTestPage(webRootDir, scriptSrcs, callback) {
     var scripts = '';
