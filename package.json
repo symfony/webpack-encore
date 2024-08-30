@@ -98,7 +98,7 @@
     "vue-loader": "^17.0.0",
     "vue-template-compiler": "^2.5",
     "webpack": "^5.72",
-    "webpack-cli": "^4.9.1 || ^5.0.1",
+    "webpack-cli": "^5.1.4",
     "webpack-notifier": "^1.15.0",
     "zombie": "^6.1.4"
   },
@@ -133,7 +133,7 @@
     "vue-loader": "^15.0.11 || ^17.0.0",
     "vue-template-compiler": "^2.5",
     "webpack": "^5.72",
-    "webpack-cli": "^4.9.1 || ^5.0.1",
+    "webpack-cli": "^5.1.4",
     "webpack-notifier": "^1.15.0"
   },
   "peerDependenciesMeta": {
