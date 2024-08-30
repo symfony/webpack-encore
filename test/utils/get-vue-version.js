@@ -36,9 +36,9 @@ describe('get-vue-version', () => {
 
     it('returns the value configured in Webpack.config.js', () => {
         const config = createWebpackConfig();
-        config.vueOptions.version = 3;
+        config.vueOptions.version = 4;
 
-        expect(getVueVersion(config)).to.equal(3);
+        expect(getVueVersion(config)).to.equal(4);
     });
 
     it('returns the default recommended version when vue is not installed', () => {
@@ -46,15 +46,15 @@ describe('get-vue-version', () => {
         getPackageVersionStub
             .callsFake(() => null);
 
-        expect(getVueVersion(config)).to.equal(2);
+        expect(getVueVersion(config)).to.equal(3);
     });
 
-    it('return 2 when Vue 2 is installed', () => {
+    it('throw an error when Vue 2 is installed', () => {
         const config = createWebpackConfig();
         getPackageVersionStub
             .callsFake(() => '2.2.4');
 
-        expect(getVueVersion(config)).to.equal(2);
+        expect(() => getVueVersion(config)).to.throw('vue version 2 is not supported.');
     });
 
     it('returns 3 when Vue 3 beta is installed', () => {
