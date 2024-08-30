@@ -9,7 +9,10 @@
 
 'use strict';
 
-const webpack = require('webpack'); // eslint-disable-line no-unused-vars
+/**
+ * @import webpack from 'webpack'
+ */
+
 const EncoreProxy = require('./lib/EncoreProxy');
 const WebpackConfig = require('./lib/WebpackConfig');
 const configGenerator = require('./lib/config-generator');
