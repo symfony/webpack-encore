@@ -15,7 +15,6 @@ const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { WebpackManifestPlugin } = require('../lib/webpack-manifest-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
 const logger = require('../lib/logger');
@@ -534,7 +533,7 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('cleanupOutputBeforeBuild() adds CleanWebpackPlugin', () => {
+    describe('cleanupOutputBeforeBuild() configures output cleaning', () => {
         it('without cleanupOutputBeforeBuild()', () => {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
@@ -543,8 +542,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const cleanPlugin = findPlugin(CleanWebpackPlugin, actualConfig.plugins);
-            expect(cleanPlugin).to.be.undefined;
+            expect(actualConfig.output.clean).to.be.false;
         });
 
         it('with cleanupOutputBeforeBuild()', () => {
@@ -556,8 +554,7 @@ describe('The config-generator function', () => {
 
             const actualConfig = configGenerator(config);
 
-            const cleanPlugin = findPlugin(CleanWebpackPlugin, actualConfig.plugins);
-            expect(cleanPlugin).to.not.be.undefined;
+            expect(actualConfig.output.clean).to.deep.equals({});
         });
     });
 

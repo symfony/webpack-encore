@@ -12,7 +12,10 @@ This is a new major version that contains several backwards-compatibility breaks
 
 * #1308 Drop Vue 2 support (End-Of-Life), only Vue 3 is supported (@Kocal)
 
-* #1309 Drop ESLint integration (@Kocal) 
+* #1309 Drop ESLint integration (@Kocal)
+
+* #1313 Drop `clean-webpack-plugin` in favor of webpack's `output.clean` configuration. The
+  configuration settings supported by `Encore.cleanupOutputBeforeBuild` have changed (@stof)
 
 * #1317 Drop support of sass-loader ^13 and ^14, add support for sass-loader ^16 (@Kocal)
 
@@ -1014,4 +1017,3 @@ for a full description of all of the valid browser descriptions.
 
  * `Encore.cleanupOutputBeforeBuild()` now empties the directory
    instead or removing it.
-
