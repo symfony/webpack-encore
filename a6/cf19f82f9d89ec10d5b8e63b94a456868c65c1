@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-08-30T15:19:53Z
+
+Should I addthe `--report-unused-disable-directives` flag in the `lint` script in our package.json ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-30T17:00:47Z
+
+> Should I add the `--report-unused-disable-directives` flag in the `lint` script in our package.json ?
+
+Yes please, it would help to remove useless directives.
