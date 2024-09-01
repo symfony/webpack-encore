@@ -91,6 +91,8 @@ pnpm install webpack-dev-server --save-dev
 
 * #1342 Replace [`assets-webpack-plugin`](https://github.com/ztoben/assets-webpack-plugin) dependency by an internal plugin, to generate `entrypoints.json` file (@Kocal)
 
+* #1319 Drop support of css-loader ^6, add support for css-loader ^7.1 (@Kocal)
+
 ## 4.7.0
 
 ### Features
