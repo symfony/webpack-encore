@@ -37,6 +37,8 @@ Encore.enableSassLoader((options) => {
 });
 ```
 
+* #1324 Drop css-minimizer-webpack-plugin 5 support, only css-minimizer-webpack-plugin 7 is supported (@Kocal)
+
 ## 4.7.0
 
 ### Features
