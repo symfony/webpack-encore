@@ -12,6 +12,26 @@ This is a new major version that contains several backwards-compatibility breaks
 
 * #1309 Drop ESLint integration (@Kocal) 
 
+* #1317 Drop support of sass-loader ^13 and ^14, add support for sass-loader ^16 (@Kocal)
+
+The sass-loader's options have changed, [the `modern` options](https://sass-lang.com/documentation/js-api/interfaces/options) are now used by default. 
+Though not recommended,
+you must specify the option `api: 'legacy'`
+if you want to keep [the `legacy` options](https://sass-lang.com/documentation/js-api/interfaces/legacystringoptions/).
+For example:
+```js
+// With the legacy API:
+Encore.enableSassLoader((options) => {
+    options.api = 'legacy';
+    options.includePaths = [/*...*/];
+});
+
+// With the modern API (default):
+Encore.enableSassLoader((options) => {
+   options.loadPaths = [/*...*/];
+});
+```
+
 ## 4.7.0
 
 ### Features
