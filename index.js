@@ -1655,7 +1655,7 @@ class Encore {
      * )
      * ```
      *
-     * Be aware than using this method will also reset the current
+     * Be aware that using this method will also reset the current
      * webpack configuration.
      *
      * @param {string} environment
@@ -1680,7 +1680,7 @@ class Encore {
 
     /**
      * Check if Encore was either called through
-     * the CLI utility or after being manually intialized
+     * the CLI utility or after being manually initialized
      * using Encore.configureRuntimeEnvironment.
      *
      * @returns {boolean}
@@ -1692,7 +1692,7 @@ class Encore {
     /**
      * Clear the runtime environment.
      *
-     * Be aware than using this method will also reset the
+     * Be aware that using this method will also reset the
      * current webpack configuration.
      *
      * @returns {void}
