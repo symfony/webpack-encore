@@ -23,7 +23,7 @@
     "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": "^18.12.0 || ^20.0.0 || >=22.0"
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {
@@ -33,7 +33,7 @@
     "chalk": "^4.0.0",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^6.7.0",
-    "css-minimizer-webpack-plugin": "^5.0.0",
+    "css-minimizer-webpack-plugin": "^7.0.0",
     "fastest-levenshtein": "^1.0.16",
     "mini-css-extract-plugin": "^2.6.0",
     "pretty-error": "^4.0.0",

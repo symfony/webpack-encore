@@ -6,6 +6,8 @@ This is a new major version that contains several backwards-compatibility breaks
 
 ### BC Breaks
 
+* #1321 Drop support of Node.js 19 and 21 (@Kocal)
+
 * #1307 Drop `webpack-cli` 4 support, only `webpack-cli` ^5.1.4 is supported (@Kocal)
 
 * #1308 Drop Vue 2 support (End-Of-Life), only Vue 3 is supported (@Kocal)
@@ -31,6 +33,8 @@ Encore.enableSassLoader((options) => {
    options.loadPaths = [/*...*/];
 });
 ```
+
+* #1320 Drop css-minimizer-webpack-plugin 5 support, only css-minimizer-webpack-plugin 7 is supported (@Kocal)
 
 ## 4.7.0
 
