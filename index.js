@@ -1491,22 +1491,21 @@ class Encore {
     /**
      * If enabled, the output directory is emptied between each build (to remove old files).
      *
-     * A list of available options can be found at https://github.com/johnagan/clean-webpack-plugin
+     * A list of available options can be found at https://webpack.js.org/configuration/output/#outputclean
      *
      * For example:
      *
      * ```
-     * Encore.cleanupOutputBeforeBuild(['*.js'], (options) => {
+     * Encore.cleanupOutputBeforeBuild((options) => {
      *     options.dry = true;
      * })
      * ```
      *
-     * @param {Array} paths Paths that should be cleaned, relative to the "root" option
-     * @param {Function} cleanWebpackPluginOptionsCallback
+     * @param {Function} cleanOptionsCallback
      * @returns {Encore}
      */
-    cleanupOutputBeforeBuild(paths = ['**/*'], cleanWebpackPluginOptionsCallback = () => {}) {
-        webpackConfig.cleanupOutputBeforeBuild(paths, cleanWebpackPluginOptionsCallback);
+    cleanupOutputBeforeBuild(cleanOptionsCallback = () => {}) {
+        webpackConfig.cleanupOutputBeforeBuild(cleanOptionsCallback);
 
         return this;
     }

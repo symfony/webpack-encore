@@ -225,33 +225,23 @@ describe('WebpackConfig object', () => {
             config.cleanupOutputBeforeBuild();
 
             expect(config.cleanupOutput).to.be.true;
-            expect(config.cleanWebpackPluginPaths).to.deep.equal(['**/*']);
         });
 
         it('Setting paths and callback', () => {
             const config = createConfig();
             const callback = () => {};
-            config.cleanupOutputBeforeBuild(['**/*.js', '**/*.css'], callback);
+            config.cleanupOutputBeforeBuild(callback);
 
             expect(config.cleanupOutput).to.be.true;
-            expect(config.cleanWebpackPluginPaths).to.deep.equal(['**/*.js', '**/*.css']);
-            expect(config.cleanWebpackPluginOptionsCallback).to.equal(callback);
-        });
-
-        it('Setting invalid paths argument', () => {
-            const config = createConfig();
-
-            expect(() => {
-                config.cleanupOutputBeforeBuild('foo', () => {});
-            }).to.throw('Argument 1 to cleanupOutputBeforeBuild() must be an Array of paths');
+            expect(config.cleanOptionsCallback).to.equal(callback);
         });
 
         it('Setting invalid callback argument', () => {
             const config = createConfig();
 
             expect(() => {
-                config.cleanupOutputBeforeBuild(['**/*'], 'foo');
-            }).to.throw('Argument 2 to cleanupOutputBeforeBuild() must be a callback function');
+                config.cleanupOutputBeforeBuild('foo');
+            }).to.throw('Argument 1 to cleanupOutputBeforeBuild() must be a callback function');
         });
     });
 
