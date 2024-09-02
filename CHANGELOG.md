@@ -39,6 +39,39 @@ Encore.enableSassLoader((options) => {
 
 * #1324 Drop css-minimizer-webpack-plugin 5 support, only css-minimizer-webpack-plugin 7 is supported (@Kocal)
 
+* #1318 Drop webpack-dev-server 4 support, only webpack-dev-server 5 is supported (@Kocal)
+
+The dev-server options have changed between versions 4 and 5, see [the official migration guide to v5](https://github.com/webpack/webpack-dev-server/blob/master/migration-v5.md).
+For example:
+```js
+// With webpack-dev-server 4:
+Encore.configureDevServerOptions((options) => {
+   options.https = {
+     ca: "./path/to/server.pem",
+     pfx: "./path/to/server.pfx",
+     key: "./path/to/server.key",
+     cert: "./path/to/server.crt",
+     passphrase: "webpack-dev-server",
+     requestCert: true,
+   };
+});
+
+// With webpack-dev-server 5 (now):
+Encore.configureDevServerOptions((options) => {
+   options.server = {
+      type: 'https',
+      options: {
+         ca: "./path/to/server.pem",
+         pfx: "./path/to/server.pfx",
+         key: "./path/to/server.key",
+         cert: "./path/to/server.crt",
+         passphrase: "webpack-dev-server",
+         requestCert: true,
+      }
+   };
+});
+```
+
 ## 4.7.0
 
 ### Features
