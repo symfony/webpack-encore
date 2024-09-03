@@ -29,7 +29,7 @@ const parseRuntime = require('./lib/config/parse-runtime');
 const context = require('./lib/context');
 
 let runtimeConfig = context.runtimeConfig;
-let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig, true) : null;
+let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig) : null;
 
 class Encore {
     /**
@@ -1660,10 +1660,9 @@ class Encore {
      *
      * @param {string} environment
      * @param {object} options
-     * @param {boolean} enablePackageJsonCheck
      * @returns {Encore}
      */
-    configureRuntimeEnvironment(environment, options = {}, enablePackageJsonCheck = true) {
+    configureRuntimeEnvironment(environment, options = {}) {
         runtimeConfig = parseRuntime(
             Object.assign(
                 {},
@@ -1673,7 +1672,7 @@ class Encore {
             process.cwd()
         );
 
-        webpackConfig = new WebpackConfig(runtimeConfig, enablePackageJsonCheck);
+        webpackConfig = new WebpackConfig(runtimeConfig);
 
         return this;
     }
