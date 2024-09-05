@@ -5,7 +5,10 @@ jobs:
     eslint:
         name: ESLint
         runs-on: ubuntu-latest
-
+        env:
+            # We don't want Puppeteer to automatically download a browser when dependencies are being installed
+            PUPPETEER_SKIP_DOWNLOAD: 'true'
+            
         steps:
             -   name: Checkout
                 uses: actions/checkout@v4

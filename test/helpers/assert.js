@@ -176,21 +176,29 @@ class Assert {
 
     /**
      *
-     * @param {import('zombie')} browser
+     * @param {Array<{ response: import('puppeteer').HTTPResponse}>} loadedResources
      * @param {Array}   expectedResourcePaths Array of expected resources, but just
      *                  their short filenames - e.g. main.css
      *                  (i.e. without the public path)
      * @returns {void}
      */
-    assertResourcesLoadedCorrectly(browser, expectedResourcePaths) {
+    assertResourcesLoadedCorrectly(loadedResources, expectedResourcePaths) {
         const actualResources = [];
-        for (let resource of browser.resources) {
+
+        for (let resource of loadedResources) {
+            const url = resource.response.url();
+
             // skip the .html page as a resource
-            if (resource.request.url.includes('testing.html')) {
+            if (url.includes('testing.html')) {
                 continue;
             }
 
-            actualResources.push(resource.request.url);
+            // skip the favicon as a resource
+            if (url.includes('favicon.ico')) {
+                continue;
+            }
+
+            actualResources.push(url);
         }
 
         // prefix each expected resource with its public path
