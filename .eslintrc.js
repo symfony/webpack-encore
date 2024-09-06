@@ -83,6 +83,13 @@ module.exports = {
             "rules": {
                 "quotes": ["error", "double"],
             },
+        },
+        {
+            "files": ["test/functional.js"],
+            "globals": {
+                // For Puppeteer when calling "page.evaluate()"
+                "document": "readonly",
+            },
         }
     ],
 };

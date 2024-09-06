@@ -14,7 +14,6 @@ const WebpackConfig = require('../../lib/WebpackConfig');
 const parseRuntime = require('../../lib/config/parse-runtime');
 const webpack = require('webpack');
 const fs = require('fs-extra');
-const Browser = require('zombie');
 const httpServer = require('http-server');
 const configGenerator = require('../../lib/config-generator');
 const validator = require('../../lib/config/validator');
@@ -142,18 +141,22 @@ function stopAllServers() {
  * makes a request to it, and executes a callback, passing that
  * the Browser instance used to make the request.
  *
+ * @param {import('puppeteer').Browser} browser Puppeteer browser instance
  * @param {string} webRootDir Directory path (e.g. /path/to/public) where the web server should be rooted
  * @param {Array} scriptSrcs  Used to create <script src=""> tags.
- * @param {Function} callback Called after the page was requested.
- * @returns {void}
+ * @param {function({
+ *      page: import('puppeteer').Page,
+ *      loadedResources: Array<{ response: import('puppeteer').HTTPResponse }>}
+ * ): void} callback Called after the page was requested.
+ * @returns {Promise<void>}
  */
-function requestTestPage(webRootDir, scriptSrcs, callback) {
+async function requestTestPage(browser, webRootDir, scriptSrcs, callback) {
     var scripts = '';
     for (let scriptSrc of scriptSrcs) {
         scripts += `<script src="${scriptSrc}"></script>`;
     }
 
-    const testHtml = `
+    const testHtml = `<!DOCTYPE html>
 <html>
 <head>
 </head>
@@ -175,23 +178,31 @@ function requestTestPage(webRootDir, scriptSrcs, callback) {
     // start a secondary server - can be used as the "CDN"
     startHttpServer('8090', webRootDir);
 
-    const browser = new Browser();
-    browser.silent = true;
-    browser.on('error', function(error) {
-        throw new Error(`Error when running the browser: ${error}`);
-    });
-    browser.visit('http://127.0.0.1:8080/testing.html', () => {
-        stopAllServers();
+    const loadedResources = [];
 
-        // sanity check for failed asset loading
-        for (let resource of browser.resources) {
-            if (resource.response.status !== 200) {
-                throw new Error(`Error: status code ${resource.response.status} when requesting resource ${resource.request.url}`);
-            }
-        }
+    const context = await browser.createBrowserContext();
+    const page = await context.newPage();
 
-        callback(browser);
+    page.on('error', (error) => {
+        throw new Error(`Error when running the browser: "${error.message}".`, { cause: error });
     });
+
+    page.on('requestfailed', (request) => {
+        throw new Error(`Error "${request.failure().errorText}" when requesting resource "${request.url()}".`);
+    });
+
+    page.on('response', (response) => {
+        loadedResources.push({
+            response,
+        });
+    });
+
+    await page.goto('http://127.0.0.1:8080/testing.html', {
+        waitUntil: 'networkidle0',
+    });
+    stopAllServers();
+    await callback({ page, loadedResources });
+    await page.close();
 }
 
 module.exports = {

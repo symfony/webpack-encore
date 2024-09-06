@@ -19,6 +19,7 @@ const fs = require('fs-extra');
 const getVueVersion = require('../lib/utils/get-vue-version');
 const packageHelper = require('../lib/package-helper');
 const semver = require('semver');
+const puppeteer = require('puppeteer');
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     const webpackConfig = testSetup.createWebpackConfig(
@@ -73,8 +74,22 @@ function getIntegrityData(config) {
 }
 
 describe('Functional tests using webpack', function() {
+    /** @type {import('puppeteer').Browser} */
+    let browser;
+
     // being functional tests, these can take quite long
     this.timeout(10000);
+
+    before(function(done) {
+        puppeteer.launch().then(_browser => {
+            browser = _browser;
+            done();
+        });
+    });
+
+    after(function(done) {
+        browser.close().then(done);
+    });
 
     describe('Basic scenarios.', () => {
 
@@ -266,14 +281,16 @@ describe('Functional tests using webpack', function() {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'public'),
                     [
                         // purposely load this NOT from the CDN
                         'assets/runtime.js',
                         'assets/main.js'
                     ],
-                    (browser) => {
-                        webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                    ({ loadedResources }) => {
+                        webpackAssert.assertResourcesLoadedCorrectly(loadedResources, [
+                            'js_no_require_js-css_h1_style_css.css',
                             'js_no_require_js-css_h1_style_css.js',
                             // guarantee that we assert that main.js is loaded from the
                             // main server, as it's simply a script tag to main.js on the page
@@ -318,15 +335,17 @@ describe('Functional tests using webpack', function() {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'public'),
                     [
                         convertToManifestPath('assets/runtime.js', config),
                         convertToManifestPath('assets/main.js', config)
                     ],
-                    (browser) => {
-                        webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                    ({ loadedResources }) => {
+                        webpackAssert.assertResourcesLoadedCorrectly(loadedResources, [
                             'runtime.js',
                             'main.js',
+                            'js_no_require_js-css_h1_style_css.css',
                             'js_no_require_js-css_h1_style_css.js',
                         ]);
 
@@ -349,17 +368,19 @@ describe('Functional tests using webpack', function() {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     // the webroot will not include the /subdirectory/build part
                     path.join(config.getContext(), ''),
                     [
                         convertToManifestPath('build/runtime.js', config),
                         convertToManifestPath('build/main.js', config)
                     ],
-                    (browser) => {
-                        webpackAssert.assertResourcesLoadedCorrectly(browser, [
-                            'http://127.0.0.1:8080/subdirectory/build/js_no_require_js-css_h1_style_css.js',
-                            'http://127.0.0.1:8080/subdirectory/build/main.js',
+                    ({ loadedResources }) => {
+                        webpackAssert.assertResourcesLoadedCorrectly(loadedResources, [
                             'http://127.0.0.1:8080/subdirectory/build/runtime.js',
+                            'http://127.0.0.1:8080/subdirectory/build/main.js',
+                            'http://127.0.0.1:8080/subdirectory/build/js_no_require_js-css_h1_style_css.js',
+                            'http://127.0.0.1:8080/subdirectory/build/js_no_require_js-css_h1_style_css.css',
                         ]);
 
                         done();
@@ -509,8 +530,8 @@ describe('Functional tests using webpack', function() {
                             'entrypoints.json',
                             'runtime.js',
                             'runtime.js.map',
-                            // no styles.js
-                            // no styles.js.map
+                        // no styles.js
+                        // no styles.js.map
                         ]);
 
                     webpackAssert.assertManifestPathDoesNotExist(
@@ -813,14 +834,17 @@ describe('Functional tests using webpack', function() {
 
                     // Check if Vue.js code is still executed properly
                     testSetup.requestTestPage(
+                        browser,
                         path.join(config.getContext(), 'www'),
                         [
                             'build/runtime.js',
                             'build/page1.js',
                             'build/vuejs.js',
                         ],
-                        (browser) => {
-                            browser.assert.text('#app', /Welcome to Your Vue\.js App/);
+                        async({ page }) => {
+                            const bodyText = await page.evaluate(() => document.querySelector('#app').textContent);
+                            expect(bodyText).to.contains('Welcome to Your Vue.js App');
+
                             done();
                         }
                     );
@@ -893,14 +917,15 @@ describe('Functional tests using webpack', function() {
 
                     // Check if Preact code is still executed properly
                     testSetup.requestTestPage(
+                        browser,
                         path.join(config.getContext(), 'www'),
                         [
                             'build/runtime.js',
                             'build/page2.js',
                             'build/common.js',
                         ],
-                        (browser) => {
-                            browser.assert.text('#app', /This is a React component!/);
+                        async({ page }) => {
+                            expect(await page.evaluate(() => document.querySelector('#app').textContent)).to.contains('This is a React component!');
                             done();
                         }
                     );
@@ -928,14 +953,17 @@ describe('Functional tests using webpack', function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     // Check if Vue.js code is still executed properly
                     testSetup.requestTestPage(
+                        browser,
                         path.join(config.getContext(), 'www'),
                         [
                             convertToManifestPath('build/runtime.js', config),
                             convertToManifestPath('build/page1.js', config),
                             convertToManifestPath('build/vuejs.js', config),
                         ],
-                        (browser) => {
-                            browser.assert.text('#app', /Welcome to Your Vue\.js App/);
+                        async({ page }) => {
+                            const bodyText = await page.evaluate(() => document.querySelector('#app').textContent);
+                            expect(bodyText).to.contains('Welcome to Your Vue.js App');
+
                             done();
                         }
                     );
@@ -963,14 +991,17 @@ describe('Functional tests using webpack', function() {
                 testSetup.runWebpack(config, (webpackAssert) => {
                     // Check if Vue.js code is still executed properly
                     testSetup.requestTestPage(
+                        browser,
                         path.join(config.getContext(), 'www'),
                         [
                             'build/runtime.js',
                             'build/page1.js',
                             'build/vuejs.js',
                         ],
-                        (browser) => {
-                            browser.assert.text('#app', /Welcome to Your Vue\.js App/);
+                        async({ page }) => {
+                            const bodyText = await page.evaluate(() => document.querySelector('#app').textContent);
+                            expect(bodyText).to.contains('Welcome to Your Vue.js App');
+
                             done();
                         }
                     );
@@ -1219,13 +1250,14 @@ module.exports = {
                     // Test that the generated scripts work fine
                     await new Promise(resolve => {
                         testSetup.requestTestPage(
+                            browser,
                             path.join(config.getContext(), 'www'),
                             [
                                 'build/runtime.js',
                                 `build/${scriptName}`,
                             ],
-                            (browser) => {
-                                browser.assert.text('body', '[1,2,3,4]');
+                            async({ page }) => {
+                                expect(await page.evaluate(() => document.body.textContent)).to.contains('[1,2,3,4]');
                                 resolve();
                             }
                         );
@@ -1353,15 +1385,17 @@ module.exports = {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js'
                     ],
-                    (browser) => {
-
+                    async({ page }) => {
                         // assert that the ts module rendered
-                        browser.assert.text('#app h1', 'Welcome to Your TypeScript App');
+                        const h1Text = await page.evaluate(() => document.querySelector('#app h1').textContent);
+                        expect(h1Text).to.contains('Welcome to Your TypeScript App');
+
                         done();
                     }
                 );
@@ -1403,15 +1437,17 @@ module.exports = {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js',
                     ],
-                    (browser) => {
-
+                    async({ page }) => {
                         // assert that the ts module rendered
-                        browser.assert.text('#app h1', 'Welcome to Your TypeScript App');
+                        const h1Text = await page.evaluate(() => document.querySelector('#app h1').textContent);
+                        expect(h1Text).to.contains('Welcome to Your TypeScript App');
+
                         done();
                     },
                 );
@@ -1427,13 +1463,16 @@ module.exports = {
 
             testSetup.runWebpack(config, () => {
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js'
                     ],
-                    (browser) => {
-                        browser.assert.text('#app h1', 'Welcome to Your Handlebars App');
+                    async({ page }) => {
+                        const h1Text = await page.evaluate(() => document.querySelector('#app h1').textContent);
+                        expect(h1Text).to.contains('Welcome to Your Handlebars App');
+
                         done();
                     }
                 );
@@ -1508,16 +1547,20 @@ module.exports = {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js'
                     ],
-                    (browser) => {
+                    async({ page }) => {
                         // assert that the vue.js app rendered
-                        browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
+                        const h1Text = await page.evaluate(() => document.querySelector('#app h1').textContent);
+                        expect(h1Text).to.contains('Welcome to Your Vue.js App');
+
                         // make sure the styles are not inlined
-                        browser.assert.elements('style', 0);
+                        const styleElementsCount = await page.evaluate(() => document.querySelectorAll('style').length);
+                        expect(styleElementsCount).to.equal(0);
 
                         done();
                     }
@@ -1573,16 +1616,20 @@ module.exports = {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js'
                     ],
-                    (browser) => {
+                    async({ page }) => {
                         // assert that the vue.js app rendered
-                        browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
+                        const h1Text = await page.evaluate(() => document.querySelector('#app h1').textContent);
+                        expect(h1Text).to.contains('Welcome to Your Vue.js App');
+
                         // make sure the styles are not inlined
-                        browser.assert.elements('style', 0);
+                        const styleElementsCount = await page.evaluate(() => document.querySelectorAll('style').length);
+                        expect(styleElementsCount).to.equal(0);
 
                         done();
                     }
@@ -1649,23 +1696,26 @@ module.exports = {
                 expectClassDeclaration('hidden_foo'); // Stylus Module
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js'
                     ],
-                    (browser) => {
-                        browser.assert.hasClass('#app div', 'red'); // Standard CSS
-                        browser.assert.hasClass('#app div', 'large'); // Standard SCSS
-                        browser.assert.hasClass('#app div', 'justified'); // Standard Less
-                        browser.assert.hasClass('#app div', 'lowercase'); // Standard Stylus
-                        browser.assert.hasClass('#app div', 'block'); // Standard Stylus
+                    async({ page }) => {
+                        const divClassArray = await page.evaluate(() => Array.from(document.body.querySelector('#app > div').classList.values()));
 
-                        browser.assert.hasClass('#app div', 'italic_foo'); // CSS module
-                        browser.assert.hasClass('#app div', 'bold_foo'); // SCSS module
-                        browser.assert.hasClass('#app div', 'underline_foo'); // Less module
-                        browser.assert.hasClass('#app div', 'rtl_foo'); // Stylus module
-                        browser.assert.hasClass('#app div', 'hidden_foo'); // Stylus module
+                        expect(divClassArray.includes('red')).to.be.true; // Standard CSS
+                        expect(divClassArray.includes('large')).to.be.true; // Standard SCSS
+                        expect(divClassArray.includes('justified')).to.be.true; // Standard Less
+                        expect(divClassArray.includes('lowercase')).to.be.true; // Standard Stylus
+                        expect(divClassArray.includes('block')).to.be.true; // Standard Stylus
+
+                        expect(divClassArray.includes('italic_foo')).to.be.true; // CSS module
+                        expect(divClassArray.includes('bold_foo')).to.be.true; // SCSS module
+                        expect(divClassArray.includes('underline_foo')).to.be.true; // Less module
+                        expect(divClassArray.includes('rtl_foo')).to.be.true; // Stylus module
+                        expect(divClassArray.includes('hidden_foo')).to.be.true; // Stylus module
 
                         done();
                     }
@@ -1748,16 +1798,20 @@ module.exports = {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js'
                     ],
-                    (browser) => {
+                    async({ page }) => {
                         // assert that the vue.js app rendered
-                        browser.assert.text('#app h1', 'Welcome to Your Vue.js App');
+                        const h1Text = await page.evaluate(() => document.querySelector('#app h1').textContent);
+                        expect(h1Text).to.contains('Welcome to Your Vue.js App');
+
                         // make sure the styles are not inlined
-                        browser.assert.elements('style', 0);
+                        const styleElementsCount = await page.evaluate(() => document.querySelectorAll('style').length);
+                        expect(styleElementsCount).to.equal(0);
 
                         done();
                     }
@@ -1809,15 +1863,16 @@ module.exports = {
                 );
 
                 testSetup.requestTestPage(
+                    browser,
                     path.join(config.getContext(), 'www'),
                     [
                         'build/runtime.js',
                         'build/main.js'
                     ],
-                    (browser) => {
-
+                    async({ page }) => {
                         // assert the async module was loaded and works
-                        browser.assert.text('#app', 'Welcome to Encore!');
+                        expect(await page.evaluate(() => document.querySelector('#app').textContent)).to.contains('Welcome to Encore!');
+
                         done();
                     }
                 );

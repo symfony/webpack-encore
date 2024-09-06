@@ -82,6 +82,7 @@
     "postcss-loader": "^7.0.0 || ^8.1.0",
     "preact": "^10.5.0",
     "preact-compat": "^3.17.0",
+    "puppeteer": "^23.2.2",
     "sass": "^1.17.0",
     "sass-loader": "^16.0.1",
     "sinon": "^14.0.0",
@@ -96,8 +97,7 @@
     "vue-loader": "^17.0.0",
     "webpack": "^5.72",
     "webpack-cli": "^5.1.4",
-    "webpack-notifier": "^1.15.0",
-    "zombie": "^6.1.4"
+    "webpack-notifier": "^1.15.0"
   },
   "peerDependencies": {
     "@babel/core": "^7.17.0",
