@@ -5,8 +5,8 @@
     "encore": "encore"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.0",
-    "@babel/preset-env": "^7.16.0",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4",
     "webpack": "^5.94.0",
     "webpack-cli": "^5.1.4"
   },
