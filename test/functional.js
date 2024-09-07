@@ -1248,20 +1248,17 @@ module.exports = {
                     );
 
                     // Test that the generated scripts work fine
-                    await new Promise(resolve => {
-                        testSetup.requestTestPage(
-                            browser,
-                            path.join(config.getContext(), 'www'),
-                            [
-                                'build/runtime.js',
-                                `build/${scriptName}`,
-                            ],
-                            async({ page }) => {
-                                expect(await page.evaluate(() => document.body.textContent)).to.contains('[1,2,3,4]');
-                                resolve();
-                            }
-                        );
-                    });
+                    await testSetup.requestTestPage(
+                        browser,
+                        path.join(config.getContext(), 'www'),
+                        [
+                            'build/runtime.js',
+                            `build/${scriptName}`,
+                        ],
+                        async({ page }) => {
+                            expect(await page.evaluate(() => document.body.textContent)).to.contains('[1,2,3,4]');
+                        }
+                    );
                 }
 
                 done();
