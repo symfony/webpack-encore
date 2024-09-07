@@ -207,7 +207,8 @@ module.exports = Encore.getWebpackConfig();
         const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
         exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
             expect(err).not.to.be.null;
-            expect(stdout).to.contain('is not a recognized property or method');
+            expect(stdout).to.contain('is not a recognized property');
+            expect(stdout).to.contain('or method');
             expect(stdout).to.contain('Did you mean');
             done();
         });
