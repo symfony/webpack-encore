@@ -7,7 +7,7 @@
     "test": "yarn run test:main && yarn run test:persistent-cache",
     "test:main": "mocha --reporter spec test --recursive --ignore test/persistent-cache/*",
     "test:persistent-cache": "node run-persistent-tests",
-    "lint": "eslint lib test index.js .eslintrc.js --report-unused-disable-directives",
+    "lint": "eslint lib test index.js .eslintrc.js --report-unused-disable-directives --max-warnings=0",
     "travis:lint": "yarn run lint"
   },
   "bin": {
