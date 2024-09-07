@@ -12,7 +12,7 @@
 
 const parseRuntime = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
-const chalk = require('chalk');
+const pc = require('picocolors');
 const logger = require('../lib/logger');
 
 const runtimeConfig = parseRuntime(
@@ -41,7 +41,7 @@ if (indexPublicArgument !== -1) {
 
 if (!runtimeConfig.isValidCommand) {
     if (runtimeConfig.command) {
-        console.log(chalk.bgRed.white(`Invalid command "${runtimeConfig.command}"`));
+        console.log(pc.bgRed(pc.white(`Invalid command "${runtimeConfig.command}"`)));
         console.log();
     }
     showUsageInstructions();
@@ -72,26 +72,26 @@ if (runtimeConfig.useDevServer) {
 function showUsageInstructions() {
     const validCommands = ['dev', 'prod', 'production', 'dev-server'];
 
-    console.log(`usage ${chalk.green('encore')} [${ validCommands.map(command => chalk.green(command)).join('|') }]`);
+    console.log(`usage ${pc.green('encore')} [${ validCommands.map(command => pc.green(command)).join('|') }]`);
     console.log();
     console.log('encore is a thin executable around the webpack or webpack-dev-server executables');
     console.log();
     console.log('Commands:');
-    console.log(`    ${chalk.green('dev')}        : runs webpack for development`);
+    console.log(`    ${pc.green('dev')}        : runs webpack for development`);
     console.log('       - Supports any webpack options (e.g. --watch)');
     console.log();
-    console.log(`    ${chalk.green('dev-server')} : runs webpack-dev-server`);
-    console.log(`       - ${chalk.yellow('--host')} The hostname/ip address the webpack-dev-server will bind to`);
-    console.log(`       - ${chalk.yellow('--port')} The port the webpack-dev-server will bind to`);
-    console.log(`       - ${chalk.yellow('--keep-public-path')} Do not change the public path (it is usually prefixed by the dev server URL)`);
-    console.log(`       - ${chalk.yellow('--public')} The public url for entry asset in entrypoints.json`);
+    console.log(`    ${pc.green('dev-server')} : runs webpack-dev-server`);
+    console.log(`       - ${pc.yellow('--host')} The hostname/ip address the webpack-dev-server will bind to`);
+    console.log(`       - ${pc.yellow('--port')} The port the webpack-dev-server will bind to`);
+    console.log(`       - ${pc.yellow('--keep-public-path')} Do not change the public path (it is usually prefixed by the dev server URL)`);
+    console.log(`       - ${pc.yellow('--public')} The public url for entry asset in entrypoints.json`);
     console.log('       - Supports any webpack-dev-server options');
     console.log();
-    console.log(`    ${chalk.green('production')} : runs webpack for production`);
+    console.log(`    ${pc.green('production')} : runs webpack for production`);
     console.log('       - Supports any webpack options (e.g. --watch)');
     console.log();
-    console.log(chalk.yellow('    encore dev --watch'));
-    console.log(chalk.yellow('    encore dev-server'));
-    console.log(chalk.yellow('    encore production'));
+    console.log(pc.yellow('    encore dev --watch'));
+    console.log(pc.yellow('    encore dev-server'));
+    console.log(pc.yellow('    encore production'));
     console.log();
 }
