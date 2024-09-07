@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by stof at 2024-09-07T15:56:15Z
+
+This does not actually reduce dependencies, because `chalk` is still a transitive dependency of `css-minimizer-webpack-plugin`. So this PR doesn't actually change the size of downloaded dependencies (`picocolors` was already a transitive dependency, from `css-minimizer-webpack-plugin` > `cssnano` as well as other places)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-07T16:07:06Z
+
+In reality yes, but that's a first step, I believe someone (or me) will open this kind of PR on `css-minimizer-webpack-plugin` etc, and only at this time we will be able to reduce the package size.
