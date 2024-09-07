@@ -87,7 +87,7 @@
     "sass-loader": "^16.0.1",
     "sinon": "^14.0.0",
     "strip-ansi": "^6.0.0",
-    "stylus": "^0.60.0",
+    "stylus": "^0.63.0",
     "stylus-loader": "^7.0.0 || ^8.1.0",
     "svelte": "^3.50.0 || ^4.2.2",
     "svelte-loader": "^3.1.0",
@@ -120,7 +120,6 @@
     "postcss-loader": "^7.0.0 || ^8.1.0",
     "sass": "^1.17.0",
     "sass-loader": "^16.0.1",
-    "stylus": "^0.58.1",
     "stylus-loader": "^7.0.0 || ^8.1.0",
     "ts-loader": "^9.0.0",
     "typescript": "^5.0.0",
@@ -189,9 +188,6 @@
       "optional": true
     },
     "sass-loader": {
-      "optional": true
-    },
-    "stylus": {
       "optional": true
     },
     "stylus-loader": {
