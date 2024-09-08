@@ -726,7 +726,7 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<import('webpack-dev-server').Configuration>} callback
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
     configureDevServerOptions(callback) {

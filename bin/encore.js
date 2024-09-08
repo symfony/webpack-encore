@@ -14,6 +14,7 @@ const parseRuntime = require('../lib/config/parse-runtime');
 const context = require('../lib/context');
 const pc = require('picocolors');
 const logger = require('../lib/logger');
+const featuresHelper = require("../lib/features");
 
 const runtimeConfig = parseRuntime(
     require('yargs-parser')(process.argv.slice(2)),
@@ -56,6 +57,13 @@ if (runtimeConfig.helpRequested) {
 }
 
 if (runtimeConfig.useDevServer) {
+    try {
+        featuresHelper.ensurePackagesExistAndAreCorrectVersion('webpack-dev-server', 'the webpack Development Server');
+    } catch (e) {
+        console.log(e);
+        process.exit(1);
+    }
+
     console.log('Running webpack-dev-server ...');
     console.log();
 

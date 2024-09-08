@@ -15,7 +15,9 @@ const expect = chai.expect;
 const path = require('path');
 const testSetup = require('../helpers/setup');
 const fs = require('fs-extra');
-const exec = require('child_process').exec;
+const { exec, execSync, spawn } = require('child_process');
+
+const projectDir = path.resolve(__dirname, '../', '../');
 
 describe('bin/encore.js', function() {
     // being functional tests, these can take quite long
@@ -211,6 +213,134 @@ module.exports = Encore.getWebpackConfig();
             expect(stdout).to.contain('or method');
             expect(stdout).to.contain('Did you mean');
             done();
+        });
+    });
+
+    it('Run the webpack-dev-server successfully', (done) => {
+        testSetup.emptyTmpDir();
+        const testDir = testSetup.createTestAppDir();
+
+        fs.writeFileSync(
+            path.join(testDir, 'package.json'),
+            `{
+                "devDependencies": {
+                    "@symfony/webpack-encore": "*"
+                }
+            }`
+        );
+
+        fs.writeFileSync(
+            path.join(testDir, 'webpack.config.js'),
+            `
+const Encore = require('../../index.js');
+Encore
+    .enableSingleRuntimeChunk()
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .addEntry('main', './js/no_require')
+;
+
+module.exports = Encore.getWebpackConfig();
+            `
+        );
+
+        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const abortController = new AbortController();
+        const node = spawn('node', [binPath, 'dev-server', `--context=${testDir}`], {
+            cwd: testDir,
+            env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
+            signal: abortController.signal
+        });
+
+        let stdout = '';
+        let stderr = '';
+
+        node.stdout.on('data', (data) => {
+            stdout += data.toString();
+        });
+
+        node.stderr.on('data', (data) => {
+            stderr += data.toString();
+        });
+
+        node.on('error', (error) => {
+            if (error.name !== 'AbortError') {
+                throw new Error('Error executing encore', { cause: error });
+            }
+
+            expect(stdout).to.contain('Running webpack-dev-server ...');
+            expect(stdout).to.contain('Compiled successfully in');
+            expect(stdout).to.contain('webpack compiled successfully');
+
+            expect(stderr).to.contain('[webpack-dev-server] Project is running at:');
+            expect(stderr).to.contain('[webpack-dev-server] Loopback: http://localhost:8080/');
+            expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
+
+            done();
+        });
+
+        setTimeout(() => {
+            abortController.abort();
+        }, 5000);
+    });
+
+    describe('Without webpack-dev-server installed', () => {
+        before(() => {
+            execSync('yarn remove webpack-dev-server --dev', { cwd: projectDir });
+        });
+
+        after(() => {
+            // Re-install webpack-dev-server and ensure the project is in a clean state
+            execSync('git checkout package.json', { cwd: projectDir });
+            execSync('yarn install', { cwd: projectDir });
+        });
+
+        it('Throw an error when trying to use the webpack-dev-server if not installed', done => {
+            testSetup.emptyTmpDir();
+            const testDir = testSetup.createTestAppDir();
+
+            fs.writeFileSync(
+                path.join(testDir, 'package.json'),
+                `{
+                    "devDependencies": {
+                        "@symfony/webpack-encore": "*"
+                    }
+                }`
+            );
+
+            fs.writeFileSync(
+                path.join(testDir, 'webpack.config.js'),
+                `
+const Encore = require('../../index.js');
+Encore
+    .enableSingleRuntimeChunk()
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .addEntry('main', './js/no_require')
+;
+
+module.exports = Encore.getWebpackConfig();
+        `
+            );
+
+            const binPath = path.resolve(projectDir, 'bin', 'encore.js');
+            exec(
+                `node ${binPath} dev-server --context=${testDir}`,
+                {
+                    cwd: testDir,
+                    env: Object.assign({}, process.env, { NO_COLOR: 'true' })
+                },
+                (err, stdout, stderr) => {
+                    expect(stdout).to.contain('Install webpack-dev-server to use the webpack Development Server');
+                    expect(stdout).to.contain('npm install webpack-dev-server --save-dev');
+                    expect(stderr).to.equal('');
+
+                    expect(stdout).not.to.contain('Running webpack-dev-server ...');
+                    expect(stdout).not.to.contain('Compiled successfully in');
+                    expect(stdout).not.to.contain('webpack compiled successfully');
+
+                    done();
+                });
         });
     });
 });
