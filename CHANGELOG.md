@@ -72,6 +72,23 @@ Encore.configureDevServerOptions((options) => {
 });
 ```
 
+* #1336 Make webpack-dev-server optional (@Kocal)
+
+The `webpack-dev-server` package is now an optional peer dependency. 
+It has been removed because some projects may not use it, and it was installing a bunch of unnecessary dependencies.
+
+Removing the `webpack-dev-server` dependency from Encore reduces the number of dependencies from **626** to **295** (**-331**!),
+it helps to reduce the size of the `node_modules` directory and the number of possible vulnerabilities.
+
+To use the `webpack-dev-server` again, you need to install it manually:
+```shell
+npm install webpack-dev-server --save-dev
+# or 
+yarn add webpack-dev-server --dev
+# or 
+pnpm install webpack-dev-server --save-dev
+```
+
 ## 4.7.0
 
 ### Features
