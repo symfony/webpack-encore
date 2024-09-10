@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-08T19:30:11Z
+
+> types relying on `import('webpack-dev-server').Configuration` need to be changed to use `object` instead, as our type declarations cannot depend on optional dependencies
+
+You think so? I kept `webpack-dev-server` as a dev dependency, and it looks like fine
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-08T19:52:05Z
+
+@Kocal as long as we use types for ourselves, the dev dependency is indeed enough. But this would block #816 which was the primary reason to add more precise types. Types shipped in the package cannot use dev dependencies.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-08T20:08:00Z
+
+Ah, I didn't think about that, I will change that, thanks
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-08T22:37:31Z
+
+Checks are finally green.
