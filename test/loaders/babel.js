@@ -75,9 +75,23 @@ describe('loaders/babel', () => {
 
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
-        expect(actualLoaders[0].options.presets).to.include(require.resolve('@babel/preset-react'));
+        expect(actualLoaders[0].options.presets[0]).to.deep.equal([
+            require.resolve('@babel/preset-env'),
+            {
+                corejs: null,
+                modules: false,
+                targets: {},
+                useBuiltIns: false,
+            },
+        ]);
+        expect(actualLoaders[0].options.presets[1]).to.deep.equal([
+            require.resolve('@babel/preset-react'),
+            {
+                runtime: 'automatic',
+            }
+        ]);
         // foo is also still there, not overridden
-        expect(actualLoaders[0].options.presets).to.include('foo');
+        expect(actualLoaders[0].options.presets[2]).to.equal('foo');
     });
 
     it('getLoaders() with preact', () => {

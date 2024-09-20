@@ -1684,13 +1684,13 @@ module.exports = {
                 expectClassDeclaration('large'); // Standard SCSS
                 expectClassDeclaration('justified'); // Standard Less
                 expectClassDeclaration('lowercase'); // Standard Stylus
-                expectClassDeclaration('block'); // Standard Postcss
+                expectClassDeclaration('block'); // Standard PostCSS
 
                 expectClassDeclaration('italic_foo'); // CSS Module
                 expectClassDeclaration('bold_foo'); // SCSS Module
                 expectClassDeclaration('underline_foo'); // Less Module
                 expectClassDeclaration('rtl_foo'); // Stylus Module
-                expectClassDeclaration('hidden_foo'); // Stylus Module
+                expectClassDeclaration('hidden_foo'); // PostCSS Module
 
                 testSetup.requestTestPage(
                     browser,
@@ -1706,13 +1706,177 @@ module.exports = {
                         expect(divClassArray.includes('large')).to.be.true; // Standard SCSS
                         expect(divClassArray.includes('justified')).to.be.true; // Standard Less
                         expect(divClassArray.includes('lowercase')).to.be.true; // Standard Stylus
-                        expect(divClassArray.includes('block')).to.be.true; // Standard Stylus
+                        expect(divClassArray.includes('block')).to.be.true; // Standard PostCSS
 
                         expect(divClassArray.includes('italic_foo')).to.be.true; // CSS module
                         expect(divClassArray.includes('bold_foo')).to.be.true; // SCSS module
                         expect(divClassArray.includes('underline_foo')).to.be.true; // Less module
                         expect(divClassArray.includes('rtl_foo')).to.be.true; // Stylus module
-                        expect(divClassArray.includes('hidden_foo')).to.be.true; // Stylus module
+                        expect(divClassArray.includes('hidden_foo')).to.be.true; // PostCSS module
+
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('React supports CSS/Sass/Less/Stylus modules', (done) => {
+            const appDir = testSetup.createTestAppDir();
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './react-css-modules/main.js');
+            config.enableReactPreset();
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.enableStylusLoader();
+            config.configureCssLoader(options => {
+                // Remove hashes from local ident names
+                // since they are not always the same.
+                if (options.modules) {
+                    options.modules.localIdentName = '[local]_foo';
+                }
+            });
+
+            // Enable the PostCSS loader so we can use `lang="postcss"`
+            config.enablePostCssLoader();
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}                            `
+            );
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                const expectClassDeclaration = (className) => {
+                    webpackAssert.assertOutputFileContains(
+                        'main.css',
+                        `.${className} {`
+                    );
+                };
+
+                expectClassDeclaration('red'); // Standard CSS
+                expectClassDeclaration('large'); // Standard SCSS
+                expectClassDeclaration('justified'); // Standard Less
+                expectClassDeclaration('lowercase'); // Standard Stylus
+
+                expectClassDeclaration('italic_foo'); // CSS Module
+                expectClassDeclaration('bold_foo'); // SCSS Module
+                expectClassDeclaration('underline_foo'); // Less Module
+                expectClassDeclaration('rtl_foo'); // Stylus Module
+
+                testSetup.requestTestPage(
+                    browser,
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    async({ page }) => {
+                        const divClassArray = await page.evaluate(() => Array.from(document.body.querySelector('#app > div').classList.values()));
+
+                        expect(divClassArray.includes('red')).to.be.true; // Standard CSS
+                        expect(divClassArray.includes('large')).to.be.true; // Standard SCSS
+                        expect(divClassArray.includes('justified')).to.be.true; // Standard Less
+                        expect(divClassArray.includes('lowercase')).to.be.true; // Standard Stylus
+
+                        expect(divClassArray.includes('italic_foo')).to.be.true; // CSS module
+                        expect(divClassArray.includes('bold_foo')).to.be.true; // SCSS module
+                        expect(divClassArray.includes('underline_foo')).to.be.true; // Less module
+                        expect(divClassArray.includes('rtl_foo')).to.be.true; // Stylus module
+
+                        done();
+                    }
+                );
+            });
+        });
+
+        it('Preact supports CSS/Sass/Less/Stylus modules', (done) => {
+            const appDir = testSetup.createTestAppDir();
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './preact-css-modules/main.js');
+            config.enablePreactPreset();
+            config.enableSassLoader();
+            config.enableLessLoader();
+            config.enableStylusLoader();
+            config.configureCssLoader(options => {
+                // Remove hashes from local ident names
+                // since they are not always the same.
+                if (options.modules) {
+                    options.modules.localIdentName = '[local]_foo';
+                }
+            });
+
+            // Enable the PostCSS loader so we can use `lang="postcss"`
+            config.enablePostCssLoader();
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+module.exports = {
+  plugins: [
+    require('autoprefixer')()
+  ]
+}                            `
+            );
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                expect(config.outputPath).to.be.a.directory().with.deep.files([
+                    'main.js',
+                    'main.css',
+                    'manifest.json',
+                    'entrypoints.json',
+                    'runtime.js',
+                ]);
+
+                const expectClassDeclaration = (className) => {
+                    webpackAssert.assertOutputFileContains(
+                        'main.css',
+                        `.${className} {`
+                    );
+                };
+
+                expectClassDeclaration('red'); // Standard CSS
+                expectClassDeclaration('large'); // Standard SCSS
+                expectClassDeclaration('justified'); // Standard Less
+                expectClassDeclaration('lowercase'); // Standard Stylus
+
+                expectClassDeclaration('italic_foo'); // CSS Module
+                expectClassDeclaration('bold_foo'); // SCSS Module
+                expectClassDeclaration('underline_foo'); // Less Module
+                expectClassDeclaration('rtl_foo'); // Stylus Module
+
+                testSetup.requestTestPage(
+                    browser,
+                    path.join(config.getContext(), 'www'),
+                    [
+                        'build/runtime.js',
+                        'build/main.js'
+                    ],
+                    async({ page }) => {
+                        const divClassArray = await page.evaluate(() => Array.from(document.body.querySelector('#app > div').classList.values()));
+
+                        expect(divClassArray.includes('red')).to.be.true; // Standard CSS
+                        expect(divClassArray.includes('large')).to.be.true; // Standard SCSS
+                        expect(divClassArray.includes('justified')).to.be.true; // Standard Less
+                        expect(divClassArray.includes('lowercase')).to.be.true; // Standard Stylus
+
+                        expect(divClassArray.includes('italic_foo')).to.be.true; // CSS module
+                        expect(divClassArray.includes('bold_foo')).to.be.true; // SCSS module
+                        expect(divClassArray.includes('underline_foo')).to.be.true; // Less module
+                        expect(divClassArray.includes('rtl_foo')).to.be.true; // Stylus module
 
                         done();
                     }
