@@ -93,6 +93,37 @@ pnpm install webpack-dev-server --save-dev
 
 * #1319 Drop support of css-loader ^6, add support for css-loader ^7.1 (@Kocal)
 
+Since [`css-loader` 7.0.0](https://github.com/webpack-contrib/css-loader/blob/master/CHANGELOG.md#700-2024-04-04),
+styles imports became named by default.
+It means you should update your code from:
+```js
+import style from "./style.css";
+
+console.log(style.myClass);
+```
+to:
+```js
+import * as style from "./style.css";
+
+console.log(style.myClass);
+```
+
+There is also a possibility to keep the previous behavior by configuring the `css-loader`'s `modules` option:
+```js
+config.configureCssLoader(options => {
+   if (options.modules) {
+       options.modules.namedExport = false;
+       options.modules.exportLocalsConvention = 'as-is';
+   } 
+});
+```
+
+> [!IMPORTANT]  
+> If you use CSS Modules inside `.vue` files,
+> until https://github.com/vuejs/vue-loader/pull/1909 is merged and released, you will need to restore the previous 
+> behavior by configuring Encore with the code above.
+
+
 ## 4.7.0
 
 ### Features

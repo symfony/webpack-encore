@@ -1,4 +1,4 @@
-import styles from './Hello.css?module';
+import * as styles from './Hello.css?module';
 
 export default {
   name: 'hello',
