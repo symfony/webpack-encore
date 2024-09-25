@@ -1,0 +1,106 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-01T13:55:02Z
+
+Hum, looks like there is more work to do
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-02T09:41:24Z
+
+why is the title taking about webpack-dev-server ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-02T15:14:42Z
+
+> why is the title taking about webpack-dev-server ?
+
+Fixed, thanks
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-03T17:12:57Z
+
+Let's keep in draft for the moment. I didn't check failing checks too much, but I believe mini-css-extract-plugin does not support css-loader 7 yet.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-04T10:20:57Z
+
+Based on the documentation of mini-css-extract-plugin, its behavior depends on the `modules.namedExport` config of the css-loader, for which the default changed in v7. Maybe this is related to the issue.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-20T07:51:27Z
+
+Looking at the test output, it seems related to the Vue integration.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-20T08:25:08Z
+
+Yeah... But, in fact, IINW we only test CSS modules with Vue, not React nor Svelte, so maybe it fails with those frameworks too.
+
+For a moment I thought about automatically configure `{ namedExport: false, exportLocalsConvention: 'as-is' }` if `Encore.enableVueLoader()` is called, but it's shaky IMO.
+
+I suggest to always configure `{ namedExport: false, exportLocalsConvention: 'as-is' }` and add some lines in the CHANGELOG about those changes. WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-20T10:13:59Z
+
+I've started to add tests about CSS Modules usages with other frameworks, coming in a new PR.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-20T13:26:10Z
+
+As expected, upgrading `css-loader` to v7 also break CSS modules for React and Preact integration.
+
+Let's add `{ namedExport: false, exportLocalsConvention: 'as-is' }` configuration by default?
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-20T13:39:21Z
+
+I'm wondering whether we should change the config to use the old behavior or update our tests to follow the recommended usage of css-loader (and document the fact that css-loader 7 has a BC break when using CSS modules so they should either make their code compatible with the new version of configure things themselves).
+
+Keeping a non-default configuration for css-loader forever looks weird to me. And shipping the BC break on a different schedule than the css-loader upgrade changing the default would make it harder to communicate about it.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-20T14:37:22Z
+
+When opening the PR, I started to update our tests and keep the breaking changes, but, IIRC CSS Modules were not usable with Vue Loader due to the way they are declared in `.vue` files.
+
+I also prefer breaking things in a new major version, but we need to find a way for Vue support. I will restart checking about this in a few hours.
+
+---------------------------------------------------------------------------
+
+by stof at 2024-09-20T16:31:35Z
+
+Looking at https://github.com/vuejs/vue-loader/blob/698636508e08f5379a57eaf086b5ff533af8e051/src/cssModules.ts#L9, it seems like vue-loader is not compatible with the new default of `namedExport: true` as it does not have the `as *`
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-20T17:36:14Z
+
+Someone opened a pull-request https://github.com/vuejs/vue-loader/pull/1909 3 years ago, the author repeatedly rebased its PR, but it doesn't look like anyone cared about what was done. The last `vue-loader` release if from december 2023 too.
+
+I want to upgrade to css-loader v7 for Encore v5, and I don't want the few users of Vue + CSS Modules to restrict us from upgrading (Pareto law).
+
+What about:
+1. Upgrading `css-loader` v7
+2. Do not touch `css-loader` options
+3. In the `CHANGELOG.md` (I think I will write a `UPGRADE.md` file too), tells people about:
+    - css-loader default options breaking changes, telling them to changes from `import styles` to `import * as styles` etc...
+    - **but**, for Vue/CSS Modules users, tell them to configure the `css-loader` themselves through `Encore.configureCssLoader()`
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-20T18:02:23Z
+
+I've just pushed my idea, I definitely think that's the best option for everyone.
