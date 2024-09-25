@@ -1645,6 +1645,14 @@ module.exports = {
             config.enableLessLoader();
             config.enableStylusLoader();
             config.configureCssLoader(options => {
+                // Until https://github.com/vuejs/vue-loader/pull/1909 is merged,
+                // Vue users should configure the css-loader modules
+                // to keep the previous default behavior from css-loader v6
+                if (options.modules) {
+                    options.modules.namedExport = false;
+                    options.modules.exportLocalsConvention = 'as-is';
+                }
+
                 // Remove hashes from local ident names
                 // since they are not always the same.
                 if (options.modules) {
