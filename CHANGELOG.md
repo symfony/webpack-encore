@@ -8,6 +8,8 @@ This is a new major version that contains several backwards-compatibility breaks
 
 * #1344 Add options configuration callback to `Encore.enableReactPreset()` (@Kocal)
 
+* #1345 Add support for integrity hashes when asset names contain a query string (@Kocal)
+
 ### BC Breaks
 
 * #1321 Drop support of Node.js 19 and 21 (@Kocal)
