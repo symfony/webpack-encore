@@ -1106,10 +1106,19 @@ class Encore {
      *
      * https://babeljs.io/docs/plugins/preset-react/
      *
+     * You can configure the preset by passing a callback:
+     * ```
+     * Encore.enableReactPreset(function(options) {
+     *     // https://babeljs.io/docs/babel-preset-react/#options
+     *     options.development = !Encore.isProduction();
+     * });
+     * ```
+     *
+     * @param {OptionsCallback<object>} callback
      * @returns {Encore}
      */
-    enableReactPreset() {
-        webpackConfig.enableReactPreset();
+    enableReactPreset(callback = () => {}) {
+        webpackConfig.enableReactPreset(callback);
 
         return this;
     }

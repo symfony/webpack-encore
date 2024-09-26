@@ -982,6 +982,23 @@ describe('WebpackConfig object', () => {
         });
     });
 
+    describe('enableReactPreset', () => {
+        it('Calling method sets it', () => {
+            const config = createConfig();
+            const testCallback = () => {};
+            config.enableReactPreset(testCallback);
+            expect(config.babelReactPresetOptionsCallback).to.equal(testCallback);
+        });
+
+        it('Calling with non-callback throws an error', () => {
+            const config = createConfig();
+
+            expect(() => {
+                config.enableReactPreset('FOO');
+            }).to.throw('must be a callback function');
+        });
+    });
+
     describe('enablePreactPreset', () => {
         it('Without preact-compat', () => {
             const config = createConfig();

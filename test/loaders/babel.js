@@ -94,6 +94,40 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options.presets[2]).to.equal('foo');
     });
 
+    it('getLoaders() with react and callback', () => {
+        const config = createConfig();
+        config.enableReactPreset((options) => {
+            options.development = !config.isProduction();
+        });
+
+        config.configureBabel(function(babelConfig) {
+            babelConfig.presets.push('foo');
+        });
+
+        const actualLoaders = babelLoader.getLoaders(config);
+
+        // env, react & foo
+        expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
+        expect(actualLoaders[0].options.presets[0]).to.deep.equal([
+            require.resolve('@babel/preset-env'),
+            {
+                corejs: null,
+                modules: false,
+                targets: {},
+                useBuiltIns: false,
+            },
+        ]);
+        expect(actualLoaders[0].options.presets[1]).to.deep.equal([
+            require.resolve('@babel/preset-react'),
+            {
+                runtime: 'automatic',
+                development: true,
+            }
+        ]);
+        // foo is also still there, not overridden
+        expect(actualLoaders[0].options.presets[2]).to.equal('foo');
+    });
+
     it('getLoaders() with preact', () => {
         const config = createConfig();
         config.enablePreactPreset();
