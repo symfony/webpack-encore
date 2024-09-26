@@ -4,6 +4,10 @@
 
 This is a new major version that contains several backwards-compatibility breaks.
 
+### Features
+
+* #1344 Add options configuration callback to `Encore.enableReactPreset()` (@Kocal)
+
 ### BC Breaks
 
 * #1321 Drop support of Node.js 19 and 21 (@Kocal)
