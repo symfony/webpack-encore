@@ -2070,14 +2070,14 @@ module.exports = {
                     'main.js',
                     'main.css',
                     'manifest.json',
-                    'node_modules_symfony_mock-module_dist_controller_js.js',
+                    'fixtures_stimulus_mock-module_dist_controller_js.js',
                     'entrypoints.json',
                     'runtime.js',
                 ]);
 
                 // test controllers and style are shipped
                 webpackAssert.assertOutputFileContains('main.js', 'app-controller');
-                webpackAssert.assertOutputFileContains('node_modules_symfony_mock-module_dist_controller_js.js', 'mock-module-controller');
+                webpackAssert.assertOutputFileContains('fixtures_stimulus_mock-module_dist_controller_js.js', 'mock-module-controller');
                 webpackAssert.assertOutputFileContains('main.css', 'body {}');
 
                 done();

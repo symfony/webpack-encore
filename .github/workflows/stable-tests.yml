@@ -25,11 +25,13 @@ jobs:
                 with:
                     node-version: ${{matrix.node-versions}}
 
+            -   run: corepack enable
+   
             -   name: Install Yarn Dependencies
                 run: yarn install
 
             -   name: Show Installed Versions
-                run: yarn list --depth=0
+                run: yarn info --name-only
 
             -   name: Run Tests
                 run: yarn test

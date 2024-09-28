@@ -18,6 +18,8 @@ jobs:
                 with:
                     node-version: '22'
 
+            -   run: corepack enable
+
             -   name: Install Yarn Dependencies
                 run: yarn install
 

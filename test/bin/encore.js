@@ -286,13 +286,18 @@ module.exports = Encore.getWebpackConfig();
 
     describe('Without webpack-dev-server installed', () => {
         before(() => {
-            execSync('yarn remove webpack-dev-server --dev', { cwd: projectDir });
+            execSync('yarn remove webpack-dev-server', { cwd: projectDir });
         });
 
-        after(() => {
+        after(function() {
+            // Yarn install can take a long time
+            this.timeout(20000);
+
+            let output;
             // Re-install webpack-dev-server and ensure the project is in a clean state
-            execSync('git checkout package.json', { cwd: projectDir });
-            execSync('yarn install', { cwd: projectDir });
+            try { output = execSync('git checkout package.json yarn.lock', { cwd: projectDir }); console.log(output.toString()) } catch(e) { console.error(e); }
+            // try { output = execSync('yarn install --mode update-lockfile' , { cwd: projectDir }); console.log(output.toString()) } catch(e) { console.error(e); }
+            try { output = execSync('yarn install ', { cwd: projectDir }); console.log(output.toString()) } catch(e) { console.error(e); }
         });
 
         it('Throw an error when trying to use the webpack-dev-server if not installed', done => {

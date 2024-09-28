@@ -22,7 +22,7 @@ const vueLoaderLowVersion = '15.0.11';
  */
 function getLowestVersion(dependency, range) {
     return new Promise((resolve, reject) => {
-        if (range.startsWith('file:')) {
+        if (range.startsWith('file:') || range.startsWith('portal:')) {
             resolve([dependency, range]);
         }
 

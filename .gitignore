@@ -1,3 +1,13 @@
-node_modules/
-npm-debug.log*
+# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+
+node_modules
+yarn-error.log
+
 /test_tmp

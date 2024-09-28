@@ -25,14 +25,16 @@ jobs:
                 with:
                     node-version: ${{matrix.node-versions}}
 
+            -   run: corepack enable
+
             -   name: Remove Lock File
                 run: rm yarn.lock
 
             -   name: Install Yarn Dependencies
-                run: yarn install
+                run: yarn install --mode update-lockfile && yarn install
 
             -   name: Show Installed Versions
-                run: yarn list --depth=0
+                run: yarn info --name-only
 
             -   name: Run Tests
                 run: yarn test

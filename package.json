@@ -3,6 +3,7 @@
   "version": "4.7.0",
   "description": "Webpack Encore is a simpler way to integrate Webpack into your application",
   "main": "index.js",
+  "packageManager": "yarn@4.5.0",
   "scripts": {
     "test": "yarn run test:main && yarn run test:persistent-cache",
     "test:main": "mocha --reporter spec test --recursive --ignore test/persistent-cache/*",
@@ -51,7 +52,7 @@
     "@babel/preset-react": "^7.9.0",
     "@babel/preset-typescript": "^7.0.0",
     "@hotwired/stimulus": "^3.0.0",
-    "@symfony/mock-module": "file:fixtures/stimulus/mock-module",
+    "@symfony/mock-module": "portal:fixtures/stimulus/mock-module",
     "@symfony/stimulus-bridge": "^3.0.0",
     "@vue/babel-helper-vue-jsx-merge-props": "^1.0.0",
     "@vue/babel-plugin-jsx": "^1.0.0",
@@ -223,6 +224,5 @@
     "lib/",
     "bin/",
     "index.js"
-  ],
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  ]
 }
