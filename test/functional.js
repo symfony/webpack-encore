@@ -3123,6 +3123,35 @@ module.exports = {
                     done();
                 });
             });
+
+            it('With query string versioning', (done) => {
+                const config = createWebpackConfig('web/build', 'dev');
+                config.addEntry('main', './js/no_require');
+                config.setPublicPath('/build');
+                config.addStyleEntry('styles', './css/h1_style.css');
+                config.enableVersioning(true);
+                config.configureFilenames({
+                    js: '[name].js?v=[contenthash:16]',
+                    css: '[name].css?v=[contenthash:16]'
+                });
+                config.enableIntegrityHashes();
+
+                testSetup.runWebpack(config, (webpackAssert) => {
+                    const integrityData = getIntegrityData(config);
+                    const expectedFilesWithHashes = [
+                        '/build/runtime.js',
+                        '/build/main.js',
+                        '/build/styles.css',
+                    ];
+
+                    expectedFilesWithHashes.forEach((file) => {
+                        expect(integrityData[file]).to.contain('sha384-');
+                        expect(integrityData[file]).to.have.length(71);
+                    });
+
+                    done();
+                });
+            });
         });
     });
 });
