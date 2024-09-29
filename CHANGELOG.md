@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## UNRELEASED
+## 5.0.0
 
 This is a new major version that contains several backwards-compatibility breaks.
 
@@ -15,35 +15,6 @@ This is a new major version that contains several backwards-compatibility breaks
 * #1321 Drop support of Node.js 19 and 21 (@Kocal)
 
 * #1307 Drop `webpack-cli` 4 support, only `webpack-cli` ^5.1.4 is supported (@Kocal)
-
-* #1308 Drop Vue 2 support (End-Of-Life), only Vue 3 is supported (@Kocal)
-
-* #1309 Drop ESLint integration (@Kocal)
-
-* #1313 Drop `clean-webpack-plugin` in favor of webpack's `output.clean` configuration. The
-  configuration settings supported by `Encore.cleanupOutputBeforeBuild` have changed (@stof)
-
-* #1317 Drop support of sass-loader ^13 and ^14, add support for sass-loader ^16 (@Kocal)
-
-The sass-loader's options have changed, [the `modern` options](https://sass-lang.com/documentation/js-api/interfaces/options) are now used by default. 
-Though not recommended,
-you must specify the option `api: 'legacy'`
-if you want to keep [the `legacy` options](https://sass-lang.com/documentation/js-api/interfaces/legacystringoptions/).
-For example:
-```js
-// With the legacy API:
-Encore.enableSassLoader((options) => {
-    options.api = 'legacy';
-    options.includePaths = [/*...*/];
-});
-
-// With the modern API (default):
-Encore.enableSassLoader((options) => {
-   options.loadPaths = [/*...*/];
-});
-```
-
-* #1324 Drop css-minimizer-webpack-plugin 5 support, only css-minimizer-webpack-plugin 7 is supported (@Kocal)
 
 * #1318 Drop webpack-dev-server 4 support, only webpack-dev-server 5 is supported (@Kocal)
 
@@ -78,9 +49,9 @@ Encore.configureDevServerOptions((options) => {
 });
 ```
 
-* #1336 Make webpack-dev-server optional (@Kocal)
+* #1336 Make `webpack-dev-server` dependency optional (@Kocal)
 
-The `webpack-dev-server` package is now an optional peer dependency. 
+The `webpack-dev-server` package is now an optional peer dependency.
 It has been removed because some projects may not use it, and it was installing a bunch of unnecessary dependencies.
 
 Removing the `webpack-dev-server` dependency from Encore reduces the number of dependencies from **626** to **295** (**-331**!),
@@ -95,7 +66,36 @@ yarn add webpack-dev-server --dev
 pnpm install webpack-dev-server --save-dev
 ```
 
+* #1308 Drop Vue 2 support (End-Of-Life), only Vue 3 is supported (@Kocal)
+
+* #1309 Drop ESLint integration (@Kocal)
+
+* #1313 Drop `clean-webpack-plugin` in favor of webpack's `output.clean` configuration. The
+  configuration settings supported by `Encore.cleanupOutputBeforeBuild` have changed (@stof)
+
+* #1324 Drop `css-minimizer-webpack-plugin` 5 support, only `css-minimizer-webpack-plugin` 7 is supported (@Kocal)
+
 * #1342 Replace [`assets-webpack-plugin`](https://github.com/ztoben/assets-webpack-plugin) dependency by an internal plugin, to generate `entrypoints.json` file (@Kocal)
+
+* #1317 Drop support of sass-loader ^13 and ^14, add support for sass-loader ^16 (@Kocal)
+
+The sass-loader's options have changed, [the `modern` options](https://sass-lang.com/documentation/js-api/interfaces/options) are now used by default. 
+Though not recommended,
+you must specify the option `api: 'legacy'`
+if you want to keep [the `legacy` options](https://sass-lang.com/documentation/js-api/interfaces/legacystringoptions/).
+For example:
+```js
+// With the legacy API:
+Encore.enableSassLoader((options) => {
+    options.api = 'legacy';
+    options.includePaths = [/*...*/];
+});
+
+// With the modern API (default):
+Encore.enableSassLoader((options) => {
+   options.loadPaths = [/*...*/];
+});
+```
 
 * #1319 Drop support of css-loader ^6, add support for css-loader ^7.1 (@Kocal)
 
@@ -129,6 +129,31 @@ config.configureCssLoader(options => {
 > until https://github.com/vuejs/vue-loader/pull/1909 is merged and released, you will need to restore the previous 
 > behavior by configuring Encore with the code above.
 
+* #1333 Replace `chalk` by `picocolors` (@Kocal)
+
+### Internal
+
+* #1325 Remove no-op argument (@stof)
+
+* #1327 Fix compat with configuring the devserver server as a string (@stof)
+
+* #1328 Remove non-existent option in our package-up utility (@stof)
+
+* #1329 Read the controllers.json as string rather than Buffer (@stof)
+
+* #1330 Add some types in the internal implementation of Encore (@stof)
+
+* #1331 test(deps): replace Zombie by Puppeteer (@Kocal)
+
+* #1332 Upgrade locked dependencies (@stof)
+
+* #1334 Upgrade the version of stylus used in dev (@stof)
+
+* #1335 Fix ESLint warning (@stof)
+
+* #1339 Add PR template (@Kocal)
+
+* #1343 Add tests for CSS Modules with React and Preact (@Kocal)
 
 ## 4.7.0
 
