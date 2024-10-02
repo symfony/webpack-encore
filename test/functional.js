@@ -3138,11 +3138,14 @@ module.exports = {
 
                 testSetup.runWebpack(config, (webpackAssert) => {
                     const integrityData = getIntegrityData(config);
-                    const expectedFilesWithHashes = [
-                        '/build/runtime.js',
-                        '/build/main.js',
-                        '/build/styles.css',
-                    ];
+                    const expectedFilesWithHashes = Object.keys(integrityData).filter(file => {
+                        if (!/\?v=[a-z0-9]{16}$/.test(file)) {
+                            return false;
+                        }
+                        return file.startsWith('/build/runtime.js?v=')
+                            || file.startsWith('/build/main.js?v=')
+                            || file.startsWith('/build/styles.css?v=');
+                    });
 
                     expectedFilesWithHashes.forEach((file) => {
                         expect(integrityData[file]).to.contain('sha384-');
