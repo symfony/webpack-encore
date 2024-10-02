@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 5.0.1
+
+* #1349 Fix issue between `Encore.enableIntegrityHashes()` and filenames with a query-string (@Kocal)
+
 ## 5.0.0
 
 This is a new major version that contains several backwards-compatibility breaks.
