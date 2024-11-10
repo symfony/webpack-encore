@@ -24,4 +24,4 @@ feel. It aims to solve the most common Webpack use cases.
 
 ## Documentation
 
-[Read the Documentation on symfony.com](https://symfony.com/doc/current/frontend.html).
+[Read the Documentation on symfony.com](https://symfony.com/doc/current/frontend/encore/index.html).
