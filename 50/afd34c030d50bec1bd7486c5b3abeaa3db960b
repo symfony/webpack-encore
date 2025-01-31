@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-01-31T22:50:45Z
+
+CI failures are not related, see https://github.com/symfony/webpack-encore/pull/1362
