@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 5.1.0
+
+### Features
+
+* Add support for @symfony/stimulus-bridge@^4.0.0 by @Kocal in https://github.com/symfony/webpack-encore/pull/1361
+
 ## 5.0.1
 
 * #1349 Fix issue between `Encore.enableIntegrityHashes()` and filenames with a query-string (@Kocal)
