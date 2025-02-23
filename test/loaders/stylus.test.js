@@ -9,10 +9,10 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const lessLoader = require('../../lib/loaders/less');
+const stylusLoader = require('../../lib/loaders/stylus');
 const cssLoader = require('../../lib/loaders/css');
 const sinon = require('sinon');
 
@@ -24,7 +24,7 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/less', () => {
+describe('loaders/stylus', () => {
     it('getLoaders() basic usage', () => {
         const config = createConfig();
         config.enableSourceMaps(true);
@@ -33,7 +33,7 @@ describe('loaders/less', () => {
         const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
             .callsFake(() => []);
 
-        const actualLoaders = lessLoader.getLoaders(config);
+        const actualLoaders = stylusLoader.getLoaders(config);
         expect(actualLoaders).to.have.lengthOf(1);
         expect(actualLoaders[0].options.sourceMap).to.be.true;
         expect(cssLoaderStub.getCall(0).args[1]).to.be.false;
@@ -49,12 +49,12 @@ describe('loaders/less', () => {
         sinon.stub(cssLoader, 'getLoaders')
             .callsFake(() => []);
 
-        config.enableLessLoader(function(lessOptions) {
-            lessOptions.custom_option = 'foo';
-            lessOptions.other_option = true;
+        config.enableStylusLoader(function(stylusOptions) {
+            stylusOptions.custom_option = 'foo';
+            stylusOptions.other_option = true;
         });
 
-        const actualLoaders = lessLoader.getLoaders(config);
+        const actualLoaders = stylusLoader.getLoaders(config);
         expect(actualLoaders[0].options).to.deep.equals({
             sourceMap: true,
             custom_option: 'foo',
@@ -71,14 +71,14 @@ describe('loaders/less', () => {
         sinon.stub(cssLoader, 'getLoaders')
             .callsFake(() => []);
 
-        config.enableLessLoader(function(lessOptions) {
-            lessOptions.custom_option = 'foo';
+        config.enableStylusLoader(function(stylusOptions) {
+            stylusOptions.custom_option = 'foo';
 
             // This should override the original config
             return { foo: true };
         });
 
-        const actualLoaders = lessLoader.getLoaders(config);
+        const actualLoaders = stylusLoader.getLoaders(config);
         expect(actualLoaders[0].options).to.deep.equals({ foo: true });
         cssLoader.getLoaders.restore();
     });
@@ -91,7 +91,7 @@ describe('loaders/less', () => {
         const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
             .callsFake(() => []);
 
-        const actualLoaders = lessLoader.getLoaders(config, true);
+        const actualLoaders = stylusLoader.getLoaders(config, true);
         expect(actualLoaders).to.have.lengthOf(1);
         expect(actualLoaders[0].options.sourceMap).to.be.true;
         expect(cssLoaderStub.getCall(0).args[1]).to.be.true;
