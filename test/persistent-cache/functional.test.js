@@ -9,7 +9,7 @@
 
 'use strict';
 
-const chai = require('chai');
+import { describe, it, expect, chai } from 'vitest';
 chai.use(require('chai-fs'));
 chai.use(require('chai-subset'));
 const path = require('path');
@@ -33,10 +33,7 @@ function createWebpackConfig(outputDirName = '', testName, command, argv = {}) {
     return webpackConfig;
 }
 
-describe('Functional persistent cache tests using webpack', function() {
-    // being functional tests, these can take quite long
-    this.timeout(10000);
-
+describe('Functional persistent cache tests using webpack', { repeats: 2, timeout: 10000 }, function() {
     describe('Basic scenarios.', () => {
         it('Persistent caching does not cause problems', (done) => {
             const config = createWebpackConfig('www/build', 'basic_cache', 'dev');
