@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const parseArgv = require('../../lib/config/parse-runtime');
 const testSetup = require('../helpers/setup');
 const fs = require('fs-extra');
@@ -30,10 +30,6 @@ function createTestDirectory() {
 }
 
 describe('parse-runtime', () => {
-    beforeEach(() => {
-        testSetup.emptyTmpDir();
-    });
-
     it('Basic usage', () => {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['foobar', '--bar', '--help']), testDir);
