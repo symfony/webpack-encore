@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const stringEscaper = require('../../lib/utils/string-escaper');
 
 function expectEvaledStringToEqual(str, expectedStr) {

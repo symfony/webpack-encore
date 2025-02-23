@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const regexpEscaper = require('../../lib/utils/regexp-escaper');
 
 describe('regexp-escaper', () => {

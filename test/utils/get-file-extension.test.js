@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const getFileExtension = require('../../lib/utils/get-file-extension');
 
 describe('get-file-extension', () => {

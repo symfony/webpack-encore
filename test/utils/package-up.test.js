@@ -9,8 +9,8 @@
 
 'use strict';
 
+import { describe, it, expect } from 'vitest';
 const { resolve: resolvePath } = require('path');
-const expect = require('chai').expect;
 const packageUp = require('../../lib/utils/package-up');
 
 describe('package-up', () => {

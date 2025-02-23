@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 const getVueVersion = require('../../lib/utils/get-vue-version');
 const sinon = require('sinon');
 const packageHelper = require('../../lib/package-helper');
@@ -27,10 +27,10 @@ const createWebpackConfig = function() {
 
 describe('get-vue-version', () => {
     let getPackageVersionStub = null;
-    before(() => {
+    beforeEach(() => {
         getPackageVersionStub = sinon.stub(packageHelper, 'getPackageVersion');
     });
-    after(() => {
+    afterEach(() => {
         packageHelper.getPackageVersion.restore();
     });
 
