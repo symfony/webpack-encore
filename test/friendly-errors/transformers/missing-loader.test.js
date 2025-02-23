@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const transformFactory = require('../../../lib/friendly-errors/transformers/missing-loader');
 const RuntimeConfig = require('../../../lib/config/RuntimeConfig');
 const WebpackConfig = require('../../../lib/WebpackConfig');

@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const transform = require('../../../lib/friendly-errors/transformers/missing-css-file');
 
 describe('transform/missing-css-file', () => {

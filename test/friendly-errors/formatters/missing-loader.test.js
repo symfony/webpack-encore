@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect } from 'vitest';
 const formatter = require('../../../lib/friendly-errors/formatters/missing-loader');
 
 describe('formatters/missing-loader', () => {
