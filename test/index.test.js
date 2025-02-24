@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect, beforeEach } from 'vitest';
 const sinon = require('sinon');
 const api = require('../index');
 const path = require('path');

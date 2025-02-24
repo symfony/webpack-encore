@@ -308,26 +308,18 @@ module.exports = Encore.getWebpackConfig();
             );
 
             const binPath = path.resolve(projectDir, 'bin', 'encore.js');
-            try {
-                 await execAsync(`node ${binPath} dev-server --context=${testDir}`, {
-                    cwd: testDir,
-                    env: Object.assign({}, process.env, { NO_COLOR: 'true' })
-                });
+             const { stdout, stderr } = await execAsync(`node ${binPath} dev-server --context=${testDir}`, {
+                cwd: testDir,
+                env: Object.assign({}, process.env, { NO_COLOR: 'true' })
+            });
 
-                throw new Error('Expected command to fail.');
-            } catch (err) {
-                if (!'stdout' in err || !'stderr' in err) {
-                    throw new Error(`Error executing encore: ${err}`);
-                }
+            expect(stdout).to.contain('Install webpack-dev-server to use the webpack Development Server');
+            expect(stdout).to.contain('npm install webpack-dev-server --save-dev');
+            expect(stderr).to.equal('');
 
-                expect(err.stdout).to.contain('Install webpack-dev-server to use the webpack Development Server');
-                expect(err.stdout).to.contain('npm install webpack-dev-server --save-dev');
-                expect(err.stderr).to.equal('');
-
-                expect(err.stdout).not.to.contain('Running webpack-dev-server ...');
-                expect(err.stdout).not.to.contain('Compiled successfully in');
-                expect(err.stdout).not.to.contain('webpack compiled successfully');
-            }
+            expect(stdout).not.to.contain('Running webpack-dev-server ...');
+            expect(stdout).not.to.contain('Compiled successfully in');
+            expect(stdout).not.to.contain('webpack compiled successfully');
         });
     });
 });

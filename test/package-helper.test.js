@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect, afterAll } from 'vitest';
 const packageHelper = require('../lib/package-helper');
 const path = require('path');
 const process = require('process');
@@ -20,7 +20,7 @@ describe('package-helper', () => {
     const baseCwd = process.cwd();
 
     describe('recommended install command is based on the existing lock files', () => {
-        after(() => {
+        afterAll(() => {
             process.chdir(baseCwd);
         });
 

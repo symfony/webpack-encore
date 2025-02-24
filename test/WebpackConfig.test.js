@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const path = require('path');

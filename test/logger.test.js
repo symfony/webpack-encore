@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 require('../lib/context').runtimeConfig = {};
 const logger = require('../lib/logger');
 

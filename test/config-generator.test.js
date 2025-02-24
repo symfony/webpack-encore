@@ -9,7 +9,7 @@
 
 'use strict';
 
-const expect = require('chai').expect;
+import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 const WebpackConfig = require('../lib/WebpackConfig');
 const RuntimeConfig = require('../lib/config/RuntimeConfig');
 const configGenerator = require('../lib/config-generator');
@@ -965,23 +965,25 @@ describe('The config-generator function', () => {
     });
 
     describe('Test shouldSplitEntryChunks', () => {
-        const config = createConfig();
-        config.outputPath = '/tmp/public/build';
-        config.setPublicPath('/build/');
-        config.splitEntryChunks();
+        it('with defaults', () => {
+            const config = createConfig();
+            config.outputPath = '/tmp/public/build';
+            config.setPublicPath('/build/');
+            config.splitEntryChunks();
 
-        const actualConfig = configGenerator(config);
-        expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
-        expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
+            const actualConfig = configGenerator(config);
+            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
+            expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
+        })
     });
 
     describe('Test shouldUseSingleRuntimeChunk', () => {
-        before(() => {
+        beforeAll(() => {
             logger.reset();
             logger.quiet();
         });
 
-        after(() => {
+        afterAll(() => {
             logger.quiet(false);
         });
 
