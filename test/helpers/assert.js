@@ -9,11 +9,11 @@
 
 'use strict';
 
-const path = require('path');
-const fs = require('fs');
-const chai = require('chai');
-const expect = chai.expect;
-const regexEscaper = require('../../lib/utils/regexp-escaper');
+import { expect } from 'vitest'
+import path from "path";
+import fs from "fs";
+
+import regexEscaper from "../../lib/utils/regexp-escaper.js";
 
 const loadManifest = function(webpackConfig) {
     return JSON.parse(
@@ -275,6 +275,6 @@ class Assert {
     }
 }
 
-module.exports = function(webpackConfig) {
+export default function(webpackConfig) {
     return new Assert(webpackConfig);
 };
