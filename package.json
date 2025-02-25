@@ -86,7 +86,6 @@
     "react-dom": "^18.0.0",
     "sass": "^1.17.0",
     "sass-loader": "^16.0.1",
-    "sinon": "^14.0.0",
     "strip-ansi": "^6.0.0",
     "stylus": "^0.63.0",
     "stylus-loader": "^7.0.0 || ^8.1.0",

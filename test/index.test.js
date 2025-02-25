@@ -9,8 +9,7 @@
 
 'use strict';
 
-import { describe, it, expect, beforeEach } from 'vitest';
-const sinon = require('sinon');
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 const api = require('../index');
 const path = require('path');
 
@@ -469,14 +468,14 @@ describe('Public API', () => {
         it('should call or not callbacks depending of the conditions', () => {
             api.configureRuntimeEnvironment('dev', {}, false);
 
-            const spy = sinon.spy();
+            const spy = vi.fn();
             api
                 .when((Encore) => Encore.isDev(), (Encore) => spy('is dev'))
                 .when((Encore) => Encore.isProduction(), (Encore) => spy('is production'))
                 .when(true, (Encore) => spy('true'));
-            expect(spy.calledWith('is dev'), 'callback for "is dev" should be called').to.be.true;
-            expect(spy.calledWith('is production'), 'callback for "is production" should NOT be called').to.be.false;
-            expect(spy.calledWith('true'), 'callback for "true" should be called').to.be.true;
+            expect(spy, 'callback for "is dev" should be called').toHaveBeenCalledWith('is dev');
+            expect(spy, 'callback for "is production" should NOT be called').not.toHaveBeenCalledWith('is production');
+            expect(spy, 'callback for "true" should be called').toHaveBeenCalledWith('true');
         });
     });
 

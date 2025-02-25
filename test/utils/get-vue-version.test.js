@@ -9,9 +9,8 @@
 
 'use strict';
 
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 const getVueVersion = require('../../lib/utils/get-vue-version');
-const sinon = require('sinon');
 const packageHelper = require('../../lib/package-helper');
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
@@ -28,10 +27,10 @@ const createWebpackConfig = function() {
 describe('get-vue-version', () => {
     let getPackageVersionStub = null;
     beforeEach(() => {
-        getPackageVersionStub = sinon.stub(packageHelper, 'getPackageVersion');
+        getPackageVersionStub = vi.spyOn(packageHelper, 'getPackageVersion');
     });
     afterEach(() => {
-        packageHelper.getPackageVersion.restore();
+        getPackageVersionStub.mockRestore();
     });
 
     it('returns the value configured in Webpack.config.js', () => {
@@ -44,7 +43,7 @@ describe('get-vue-version', () => {
     it('returns the default recommended version when vue is not installed', () => {
         const config = createWebpackConfig();
         getPackageVersionStub
-            .callsFake(() => null);
+            .mockImplementation(() => null);
 
         expect(getVueVersion(config)).to.equal(3);
     });
@@ -52,7 +51,7 @@ describe('get-vue-version', () => {
     it('throw an error when Vue 2 is installed', () => {
         const config = createWebpackConfig();
         getPackageVersionStub
-            .callsFake(() => '2.2.4');
+            .mockImplementation(() => '2.2.4');
 
         expect(() => getVueVersion(config)).to.throw('vue version 2 is not supported.');
     });
@@ -60,7 +59,7 @@ describe('get-vue-version', () => {
     it('returns 3 when Vue 3 beta is installed', () => {
         const config = createWebpackConfig();
         getPackageVersionStub
-            .callsFake(() => '3.0.0-beta.9');
+            .mockImplementation(() => '3.0.0-beta.9');
 
         expect(getVueVersion(config)).to.equal(3);
     });
@@ -68,7 +67,7 @@ describe('get-vue-version', () => {
     it('returns 3 when Vue 3 is installed', () => {
         const config = createWebpackConfig();
         getPackageVersionStub
-            .callsFake(() => '3.0.0');
+            .mockImplementation(() => '3.0.0');
 
         expect(getVueVersion(config)).to.equal(3);
     });
@@ -76,7 +75,7 @@ describe('get-vue-version', () => {
     it('returns 3 when a version is too new', () => {
         const config = createWebpackConfig();
         getPackageVersionStub
-            .callsFake(() => '4.0.0'); // unsupported version
+            .mockImplementation(() => '4.0.0'); // unsupported version
 
         expect(getVueVersion(config)).to.equal(3);
     });
