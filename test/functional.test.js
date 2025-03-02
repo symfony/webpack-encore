@@ -77,7 +77,9 @@ describe('Functional tests using webpack', { timeout: 10000}, function() {
     let browser;
 
     beforeAll(async () => {
-        browser = await puppeteer.launch()
+        browser = await puppeteer.launch({
+            args: ['--no-sandbox'],
+        })
 
         return async() => {
             await browser.close();
