@@ -17,7 +17,7 @@ const fs = require('fs-extra');
 const httpServer = require('http-server');
 const configGenerator = require('../../lib/config-generator');
 const validator = require('../../lib/config/validator');
-const assertUtil = require('./assert').default;
+const assertUtil = require('./assert');
 
 const tmpDir = path.join(__dirname, '../', '../', 'test_tmp');
 const testFixturesDir = path.join(__dirname, '../', '../', 'fixtures');
