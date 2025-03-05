@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 5.2.0 
+
+* Add support for Webpack CLI ^6.0 by @Kocal in https://github.com/symfony/webpack-encore/pull/1367
+
 ## 5.1.0
 
 ### Features
