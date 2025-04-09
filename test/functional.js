@@ -81,9 +81,14 @@ describe('Functional tests using webpack', function() {
     this.timeout(10000);
 
     before(function(done) {
-        puppeteer.launch().then(_browser => {
+        this.timeout(15000);
+        puppeteer.launch({ headless: 'new', timeout: 14000, args: ['--no-sandbox', '--disable-setuid-sandbox'] }).then(_browser => {
             browser = _browser;
             done();
+        }).catch(err => {
+            console.log('Unable to launch Puppeteer');
+            console.log(err);
+            throw err;
         });
     });
 
