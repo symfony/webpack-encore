@@ -394,6 +394,35 @@ describe('Functional tests using webpack', function() {
             });
         });
 
+        it('Deploying to an unknown (at compile-time) subdirectory is no problem', (done) => {
+            const config = createWebpackConfig('public/build', 'dev');
+            config.addEntry('main', './js/code_splitting');
+            config.setPublicPath('');
+            config.setManifestKeyPrefix('build/');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertManifestPath(
+                    'build/main.js',
+                    'build/main.js'
+                );
+
+                testSetup.requestTestPage(
+                    path.join(config.getContext(), 'public'),
+                    [
+                        convertToManifestPath('build/main.js', config)
+                    ],
+                    (browser) => {
+                        webpackAssert.assertResourcesLoadedCorrectly(browser, [
+                            'http://127.0.0.1:8080/build/0.js',
+                            'http://127.0.0.1:8080/build/main.js'
+                        ]);
+
+                        done();
+                    }
+                );
+            });
+        });
+
         it('Empty manifestKeyPrefix is allowed', (done) => {
             const config = createWebpackConfig('build', 'dev');
             config.addEntry('main', './js/code_splitting');
