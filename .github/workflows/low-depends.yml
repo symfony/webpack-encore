@@ -13,7 +13,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                os: [ubuntu-latest, windows-2019]
+                os: [ubuntu-latest, windows-latest]
                 node-versions: ['18', '20', '22', '23']
 
         steps:
@@ -30,7 +30,7 @@ jobs:
 
             -   name: Force Lowest Dependencies
                 run: node ./scripts/force-lowest-dependencies
-                
+
             # We have some tests that need to "git checkout" package.json file.
             # Commit them prevent the tests from re-using the locked dependencies.
             -   name: Commit Changes, to preserve a clean working directory
