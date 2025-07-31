@@ -14,123 +14,123 @@ const sinon = require('sinon');
 const api = require('../index');
 const path = require('path');
 
-describe('Public API', () => {
-    beforeEach(() => {
+describe('Public API', function() {
+    beforeEach(function() {
         process.chdir(path.join(__dirname, '..'));
         api.configureRuntimeEnvironment('dev', {}, false);
     });
 
-    describe('setOutputPath', () => {
+    describe('setOutputPath', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.setOutputPath('/');
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('setPublicPath', () => {
+    describe('setPublicPath', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.setPublicPath('/');
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('setManifestKeyPrefix', () => {
+    describe('setManifestKeyPrefix', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.setManifestKeyPrefix('/build');
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addEntry', () => {
+    describe('addEntry', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addEntry('entry', 'main.js');
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addStyleEntry', () => {
+    describe('addStyleEntry', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addStyleEntry('styleEntry', 'main.css');
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addPlugin', () => {
+    describe('addPlugin', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addPlugin(null);
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addLoader', () => {
+    describe('addLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addLoader(null);
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addRule', () => {
+    describe('addRule', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addRule(null);
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addAliases', () => {
+    describe('addAliases', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addAliases({});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addExternals', () => {
+    describe('addExternals', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addExternals({});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableVersioning', () => {
+    describe('enableVersioning', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableVersioning();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableSourceMaps', () => {
+    describe('enableSourceMaps', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableSourceMaps();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('addCacheGroup', () => {
+    describe('addCacheGroup', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.addCacheGroup('sharedEntry', {
                 test: /vendor\.js/
             });
@@ -139,27 +139,27 @@ describe('Public API', () => {
 
     });
 
-    describe('copyFiles', () => {
+    describe('copyFiles', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.copyFiles({ from: './foo' });
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableSingleRuntimeChunk', () => {
+    describe('enableSingleRuntimeChunk', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableSingleRuntimeChunk();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('disableSingleRuntimeChunk', () => {
+    describe('disableSingleRuntimeChunk', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.disableSingleRuntimeChunk();
             expect(returnedValue).to.equal(api);
         });
@@ -167,279 +167,279 @@ describe('Public API', () => {
     });
 
 
-    describe('splitEntryChunks', () => {
+    describe('splitEntryChunks', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.splitEntryChunks();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureSplitChunks', () => {
+    describe('configureSplitChunks', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.configureSplitChunks(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('autoProvideVariables', () => {
+    describe('autoProvideVariables', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.autoProvideVariables({});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('autoProvidejQuery', () => {
+    describe('autoProvidejQuery', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.autoProvidejQuery();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enablePostCssLoader', () => {
+    describe('enablePostCssLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enablePostCssLoader();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableSassLoader', () => {
+    describe('enableSassLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableSassLoader();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableLessLoader', () => {
+    describe('enableLessLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableLessLoader();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableStylusLoader', () => {
+    describe('enableStylusLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableStylusLoader();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureBabel', () => {
+    describe('configureBabel', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.configureBabel(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureBabelPresetEnv', () => {
+    describe('configureBabelPresetEnv', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.configureBabelPresetEnv(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableReactPreset', () => {
+    describe('enableReactPreset', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableReactPreset();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableSvelte', () => {
+    describe('enableSvelte', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableSvelte();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enablePreactPreset', () => {
+    describe('enablePreactPreset', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enablePreactPreset();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableTypeScriptLoader', () => {
+    describe('enableTypeScriptLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableTypeScriptLoader();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableForkedTypeScriptTypesChecking', () => {
+    describe('enableForkedTypeScriptTypesChecking', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableForkedTypeScriptTypesChecking();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableVueLoader', () => {
+    describe('enableVueLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableVueLoader();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableBuildNotifications', () => {
+    describe('enableBuildNotifications', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableBuildNotifications();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableHandlebarsLoader', () => {
+    describe('enableHandlebarsLoader', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.enableHandlebarsLoader();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('disableCssExtraction', () => {
+    describe('disableCssExtraction', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.disableCssExtraction();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureFilenames', () => {
+    describe('configureFilenames', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.configureFilenames({});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureImageRule', () => {
+    describe('configureImageRule', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.configureImageRule();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureFontRule', () => {
+    describe('configureFontRule', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.configureFontRule();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('cleanupOutputBeforeBuild', () => {
+    describe('cleanupOutputBeforeBuild', function() {
 
-        it('must return the API object', () => {
+        it('must return the API object', function() {
             const returnedValue = api.cleanupOutputBeforeBuild();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureRuntimeEnvironment', () => {
+    describe('configureRuntimeEnvironment', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.configureRuntimeEnvironment('dev');
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureDefinePlugin', () => {
+    describe('configureDefinePlugin', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.configureDefinePlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureFriendlyErrorsPlugin', () => {
+    describe('configureFriendlyErrorsPlugin', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.configureFriendlyErrorsPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureManifestPlugin', () => {
+    describe('configureManifestPlugin', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.configureManifestPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureTerserPlugin', () => {
+    describe('configureTerserPlugin', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.configureTerserPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('configureCssMinimizerPlugin', () => {
+    describe('configureCssMinimizerPlugin', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.configureCssMinimizerPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableStimulusBridge', () => {
+    describe('enableStimulusBridge', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.enableStimulusBridge(path.resolve(__dirname, '../', 'package.json'));
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableBuildCache', () => {
+    describe('enableBuildCache', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.enableBuildCache({ config: [__filename] });
             expect(returnedValue).to.equal(api);
         });
@@ -447,26 +447,26 @@ describe('Public API', () => {
     });
 
 
-    describe('configureMiniCssExtractPlugin', () => {
+    describe('configureMiniCssExtractPlugin', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.configureMiniCssExtractPlugin(() => {});
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('enableIntegrityHashes', () => {
+    describe('enableIntegrityHashes', function() {
 
-        it('should return the API object', () => {
+        it('should return the API object', function() {
             const returnedValue = api.enableIntegrityHashes();
             expect(returnedValue).to.equal(api);
         });
 
     });
 
-    describe('when', () => {
-        it('should call or not callbacks depending of the conditions', () => {
+    describe('when', function() {
+        it('should call or not callbacks depending of the conditions', function() {
             api.configureRuntimeEnvironment('dev', {}, false);
 
             const spy = sinon.spy();
@@ -480,14 +480,14 @@ describe('Public API', () => {
         });
     });
 
-    describe('isRuntimeEnvironmentConfigured', () => {
+    describe('isRuntimeEnvironmentConfigured', function() {
 
-        it('should return true if the runtime environment has been configured', () => {
+        it('should return true if the runtime environment has been configured', function() {
             const returnedValue = api.isRuntimeEnvironmentConfigured();
             expect(returnedValue).to.be.true;
         });
 
-        it('should return false if the runtime environment has not been configured', () => {
+        it('should return false if the runtime environment has not been configured', function() {
             api.clearRuntimeEnvironment();
 
             const returnedValue = api.isRuntimeEnvironmentConfigured();
@@ -496,16 +496,16 @@ describe('Public API', () => {
 
     });
 
-    describe('Runtime environment proxy', () => {
-        beforeEach(() => {
+    describe('Runtime environment proxy', function() {
+        beforeEach(function() {
             api.clearRuntimeEnvironment();
         });
 
-        it('safe methods should be callable even if the runtime environment has not been configured', () => {
+        it('safe methods should be callable even if the runtime environment has not been configured', function() {
             expect(() => api.clearRuntimeEnvironment()).to.not.throw();
         });
 
-        it('unsafe methods should NOT be callable if the runtime environment has not been configured', () => {
+        it('unsafe methods should NOT be callable if the runtime environment has not been configured', function() {
             expect(() => api.setOutputPath('/')).to.throw('Encore.setOutputPath() cannot be called yet');
         });
     });

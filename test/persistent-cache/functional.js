@@ -37,8 +37,8 @@ describe('Functional persistent cache tests using webpack', function() {
     // being functional tests, these can take quite long
     this.timeout(10000);
 
-    describe('Basic scenarios.', () => {
-        it('Persistent caching does not cause problems', (done) => {
+    describe('Basic scenarios.', function() {
+        it('Persistent caching does not cause problems', function(done) {
             const config = createWebpackConfig('www/build', 'basic_cache', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/code_splitting');
@@ -55,8 +55,8 @@ describe('Functional persistent cache tests using webpack', function() {
         });
     });
 
-    describe('copyFiles() allows to copy files and folders', () => {
-        it('Persistent caching does not cause problems', (done) => {
+    describe('copyFiles() allows to copy files and folders', function() {
+        it('Persistent caching does not cause problems', function(done) {
             const config = createWebpackConfig('www/build', 'copy_files_cache', 'production');
             config.addEntry('main', './js/no_require');
             config.setPublicPath('/build');

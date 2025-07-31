@@ -13,16 +13,16 @@ const expect = require('chai').expect;
 require('../lib/context').runtimeConfig = {};
 const logger = require('../lib/logger');
 
-describe('logger', () => {
-    beforeEach(() => {
+describe('logger', function() {
+    beforeEach(function() {
         logger.reset();
     });
 
-    afterEach(() => {
+    afterEach(function() {
         logger.reset();
     });
 
-    it('Smoke test for log methods', () => {
+    it('Smoke test for log methods', function() {
 
         const methods = [
             'debug',
@@ -51,7 +51,7 @@ describe('logger', () => {
         expect(actualMessages).to.deep.equal(expectedMessages);
     });
 
-    it('test reset()', () => {
+    it('test reset()', function() {
         logger.debug('DEBUG!');
         logger.reset();
 

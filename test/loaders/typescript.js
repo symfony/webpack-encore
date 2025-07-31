@@ -22,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/typescript', () => {
-    it('getLoaders() basic usage', () => {
+describe('loaders/typescript', function() {
+    it('getLoaders() basic usage', function() {
         const config = createConfig();
         config.enableTypeScriptLoader(function(config) {
             config.foo = 'bar';
@@ -35,7 +35,7 @@ describe('loaders/typescript', () => {
         expect(actualLoaders[1].options.foo).to.equal('bar');
     });
 
-    it('getLoaders() check defaults configuration values', () => {
+    it('getLoaders() check defaults configuration values', function() {
         const config = createConfig();
         config.enableTypeScriptLoader(function(config) {
             config.foo = 'bar';
@@ -48,7 +48,7 @@ describe('loaders/typescript', () => {
         expect(actualLoaders[1].options.silent).to.be.true;
     });
 
-    it('getLoaders() with a callback that returns an object', () => {
+    it('getLoaders() with a callback that returns an object', function() {
         const config = createConfig();
         config.enableTypeScriptLoader(function(config) {
             config.foo = false;

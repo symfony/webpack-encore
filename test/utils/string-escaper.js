@@ -17,8 +17,8 @@ function expectEvaledStringToEqual(str, expectedStr) {
     expect(eval(`'${str}'`)).to.equal(expectedStr);
 }
 
-describe('string-escaper', () => {
-    it('escapes filenames with quotes', () => {
+describe('string-escaper', function() {
+    it('escapes filenames with quotes', function() {
         // eslint-disable-next-line quotes
         const filename = "/foo/bar's/stuff";
 
@@ -26,7 +26,7 @@ describe('string-escaper', () => {
         expectEvaledStringToEqual(escapedFilename, filename);
     });
 
-    it('escapes Windows filenames', () => {
+    it('escapes Windows filenames', function() {
         // eslint-disable-next-line quotes
         const filename = `C:\\path\\to\\file`;
 

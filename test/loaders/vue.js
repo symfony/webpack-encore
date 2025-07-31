@@ -22,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/vue', () => {
-    it('getLoaders() with extra options', () => {
+describe('loaders/vue', function() {
+    it('getLoaders() with extra options', function() {
         const config = createConfig();
         config.enableVueLoader((options) => {
             options.postLoaders = { foo: 'foo-loader' };
@@ -35,7 +35,7 @@ describe('loaders/vue', () => {
         expect(actualLoaders[0].options.postLoaders.foo).to.equal('foo-loader');
     });
 
-    it('getLoaders() with a callback that returns an object', () => {
+    it('getLoaders() with a callback that returns an object', function() {
         const config = createConfig();
         config.enableVueLoader((options) => {
             options.postLoaders = { foo: 'foo-loader' };

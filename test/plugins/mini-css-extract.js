@@ -23,8 +23,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/mini-css-extract', () => {
-    it('with default settings and versioning disabled', () => {
+describe('plugins/mini-css-extract', function() {
+    it('with default settings and versioning disabled', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -34,7 +34,7 @@ describe('plugins/mini-css-extract', () => {
         expect(plugins[0].plugin.options.filename).to.equal('[name].css');
     });
 
-    it('with default settings and versioning enabled', () => {
+    it('with default settings and versioning enabled', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -46,7 +46,7 @@ describe('plugins/mini-css-extract', () => {
         expect(plugins[0].plugin.options.filename).to.equal('[name].[contenthash:8].css');
     });
 
-    it('with CSS extraction disabled', () => {
+    it('with CSS extraction disabled', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -56,7 +56,7 @@ describe('plugins/mini-css-extract', () => {
         expect(plugins.length).to.equal(0);
     });
 
-    it('with options callback', () => {
+    it('with options callback', function() {
         const config = createConfig();
         const plugins = [];
 

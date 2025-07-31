@@ -12,10 +12,10 @@
 const expect = require('chai').expect;
 const transform = require('../../../lib/friendly-errors/transformers/missing-css-file');
 
-describe('transform/missing-css-file', () => {
+describe('transform/missing-css-file', function() {
 
-    describe('test transform', () => {
-        it('Error not with "ModuleNotFoundError" name is ignored', () => {
+    describe('test transform', function() {
+        it('Error not with "ModuleNotFoundError" name is ignored', function() {
             const startError = {
                 name: 'OtherParseError',
                 message: 'You may need an appropriate loader',
@@ -26,7 +26,7 @@ describe('transform/missing-css-file', () => {
             expect(actualError).to.deep.equal(startError);
         });
 
-        it('Error not containing "Module not found: Error: Can\'t resolve" is ignored', () => {
+        it('Error not containing "Module not found: Error: Can\'t resolve" is ignored', function() {
             const startError = {
                 name: 'ModuleNotFoundError',
                 message: 'Some other message',
@@ -37,7 +37,7 @@ describe('transform/missing-css-file', () => {
             expect(actualError).to.deep.equal(startError);
         });
 
-        it('Matching error is properly transformed', () => {
+        it('Matching error is properly transformed', function() {
             const startError = {
                 name: 'ModuleNotFoundError',
                 message: 'Module build failed: ModuleNotFoundError: Module not found: Error: Can\'t resolve \'./../images/symfony_logo.png2\' in \'/Users/weaverryan/Sites/os/webpack-encore/tmp_project_playing/css\'',

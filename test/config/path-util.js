@@ -26,8 +26,8 @@ function createConfig() {
 
 const isWindows = (process.platform === 'win32');
 
-describe('path-util getContentBase()', () => {
-    describe('getContentBase()', () => {
+describe('path-util getContentBase()', function() {
+    describe('getContentBase()', function() {
         it('contentBase is calculated correctly', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
@@ -68,8 +68,8 @@ describe('path-util getContentBase()', () => {
         });
     });
 
-    describe('validatePublicPathAndManifestKeyPrefix', () => {
-        it('manifestKeyPrefix is correctly not required on windows', () => {
+    describe('validatePublicPathAndManifestKeyPrefix', function() {
+        it('manifestKeyPrefix is correctly not required on windows', function() {
             const config = createConfig();
             config.outputPath = 'C:\\projects\\webpack-encore\\web\\build';
             config.setPublicPath('/build/');
@@ -79,7 +79,7 @@ describe('path-util getContentBase()', () => {
             pathUtil.validatePublicPathAndManifestKeyPrefix(config);
         });
 
-        it('with absolute publicPath, manifestKeyPrefix must be set', () => {
+        it('with absolute publicPath, manifestKeyPrefix must be set', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build');
@@ -91,7 +91,7 @@ describe('path-util getContentBase()', () => {
             }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
         });
 
-        it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', () => {
+        it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', function() {
             const config = createConfig();
 
             config.outputPath = isWindows ? 'C:\\tmp\\public\\build' : '/tmp/public/build';
@@ -105,7 +105,7 @@ describe('path-util getContentBase()', () => {
         });
     });
 
-    describe('getRelativeOutputPath', () => {
+    describe('getRelativeOutputPath', function() {
         it('basic usage', function() {
             const config = createConfig();
             if (isWindows) {
@@ -121,7 +121,7 @@ describe('path-util getContentBase()', () => {
         });
     });
 
-    describe('calculateDevServerUrl', () => {
+    describe('calculateDevServerUrl', function() {
         it('no https, no public', function() {
             const runtimeConfig = new RuntimeConfig();
             runtimeConfig.devServerFinalIsHttps = false;

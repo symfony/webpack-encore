@@ -22,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/babel', () => {
-    it('getLoaders() basic usage', () => {
+describe('loaders/babel', function() {
+    it('getLoaders() basic usage', function() {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = false;
         config.configureBabel(function(config) {
@@ -38,7 +38,7 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options.foo).to.equal('bar');
     });
 
-    it('getLoaders() when .babelrc IS present', () => {
+    it('getLoaders() when .babelrc IS present', function() {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = true;
 
@@ -50,7 +50,7 @@ describe('loaders/babel', () => {
         });
     });
 
-    it('getLoaders() for production', () => {
+    it('getLoaders() for production', function() {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = true;
         config.runtimeConfig.environment = 'production';
@@ -63,7 +63,7 @@ describe('loaders/babel', () => {
         });
     });
 
-    it('getLoaders() with react', () => {
+    it('getLoaders() with react', function() {
         const config = createConfig();
         config.enableReactPreset();
 
@@ -94,7 +94,7 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options.presets[2]).to.equal('foo');
     });
 
-    it('getLoaders() with react and callback', () => {
+    it('getLoaders() with react and callback', function() {
         const config = createConfig();
         config.enableReactPreset((options) => {
             options.development = !config.isProduction();
@@ -128,7 +128,7 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options.presets[2]).to.equal('foo');
     });
 
-    it('getLoaders() with preact', () => {
+    it('getLoaders() with preact', function() {
         const config = createConfig();
         config.enablePreactPreset();
 
@@ -144,7 +144,7 @@ describe('loaders/babel', () => {
         ]);
     });
 
-    it('getLoaders() with preact and preact-compat', () => {
+    it('getLoaders() with preact and preact-compat', function() {
         const config = createConfig();
         config.enablePreactPreset({ preactCompat: true });
 
@@ -160,7 +160,7 @@ describe('loaders/babel', () => {
         ]);
     });
 
-    it('getLoaders() with a callback that returns an object', () => {
+    it('getLoaders() with a callback that returns an object', function() {
         const config = createConfig();
         config.enablePreactPreset({ preactCompat: true });
 
@@ -175,7 +175,7 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options).to.deep.equal({ 'foo': true });
     });
 
-    it('getLoaders() with Vue and JSX support', () => {
+    it('getLoaders() with Vue and JSX support', function() {
         const config = createConfig();
         config.enableVueLoader(() => {}, {
             useJsx: true,
@@ -193,7 +193,7 @@ describe('loaders/babel', () => {
         ]);
     });
 
-    it('getLoaders() with configured babel env preset', () => {
+    it('getLoaders() with configured babel env preset', function() {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = false;
 
@@ -213,7 +213,7 @@ describe('loaders/babel', () => {
         expect(actualLoaders[0].options.presets[0][1].include).to.have.members(['bar']);
     });
 
-    it('getLoaders() with TypeScript', () => {
+    it('getLoaders() with TypeScript', function() {
         const config = createConfig();
         const presetTypeScriptOptions = { isTSX: true };
 
@@ -233,14 +233,14 @@ describe('loaders/babel', () => {
         ]);
     });
 
-    it('getTest() base behavior', () => {
+    it('getTest() base behavior', function() {
         const config = createConfig();
 
         const actualTest = babelLoader.getTest(config);
         expect(actualTest.toString()).to.equals(/\.(m?jsx?)$/.toString());
     });
 
-    it('getTest() with TypeScript', () => {
+    it('getTest() with TypeScript', function() {
         const config = createConfig();
         config.enableBabelTypeScriptPreset();
 

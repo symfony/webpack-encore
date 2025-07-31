@@ -23,10 +23,10 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('The validator function', () => {
+describe('The validator function', function() {
     function CustomPlugin1() {}
 
-    it('throws an error if there are no entries', () => {
+    it('throws an error if there are no entries', function() {
         const config = createConfig();
         config.publicPath = '/';
         config.outputPath = '/tmp';
@@ -36,7 +36,7 @@ describe('The validator function', () => {
         }).to.throw('No entries found!');
     });
 
-    it('should accept use with copyFiles() only', () => {
+    it('should accept use with copyFiles() only', function() {
         const config = createConfig();
         config.setOutputPath('/tmp');
         config.setPublicPath('/tmp');
@@ -49,7 +49,7 @@ describe('The validator function', () => {
         expect(Object.keys(config.copyFilesConfigs).length).to.equal(1);
     });
 
-    it('should accept use with addPlugin() only', () => {
+    it('should accept use with addPlugin() only', function() {
         const config = createConfig();
         config.setOutputPath('/tmp');
         config.setPublicPath('/tmp');
@@ -60,7 +60,7 @@ describe('The validator function', () => {
         }).not.throw();
     });
 
-    it('throws an error if there is no output path', () => {
+    it('throws an error if there is no output path', function() {
         const config = createConfig();
         config.publicPath = '/';
         config.addEntry('main', './main');
@@ -70,7 +70,7 @@ describe('The validator function', () => {
         }).to.throw('Missing output path');
     });
 
-    it('throws an error if there is no public path', () => {
+    it('throws an error if there is no public path', function() {
         const config = createConfig();
         config.outputPath = '/tmp';
         config.addEntry('main', './main');
@@ -80,7 +80,7 @@ describe('The validator function', () => {
         }).to.throw('Missing public path');
     });
 
-    it('cannot use versioning with webpack-dev-server', () => {
+    it('cannot use versioning with webpack-dev-server', function() {
         const config = createConfig();
         config.outputPath = '/tmp/public/build';
         config.setPublicPath('/build');
@@ -93,7 +93,7 @@ describe('The validator function', () => {
         }).to.throw('Don\'t enable versioning with the dev-server');
     });
 
-    it('warning with dev-server and absolute publicPath', () => {
+    it('warning with dev-server and absolute publicPath', function() {
         const config = createConfig();
         config.outputPath = '/tmp/public/build';
         config.setPublicPath('https://absoluteurl.com/build');
@@ -109,7 +109,7 @@ describe('The validator function', () => {
         expect(logger.getMessages().warning[0]).to.include('Passing an absolute URL to setPublicPath() *and* using the dev-server can cause issues');
     });
 
-    it('warning with addCacheGroup() and core cache group name', () => {
+    it('warning with addCacheGroup() and core cache group name', function() {
         const config = createConfig();
         config.outputPath = '/tmp/public/build';
         config.setPublicPath('/build');

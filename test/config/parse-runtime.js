@@ -29,12 +29,12 @@ function createTestDirectory() {
     return projectDir;
 }
 
-describe('parse-runtime', () => {
-    beforeEach(() => {
+describe('parse-runtime', function() {
+    beforeEach(function() {
         testSetup.emptyTmpDir();
     });
 
-    it('Basic usage', () => {
+    it('Basic usage', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['foobar', '--bar', '--help']), testDir);
 
@@ -45,7 +45,7 @@ describe('parse-runtime', () => {
         expect(config.babelRcFileExists).to.be.false;
     });
 
-    it('dev command', () => {
+    it('dev command', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev', '--bar']), testDir);
 
@@ -53,7 +53,7 @@ describe('parse-runtime', () => {
         expect(config.isValidCommand).to.be.true;
     });
 
-    it('production command', () => {
+    it('production command', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['production', '--bar']), testDir);
 
@@ -61,7 +61,7 @@ describe('parse-runtime', () => {
         expect(config.isValidCommand).to.be.true;
     });
 
-    it('dev-server command', () => {
+    it('dev-server command', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev-server', '--bar']), testDir);
 
@@ -73,7 +73,7 @@ describe('parse-runtime', () => {
         expect(config.devServerPublic).to.be.null;
     });
 
-    it('dev-server command with options', () => {
+    it('dev-server command with options', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev-server', '--bar', '--host', 'foohost.l', '--port', '9999']), testDir);
 
@@ -83,7 +83,7 @@ describe('parse-runtime', () => {
         expect(config.devServerHttps).to.be.null;
     });
 
-    it('dev-server command https', () => {
+    it('dev-server command https', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev-server', '--https', '--host', 'foohost.l', '--port', '9999']), testDir);
 
@@ -93,7 +93,7 @@ describe('parse-runtime', () => {
         expect(config.devServerHttps).to.equal(true);
     });
 
-    it('dev-server command server-type https', () => {
+    it('dev-server command server-type https', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev-server', '--server-type', 'https', '--host', 'foohost.l', '--port', '9999']), testDir);
 
@@ -103,21 +103,21 @@ describe('parse-runtime', () => {
         expect(config.devServerHttps).to.equal(true);
     });
 
-    it('dev-server command public', () => {
+    it('dev-server command public', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev-server', '--public', 'https://my-domain:8080']), testDir);
 
         expect(config.devServerPublic).to.equal('https://my-domain:8080');
     });
 
-    it('--context is parsed correctly', () => {
+    it('--context is parsed correctly', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev', '--context', '/tmp/custom-context']), testDir);
 
         expect(config.context).to.equal('/tmp/custom-context');
     });
 
-    it('babel config in package.json detected when present', () => {
+    it('babel config in package.json detected when present', function() {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, 'package.json'),
@@ -129,7 +129,7 @@ describe('parse-runtime', () => {
         expect(config.babelRcFileExists).to.be.true;
     });
 
-    it('.babelrc detected when present', () => {
+    it('.babelrc detected when present', function() {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, '.babelrc'),
@@ -141,7 +141,7 @@ describe('parse-runtime', () => {
         expect(config.babelRcFileExists).to.be.true;
     });
 
-    it('babel.config.json detected when present', () => {
+    it('babel.config.json detected when present', function() {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, 'babel.config.json'),
@@ -153,7 +153,7 @@ describe('parse-runtime', () => {
         expect(config.babelRcFileExists).to.be.true;
     });
 
-    it('dev-server command --keep-public-path', () => {
+    it('dev-server command --keep-public-path', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['dev-server', '--keep-public-path']), testDir);
 

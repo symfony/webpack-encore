@@ -23,8 +23,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/forkedtypecheck', () => {
-    it('getPlugins() basic usage', () => {
+describe('plugins/forkedtypecheck', function() {
+    it('getPlugins() basic usage', function() {
         const config = createConfig();
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking();
@@ -40,7 +40,7 @@ describe('plugins/forkedtypecheck', () => {
         expect(actualLoaders[1].options.transpileOnly).to.be.true;
     });
 
-    it('getPlugins() with options callback', () => {
+    it('getPlugins() with options callback', function() {
         const config = createConfig();
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking(function(options) {
@@ -55,7 +55,7 @@ describe('plugins/forkedtypecheck', () => {
         expect(config.plugins[0].plugin.options.async).to.equal(true);
     });
 
-    it('getPlugins() with options callback that returns an object', () => {
+    it('getPlugins() with options callback that returns an object', function() {
         const config = createConfig();
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking(function(options) {

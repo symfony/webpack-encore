@@ -24,8 +24,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/less', () => {
-    it('getLoaders() basic usage', () => {
+describe('loaders/less', function() {
+    it('getLoaders() basic usage', function() {
         const config = createConfig();
         config.enableSourceMaps(true);
 
@@ -41,7 +41,7 @@ describe('loaders/less', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with options callback', () => {
+    it('getLoaders() with options callback', function() {
         const config = createConfig();
         config.enableSourceMaps(true);
 
@@ -63,7 +63,7 @@ describe('loaders/less', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with a callback that returns an object', () => {
+    it('getLoaders() with a callback that returns an object', function() {
         const config = createConfig();
         config.enableSourceMaps(true);
 
@@ -83,7 +83,7 @@ describe('loaders/less', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with CSS modules enabled', () => {
+    it('getLoaders() with CSS modules enabled', function() {
         const config = createConfig();
         config.enableSourceMaps(true);
 

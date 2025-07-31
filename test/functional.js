@@ -96,9 +96,9 @@ describe('Functional tests using webpack', function() {
         browser.close().then(done);
     });
 
-    describe('Basic scenarios.', () => {
+    describe('Basic scenarios.', function() {
 
-        it('Builds a few simple entries file + manifest.json', (done) => {
+        it('Builds a few simple entries file + manifest.json', function(done) {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/no_require');
             config.addStyleEntry('font', './css/roboto_font.css');
@@ -167,7 +167,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Check manifest.json with node_module includes', (done) => {
+        it('Check manifest.json with node_module includes', function(done) {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/import_node_modules_image');
             config.setPublicPath('/build');
@@ -187,7 +187,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Use "all" splitChunks & look at entrypoints.json', (done) => {
+        it('Use "all" splitChunks & look at entrypoints.json', function(done) {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
             config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -225,7 +225,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Disable the runtime chunk', (done) => {
+        it('Disable the runtime chunk', function(done) {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/no_require');
             config.disableSingleRuntimeChunk();
@@ -243,7 +243,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('setPublicPath with CDN loads assets from the CDN', (done) => {
+        it('setPublicPath with CDN loads assets from the CDN', function(done) {
             const config = createWebpackConfig('public/assets', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.addStyleEntry('font', './css/roboto_font.css');
@@ -311,7 +311,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('The devServer config loads successfully', (done) => {
+        it('The devServer config loads successfully', function(done) {
             const config = createWebpackConfig('public/assets', 'dev-server', {
                 port: '8090',
                 host: '127.0.0.1',
@@ -360,7 +360,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Deploying to a subdirectory is no problem', (done) => {
+        it('Deploying to a subdirectory is no problem', function(done) {
             const config = createWebpackConfig('subdirectory/build', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/subdirectory/build');
@@ -394,7 +394,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Empty manifestKeyPrefix is allowed', (done) => {
+        it('Empty manifestKeyPrefix is allowed', function(done) {
             const config = createWebpackConfig('build', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/build');
@@ -410,7 +410,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('.mjs files are supported natively', (done) => {
+        it('.mjs files are supported natively', function(done) {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/hello_world');
             config.setPublicPath('/build');
@@ -426,8 +426,8 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        describe('addStyleEntry .js files are removed', () => {
-            it('Without versioning', (done) => {
+        describe('addStyleEntry .js files are removed', function() {
+            it('Without versioning', function(done) {
                 const config = createWebpackConfig('web', 'dev');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/');
@@ -454,7 +454,7 @@ describe('Functional tests using webpack', function() {
                 });
             });
 
-            it('With default versioning', (done) => {
+            it('With default versioning', function(done) {
                 const config = createWebpackConfig('web', 'dev');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/');
@@ -486,7 +486,7 @@ describe('Functional tests using webpack', function() {
                 });
             });
 
-            it('With query string versioning', (done) => {
+            it('With query string versioning', function(done) {
                 const config = createWebpackConfig('web', 'dev');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/');
@@ -517,7 +517,7 @@ describe('Functional tests using webpack', function() {
                 });
             });
 
-            it('With source maps in production mode', (done) => {
+            it('With source maps in production mode', function(done) {
                 const config = createWebpackConfig('web', 'production');
                 config.addEntry('main', './js/arrow_function');
                 config.setPublicPath('/');
@@ -552,7 +552,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('enableVersioning applies to js, css & manifest', (done) => {
+        it('enableVersioning applies to js, css & manifest', function(done) {
             const config = createWebpackConfig('web/build', 'dev');
             config.addEntry('main', './js/code_splitting');
             config.setPublicPath('/build');
@@ -587,7 +587,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('font and image files are copied correctly', (done) => {
+        it('font and image files are copied correctly', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('bg', './css/background_image.scss');
@@ -631,7 +631,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('two fonts or images with the same filename should not output a single file', (done) => {
+        it('two fonts or images with the same filename should not output a single file', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', './css/same_filename.css');
@@ -682,7 +682,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('enableSourceMaps() adds to .js, css & scss', (done) => {
+        it('enableSourceMaps() adds to .js, css & scss', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/no_require');
@@ -706,7 +706,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Without enableSourceMaps(), there are no sourcemaps', (done) => {
+        it('Without enableSourceMaps(), there are no sourcemaps', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/no_require');
@@ -729,7 +729,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Without enableSourceMaps(), there are no sourcemaps in production', (done) => {
+        it('Without enableSourceMaps(), there are no sourcemaps in production', function(done) {
             const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');
             config.addEntry('main', './js/no_require');
@@ -752,7 +752,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('Code splitting a scss file works', (done) => {
+        it('Code splitting a scss file works', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             // loads sass_features.scss via require.ensure
@@ -775,8 +775,8 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        describe('addCacheGroup()', () => {
-            it('addCacheGroup() to extract a vendor into its own chunk', (done) => {
+        describe('addCacheGroup()', function() {
+            it('addCacheGroup() to extract a vendor into its own chunk', function(done) {
                 const config = createWebpackConfig('www/build', 'dev');
                 config.setPublicPath('/build');
                 config.enableVueLoader();
@@ -856,7 +856,7 @@ describe('Functional tests using webpack', function() {
                 });
             });
 
-            it('addCacheGroup() with node_modules', (done) => {
+            it('addCacheGroup() with node_modules', function(done) {
                 const config = createWebpackConfig('www/build', 'dev');
                 config.setPublicPath('/build');
                 config.enableVueLoader();
@@ -937,7 +937,7 @@ describe('Functional tests using webpack', function() {
                 });
             });
 
-            it('addCacheGroup() with versioning enabled', (done) => {
+            it('addCacheGroup() with versioning enabled', function(done) {
                 const config = createWebpackConfig('www/build', 'dev');
                 config.setPublicPath('/build');
                 config.enableVersioning();
@@ -975,7 +975,7 @@ describe('Functional tests using webpack', function() {
                 });
             });
 
-            it('addCacheGroup() with source maps enabled', (done) => {
+            it('addCacheGroup() with source maps enabled', function(done) {
                 const config = createWebpackConfig('www/build', 'dev');
                 config.setPublicPath('/build');
                 config.enableSourceMaps();
@@ -1014,7 +1014,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('in production mode, code is uglified', (done) => {
+        it('in production mode, code is uglified', function(done) {
             const config = createWebpackConfig('www/build', 'production');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/no_require']);
@@ -1041,7 +1041,7 @@ describe('Functional tests using webpack', function() {
             });
         });
 
-        it('PostCSS works when enabled', (done) => {
+        it('PostCSS works when enabled', function(done) {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
@@ -1083,7 +1083,7 @@ module.exports = {
             });
         });
 
-        it('less processes when enabled', (done) => {
+        it('less processes when enabled', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', ['./css/h2_styles.less']);
@@ -1101,7 +1101,7 @@ module.exports = {
             });
         });
 
-        it('stylus processes when enabled', (done) => {
+        it('stylus processes when enabled', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('styles', ['./css/h2_styles.styl']);
@@ -1119,7 +1119,7 @@ module.exports = {
             });
         });
 
-        it('Babel is executed on .js files', (done) => {
+        it('Babel is executed on .js files', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/class-syntax');
@@ -1135,7 +1135,7 @@ module.exports = {
             });
         });
 
-        it('Babel can be configured via .babelrc', (done) => {
+        it('Babel can be configured via .babelrc', function(done) {
             // create the .babelrc file first, so we see it
             const appDir = testSetup.createTestAppDir();
 
@@ -1171,9 +1171,10 @@ module.exports = {
             });
         });
 
-        it('Babel can be configured via package.json browserlist', (done) => {
+        it('Babel can be configured via package.json browserlist', function(done) {
             const cwd = process.cwd();
-            after(() => {
+
+            after(function() {
                 process.chdir(cwd);
             });
 
@@ -1217,12 +1218,8 @@ module.exports = {
             });
         });
 
-        it('Babel adds polyfills correctly', (done) => {
+        it('Babel adds polyfills correctly', function(done) {
             const cwd = process.cwd();
-            after(() => {
-                process.chdir(cwd);
-            });
-
             const appDir = testSetup.createTestAppDir();
             process.chdir(appDir);
 
@@ -1266,16 +1263,13 @@ module.exports = {
                     );
                 }
 
+                process.chdir(cwd);
                 done();
             });
         });
 
-        it('Babel does not force transforms if they are not needed', (done) => {
+        it('Babel does not force transforms if they are not needed', function(done) {
             const cwd = process.cwd();
-            after(() => {
-                process.chdir(cwd);
-            });
-
             const appDir = testSetup.createTestAppDir();
             process.chdir(appDir);
 
@@ -1300,11 +1294,12 @@ module.exports = {
                     'async function(){console.log("foo")}().then((()=>{console.log("bar")}))'
                 );
 
+                process.chdir(cwd);
                 done();
             });
         });
 
-        it('When enabled, react JSX is transformed!', (done) => {
+        it('When enabled, react JSX is transformed!', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
@@ -1321,7 +1316,7 @@ module.exports = {
             });
         });
 
-        it('When enabled, preact JSX is transformed without preact-compat!', (done) => {
+        it('When enabled, preact JSX is transformed without preact-compat!', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
@@ -1338,7 +1333,7 @@ module.exports = {
             });
         });
 
-        it('When enabled, svelte is transformed', (done) => {
+        it('When enabled, svelte is transformed', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/hello_world.svelte');
@@ -1355,7 +1350,7 @@ module.exports = {
             });
         });
 
-        it('When enabled, preact JSX is transformed with preact-compat!', (done) => {
+        it('When enabled, preact JSX is transformed with preact-compat!', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/CoolReactComponent.jsx');
@@ -1372,7 +1367,7 @@ module.exports = {
             });
         });
 
-        it('When configured, TypeScript is compiled!', (done) => {
+        it('When configured, TypeScript is compiled!', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/index.ts']);
@@ -1404,7 +1399,7 @@ module.exports = {
             });
         });
 
-        it('TypeScript is compiled and type checking is done in a separate process!', (done) => {
+        it('TypeScript is compiled and type checking is done in a separate process!', function(done) {
             this.timeout(10000);
             setTimeout(done, 9000);
 
@@ -1425,7 +1420,7 @@ module.exports = {
             }).to.throw('Cannot find the');
         });
 
-        it('TypeScript can be compiled by Babel', (done) => {
+        it('TypeScript can be compiled by Babel', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/render.ts', './js/index.ts']);
@@ -1456,7 +1451,7 @@ module.exports = {
             });
         });
 
-        it('When configured, Handlebars is compiled', (done) => {
+        it('When configured, Handlebars is compiled', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', ['./js/handlebars.js']);
@@ -1481,7 +1476,7 @@ module.exports = {
             });
         });
 
-        it('The output directory is cleaned between builds', (done) => {
+        it('The output directory is cleaned between builds', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/no_require');
@@ -1502,7 +1497,7 @@ module.exports = {
             });
         });
 
-        it('Vue.js is compiled correctly', (done) => {
+        it('Vue.js is compiled correctly', function(done) {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
@@ -1570,7 +1565,7 @@ module.exports = {
             });
         });
 
-        it('Vue.js is compiled correctly using TypeScript', (done) => {
+        it('Vue.js is compiled correctly using TypeScript', function(done) {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
@@ -1639,7 +1634,7 @@ module.exports = {
             });
         });
 
-        it('Vue.js supports CSS/Sass/Less/Stylus/PostCSS modules', (done) => {
+        it('Vue.js supports CSS/Sass/Less/Stylus/PostCSS modules', function(done) {
             const appDir = testSetup.createTestAppDir();
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
@@ -1733,7 +1728,7 @@ module.exports = {
             });
         });
 
-        it('React supports CSS/Sass/Less/Stylus modules', (done) => {
+        it('React supports CSS/Sass/Less/Stylus modules', function(done) {
             const appDir = testSetup.createTestAppDir();
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
@@ -1815,7 +1810,7 @@ module.exports = {
             });
         });
 
-        it('Preact supports CSS/Sass/Less/Stylus modules', (done) => {
+        it('Preact supports CSS/Sass/Less/Stylus modules', function(done) {
             const appDir = testSetup.createTestAppDir();
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
@@ -1897,7 +1892,7 @@ module.exports = {
             });
         });
 
-        it('Vue.js error when using non-activated loaders', (done) => {
+        it('Vue.js error when using non-activated loaders', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
@@ -1993,7 +1988,7 @@ module.exports = {
             });
         });
 
-        it('configureImageRule() allows configuring maxSize for inlining', (done) => {
+        it('configureImageRule() allows configuring maxSize for inlining', function(done) {
             const config = createWebpackConfig('web/build', 'dev');
             config.setPublicPath('/build');
             config.addStyleEntry('url-loader', './css/url-loader.css');
@@ -2024,7 +2019,7 @@ module.exports = {
             });
         });
 
-        it('Code splitting with dynamic import', (done) => {
+        it('Code splitting with dynamic import', function(done) {
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/code_splitting_dynamic_import');
@@ -2089,8 +2084,8 @@ module.exports = {
             });
         });
 
-        describe('copyFiles() allows to copy files and folders', () => {
-            it('Single file copy', (done) => {
+        describe('copyFiles() allows to copy files and folders', function() {
+            it('Single file copy', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2124,7 +2119,7 @@ module.exports = {
                 });
             });
 
-            it('Folder copy without subdirectories', (done) => {
+            it('Folder copy without subdirectories', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2163,7 +2158,7 @@ module.exports = {
                 });
             });
 
-            it('Multiple copies', (done) => {
+            it('Multiple copies', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2217,7 +2212,7 @@ module.exports = {
                 });
             });
 
-            it('Copy folder and subdirectories with versioning enabled to the specified location', (done) => {
+            it('Copy folder and subdirectories with versioning enabled to the specified location', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2271,7 +2266,7 @@ module.exports = {
                 });
             });
 
-            it('Filter files using the given pattern', (done) => {
+            it('Filter files using the given pattern', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2309,7 +2304,7 @@ module.exports = {
                 });
             });
 
-            it('Copy with versioning enabled', (done) => {
+            it('Copy with versioning enabled', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2362,7 +2357,7 @@ module.exports = {
                 });
             });
 
-            it('Do not try to copy files from an invalid path', (done) => {
+            it('Do not try to copy files from an invalid path', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2399,7 +2394,7 @@ module.exports = {
                 });
             });
 
-            it('Copy with a custom context', (done) => {
+            it('Copy with a custom context', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2454,7 +2449,7 @@ module.exports = {
                 });
             });
 
-            it('Copy files without processing them', (done) => {
+            it('Copy files without processing them', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2502,7 +2497,7 @@ module.exports = {
                 });
             });
 
-            it('Do not copy files excluded by a RegExp', (done) => {
+            it('Do not copy files excluded by a RegExp', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2560,7 +2555,7 @@ module.exports = {
                 });
             });
 
-            it('Can use the "[N]" placeholder', (done) => {
+            it('Can use the "[N]" placeholder', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2595,7 +2590,7 @@ module.exports = {
                 });
             });
 
-            it('Does not prevent from setting the map option of the manifest plugin', (done) => {
+            it('Does not prevent from setting the map option of the manifest plugin', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');
@@ -2638,8 +2633,8 @@ module.exports = {
             });
         });
 
-        describe('entrypoints.json & splitChunks()', () => {
-            it('Use "all" splitChunks & look at entrypoints.json', (done) => {
+        describe('entrypoints.json & splitChunks()', function() {
+            it('Use "all" splitChunks & look at entrypoints.json', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -2681,7 +2676,7 @@ module.exports = {
                 });
             });
 
-            it('Custom public path does affect entrypoints.json but does not affect manifest.json', (done) => {
+            it('Custom public path does affect entrypoints.json but does not affect manifest.json', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -2723,7 +2718,7 @@ module.exports = {
                 });
             });
 
-            it('Subdirectory public path affects entrypoints.json but does not affect manifest.json', (done) => {
+            it('Subdirectory public path affects entrypoints.json but does not affect manifest.json', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -2765,7 +2760,7 @@ module.exports = {
                 });
             });
 
-            it('Use splitChunks in production mode', (done) => {
+            it('Use splitChunks in production mode', function(done) {
                 const config = createWebpackConfig('web/build', 'production');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -2797,7 +2792,7 @@ module.exports = {
                 });
             });
 
-            it('Use splitEntryChunks() with code splitting', (done) => {
+            it('Use splitEntryChunks() with code splitting', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./js/code_splitting', 'vue']);
                 config.addEntry('other', ['./js/no_require', 'vue']);
@@ -2827,7 +2822,7 @@ module.exports = {
                 });
             });
 
-            it('Make sure chunkIds do not change between builds', (done) => {
+            it('Make sure chunkIds do not change between builds', function(done) {
                 // https://github.com/symfony/webpack-encore/issues/461
                 const createSimilarConfig = function(includeExtraEntry) {
                     const config = createWebpackConfig('web/build', 'production');
@@ -2858,7 +2853,7 @@ module.exports = {
                 });
             });
 
-            it('Do not change contents or filenames when more modules require the same split contents', (done) => {
+            it('Do not change contents or filenames when more modules require the same split contents', function(done) {
                 const createSimilarConfig = function(includeExtraEntry) {
                     const config = createWebpackConfig('web/build', 'production');
                     config.addEntry('main1', ['./js/code_splitting', 'preact']);
@@ -2920,8 +2915,8 @@ module.exports = {
             });
         });
 
-        describe('Package entrypoint imports', () => {
-            it('Import via "sass" package property', (done) => {
+        describe('Package entrypoint imports', function() {
+            it('Import via "sass" package property', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
 
                 config.setPublicPath('/build');
@@ -2939,7 +2934,7 @@ module.exports = {
                 });
             });
 
-            it('Import via "style" package property', (done) => {
+            it('Import via "style" package property', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
 
                 config.setPublicPath('/build');
@@ -2957,8 +2952,8 @@ module.exports = {
             });
         });
 
-        describe('CSS extraction', () => {
-            it('With CSS extraction enabled', (done) => {
+        describe('CSS extraction', function() {
+            it('With CSS extraction enabled', function(done) {
                 const config = createWebpackConfig('build', 'dev');
                 config.setPublicPath('/build');
                 config.disableSingleRuntimeChunk();
@@ -2982,7 +2977,7 @@ module.exports = {
                 });
             });
 
-            it('With CSS extraction disabled', (done) => {
+            it('With CSS extraction disabled', function(done) {
                 const config = createWebpackConfig('build', 'dev');
                 config.setPublicPath('/build');
                 config.disableSingleRuntimeChunk();
@@ -3006,7 +3001,7 @@ module.exports = {
                 });
             });
 
-            it('With CSS extraction disabled and with options callback of the StyleLoader', (done) => {
+            it('With CSS extraction disabled and with options callback of the StyleLoader', function(done) {
                 const config = createWebpackConfig('build', 'dev');
                 config.setPublicPath('/build');
                 config.disableSingleRuntimeChunk();
@@ -3034,8 +3029,8 @@ module.exports = {
             });
         });
 
-        describe('enableIntegrityHashes() adds hashes to the entrypoints.json file', () => {
-            it('Using default algorithm', (done) => {
+        describe('enableIntegrityHashes() adds hashes to the entrypoints.json file', function() {
+            it('Using default algorithm', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -3066,7 +3061,7 @@ module.exports = {
                 });
             });
 
-            it('Using another algorithm and a different public path', (done) => {
+            it('Using another algorithm and a different public path', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -3097,7 +3092,7 @@ module.exports = {
                 });
             });
 
-            it('Using multiple algorithms', (done) => {
+            it('Using multiple algorithms', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', ['./css/roboto_font.css', './js/no_require', 'vue']);
                 config.addEntry('other', ['./css/roboto_font.css', 'vue']);
@@ -3129,7 +3124,7 @@ module.exports = {
                 });
             });
 
-            it('With query string versioning', (done) => {
+            it('With query string versioning', function(done) {
                 const config = createWebpackConfig('web/build', 'dev');
                 config.addEntry('main', './js/no_require');
                 config.setPublicPath('/build');

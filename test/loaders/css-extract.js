@@ -23,8 +23,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/css-extract', () => {
-    it('prependLoaders() basic usage', () => {
+describe('loaders/css-extract', function() {
+    it('prependLoaders() basic usage', function() {
         const config = createConfig();
 
         const loaders = cssExtractLoader.prependLoaders(config, ['foo']);
@@ -33,7 +33,7 @@ describe('loaders/css-extract', () => {
         expect(loaders[0].loader).to.equal(MiniCssExtractPlugin.loader);
     });
 
-    it('prependLoaders() with CSS extraction disabled', () => {
+    it('prependLoaders() with CSS extraction disabled', function() {
         const config = createConfig();
         config.disableCssExtraction();
         config.enableSourceMaps(true);
@@ -44,7 +44,7 @@ describe('loaders/css-extract', () => {
         expect(loaders[0].loader).to.contain('style-loader');
     });
 
-    it('prependLoaders() options callback', () => {
+    it('prependLoaders() options callback', function() {
         const config = createConfig();
         config.configureMiniCssExtractPlugin(options => {
             options.ignoreOrder = true;

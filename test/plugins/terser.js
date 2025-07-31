@@ -24,8 +24,8 @@ function createConfig(environment = 'production') {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/terser', () => {
-    it('production environment default settings', () => {
+describe('plugins/terser', function() {
+    it('production environment default settings', function() {
         const config = createConfig();
 
         const plugin = terserPluginUtil(config);
@@ -33,7 +33,7 @@ describe('plugins/terser', () => {
         expect(plugin.options.parallel).to.equal(true);
     });
 
-    it('with options callback', () => {
+    it('with options callback', function() {
         const config = createConfig();
 
         config.configureTerserPlugin((options) => {
@@ -49,7 +49,7 @@ describe('plugins/terser', () => {
         expect(plugin.options.parallel).to.equal(true);
     });
 
-    it('with options callback that returns an object', () => {
+    it('with options callback that returns an object', function() {
         const config = createConfig();
 
         config.configureTerserPlugin((options) => {
