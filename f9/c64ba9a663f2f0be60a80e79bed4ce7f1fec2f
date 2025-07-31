@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by stof at 2025-03-05T14:30:42Z
+
+updating the dev dependency only won't add support for users of Encore, as it is ignored outside the root package. You need to widen the peer dependency constraint.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-05T14:36:09Z
+
+Yup you're right, but I didn't have much time this morning :D
+
+---------------------------------------------------------------------------
+
+by ToshY at 2025-07-20T08:27:41Z
+
+@Kocal any chance you have time to finish this PR? Thanks in advance.
