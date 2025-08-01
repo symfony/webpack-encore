@@ -16,15 +16,15 @@ const process = require('process');
 const fs = require('fs');
 const stripAnsi = require('strip-ansi');
 
-describe('package-helper', () => {
+describe('package-helper', function() {
     const baseCwd = process.cwd();
 
-    describe('recommended install command is based on the existing lock files', () => {
-        after(() => {
+    describe('recommended install command is based on the existing lock files', function() {
+        after(function() {
             process.chdir(baseCwd);
         });
 
-        it('missing packages without any lock file', () => {
+        it('missing packages without any lock file', function() {
             process.chdir(path.join(__dirname , '../fixtures/package-helper/empty'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
@@ -33,7 +33,7 @@ describe('package-helper', () => {
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
-        it('missing packages with package-lock.json only', () => {
+        it('missing packages with package-lock.json only', function() {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/npm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
@@ -42,7 +42,7 @@ describe('package-helper', () => {
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
-        it('missing packages with yarn.lock only', () => {
+        it('missing packages with yarn.lock only', function() {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
@@ -51,7 +51,7 @@ describe('package-helper', () => {
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
-        it('missing packages with pnpm-lock.yaml only', () => {
+        it('missing packages with pnpm-lock.yaml only', function() {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/pnpm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
@@ -60,7 +60,7 @@ describe('package-helper', () => {
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
-        it('missing packages with both package-lock.json and yarn.lock', () => {
+        it('missing packages with both package-lock.json and yarn.lock', function() {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn-npm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
@@ -69,7 +69,7 @@ describe('package-helper', () => {
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
-        it('missing packages with package-lock.json, yarn.lock and pnpm-lock.yaml', () => {
+        it('missing packages with package-lock.json, yarn.lock and pnpm-lock.yaml', function() {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/pnpm-yarn-npm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
@@ -78,7 +78,7 @@ describe('package-helper', () => {
             expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
         });
 
-        it('missing packages with alternative packages', () => {
+        it('missing packages with alternative packages', function() {
             process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' },
@@ -91,8 +91,8 @@ describe('package-helper', () => {
         });
     });
 
-    describe('check messaging on install commands', () => {
-        it('Make sure the major version is included in the install command', () => {
+    describe('check messaging on install commands', function() {
+        it('Make sure the major version is included in the install command', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'bar', version: '^3.0' }
             ]);
@@ -100,7 +100,7 @@ describe('package-helper', () => {
             expect(packageRecommendations.installCommand).to.contain('yarn add foo bar@^3.0');
         });
 
-        it('Recommends correct install on 0 version', () => {
+        it('Recommends correct install on 0 version', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo', version: '^0.1.0' },
                 { name: 'bar' }
@@ -109,7 +109,7 @@ describe('package-helper', () => {
             expect(packageRecommendations.installCommand).to.contain('yarn add foo@^0.1.0 bar');
         });
 
-        it('Recommends correct install with a more complex constraint', () => {
+        it('Recommends correct install with a more complex constraint', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo', version: '^7.0||^8.0' },
                 { name: 'bar' }
@@ -118,7 +118,7 @@ describe('package-helper', () => {
             expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar');
         });
 
-        it('Recommends correct install with a more complex constraint', () => {
+        it('Recommends correct install with a more complex constraint (spaces around ||)', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo', version: '^7.0 || ^8.0' },
                 { name: 'bar' }
@@ -127,7 +127,7 @@ describe('package-helper', () => {
             expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar');
         });
 
-        it('Recommends correct install with alternative packages', () => {
+        it('Recommends correct install with alternative packages', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo', version: '^7.0 || ^8.0' },
                 [{ name: 'bar' }, { name: 'baz' }],
@@ -138,8 +138,8 @@ describe('package-helper', () => {
         });
     });
 
-    describe('The getInvalidPackageVersionRecommendations correctly checks installed versions', () => {
-        it('Check package that *is* the correct version', () => {
+    describe('The getInvalidPackageVersionRecommendations correctly checks installed versions', function() {
+        it('Check package that *is* the correct version', function() {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
                 { name: '@hotwired/stimulus', version: '^3.0.0' },
                 { name: 'preact', version: '^8.2.0 || ^10.0.0' }
@@ -148,7 +148,7 @@ describe('package-helper', () => {
             expect(versionProblems).to.be.empty;
         });
 
-        it('Check package with a version too low', () => {
+        it('Check package with a version too low', function() {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
                 { name: '@hotwired/stimulus', version: '^4.0.0' },
                 { name: 'preact', version: '9.0.0' }
@@ -158,7 +158,7 @@ describe('package-helper', () => {
             expect(versionProblems[0]).to.contain('is too old');
         });
 
-        it('Check package with a version too new', () => {
+        it('Check package with a version too new', function() {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
                 { name: '@hotwired/stimulus', version: '^2.0' },
                 { name: 'preact', version: '8.1.0' }
@@ -168,7 +168,7 @@ describe('package-helper', () => {
             expect(versionProblems[0]).to.contain('is too new');
         });
 
-        it('Missing "version" key is ok', () => {
+        it('Missing "version" key is ok', function() {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
                 { name: 'sass-loader', version: '^6.9.9' },
                 { name: 'preact' }
@@ -178,7 +178,7 @@ describe('package-helper', () => {
             expect(versionProblems).to.have.length(1);
         });
 
-        it('Beta version is ok', () => {
+        it('Beta version is ok', function() {
             const versionProblems = packageHelper.getInvalidPackageVersionRecommendations([
                 { name: 'vue', version: '^3.0.0-beta.5' },
             ]);
@@ -187,8 +187,8 @@ describe('package-helper', () => {
         });
     });
 
-    describe('addPackagesVersionConstraint', () => {
-        it('Lookup a version constraint', () => {
+    describe('addPackagesVersionConstraint', function() {
+        it('Lookup a version constraint', function() {
             const inputPackages = [
                 { name: 'sass-loader', enforce_version: 7 },
                 { name: 'node-sass' },

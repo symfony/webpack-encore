@@ -25,23 +25,25 @@ const createWebpackConfig = function() {
     return new WebpackConfig(runtimeConfig);
 };
 
-describe('get-vue-version', () => {
+describe('get-vue-version', function() {
     let getPackageVersionStub = null;
-    before(() => {
+
+    before(function() {
         getPackageVersionStub = sinon.stub(packageHelper, 'getPackageVersion');
     });
-    after(() => {
+
+    after(function() {
         packageHelper.getPackageVersion.restore();
     });
 
-    it('returns the value configured in Webpack.config.js', () => {
+    it('returns the value configured in Webpack.config.js', function() {
         const config = createWebpackConfig();
         config.vueOptions.version = 4;
 
         expect(getVueVersion(config)).to.equal(4);
     });
 
-    it('returns the default recommended version when vue is not installed', () => {
+    it('returns the default recommended version when vue is not installed', function() {
         const config = createWebpackConfig();
         getPackageVersionStub
             .callsFake(() => null);
@@ -49,7 +51,7 @@ describe('get-vue-version', () => {
         expect(getVueVersion(config)).to.equal(3);
     });
 
-    it('throw an error when Vue 2 is installed', () => {
+    it('throw an error when Vue 2 is installed', function() {
         const config = createWebpackConfig();
         getPackageVersionStub
             .callsFake(() => '2.2.4');
@@ -57,7 +59,7 @@ describe('get-vue-version', () => {
         expect(() => getVueVersion(config)).to.throw('vue version 2 is not supported.');
     });
 
-    it('returns 3 when Vue 3 beta is installed', () => {
+    it('returns 3 when Vue 3 beta is installed', function() {
         const config = createWebpackConfig();
         getPackageVersionStub
             .callsFake(() => '3.0.0-beta.9');
@@ -65,7 +67,7 @@ describe('get-vue-version', () => {
         expect(getVueVersion(config)).to.equal(3);
     });
 
-    it('returns 3 when Vue 3 is installed', () => {
+    it('returns 3 when Vue 3 is installed', function() {
         const config = createWebpackConfig();
         getPackageVersionStub
             .callsFake(() => '3.0.0');
@@ -73,7 +75,7 @@ describe('get-vue-version', () => {
         expect(getVueVersion(config)).to.equal(3);
     });
 
-    it('returns 3 when a version is too new', () => {
+    it('returns 3 when a version is too new', function() {
         const config = createWebpackConfig();
         getPackageVersionStub
             .callsFake(() => '4.0.0'); // unsupported version

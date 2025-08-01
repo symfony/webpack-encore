@@ -13,7 +13,7 @@ const { resolve: resolvePath } = require('path');
 const expect = require('chai').expect;
 const packageUp = require('../../lib/utils/package-up');
 
-describe('package-up', () => {
+describe('package-up', function() {
     const test = {
         'package.json from Encore': {
             cwd: __dirname,
@@ -34,7 +34,8 @@ describe('package-up', () => {
     };
 
     Object.entries(test).forEach(([description, { cwd, expectedPath }]) => {
-        it(description, () => {
+
+        it(description, function() {
             expect(expectedPath).to.be.a('string');
 
             const path = packageUp({ cwd });

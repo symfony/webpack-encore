@@ -24,8 +24,8 @@ function createConfig(environment = 'production') {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/define', () => {
-    it('dev environment', () => {
+describe('plugins/define', function() {
+    it('dev environment', function() {
         const config = createConfig('dev');
         const plugins = [];
 
@@ -35,7 +35,7 @@ describe('plugins/define', () => {
         expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('development'));
     });
 
-    it('production environment with default settings', () => {
+    it('production environment with default settings', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -45,7 +45,7 @@ describe('plugins/define', () => {
         expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('production'));
     });
 
-    it('production environment with options callback', () => {
+    it('production environment with options callback', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -66,7 +66,7 @@ describe('plugins/define', () => {
         expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('production'));
     });
 
-    it('production environment with options callback that returns an object', () => {
+    it('production environment with options callback that returns an object', function() {
         const config = createConfig();
         const plugins = [];
 

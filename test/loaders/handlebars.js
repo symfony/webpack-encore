@@ -22,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/handlebars', () => {
-    it('getLoaders() basic usage', () => {
+describe('loaders/handlebars', function() {
+    it('getLoaders() basic usage', function() {
         const config = createConfig();
         config.enableHandlebarsLoader();
 
@@ -32,7 +32,7 @@ describe('loaders/handlebars', () => {
         expect(actualLoaders[0].options).to.be.empty;
     });
 
-    it('getLoaders() with options callback', () => {
+    it('getLoaders() with options callback', function() {
         const config = createConfig();
         config.enableHandlebarsLoader((options) => {
             options.debug = true;
@@ -43,7 +43,7 @@ describe('loaders/handlebars', () => {
         expect(actualLoaders[0].options.debug).to.be.true;
     });
 
-    it('getLoaders() with options callback that returns an object', () => {
+    it('getLoaders() with options callback that returns an object', function() {
         const config = createConfig();
         config.enableHandlebarsLoader((options) => {
             options.debug = true;

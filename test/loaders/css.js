@@ -22,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/css', () => {
-    it('getLoaders() basic usage', () => {
+describe('loaders/css', function() {
+    it('getLoaders() basic usage', function() {
         const config = createConfig();
         config.enableSourceMaps(true);
 
@@ -33,7 +33,7 @@ describe('loaders/css', () => {
         expect(actualLoaders[0].options.modules).to.be.false;
     });
 
-    it('getLoaders() for production', () => {
+    it('getLoaders() for production', function() {
         const config = createConfig();
         config.enableSourceMaps(false);
         config.runtimeConfig.environment = 'production';
@@ -44,7 +44,7 @@ describe('loaders/css', () => {
         expect(actualLoaders[0].options.modules).to.be.false;
     });
 
-    it('getLoaders() with options callback', () => {
+    it('getLoaders() with options callback', function() {
         const config = createConfig();
 
         config.configureCssLoader(function(options) {
@@ -59,7 +59,7 @@ describe('loaders/css', () => {
         expect(actualLoaders[0].options.modules).to.be.false;
     });
 
-    it('getLoaders() with CSS modules enabled', () => {
+    it('getLoaders() with CSS modules enabled', function() {
         const config = createConfig();
 
         config.configureCssLoader(function(options) {
@@ -76,8 +76,8 @@ describe('loaders/css', () => {
         });
     });
 
-    describe('getLoaders() with PostCSS', () => {
-        it('without options callback', () => {
+    describe('getLoaders() with PostCSS', function() {
+        it('without options callback', function() {
             const config = createConfig();
             config.enableSourceMaps();
             config.enablePostCssLoader();
@@ -88,7 +88,7 @@ describe('loaders/css', () => {
             expect(actualLoaders[1].options.sourceMap).to.be.true;
         });
 
-        it('with options callback', () => {
+        it('with options callback', function() {
             const config = createConfig();
             config.enableSourceMaps();
             config.enablePostCssLoader((options) => {
@@ -104,7 +104,7 @@ describe('loaders/css', () => {
             expect(actualLoaders[1].options.config.path).to.equal('config/postcss.config.js');
         });
 
-        it('with options callback that returns an object', () => {
+        it('with options callback that returns an object', function() {
             const config = createConfig();
             config.enableSourceMaps(true);
             config.enablePostCssLoader((options) => {

@@ -12,15 +12,15 @@
 const expect = require('chai').expect;
 const formatter = require('../../../lib/friendly-errors/formatters/missing-css-file');
 
-describe('formatters/missing-css-file', () => {
+describe('formatters/missing-css-file', function() {
 
-    describe('test format()', () => {
-        it('works with no errors', () => {
+    describe('test format()', function() {
+        it('works with no errors', function() {
             const actualErrors = formatter([]);
             expect(actualErrors).to.be.empty;
         });
 
-        it(' filters errors that dont have the correct type', () => {
+        it(' filters errors that dont have the correct type', function() {
             const errors = [
                 { type: 'missing-css-file', file: 'some-file.sass', ref: '../images/foo.png' },
                 { type: 'other-type', file: 'other-type.sass' }
@@ -31,7 +31,7 @@ describe('formatters/missing-css-file', () => {
             expect(JSON.stringify(actualErrors)).to.not.contain('other-type.sass');
         });
 
-        it('formats the error correctly', () => {
+        it('formats the error correctly', function() {
             const error = {
                 type: 'missing-css-file',
                 file: '/some/file.css',

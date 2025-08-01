@@ -12,15 +12,15 @@
 const expect = require('chai').expect;
 const formatter = require('../../../lib/friendly-errors/formatters/missing-loader');
 
-describe('formatters/missing-loader', () => {
+describe('formatters/missing-loader', function() {
 
-    describe('test format()', () => {
-        it('works with no errors', () => {
+    describe('test format()', function() {
+        it('works with no errors', function() {
             const actualErrors = formatter([]);
             expect(actualErrors).to.be.empty;
         });
 
-        it('errors without loader-not-enabled type are filtered', () => {
+        it('errors without loader-not-enabled type are filtered', function() {
             const errors = [
                 { type: 'loader-not-enabled', file: 'not-enabled.sass' },
                 { type: 'other-type', file: 'other-type.sass' }
@@ -31,7 +31,7 @@ describe('formatters/missing-loader', () => {
             expect(JSON.stringify(actualErrors)).to.not.contain('other-type.sass');
         });
 
-        it('error is formatted correctly', () => {
+        it('error is formatted correctly', function() {
             const error = {
                 type: 'loader-not-enabled',
                 file: '/some/file.sass',
@@ -45,7 +45,7 @@ describe('formatters/missing-loader', () => {
             expect(JSON.stringify(actualErrors)).to.not.contain('yarn add');
         });
 
-        it('error is formatted correctly without loaderName', () => {
+        it('error is formatted correctly without loaderName', function() {
             const error = {
                 type: 'loader-not-enabled',
                 file: '/some/file.jpg'
@@ -56,7 +56,7 @@ describe('formatters/missing-loader', () => {
             expect(JSON.stringify(actualErrors)).to.contain('You may need to install and configure a special loader');
         });
 
-        it('vue loader error includes original message & origin', () => {
+        it('vue loader error includes original message & origin', function() {
             const error = {
                 message: 'I am a message from vue-loader',
                 isVueLoader: true,

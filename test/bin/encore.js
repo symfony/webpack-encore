@@ -23,7 +23,7 @@ describe('bin/encore.js', function() {
     // being functional tests, these can take quite long
     this.timeout(10000);
 
-    it('Basic smoke test', (done) => {
+    it('Basic smoke test', function(done) {
         testSetup.emptyTmpDir();
         const testDir = testSetup.createTestAppDir();
 
@@ -67,7 +67,7 @@ module.exports = Encore.getWebpackConfig();
         });
     });
 
-    it('Smoke test using the --json option', (done) => {
+    it('Smoke test using the --json option', function(done) {
         testSetup.emptyTmpDir();
         const testDir = testSetup.createTestAppDir();
 
@@ -95,7 +95,7 @@ module.exports = Encore.getWebpackConfig();
             let parsedOutput = null;
             try {
                 parsedOutput = JSON.parse(stdout);
-            } catch (e) {
+            } catch {
                 throw `Webpack output does not contain a valid JSON object: ${stdout}`;
             }
 
@@ -114,7 +114,7 @@ module.exports = Encore.getWebpackConfig();
         });
     });
 
-    it('Smoke test using the --profile option', (done) => {
+    it('Smoke test using the --profile option', function(done) {
         testSetup.emptyTmpDir();
         const testDir = testSetup.createTestAppDir();
 
@@ -148,7 +148,7 @@ module.exports = Encore.getWebpackConfig();
         });
     });
 
-    it('Smoke test using the --keep-public-path option', (done) => {
+    it('Smoke test using the --keep-public-path option', function(done) {
         testSetup.emptyTmpDir();
         const testDir = testSetup.createTestAppDir();
 
@@ -177,7 +177,7 @@ module.exports = Encore.getWebpackConfig();
         });
     });
 
-    it('Display an error when calling an unknown method', (done) => {
+    it('Display an error when calling an unknown method', function(done) {
         testSetup.emptyTmpDir();
         const testDir = testSetup.createTestAppDir();
 
@@ -216,7 +216,7 @@ module.exports = Encore.getWebpackConfig();
         });
     });
 
-    it('Run the webpack-dev-server successfully', (done) => {
+    it('Run the webpack-dev-server successfully', function(done) {
         testSetup.emptyTmpDir();
         const testDir = testSetup.createTestAppDir();
 
@@ -284,18 +284,18 @@ module.exports = Encore.getWebpackConfig();
         }, 5000);
     });
 
-    describe('Without webpack-dev-server installed', () => {
-        before(() => {
+    describe('Without webpack-dev-server installed', function() {
+        before(function() {
             execSync('yarn remove webpack-dev-server --dev', { cwd: projectDir });
         });
 
-        after(() => {
+        after(function() {
             // Re-install webpack-dev-server and ensure the project is in a clean state
             execSync('git checkout package.json', { cwd: projectDir });
             execSync('yarn install', { cwd: projectDir });
         });
 
-        it('Throw an error when trying to use the webpack-dev-server if not installed', done => {
+        it('Throw an error when trying to use the webpack-dev-server if not installed', function(done) {
             testSetup.emptyTmpDir();
             const testDir = testSetup.createTestAppDir();
 

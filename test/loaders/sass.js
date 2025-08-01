@@ -24,8 +24,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/sass', () => {
-    it('getLoaders() basic usage', () => {
+describe('loaders/sass', function() {
+    it('getLoaders() basic usage', function() {
         const config = createConfig();
         config.enableSourceMaps(true);
 
@@ -45,7 +45,7 @@ describe('loaders/sass', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with resolve-url-loader but not sourcemaps', () => {
+    it('getLoaders() with resolve-url-loader but not sourcemaps', function() {
         const config = createConfig();
         config.enableSourceMaps(false);
 
@@ -65,7 +65,7 @@ describe('loaders/sass', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with resolve-url-loader options', () => {
+    it('getLoaders() with resolve-url-loader options', function() {
         const config = createConfig();
         config.enableSassLoader(() => {}, {
             resolveUrlLoaderOptions: {
@@ -85,7 +85,7 @@ describe('loaders/sass', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() without resolve-url-loader', () => {
+    it('getLoaders() without resolve-url-loader', function() {
         const config = createConfig();
         config.enableSassLoader(() => {}, {
             resolveUrlLoader: false,
@@ -104,7 +104,7 @@ describe('loaders/sass', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with options callback', () => {
+    it('getLoaders() with options callback', function() {
         const config = createConfig();
 
         // make the cssLoader return nothing
@@ -129,7 +129,7 @@ describe('loaders/sass', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with a callback that returns an object', () => {
+    it('getLoaders() with a callback that returns an object', function() {
         const config = createConfig();
 
         // make the cssLoader return nothing
@@ -150,7 +150,7 @@ describe('loaders/sass', () => {
         cssLoader.getLoaders.restore();
     });
 
-    it('getLoaders() with CSS modules enabled', () => {
+    it('getLoaders() with CSS modules enabled', function() {
         const config = createConfig();
         config.enableSourceMaps(true);
 

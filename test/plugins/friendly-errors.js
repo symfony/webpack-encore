@@ -23,8 +23,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/friendly-errors', () => {
-    it('with default settings', () => {
+describe('plugins/friendly-errors', function() {
+    it('with default settings', function() {
         const config = createConfig();
 
         const plugin = friendlyErrorsPluginUtil(config);
@@ -34,7 +34,7 @@ describe('plugins/friendly-errors', () => {
         expect(plugin.transformers.length).to.equal(6);
     });
 
-    it('with options callback', () => {
+    it('with options callback', function() {
         const config = createConfig();
 
         config.configureFriendlyErrorsPlugin((options) => {
@@ -49,7 +49,7 @@ describe('plugins/friendly-errors', () => {
         expect(plugin.transformers.length).to.equal(6);
     });
 
-    it('with options callback that returns an object', () => {
+    it('with options callback that returns an object', function() {
         const config = createConfig();
 
         config.configureFriendlyErrorsPlugin((options) => {

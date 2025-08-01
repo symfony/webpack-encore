@@ -65,10 +65,10 @@ function findRule(regex, rules) {
     throw new Error(`No rule found for regex ${regex}`);
 }
 
-describe('The config-generator function', () => {
+describe('The config-generator function', function() {
 
-    describe('Test basic output properties', () => {
-        it('Returns an object with the correct properties', () => {
+    describe('Test basic output properties', function() {
+        it('Returns an object with the correct properties', function() {
             // setting context explicitly to make test more dependable
             const runtimeConfig = new RuntimeConfig();
             runtimeConfig.context = '/foo/dir';
@@ -86,7 +86,7 @@ describe('The config-generator function', () => {
             expect(actualConfig.plugins).to.be.an('Array');
         });
 
-        it('entries and styleEntries are merged', () => {
+        it('entries and styleEntries are merged', function() {
             const config = createConfig();
             config.publicPath = '/';
             config.outputPath = '/tmp';
@@ -103,7 +103,7 @@ describe('The config-generator function', () => {
             }));
         });
 
-        it('addEntry and addEntries expectations are merged', () => {
+        it('addEntry and addEntries expectations are merged', function() {
             const config = createConfig();
             config.publicPath = '/';
             config.outputPath = '/tmp';
@@ -118,7 +118,7 @@ describe('The config-generator function', () => {
             }));
         });
 
-        it('addStyleEntry and addEntries expectations are merged', () => {
+        it('addStyleEntry and addEntries expectations are merged', function() {
             const config = createConfig();
             config.publicPath = '/';
             config.outputPath = '/tmp';
@@ -133,7 +133,7 @@ describe('The config-generator function', () => {
             }));
         });
 
-        it('addEntry, addStyleEntry and addEntries expectations are merged', () => {
+        it('addEntry, addStyleEntry and addEntries expectations are merged', function() {
             const config = createConfig();
             config.publicPath = '/';
             config.outputPath = '/tmp';
@@ -150,7 +150,7 @@ describe('The config-generator function', () => {
             }));
         });
 
-        it('basic output', () => {
+        it('basic output', function() {
             const config = createConfig();
 
             config.outputPath = '/tmp/public-path';
@@ -165,8 +165,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test source maps changes', () => {
-        it('without sourcemaps', () => {
+    describe('Test source maps changes', function() {
+        it('without sourcemaps', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -179,7 +179,7 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('?sourceMap');
         });
 
-        it('with sourcemaps', () => {
+        it('with sourcemaps', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -193,8 +193,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test publicPath and manifestKeyPrefix variants', () => {
-        it('with normal publicPath, manifestKeyPrefix matches it', () => {
+    describe('Test publicPath and manifestKeyPrefix variants', function() {
+        it('with normal publicPath, manifestKeyPrefix matches it', function() {
             const config = createConfig();
             config.outputPath = '/tmp/web/build';
             config.addEntry('main', './main');
@@ -209,7 +209,7 @@ describe('The config-generator function', () => {
             expect(manifestPlugin.options.basePath).to.equal('build/');
         });
 
-        it('when manifestKeyPrefix is set, that is used instead', () => {
+        it('when manifestKeyPrefix is set, that is used instead', function() {
             const config = createConfig();
             config.outputPath = '/tmp/web/build';
             config.addEntry('main', './main');
@@ -226,7 +226,7 @@ describe('The config-generator function', () => {
             expect(manifestPlugin.options.basePath).to.equal('/build/');
         });
 
-        it('manifestKeyPrefix can be empty', () => {
+        it('manifestKeyPrefix can be empty', function() {
             const config = createConfig();
             config.outputPath = '/tmp/web/build';
             config.addEntry('main', './main');
@@ -240,8 +240,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test versioning changes', () => {
-        it('with versioning', () => {
+    describe('Test versioning changes', function() {
+        it('with versioning', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -257,8 +257,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test production changes', () => {
-        it('not in production', () => {
+    describe('Test production changes', function() {
+        it('not in production', function() {
             const runtimeConfig = new RuntimeConfig();
             runtimeConfig.context = '/tmp/context';
             runtimeConfig.environment = 'dev';
@@ -276,7 +276,7 @@ describe('The config-generator function', () => {
             expect(actualConfig.optimization.minimizer).to.be.undefined;
         });
 
-        it('YES to production', () => {
+        it('YES to production', function() {
             const runtimeConfig = new RuntimeConfig();
             runtimeConfig.environment = 'production';
             const config = createConfig(runtimeConfig);
@@ -293,8 +293,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enableSassLoader() adds the sass-loader', () => {
-        it('without enableSassLoader()', () => {
+    describe('enableSassLoader() adds the sass-loader', function() {
+        it('without enableSassLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -306,7 +306,7 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('sass-loader');
         });
 
-        it('enableSassLoader()', () => {
+        it('enableSassLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -319,8 +319,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enableLessLoader() adds the less-loader', () => {
-        it('without enableLessLoader()', () => {
+    describe('enableLessLoader() adds the less-loader', function() {
+        it('without enableLessLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -332,7 +332,7 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader');
         });
 
-        it('enableLessLoader()', () => {
+        it('enableLessLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -345,8 +345,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enableStylusLoader() adds the stylus-loader', () => {
-        it('without enableStylusLoader()', () => {
+    describe('enableStylusLoader() adds the stylus-loader', function() {
+        it('without enableStylusLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -358,7 +358,7 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('stylus-loader');
         });
 
-        it('enableStylusLoader()', () => {
+        it('enableStylusLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -371,9 +371,9 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enableHandlebarsLoader() adds the handlebars-loader', () => {
+    describe('enableHandlebarsLoader() adds the handlebars-loader', function() {
 
-        it('without enableHandlebarsLoader()', () => {
+        it('without enableHandlebarsLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -383,7 +383,7 @@ describe('The config-generator function', () => {
             expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('handlebars-loader');
         });
 
-        it('enableHandlebarsLoader()', () => {
+        it('enableHandlebarsLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -396,8 +396,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('addLoader() adds a custom loader', () => {
-        it('addLoader()', () => {
+    describe('addLoader() adds a custom loader', function() {
+        it('addLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -409,8 +409,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enableVueLoader() with runtimeCompilerBuild sets Vue alias', () => {
-        it('defaults to "true"', () => {
+    describe('enableVueLoader() with runtimeCompilerBuild sets Vue alias', function() {
+        it('defaults to "true"', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -424,7 +424,7 @@ describe('The config-generator function', () => {
             });
         });
 
-        it('no alias for false', () => {
+        it('no alias for false', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -437,8 +437,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('addAliases() adds new aliases', () => {
-        it('without addAliases()', () => {
+    describe('addAliases() adds new aliases', function() {
+        it('without addAliases()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -448,7 +448,7 @@ describe('The config-generator function', () => {
             expect(actualConfig.resolve.alias).to.deep.equals({});
         });
 
-        it('with addAliases()', () => {
+        it('with addAliases()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -465,7 +465,7 @@ describe('The config-generator function', () => {
             });
         });
 
-        it('with addAliases() that overwrites pre-defined aliases', () => {
+        it('with addAliases() that overwrites pre-defined aliases', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -488,8 +488,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('addExternals() adds new externals', () => {
-        it('without addExternals()', () => {
+    describe('addExternals() adds new externals', function() {
+        it('without addExternals()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -499,7 +499,7 @@ describe('The config-generator function', () => {
             expect(actualConfig.externals).to.deep.equals([]);
         });
 
-        it('with addExternals()', () => {
+        it('with addExternals()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -517,8 +517,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('.js rule receives different configuration', () => {
-        it('Use default config', () => {
+    describe('.js rule receives different configuration', function() {
+        it('Use default config', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -533,8 +533,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('cleanupOutputBeforeBuild() configures output cleaning', () => {
-        it('without cleanupOutputBeforeBuild()', () => {
+    describe('cleanupOutputBeforeBuild() configures output cleaning', function() {
+        it('without cleanupOutputBeforeBuild()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -545,7 +545,7 @@ describe('The config-generator function', () => {
             expect(actualConfig.output.clean).to.be.false;
         });
 
-        it('with cleanupOutputBeforeBuild()', () => {
+        it('with cleanupOutputBeforeBuild()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -558,8 +558,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('test for devServer config', () => {
-        it('no devServer config when not enabled', () => {
+    describe('test for devServer config', function() {
+        it('no devServer config when not enabled', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = false;
             config.publicPath = '/';
@@ -570,7 +570,7 @@ describe('The config-generator function', () => {
             expect(actualConfig.devServer).to.be.undefined;
         });
 
-        it('devServer with custom options', () => {
+        it('devServer with custom options', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerPort = 9090;
@@ -590,7 +590,7 @@ describe('The config-generator function', () => {
             expect(config.runtimeConfig.devServerFinalIsHttps).is.false;
         });
 
-        it('devServer enabled only at the command line', () => {
+        it('devServer enabled only at the command line', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerHttps = true;
@@ -603,7 +603,7 @@ describe('The config-generator function', () => {
             expect(config.runtimeConfig.devServerFinalIsHttps).is.true;
         });
 
-        it('devServer enabled only via config', () => {
+        it('devServer enabled only via config', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
@@ -636,12 +636,12 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('test for addPlugin config', () => {
+    describe('test for addPlugin config', function() {
         function CustomPlugin1() {}
         function CustomPlugin2() {}
         function CustomPlugin3() {}
 
-        it('extra plugin is set correctly', () => {
+        it('extra plugin is set correctly', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
@@ -656,7 +656,7 @@ describe('The config-generator function', () => {
             expect(ignorePlugin).to.not.be.undefined;
         });
 
-        it('by default custom plugins are added after the last plugin with a priority of 0 and are kept in order', () => {
+        it('by default custom plugins are added after the last plugin with a priority of 0 and are kept in order', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
@@ -672,7 +672,7 @@ describe('The config-generator function', () => {
             expect(plugins[plugins.length - 2]).to.be.instanceof(CustomPlugin3);
         });
 
-        it('plugins can be sorted relatively to each other', () => {
+        it('plugins can be sorted relatively to each other', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
@@ -689,8 +689,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test filenames changes', () => {
-        it('without versioning', () => {
+    describe('Test filenames changes', function() {
+        it('without versioning', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -710,7 +710,7 @@ describe('The config-generator function', () => {
             expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
         });
 
-        it('with versioning', () => {
+        it('with versioning', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -732,8 +732,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('configuration for assets (images and fonts)', () => {
-        it('no custom config', () => {
+    describe('configuration for assets (images and fonts)', function() {
+        it('no custom config', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -752,7 +752,7 @@ describe('The config-generator function', () => {
             expect(fontsRule.generator).to.eql({ filename: 'fonts/[name].[hash:8][ext]' });
         });
 
-        it('with configureImageRule() custom options', () => {
+        it('with configureImageRule() custom options', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -769,7 +769,7 @@ describe('The config-generator function', () => {
             expect(imagesRule.generator).to.eql({ filename: 'file.[hash][ext]' });
         });
 
-        it('with configureImageRule() and maxSize', () => {
+        it('with configureImageRule() and maxSize', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -785,7 +785,7 @@ describe('The config-generator function', () => {
             expect(imagesRule.parser).to.eql({ dataUrlCondition: { maxSize: 3000 } });
         });
 
-        it('with configureImageRule() disabled', () => {
+        it('with configureImageRule() disabled', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -802,9 +802,9 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test preact preset', () => {
-        describe('Without preact-compat', () => {
-            it('enablePreactPreset() does not add aliases to use preact-compat', () => {
+    describe('Test preact preset', function() {
+        describe('Without preact-compat', function() {
+            it('enablePreactPreset() does not add aliases to use preact-compat', function() {
                 const config = createConfig();
                 config.outputPath = '/tmp/public/build';
                 config.setPublicPath('/build/');
@@ -815,8 +815,8 @@ describe('The config-generator function', () => {
             });
         });
 
-        describe('With preact-compat', () => {
-            it('enablePreactPreset({ preactCompat: true }) adds aliases to use preact-compat', () => {
+        describe('With preact-compat', function() {
+            it('enablePreactPreset({ preactCompat: true }) adds aliases to use preact-compat', function() {
                 const config = createConfig();
                 config.outputPath = '/tmp/public/build';
                 config.setPublicPath('/build/');
@@ -830,8 +830,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test enableBuildCache()', () => {
-        it('with full arguments', () => {
+    describe('Test enableBuildCache()', function() {
+        it('with full arguments', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -848,7 +848,7 @@ describe('The config-generator function', () => {
             });
         });
 
-        it('with sourcemaps', () => {
+        it('with sourcemaps', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public-path';
             config.publicPath = '/public-path';
@@ -862,8 +862,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test configureBabel()', () => {
-        it('without configureBabel()', () => {
+    describe('Test configureBabel()', function() {
+        it('without configureBabel()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -879,7 +879,7 @@ describe('The config-generator function', () => {
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
 
-        it('with configureBabel() and a different exclude rule', () => {
+        it('with configureBabel() and a different exclude rule', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -894,7 +894,7 @@ describe('The config-generator function', () => {
             expect(String(jsRule.exclude)).to.equal(String(/foo/));
         });
 
-        it('with configureBabel() and some whitelisted modules', () => {
+        it('with configureBabel() and some whitelisted modules', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -911,7 +911,7 @@ describe('The config-generator function', () => {
             expect(jsRule.exclude(path.join('test', 'node_modules', 'bar', 'index.js'))).to.be.true;
         });
 
-        it('with configureBabel() and a different useBuiltIns value', () => {
+        it('with configureBabel() and a different useBuiltIns value', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -931,8 +931,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test configureBabelPresetEnv()', () => {
-        it('without configureBabelPresetEnv()', () => {
+    describe('Test configureBabelPresetEnv()', function() {
+        it('without configureBabelPresetEnv()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -946,7 +946,7 @@ describe('The config-generator function', () => {
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
 
-        it('with configureBabelPresetEnv()', () => {
+        it('with configureBabelPresetEnv()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -964,7 +964,7 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test shouldSplitEntryChunks', () => {
+    describe('Test shouldSplitEntryChunks', function() {
         const config = createConfig();
         config.outputPath = '/tmp/public/build';
         config.setPublicPath('/build/');
@@ -975,17 +975,17 @@ describe('The config-generator function', () => {
         expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
     });
 
-    describe('Test shouldUseSingleRuntimeChunk', () => {
-        before(() => {
+    describe('Test shouldUseSingleRuntimeChunk', function() {
+        before(function() {
             logger.reset();
             logger.quiet();
         });
 
-        after(() => {
+        after(function() {
             logger.quiet(false);
         });
 
-        it('Set to true', () => {
+        it('Set to true', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
@@ -996,7 +996,7 @@ describe('The config-generator function', () => {
             expect(logger.getMessages().deprecation).to.be.empty;
         });
 
-        it('Set to false', () => {
+        it('Set to false', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
@@ -1007,7 +1007,7 @@ describe('The config-generator function', () => {
             expect(logger.getMessages().deprecation).to.be.empty;
         });
 
-        it('Not set should throw an error', () => {
+        it('Not set should throw an error', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.shouldUseSingleRuntimeChunk = null;
@@ -1017,8 +1017,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test buildWatchOptionsConfig()', () => {
-        it('Set webpack watch options', () => {
+    describe('Test buildWatchOptionsConfig()', function() {
+        it('Set webpack watch options', function() {
             const config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/build/');
@@ -1034,17 +1034,17 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test configureLoaderRule()', () => {
+    describe('Test configureLoaderRule()', function() {
         let config;
 
-        beforeEach(() => {
+        beforeEach(function() {
             config = createConfig();
             config.outputPath = '/tmp/public/build';
             config.setPublicPath('/');
             config.enableSingleRuntimeChunk();
         });
 
-        it('configure rule for "javascript"', () => {
+        it('configure rule for "javascript"', function() {
             config.configureLoaderRule('javascript', (loaderRule) => {
                 loaderRule.test = /\.m?js$/;
                 loaderRule.use[0].options.fooBar = 'fooBar';
@@ -1058,7 +1058,7 @@ describe('The config-generator function', () => {
             expect(rule.use[0].options.fooBar).to.equal('fooBar');
         });
 
-        it('configure rule for the alias "js"', () => {
+        it('configure rule for the alias "js"', function() {
             config.configureLoaderRule('js', (loaderRule) => {
                 loaderRule.test = /\.m?js$/;
                 loaderRule.use[0].options.fooBar = 'fooBar';
@@ -1072,7 +1072,7 @@ describe('The config-generator function', () => {
             expect(rule.use[0].options.fooBar).to.equal('fooBar');
         });
 
-        it('configure rule for "css"', () => {
+        it('configure rule for "css"', function() {
             config.configureLoaderRule('css', (loaderRule) => {
                 loaderRule.camelCase = true;
             });
@@ -1083,7 +1083,7 @@ describe('The config-generator function', () => {
             expect(rule.camelCase).to.be.true;
         });
 
-        it('configure rule for "images"', () => {
+        it('configure rule for "images"', function() {
             config.configureLoaderRule('images', (loaderRule) => {
                 loaderRule.oneOf[1].generator.filename = 'dirname-images/[hash:42][ext]';
             });
@@ -1094,7 +1094,7 @@ describe('The config-generator function', () => {
             expect(rule.generator.filename).to.equal('dirname-images/[hash:42][ext]');
         });
 
-        it('configure rule for "fonts"', () => {
+        it('configure rule for "fonts"', function() {
             config.configureLoaderRule('fonts', (loader) => {
                 loader.oneOf[1].generator.filename = 'dirname-fonts/[hash:42][ext]';
             });
@@ -1105,7 +1105,7 @@ describe('The config-generator function', () => {
             expect(rule.generator.filename).to.equal('dirname-fonts/[hash:42][ext]');
         });
 
-        it('configure rule for "sass"', () => {
+        it('configure rule for "sass"', function() {
             config.enableSassLoader();
             config.configureLoaderRule('sass', (loaderRule) => {
                 loaderRule.oneOf[1].use[2].options.fooBar = 'fooBar';
@@ -1117,7 +1117,7 @@ describe('The config-generator function', () => {
             expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
         });
 
-        it('configure rule for the alias "scss"', () => {
+        it('configure rule for the alias "scss"', function() {
             config.enableSassLoader();
             config.configureLoaderRule('scss', (loaderRule) => {
                 loaderRule.oneOf[1].use[2].options.fooBar = 'fooBar';
@@ -1129,7 +1129,7 @@ describe('The config-generator function', () => {
             expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
         });
 
-        it('configure rule for "less"', () => {
+        it('configure rule for "less"', function() {
             config.enableLessLoader((options) => {
                 options.optionA = 'optionA';
             });
@@ -1144,7 +1144,7 @@ describe('The config-generator function', () => {
             expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
         });
 
-        it('configure rule for "stylus"', () => {
+        it('configure rule for "stylus"', function() {
             config.enableStylusLoader((options) => {
                 options.optionA = 'optionA';
             });
@@ -1159,7 +1159,7 @@ describe('The config-generator function', () => {
             expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
         });
 
-        it('configure rule for "vue"', () => {
+        it('configure rule for "vue"', function() {
             config.enableVueLoader((options) => {
                 options.shadowMode = true;
             });
@@ -1174,7 +1174,7 @@ describe('The config-generator function', () => {
             expect(rule.use[0].options.prettify).to.be.false;
         });
 
-        it('configure rule for "typescript" and "ts"', () => {
+        it('configure rule for "typescript" and "ts"', function() {
             config.enableTypeScriptLoader((options) => {
                 options.silent = true;
             });
@@ -1189,7 +1189,7 @@ describe('The config-generator function', () => {
             expect(rule.use[1].options.happyPackMode).to.be.true;
         });
 
-        it('configure rule for the alias "ts"', () => {
+        it('configure rule for the alias "ts"', function() {
             config.enableTypeScriptLoader((options) => {
                 options.silent = true;
             });
@@ -1204,7 +1204,7 @@ describe('The config-generator function', () => {
             expect(rule.use[1].options.happyPackMode).to.be.true;
         });
 
-        it('configure rule for "handlebars"', () => {
+        it('configure rule for "handlebars"', function() {
             config.enableHandlebarsLoader((options) => {
                 options.debug = true;
             });
@@ -1220,8 +1220,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('enablePostCssLoader() makes the CSS rule process .postcss file', () => {
-        it('without enablePostCssLoader()', () => {
+    describe('enablePostCssLoader() makes the CSS rule process .postcss file', function() {
+        it('without enablePostCssLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -1238,7 +1238,7 @@ describe('The config-generator function', () => {
             }).to.throw();
         });
 
-        it('with enablePostCssLoader()', () => {
+        it('with enablePostCssLoader()', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -1257,8 +1257,8 @@ describe('The config-generator function', () => {
         });
     });
 
-    describe('Test addCacheGroup()', () => {
-        it('Calling it adds cache groups', () => {
+    describe('Test addCacheGroup()', function() {
+        it('Calling it adds cache groups', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -1275,7 +1275,7 @@ describe('The config-generator function', () => {
             });
         });
 
-        it('Calling it using the "node_modules" option', () => {
+        it('Calling it using the "node_modules" option', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -1295,7 +1295,7 @@ describe('The config-generator function', () => {
             });
         });
 
-        it('Calling it and overriding default options', () => {
+        it('Calling it and overriding default options', function() {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';

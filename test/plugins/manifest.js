@@ -25,8 +25,8 @@ function createConfig() {
     return config;
 }
 
-describe('plugins/manifest', () => {
-    it('default settings', () => {
+describe('plugins/manifest', function() {
+    it('default settings', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -36,7 +36,7 @@ describe('plugins/manifest', () => {
         expect(plugins[0].plugin.options.fileName).to.equal('manifest.json');
     });
 
-    it('with options callback', () => {
+    it('with options callback', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -52,7 +52,7 @@ describe('plugins/manifest', () => {
         expect(plugins[0].plugin.options.fileName).to.equal('bar');
     });
 
-    it('with options callback that returns an object', () => {
+    it('with options callback that returns an object', function() {
         const config = createConfig();
         const plugins = [];
 

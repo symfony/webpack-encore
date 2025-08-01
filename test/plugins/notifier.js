@@ -23,8 +23,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/notifier', () => {
-    it('disabled by default', () => {
+describe('plugins/notifier', function() {
+    it('disabled by default', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -32,7 +32,7 @@ describe('plugins/notifier', () => {
         expect(plugins.length).to.equal(0);
     });
 
-    it('explicitly disabled', () => {
+    it('explicitly disabled', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -42,7 +42,7 @@ describe('plugins/notifier', () => {
         expect(plugins.length).to.equal(0);
     });
 
-    it('enabled with default settings', () => {
+    it('enabled with default settings', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -54,7 +54,7 @@ describe('plugins/notifier', () => {
         expect(plugins[0].plugin.options.title).to.equal('Webpack Encore');
     });
 
-    it('enabled with options callback', () => {
+    it('enabled with options callback', function() {
         const config = createConfig();
         const plugins = [];
 
@@ -68,7 +68,7 @@ describe('plugins/notifier', () => {
         expect(plugins[0].plugin.options.title).to.equal('foo');
     });
 
-    it('enabled with options callback that returns an object', () => {
+    it('enabled with options callback that returns an object', function() {
         const config = createConfig();
         const plugins = [];
 
