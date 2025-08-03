@@ -30,7 +30,6 @@ module.exports = [
                 ...globals.node,
             },
         },
-        ignores: ['lib/webpack-manifest-plugin']
     },
     {
         'rules': {
