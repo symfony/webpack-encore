@@ -41,6 +41,7 @@
     "tapable": "^2.2.1",
     "terser-webpack-plugin": "^5.3.0",
     "tmp": "^0.2.1",
+    "webpack-manifest-plugin": "^5.0.1",
     "yargs-parser": "^21.0.0"
   },
   "devDependencies": {
