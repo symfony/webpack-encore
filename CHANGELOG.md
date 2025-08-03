@@ -2,8 +2,14 @@
 
 ## 5.2.0 
 
-* Add support for Webpack CLI ^6.0 by @Kocal in https://github.com/symfony/webpack-encore/pull/1367
-* Add support for babel-loader ^10.0
+* Add support for Webpack CLI ^6.0.0
+
+* Add support for babel-loader ^10.0.0
+
+* Add support for style-loader ^4.0.0
+
+If you manually specified the option `insert`, now it can only be a selector or the path to the module.
+Follow the [style-loader migration guide](https://github.com/webpack-contrib/style-loader/releases/tag/v4.0.0) to upgrade!
 
 ## 5.1.0
 
