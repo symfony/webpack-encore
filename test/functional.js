@@ -1055,6 +1055,9 @@ module.exports = {
                 `
             );
 
+            // Force very old Safari to ensure that autoprefixer will prefix `backdrop-filter`
+            fs.writeFileSync(path.join(appDir, '.browserslistrc'), 'Safari 9');
+
             const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
