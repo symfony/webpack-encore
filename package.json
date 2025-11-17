@@ -126,6 +126,8 @@
     "sass": "^1.17.0",
     "sass-loader": "^16.0.1",
     "stylus-loader": "^7.0.0 || ^8.1.0",
+    "svelte": "^3.50.0 || ^4.2.2 || ^5.0.0",
+    "svelte-loader": "^3.1.0",
     "ts-loader": "^9.0.0",
     "typescript": "^5.0.0",
     "vue": "^3.2.14",
