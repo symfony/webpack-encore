@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 5.3.0
+
+* Add support for Svelte 5
+
 ## 5.2.0 
 
 * Add support for Webpack CLI ^6.0.0
