@@ -200,6 +200,12 @@
     "stylus-loader": {
       "optional": true
     },
+    "svelte": {
+      "optional": true
+    },
+    "svelte-loader": {
+      "optional": true
+    },
     "ts-loader": {
       "optional": true
     },
