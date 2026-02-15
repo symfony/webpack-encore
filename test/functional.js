@@ -2024,7 +2024,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             const version = packageHelper.getPackageVersion('@symfony/stimulus-bridge');
-            if (!semver.satisfies(version, '^3.0.0')) {
+            if (!semver.satisfies(version, '>3.0.0')) {
                 // we support the old version, but it's not tested
                 this.skip();
 
@@ -2045,12 +2045,14 @@ module.exports = {
                     'node_modules_symfony_mock-module_dist_controller_js.js',
                     'entrypoints.json',
                     'runtime.js',
+                    '@symfony/mock-module/entrypoint.js'
                 ]);
 
                 // test controllers and style are shipped
                 webpackAssert.assertOutputFileContains('main.js', 'app-controller');
                 webpackAssert.assertOutputFileContains('node_modules_symfony_mock-module_dist_controller_js.js', 'mock-module-controller');
                 webpackAssert.assertOutputFileContains('main.css', 'body {}');
+                webpackAssert.assertOutputFileContains('entrypoints.json', '@symfony/mock-module/entrypoint');
 
                 done();
             });
