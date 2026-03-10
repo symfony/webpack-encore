@@ -98,8 +98,8 @@
     "typescript": "^5.0.0",
     "vue": "^3.2.14",
     "vue-loader": "^17.0.0",
-    "webpack": "^5.72",
-    "webpack-cli": "^5.1.4 || ^6.0.0",
+    "webpack": "^5.82.0",
+    "webpack-cli": "^6.0.0",
     "webpack-dev-server": "^5.1.0",
     "webpack-notifier": "^1.15.0"
   },
@@ -132,7 +132,7 @@
     "vue": "^3.2.14",
     "vue-loader": "^17.0.0",
     "webpack": "^5.72",
-    "webpack-cli": "^5.1.4 || ^6.0.0",
+    "webpack-cli": "^6.0.0",
     "webpack-notifier": "^1.15.0"
   },
   "peerDependenciesMeta": {
