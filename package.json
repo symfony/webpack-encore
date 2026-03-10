@@ -7,8 +7,7 @@
     "test": "yarn run test:main && yarn run test:persistent-cache",
     "test:main": "mocha --reporter spec test --recursive --ignore test/persistent-cache/*",
     "test:persistent-cache": "node run-persistent-tests",
-    "lint": "eslint lib test index.js eslint.config.js --report-unused-disable-directives --max-warnings=0",
-    "travis:lint": "yarn run lint"
+    "lint": "eslint lib test index.js eslint.config.js --report-unused-disable-directives --max-warnings=0"
   },
   "bin": {
     "encore": "bin/encore.js"
@@ -23,7 +22,7 @@
     "url": "https://github.com/symfony/webpack-encore/issues"
   },
   "engines": {
-    "node": "^18.12.0 || ^20.0.0 || >=22.0"
+    "node": "^22.13.0 || >=24.0"
   },
   "homepage": "https://github.com/symfony/webpack-encore",
   "dependencies": {

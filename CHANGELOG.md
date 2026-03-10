@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 6.0.0
+
+* Drop support for Node.js <22, minimum is now Node.js 22.13.0
+
 ## 5.3.0
 
 * Add support for Svelte 5
