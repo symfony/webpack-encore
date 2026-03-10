@@ -9,6 +9,7 @@
 * Remove support for style-loader ^3.3.0, see [4.0.0 release notes](https://github.com/webpack/style-loader/releases/tag/v4.0.0)
 * Remove support for less-loader ^11.0.0, see [12.0.0 release notes](https://github.com/webpack/less-loader/releases/tag/v12.0.0)
 * Remove support for postcss-loader ^7.0.0, see [8.0.0 release notes](https://github.com/webpack/postcss-loader/releases/tag/v8.0.0)
+* Remove support for stylus-loader ^7.0.0, see [8.0.0 release notes](https://github.com/webpack/stylus-loader/releases/tag/v8.0.0)
 
 ## 5.3.0
 
