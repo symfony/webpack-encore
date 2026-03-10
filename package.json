@@ -29,7 +29,7 @@
     "@kocal/friendly-errors-webpack-plugin": "^3.0.0",
     "babel-loader": "^10.0.0",
     "css-loader": "^7.1.0",
-    "css-minimizer-webpack-plugin": "^7.0.0",
+    "css-minimizer-webpack-plugin": "^8.0.0",
     "fastest-levenshtein": "^1.0.16",
     "mini-css-extract-plugin": "^2.6.0",
     "picocolors": "^1.1.0",

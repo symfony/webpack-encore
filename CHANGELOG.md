@@ -5,6 +5,7 @@
 * Drop support for Node.js <22, minimum is now Node.js 22.13.0
 * Update dependency from @nuxt/friendly-errors-webpack-plugin to @kocal/friendly-errors-webpack-plugin
 * Remove support for babel-loader ^9.1.3, see [10.0.0 release notes](https://github.com/babel/babel-loader/releases/tag/v10.0.0)
+* Upgrade css-minimizer-webpack-plugin to ^8.0.0, see [release notes](https://github.com/webpack/css-minimizer-webpack-plugin/releases/tag/v8.0.0)
 
 ## 5.3.0
 
