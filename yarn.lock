@@ -1270,6 +1270,16 @@
   dependencies:
     "@jsonjoy.com/buffers" "^1.0.0"
 
+"@kocal/friendly-errors-webpack-plugin@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@kocal/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-3.0.0.tgz#834b6a181194830200eeed848c6b92fcbc927392"
+  integrity sha512-ELJuHiZIFlynsi+hRmxZYZHrN3nF+j4wXRaIgVGVGy/oMtvm0Fmv8n+ZSWurFkWZ+wH/SV3grE+WhNP2MbfypA==
+  dependencies:
+    consola "^3.2.3"
+    error-stack-parser "^2.1.4"
+    picocolors "^1.1.1"
+    string-width "^4.2.3"
+
 "@leichtgewicht/ip-codec@^2.0.1":
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/@leichtgewicht/ip-codec/-/ip-codec-2.0.5.tgz#4fc56c15c580b9adb7dc3c333a134e540b44bfb1"
@@ -1302,16 +1312,6 @@
   dependencies:
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
-
-"@nuxt/friendly-errors-webpack-plugin@^2.5.1":
-  version "2.6.0"
-  resolved "https://registry.yarnpkg.com/@nuxt/friendly-errors-webpack-plugin/-/friendly-errors-webpack-plugin-2.6.0.tgz#bd0cf6cd73b6e1d3e7c7f1c0de43333e69cc660c"
-  integrity sha512-3IZj6MXbzlvUxDncAxgBMLQwGPY/JlNhy2i+AGyOHCAReR5HcBxYjVRBvyaKM9R3s5k4OODYKeHAbrToZH/47w==
-  dependencies:
-    chalk "^2.4.2"
-    consola "^3.2.3"
-    error-stack-parser "^2.1.4"
-    string-width "^4.2.3"
 
 "@puppeteer/browsers@2.9.0":
   version "2.9.0"
