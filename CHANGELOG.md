@@ -2,7 +2,7 @@
 
 ## 6.0.0
 
-* Drop support for Node.js <22, minimum is now Node.js 22.13.0
+* Drop support for Node.js <22.13.0
 * Update @nuxt/friendly-errors-webpack-plugin to @kocal/friendly-errors-webpack-plugin, an updated fork of the original plugin
 * Update css-minimizer-webpack-plugin to ^8.0.0, see [release notes](https://github.com/webpack/css-minimizer-webpack-plugin/releases/tag/v8.0.0)
 * Update webpack from ^5.74.0 to ^5.82.0
