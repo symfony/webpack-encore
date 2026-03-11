@@ -584,9 +584,11 @@ class Encore {
      *              A regular expression (or a string containing one) that
      *              the filenames must match in order to be copied
      *      - {string} to (default: [path][name].[ext])
-     *              Where the files must be copied to. You can add all the
-     *              placeholders supported by the file-loader.
-     *              https://github.com/webpack-contrib/file-loader#placeholders
+     *              Where the files must be copied to. Supported placeholders:
+     *                - [name]: filename without extension
+     *                - [ext]: file extension without the leading dot
+     *                - [path]: relative directory path from context
+     *                - [hash:N]: content hash, optionally truncated to N characters
      *      - {boolean} includeSubdirectories (default: true)
      *              Whether or not the copy should include subdirectories.
      *      - {string} context (default: path of the source directory)

@@ -69,7 +69,6 @@
     "eslint-plugin-jsdoc": "^50.8.0",
     "eslint-plugin-mocha": "^11.1.0",
     "eslint-plugin-n": "^17.21.3",
-    "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^7.0.0 || ^8.0.0 || ^9.0.0",
     "fs-extra": "^10.0.0",
     "globals": "^16.3.0",
@@ -114,7 +113,6 @@
     "@vue/babel-plugin-jsx": "^1.0.0",
     "@vue/babel-preset-jsx": "^1.0.0",
     "@vue/compiler-sfc": "^2.6 || ^3.0.2",
-    "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^7.0.0 || ^8.0.0 || ^9.0.0",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.0",
@@ -164,9 +162,6 @@
       "optional": true
     },
     "@vue/compiler-sfc": {
-      "optional": true
-    },
-    "file-loader": {
       "optional": true
     },
     "fork-ts-checker-webpack-plugin": {
