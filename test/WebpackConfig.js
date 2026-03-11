@@ -1161,7 +1161,7 @@ describe('WebpackConfig object', function() {
                 config.enableVueLoader(() => {}, {
                     version: 4,
                 });
-            }).to.throw('"4" is not a valid value for the "version" option passed to enableVueLoader(). Valid versions are: 2, 3.');
+            }).to.throw('"4" is not a valid value for the "version" option passed to enableVueLoader(). Valid versions are: 3.');
         });
     });
 
