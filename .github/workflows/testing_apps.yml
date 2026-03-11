@@ -87,7 +87,7 @@ jobs:
     env:
       # We don't want Puppeteer to automatically download a browser when dependencies are being installed
       PUPPETEER_SKIP_DOWNLOAD: 'true'
-      
+
     steps:
       -   name: Checkout
           uses: actions/checkout@v4
@@ -95,7 +95,7 @@ jobs:
       -   name: Node ${{matrix.node-versions}}
           uses: actions/setup-node@v4
           with:
-            node-version: '22'
+            node-version: '22.13.0'
 
       -   if: ${{ contains(matrix.app.name, 'pnpm') }}
           name: Install pnpm

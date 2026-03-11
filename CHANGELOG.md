@@ -1,5 +1,18 @@
 # CHANGELOG
 
+## 6.0.0
+
+* Drop support for Node.js <22.13.0
+* Update @nuxt/friendly-errors-webpack-plugin to @kocal/friendly-errors-webpack-plugin, an updated fork of the original plugin
+* Update css-minimizer-webpack-plugin to ^8.0.0, see [release notes](https://github.com/webpack/css-minimizer-webpack-plugin/releases/tag/v8.0.0)
+* Update webpack from ^5.74.0 to ^5.82.0
+* Remove support for babel-loader ^9.1.3, see [10.0.0 release notes](https://github.com/babel/babel-loader/releases/tag/v10.0.0)
+* Remove support for style-loader ^3.3.0, see [4.0.0 release notes](https://github.com/webpack/style-loader/releases/tag/v4.0.0)
+* Remove support for less-loader ^11.0.0, see [12.0.0 release notes](https://github.com/webpack/less-loader/releases/tag/v12.0.0)
+* Remove support for postcss-loader ^7.0.0, see [8.0.0 release notes](https://github.com/webpack/postcss-loader/releases/tag/v8.0.0)
+* Remove support for stylus-loader ^7.0.0, see [8.0.0 release notes](https://github.com/webpack/stylus-loader/releases/tag/v8.0.0)
+* Remove support for webpack-cli ^5.0.0, see [6.0.0 release notes](https://github.com/webpack/webpack-cli/releases/tag/webpack-cli%406.0.0)
+
 ## 5.3.0
 
 * Add support for Svelte 5
