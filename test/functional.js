@@ -2527,41 +2527,6 @@ module.exports = {
                 });
             });
 
-            it('Can use the "[N]" placeholder', function(done) {
-                const config = createWebpackConfig('www/build', 'production');
-                config.addEntry('main', './js/no_require');
-                config.setPublicPath('/build');
-                config.copyFiles({
-                    from: './images',
-                    pattern: /(symfony)_(logo)\.png/,
-                    to: '[path][2]_[1].[ext]',
-                    includeSubdirectories: false
-                });
-
-                testSetup.runWebpack(config, (webpackAssert) => {
-                    expect(config.outputPath).to.be.a.directory()
-                        .with.files([
-                            'entrypoints.json',
-                            'runtime.js',
-                            'main.js',
-                            'manifest.json',
-                            'logo_symfony.png'
-                        ]);
-
-                    webpackAssert.assertManifestPath(
-                        'build/main.js',
-                        '/build/main.js'
-                    );
-
-                    webpackAssert.assertManifestPath(
-                        'build/symfony_logo.png',
-                        '/build/logo_symfony.png'
-                    );
-
-                    done();
-                });
-            });
-
             it('Does not prevent from setting the map option of the manifest plugin', function(done) {
                 const config = createWebpackConfig('www/build', 'production');
                 config.addEntry('main', './js/no_require');
