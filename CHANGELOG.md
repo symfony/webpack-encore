@@ -22,6 +22,7 @@ This is a new major version that contains several backwards-compatibility breaks
 * Update @nuxt/friendly-errors-webpack-plugin to @kocal/friendly-errors-webpack-plugin, a maintained fork of the original plugin
 * Update webpack from ^5.74.0 to ^5.82.0
 * Update css-minimizer-webpack-plugin to ^8.0.0, see [release notes](https://github.com/webpack/css-minimizer-webpack-plugin/releases/tag/v8.0.0)
+* Finish removing Vue 2 support leftovers (JSX code path, `vue-jsx` feature, `version: 2` option, Vue 2 peer dependencies), which was forgotten during v5.0.0
 
 ## 5.3.0
 

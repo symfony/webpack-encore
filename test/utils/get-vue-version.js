@@ -56,7 +56,7 @@ describe('get-vue-version', function() {
         getPackageVersionStub
             .callsFake(() => '2.2.4');
 
-        expect(() => getVueVersion(config)).to.throw('vue version 2 is not supported.');
+        expect(() => getVueVersion(config)).to.throw('The support for Vue 2 has been removed.');
     });
 
     it('returns 3 when Vue 3 beta is installed', function() {

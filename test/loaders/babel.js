@@ -178,17 +178,18 @@ describe('loaders/babel', function() {
     it('getLoaders() with Vue and JSX support', function() {
         const config = createConfig();
         config.enableVueLoader(() => {}, {
+            version: 3,
             useJsx: true,
         });
 
         config.configureBabel(function(babelConfig) {
-            babelConfig.presets.push('foo');
+            babelConfig.plugins.push('foo');
         });
 
         const actualLoaders = babelLoader.getLoaders(config);
 
-        expect(actualLoaders[0].options.presets).to.deep.include.members([
-            require.resolve('@vue/babel-preset-jsx'),
+        expect(actualLoaders[0].options.plugins).to.deep.include.members([
+            require.resolve('@vue/babel-plugin-jsx'),
             'foo'
         ]);
     });
