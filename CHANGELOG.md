@@ -16,6 +16,7 @@ This is a new major version that contains several backwards-compatibility breaks
 * Remove unmaintained file-loader dependency 
   The `[N]` placeholder (regex capture groups in filename patterns) is no longer supported. 
   If you were using patterns like `[1]` or `[2]` in your `Encore.copyFiles()` filename option, you will need to restructure your file organization or use a different naming strategy.
+* Remove deprecated `--https` flag and `devServerConfig.https` option for webpack-dev-server, use `--server-type https` or `configureDevServerOptions()` with `server: 'https'` instead
 
 ### Features
 

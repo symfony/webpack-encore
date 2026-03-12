@@ -13,6 +13,7 @@ const expect = require('chai').expect;
 const WebpackConfig = require('../../lib/WebpackConfig');
 const RuntimeConfig = require('../../lib/config/RuntimeConfig');
 const pathUtil = require('../../lib/config/path-util');
+const configGenerator = require('../../lib/config-generator');
 const process = require('process');
 
 function createConfig() {
@@ -164,6 +165,62 @@ describe('path-util getContentBase()', function() {
             runtimeConfig.devServerPublic = 'https://myhost.local:9090';
 
             expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('https://myhost.local:9090');
+        });
+    });
+
+    describe('calculateDevServerUrl with configGenerator integration', function() {
+        it('generates http URL without server option', function() {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerHost = 'localhost';
+            config.runtimeConfig.devServerPort = 8080;
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+            config.enableSingleRuntimeChunk();
+
+            // Run config generator to set devServerFinalIsHttps
+            configGenerator(config);
+
+            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('http://localhost:8080');
+        });
+
+        it('generates https URL with server: "https" option', function() {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerHost = 'localhost';
+            config.runtimeConfig.devServerPort = 8080;
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+            config.enableSingleRuntimeChunk();
+            config.configureDevServerOptions(options => {
+                options.server = 'https';
+            });
+
+            // Run config generator to set devServerFinalIsHttps
+            configGenerator(config);
+
+            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('https://localhost:8080');
+        });
+
+        it('generates https URL with server: { type: "https" } option', function() {
+            const config = createConfig();
+            config.runtimeConfig.useDevServer = true;
+            config.runtimeConfig.devServerHost = 'localhost';
+            config.runtimeConfig.devServerPort = 8080;
+            config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
+            config.setPublicPath('/');
+            config.addEntry('main', './main');
+            config.enableSingleRuntimeChunk();
+            config.configureDevServerOptions(options => {
+                options.server = { type: 'https' };
+            });
+
+            // Run config generator to set devServerFinalIsHttps
+            configGenerator(config);
+
+            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('https://localhost:8080');
         });
     });
 });

@@ -284,6 +284,74 @@ module.exports = Encore.getWebpackConfig();
         }, 5000);
     });
 
+    it('Run the webpack-dev-server with --server-type https', function(done) {
+        testSetup.emptyTmpDir();
+        const testDir = testSetup.createTestAppDir();
+
+        fs.writeFileSync(
+            path.join(testDir, 'package.json'),
+            `{
+                "devDependencies": {
+                    "@symfony/webpack-encore": "*"
+                }
+            }`
+        );
+
+        fs.writeFileSync(
+            path.join(testDir, 'webpack.config.js'),
+            `
+const Encore = require('../../index.js');
+Encore
+    .enableSingleRuntimeChunk()
+    .setOutputPath('build/')
+    .setPublicPath('/build')
+    .addEntry('main', './js/no_require')
+;
+
+module.exports = Encore.getWebpackConfig();
+            `
+        );
+
+        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const abortController = new AbortController();
+        const node = spawn('node', [binPath, 'dev-server', '--server-type', 'https', `--context=${testDir}`], {
+            cwd: testDir,
+            env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
+            signal: abortController.signal
+        });
+
+        let stdout = '';
+        let stderr = '';
+
+        node.stdout.on('data', (data) => {
+            stdout += data.toString();
+        });
+
+        node.stderr.on('data', (data) => {
+            stderr += data.toString();
+        });
+
+        node.on('error', (error) => {
+            if (error.name !== 'AbortError') {
+                throw new Error('Error executing encore', { cause: error });
+            }
+
+            expect(stdout).to.contain('Running webpack-dev-server ...');
+            expect(stdout).to.contain('Compiled successfully in');
+            expect(stdout).to.contain('webpack compiled successfully');
+
+            expect(stderr).to.contain('[webpack-dev-server] Project is running at:');
+            expect(stderr).to.contain('[webpack-dev-server] Loopback: https://localhost:8080/');
+            expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
+
+            done();
+        });
+
+        setTimeout(() => {
+            abortController.abort();
+        }, 5000);
+    });
+
     describe('Without webpack-dev-server installed', function() {
         before(function() {
             execSync('yarn remove webpack-dev-server --dev', { cwd: projectDir });
