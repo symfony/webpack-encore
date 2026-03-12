@@ -590,13 +590,15 @@ describe('The config-generator function', function() {
             expect(config.runtimeConfig.devServerFinalIsHttps).is.false;
         });
 
-        it('devServer enabled only at the command line', function() {
+        it('devServer enabled with https via configureDevServerOptions', function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
-            config.runtimeConfig.devServerHttps = true;
             config.outputPath = isWindows ? 'C:\\tmp\\public' : '/tmp/public';
             config.setPublicPath('/');
             config.addEntry('main', './main');
+            config.configureDevServerOptions(options => {
+                options.server = 'https';
+            });
 
             configGenerator(config);
             // this should be set when running the config generator

@@ -80,17 +80,6 @@ describe('parse-runtime', function() {
         expect(config.environment).to.equal('dev');
         expect(config.devServerHost).to.equal('foohost.l');
         expect(config.devServerPort).to.equal(9999);
-        expect(config.devServerHttps).to.be.null;
-    });
-
-    it('dev-server command https', function() {
-        const testDir = createTestDirectory();
-        const config = parseArgv(createArgv(['dev-server', '--https', '--host', 'foohost.l', '--port', '9999']), testDir);
-
-        expect(config.useDevServer).to.be.true;
-        expect(config.devServerHost).to.equal('foohost.l');
-        expect(config.devServerPort).to.equal(9999);
-        expect(config.devServerHttps).to.equal(true);
     });
 
     it('dev-server command server-type https', function() {
@@ -100,7 +89,6 @@ describe('parse-runtime', function() {
         expect(config.useDevServer).to.be.true;
         expect(config.devServerHost).to.equal('foohost.l');
         expect(config.devServerPort).to.equal(9999);
-        expect(config.devServerHttps).to.equal(true);
     });
 
     it('dev-server command public', function() {
