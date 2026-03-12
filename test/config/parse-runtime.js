@@ -87,6 +87,7 @@ describe('parse-runtime', function() {
         const config = parseArgv(createArgv(['dev-server', '--server-type', 'https', '--host', 'foohost.l', '--port', '9999']), testDir);
 
         expect(config.useDevServer).to.be.true;
+        expect(config.devServerServerType).to.equal('https');
         expect(config.devServerHost).to.equal('foohost.l');
         expect(config.devServerPort).to.equal(9999);
     });
