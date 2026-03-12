@@ -276,6 +276,18 @@ module.exports = Encore.getWebpackConfig();
             expect(stderr).to.contain('[webpack-dev-server] Loopback: http://localhost:8080/');
             expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
 
+            // Verify entrypoints.json contains http:// URLs
+            const entrypoints = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
+            );
+            expect(entrypoints.entrypoints.main.js[0]).to.contain('http://localhost:8080/build/');
+
+            // Verify manifest.json contains http:// URLs
+            const manifest = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
+            );
+            expect(manifest['build/main.js']).to.contain('http://localhost:8080/build/');
+
             done();
         });
 
@@ -343,6 +355,19 @@ module.exports = Encore.getWebpackConfig();
             expect(stderr).to.contain('[webpack-dev-server] Project is running at:');
             expect(stderr).to.contain('[webpack-dev-server] Loopback: https://localhost:8080/');
             expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
+
+            // Verify entrypoints.json contains https:// URLs
+            const entrypoints = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
+            );
+
+            expect(entrypoints.entrypoints.main.js[0]).to.contain('https://localhost:8080/build/');
+
+            // Verify manifest.json contains https:// URLs
+            const manifest = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
+            );
+            expect(manifest['build/main.js']).to.contain('https://localhost:8080/build/');
 
             done();
         });
