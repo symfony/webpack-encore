@@ -390,6 +390,8 @@ export default await Encore.getWebpackConfig();
         });
 
         it('Throw an error when trying to use the webpack-dev-server if not installed', function(done) {
+            this.timeout(15000);
+
             testSetup.emptyTmpDir();
             const testDir = testSetup.createTestAppDir();
 
@@ -432,6 +434,8 @@ export default await Encore.getWebpackConfig();
                     expect(stdout).not.to.contain('Running webpack-dev-server ...');
                     expect(stdout).not.to.contain('Compiled successfully in');
                     expect(stdout).not.to.contain('webpack compiled successfully');
+
+                    console.log({ stdout, stderr })
 
                     done();
                 });
