@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 /**
  * @import webpack from 'webpack'
  */
@@ -21,12 +19,13 @@
  * @typedef {{from: string, pattern?: RegExp|string, to?: string|null, includeSubdirectories?: boolean, context?: string}} CopyFilesOptions
  */
 
-const EncoreProxy = require('./lib/EncoreProxy');
-const WebpackConfig = require('./lib/WebpackConfig');
-const configGenerator = require('./lib/config-generator');
-const validator = require('./lib/config/validator');
-const parseRuntime = require('./lib/config/parse-runtime');
-const context = require('./lib/context');
+import EncoreProxy from './lib/EncoreProxy.js';
+import WebpackConfig from './lib/WebpackConfig.js';
+import configGenerator from './lib/config-generator.js';
+import validator from './lib/config/validator.js';
+import parseRuntime from './lib/config/parse-runtime.js';
+import context from './lib/context.js';
+import yargsParser from 'yargs-parser';
 
 let runtimeConfig = context.runtimeConfig;
 let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig) : null;
@@ -328,8 +327,8 @@ class Encore {
      * than the DefinePlugin:
      *
      * ```
-     * const Encore = require('@symfony/webpack-encore');
-     * const PluginPriorities = require('@symfony/webpack-encore/lib/plugins/plugin-priorities.js');
+     * import Encore from '@symfony/webpack-encore';
+     * import PluginPriorities from '@symfony/webpack-encore/lib/plugins/plugin-priorities.js';
      *
      * Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
      * ```
@@ -1621,15 +1620,15 @@ class Encore {
      * Use this at the bottom of your webpack.config.js file:
      *
      * ```
-     * module.exports = Encore.getWebpackConfig();
+     * export default await Encore.getWebpackConfig();
      * ```
      *
-     * @returns {webpack.Configuration}
+     * @returns {Promise<webpack.Configuration>}
      */
-    getWebpackConfig() {
+    async getWebpackConfig() {
         validator(webpackConfig);
 
-        return configGenerator(webpackConfig);
+        return await configGenerator(webpackConfig);
     }
 
     /**
@@ -1677,7 +1676,7 @@ class Encore {
         runtimeConfig = parseRuntime(
             Object.assign(
                 {},
-                require('yargs-parser')([environment]),
+                yargsParser([environment]),
                 options
             ),
             process.cwd()
@@ -1732,4 +1731,4 @@ class Encore {
  *
  * @type {Encore}
  */
-module.exports = EncoreProxy.createProxy(new Encore());
+export default EncoreProxy.createProxy(new Encore());
