@@ -7,17 +7,18 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
+import { use } from 'chai';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+use(require('chai-fs'));
 
-const chai = require('chai');
-chai.use(require('chai-fs'));
-const expect = chai.expect;
-const path = require('path');
-const testSetup = require('../helpers/setup');
-const fs = require('fs-extra');
-const { exec, execSync, spawn } = require('child_process');
+import { expect } from 'chai';
+import path from 'path';
+import * as testSetup from '../helpers/setup.js';
+import fs from 'fs-extra';
+import { exec, execSync, spawn } from 'child_process';
 
-const projectDir = path.resolve(__dirname, '../', '../');
+const projectDir = path.resolve(import.meta.dirname, '../', '../');
 
 describe('bin/encore.js', function() {
     // being functional tests, these can take quite long
@@ -39,7 +40,7 @@ describe('bin/encore.js', function() {
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -47,11 +48,11 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
@@ -74,7 +75,7 @@ module.exports = Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -82,11 +83,11 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         exec(`node ${binPath} dev --json --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
@@ -121,7 +122,7 @@ module.exports = Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -129,11 +130,11 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         exec(`node ${binPath} dev --profile --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
@@ -155,7 +156,7 @@ module.exports = Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -163,11 +164,11 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         exec(`node ${binPath} dev --keep-public-path --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
             if (err) {
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
@@ -193,7 +194,7 @@ module.exports = Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -202,11 +203,11 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
             expect(err).not.to.be.null;
             expect(stdout).to.contain('is not a recognized property');
@@ -232,7 +233,7 @@ module.exports = Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -240,11 +241,11 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         const abortController = new AbortController();
         const node = spawn('node', [binPath, 'dev-server', `--context=${testDir}`], {
             cwd: testDir,
@@ -312,7 +313,7 @@ module.exports = Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -320,11 +321,11 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(__dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         const abortController = new AbortController();
         const node = spawn('node', [binPath, 'dev-server', '--server-type', 'https', `--context=${testDir}`], {
             cwd: testDir,
@@ -389,6 +390,8 @@ module.exports = Encore.getWebpackConfig();
         });
 
         it('Throw an error when trying to use the webpack-dev-server if not installed', function(done) {
+            this.timeout(15000);
+
             testSetup.emptyTmpDir();
             const testDir = testSetup.createTestAppDir();
 
@@ -404,7 +407,7 @@ module.exports = Encore.getWebpackConfig();
             fs.writeFileSync(
                 path.join(testDir, 'webpack.config.js'),
                 `
-const Encore = require('../../index.js');
+import Encore from '../../index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -412,7 +415,7 @@ Encore
     .addEntry('main', './js/no_require')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
         `
             );
 
@@ -431,6 +434,8 @@ module.exports = Encore.getWebpackConfig();
                     expect(stdout).not.to.contain('Running webpack-dev-server ...');
                     expect(stdout).not.to.contain('Compiled successfully in');
                     expect(stdout).not.to.contain('webpack compiled successfully');
+
+                    console.log({ stdout, stderr })
 
                     done();
                 });

@@ -1,4 +1,4 @@
-const Encore = require('@symfony/webpack-encore');
+import Encore from '@symfony/webpack-encore';
 
 Encore
     .setOutputPath('public/build/')
@@ -7,4 +7,4 @@ Encore
     .addEntry('app', './assets/app.js')
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();

@@ -7,14 +7,12 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const packageHelper = require('../lib/package-helper');
-const path = require('path');
-const process = require('process');
-const fs = require('fs');
-const stripAnsi = require('strip-ansi');
+import { expect } from 'chai';
+import packageHelper from '../lib/package-helper.js';
+import path from 'path';
+import process from 'process';
+import fs from 'fs';
+import stripAnsi from 'strip-ansi';
 
 describe('package-helper', function() {
     const baseCwd = process.cwd();
@@ -25,7 +23,7 @@ describe('package-helper', function() {
         });
 
         it('missing packages without any lock file', function() {
-            process.chdir(path.join(__dirname , '../fixtures/package-helper/empty'));
+            process.chdir(path.join(import.meta.dirname , '../fixtures/package-helper/empty'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
@@ -34,7 +32,7 @@ describe('package-helper', function() {
         });
 
         it('missing packages with package-lock.json only', function() {
-            process.chdir(path.join(__dirname, '../fixtures/package-helper/npm'));
+            process.chdir(path.join(import.meta.dirname, '../fixtures/package-helper/npm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
@@ -43,7 +41,7 @@ describe('package-helper', function() {
         });
 
         it('missing packages with yarn.lock only', function() {
-            process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn'));
+            process.chdir(path.join(import.meta.dirname, '../fixtures/package-helper/yarn'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
@@ -52,7 +50,7 @@ describe('package-helper', function() {
         });
 
         it('missing packages with pnpm-lock.yaml only', function() {
-            process.chdir(path.join(__dirname, '../fixtures/package-helper/pnpm'));
+            process.chdir(path.join(import.meta.dirname, '../fixtures/package-helper/pnpm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
@@ -61,7 +59,7 @@ describe('package-helper', function() {
         });
 
         it('missing packages with both package-lock.json and yarn.lock', function() {
-            process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn-npm'));
+            process.chdir(path.join(import.meta.dirname, '../fixtures/package-helper/yarn-npm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
@@ -70,7 +68,7 @@ describe('package-helper', function() {
         });
 
         it('missing packages with package-lock.json, yarn.lock and pnpm-lock.yaml', function() {
-            process.chdir(path.join(__dirname, '../fixtures/package-helper/pnpm-yarn-npm'));
+            process.chdir(path.join(import.meta.dirname, '../fixtures/package-helper/pnpm-yarn-npm'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
@@ -79,7 +77,7 @@ describe('package-helper', function() {
         });
 
         it('missing packages with alternative packages', function() {
-            process.chdir(path.join(__dirname, '../fixtures/package-helper/yarn'));
+            process.chdir(path.join(import.meta.dirname, '../fixtures/package-helper/yarn'));
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' },
                 [{ name: 'bar' }, { name: 'baz' }],
@@ -196,7 +194,7 @@ describe('package-helper', function() {
             ];
 
             const packageInfo = JSON.parse(
-                fs.readFileSync(path.join(__dirname, '../package.json'))
+                fs.readFileSync(path.join(import.meta.dirname, '../package.json'))
             );
 
             const expectedPackages = [

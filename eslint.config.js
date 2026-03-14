@@ -7,14 +7,16 @@
  * file that was distributed with this source code.
  */
 
-const globals = require('globals');
-const js = require('@eslint/js');
-const nodePlugin = require('eslint-plugin-n');
-const jsdoc = require('eslint-plugin-jsdoc');
-const headers = require('eslint-plugin-headers');
-const mocha = require('eslint-plugin-mocha').default;
+import globals from 'globals';
+import js from '@eslint/js';
+import nodePlugin from 'eslint-plugin-n';
+import jsdoc from 'eslint-plugin-jsdoc';
+import headers from 'eslint-plugin-headers';
+import mochaPlugin from 'eslint-plugin-mocha';
 
-module.exports = [
+const mocha = mochaPlugin.default ?? mochaPlugin;
+
+export default [
     js.configs.recommended,
     nodePlugin.configs['flat/recommended'],
     jsdoc.configs['flat/recommended'],
@@ -24,7 +26,8 @@ module.exports = [
             headers,
         },
         languageOptions: {
-            ecmaVersion: 2021,
+            ecmaVersion: 2022,
+            sourceType: 'module',
             globals: {
                 ...globals.browser,
                 ...globals.node,
@@ -40,7 +43,6 @@ module.exports = [
             'no-template-curly-in-string': 'error',
             'no-caller': 'error',
             'eqeqeq': 'error',
-            'global-require': 'off',
             'brace-style': 'error',
             'eol-last': 'error',
             'indent': ['error', 4, { 'SwitchCase': 1 }],
@@ -74,16 +76,10 @@ module.exports = [
             'n/no-unsupported-features/node-builtins': ['error'],
             'n/no-deprecated-api': 'error',
             'n/no-missing-import': 'error',
-            'n/no-missing-require': [
-                'error',
-                {
-                    'allowModules': [
-                        'webpack'
-                    ]
-                }
-            ],
+            'n/no-missing-require': 'off',
             'n/no-unpublished-bin': 'error',
-            'n/no-unpublished-require': 'error',
+            'n/no-unpublished-import': 'error',
+            'n/no-unpublished-require': 'off',
             'n/process-exit-as-throw': 'error',
             'headers/header-format': ['error', {
                 source: 'string',
@@ -100,12 +96,6 @@ file that was distributed with this source code.`,
             'jsdoc': {
                 'mode': 'typescript'
             }
-        },
-    },
-    {
-        'files': ['.eslintrc.js'],
-        'rules': {
-            'quotes': ['error', 'double'],
         },
     },
     {

@@ -1,4 +1,4 @@
-const Encore = require('@symfony/webpack-encore');
+import Encore from '@symfony/webpack-encore';
 
 Encore
     .setOutputPath('public/build/')
@@ -8,7 +8,7 @@ Encore
 
     // Configure Babel
     .configureBabel((config) => {
-        config.plugins.push(require.resolve('@babel/plugin-proposal-partial-application'));
+        config.plugins.push(import.meta.resolve('@babel/plugin-proposal-partial-application'));
     })
     .configureBabelPresetEnv((config) => {
         config.useBuiltIns = 'usage';
@@ -16,4 +16,4 @@ Encore
     })
 ;
 
-module.exports = Encore.getWebpackConfig();
+export default await Encore.getWebpackConfig();
