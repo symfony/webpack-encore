@@ -1044,7 +1044,7 @@ describe('Functional tests using webpack', function() {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1370,9 +1370,8 @@ module.exports = {
             });
         });
 
-        it('TypeScript is compiled and type checking is done in a separate process!', function(done) {
+        it('TypeScript is compiled and type checking is done in a separate process!', async function() {
             this.timeout(10000);
-            setTimeout(done, 9000);
 
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -1383,12 +1382,14 @@ module.exports = {
 
             });
 
-            expect(function() {
-                testSetup.runWebpack(config, (webpackAssert) => {
-                    done();
-                });
+            try {
+                await testSetup.runWebpack(config, () => {});
+                // If we get here, webpack didn't throw — fail the test
+                expect.fail('Expected runWebpack to throw "Cannot find the" error');
+            } catch (error) {
                 // Cannot find the "/path/to/tsconfig.json" file
-            }).to.throw('Cannot find the');
+                expect(error.message).to.contain('Cannot find the');
+            }
         });
 
         it('TypeScript can be compiled by Babel', function(done) {
@@ -1472,7 +1473,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1540,7 +1541,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1634,7 +1635,7 @@ module.exports = {
             // Enable the PostCSS loader so we can use `lang="postcss"`
             config.enablePostCssLoader();
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1720,7 +1721,7 @@ module.exports = {
             // Enable the PostCSS loader so we can use `lang="postcss"`
             config.enablePostCssLoader();
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1802,7 +1803,7 @@ module.exports = {
             // Enable the PostCSS loader so we can use `lang="postcss"`
             config.enablePostCssLoader();
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1881,7 +1882,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1903,7 +1904,7 @@ module.exports = {
             config.enableLessLoader();
             config.configureBabel(function(config) {
                 // throw new Error(JSON.stringify(config));
-                expect(config.presets[0][0]).to.equal(require.resolve('@babel/preset-env'));
+                expect(config.presets[0][0]).to.equal(import.meta.resolve('@babel/preset-env'));
                 config.presets[0][1].targets = {
                     chrome: 109
                 };

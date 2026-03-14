@@ -9,6 +9,7 @@
 
 import { expect } from 'chai';
 import parseArgv from '../../lib/config/parse-runtime.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 import * as testSetup from '../helpers/setup.js';
 import fs from 'fs-extra';
 import path from 'path';
@@ -41,7 +42,8 @@ describe('parse-runtime', function() {
         expect(config.context).to.equal(testDir);
         expect(config.helpRequested).to.be.true;
         expect(config.isValidCommand).to.be.false;
-        expect(config.babelRcFileExists).to.be.false;
+        // babelRcFileExists detection is deferred to build time
+        expect(config.babelRcFileExists).to.be.null;
     });
 
     it('dev command', function() {
@@ -105,40 +107,43 @@ describe('parse-runtime', function() {
         expect(config.context).to.equal('/tmp/custom-context');
     });
 
-    it('babel config in package.json detected when present', function() {
+    it('babel config in package.json detected when present', async function() {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, 'package.json'),
             '{"babel": {}}'
         );
 
-        const config = parseArgv(createArgv(['dev']), projectDir);
+        const runtimeConfig = parseArgv(createArgv(['dev']), projectDir);
+        const webpackConfig = new WebpackConfig(runtimeConfig);
 
-        expect(config.babelRcFileExists).to.be.true;
+        expect(await webpackConfig.doesBabelRcFileExist()).to.be.true;
     });
 
-    it('.babelrc detected when present', function() {
+    it('.babelrc detected when present', async function() {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, '.babelrc'),
             '{}'
         );
 
-        const config = parseArgv(createArgv(['dev']), projectDir);
+        const runtimeConfig = parseArgv(createArgv(['dev']), projectDir);
+        const webpackConfig = new WebpackConfig(runtimeConfig);
 
-        expect(config.babelRcFileExists).to.be.true;
+        expect(await webpackConfig.doesBabelRcFileExist()).to.be.true;
     });
 
-    it('babel.config.json detected when present', function() {
+    it('babel.config.json detected when present', async function() {
         const projectDir = createTestDirectory();
         fs.writeFileSync(
             path.join(projectDir, 'babel.config.json'),
             '{}'
         );
 
-        const config = parseArgv(createArgv(['dev']), projectDir);
+        const runtimeConfig = parseArgv(createArgv(['dev']), projectDir);
+        const webpackConfig = new WebpackConfig(runtimeConfig);
 
-        expect(config.babelRcFileExists).to.be.true;
+        expect(await webpackConfig.doesBabelRcFileExist()).to.be.true;
     });
 
     it('dev-server command --keep-public-path', function() {

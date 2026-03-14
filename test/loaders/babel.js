@@ -8,12 +8,9 @@
  */
 
 import { expect } from 'chai';
-import { createRequire } from 'node:module';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import babelLoader from '../../lib/loaders/babel.js';
-
-const require = createRequire(import.meta.url);
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -77,7 +74,7 @@ describe('loaders/babel', function() {
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
         expect(actualLoaders[0].options.presets[0]).to.deep.equal([
-            require.resolve('@babel/preset-env'),
+            import.meta.resolve('@babel/preset-env'),
             {
                 corejs: null,
                 modules: false,
@@ -86,7 +83,7 @@ describe('loaders/babel', function() {
             },
         ]);
         expect(actualLoaders[0].options.presets[1]).to.deep.equal([
-            require.resolve('@babel/preset-react'),
+            import.meta.resolve('@babel/preset-react'),
             {
                 runtime: 'automatic',
             }
@@ -110,7 +107,7 @@ describe('loaders/babel', function() {
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
         expect(actualLoaders[0].options.presets[0]).to.deep.equal([
-            require.resolve('@babel/preset-env'),
+            import.meta.resolve('@babel/preset-env'),
             {
                 corejs: null,
                 modules: false,
@@ -119,7 +116,7 @@ describe('loaders/babel', function() {
             },
         ]);
         expect(actualLoaders[0].options.presets[1]).to.deep.equal([
-            require.resolve('@babel/preset-react'),
+            import.meta.resolve('@babel/preset-react'),
             {
                 runtime: 'automatic',
                 development: true,
@@ -140,7 +137,7 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            [require.resolve('@babel/plugin-transform-react-jsx'), { pragma: 'h' }],
+            [import.meta.resolve('@babel/plugin-transform-react-jsx'), { pragma: 'h' }],
             'foo'
         ]);
     });
@@ -156,7 +153,7 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            [require.resolve('@babel/plugin-transform-react-jsx')],
+            [import.meta.resolve('@babel/plugin-transform-react-jsx')],
             'foo'
         ]);
     });
@@ -190,7 +187,7 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            require.resolve('@vue/babel-plugin-jsx'),
+            import.meta.resolve('@vue/babel-plugin-jsx'),
             'foo'
         ]);
     });
@@ -227,8 +224,8 @@ describe('loaders/babel', function() {
 
         const actualLoaders = await babelLoader.getLoaders(config);
 
-        expect(actualLoaders[0].options.presets[0][0]).to.equal(require.resolve('@babel/preset-env'));
-        expect(actualLoaders[0].options.presets[1][0]).to.equal(require.resolve('@babel/preset-typescript'));
+        expect(actualLoaders[0].options.presets[0][0]).to.equal(import.meta.resolve('@babel/preset-env'));
+        expect(actualLoaders[0].options.presets[1][0]).to.equal(import.meta.resolve('@babel/preset-typescript'));
         expect(actualLoaders[0].options.presets[1][1]).to.equal(presetTypeScriptOptions);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
             'foo'

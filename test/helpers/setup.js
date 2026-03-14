@@ -28,6 +28,18 @@ export function createTestAppDir(rootDir = null, subDir = null) {
     // copy the fixtures into this new directory
     fs.copySync(testFixturesDir, testAppDir);
 
+    // Write a default package.json so that this directory has its own
+    // package boundary. Without this, the .js fixture files would inherit
+    // "type": "module" from the project root's package.json, causing
+    // webpack to treat them as strict ESM (requiring fully-specified
+    // imports, disabling require.ensure, etc.).
+    if (!fs.existsSync(path.join(testAppDir, 'package.json'))) {
+        fs.writeFileSync(
+            path.join(testAppDir, 'package.json'),
+            JSON.stringify({ private: true })
+        );
+    }
+
     return testAppDir;
 }
 

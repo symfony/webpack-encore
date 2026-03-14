@@ -23,7 +23,7 @@ function createConfig() {
 }
 
 describe('plugins/forkedtypecheck', function() {
-    it('getPlugins() basic usage', function() {
+    it('getPlugins() basic usage', async function() {
         const config = createConfig();
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking();
@@ -34,7 +34,7 @@ describe('plugins/forkedtypecheck', function() {
         expect(config.plugins[0].plugin).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
         expect(config.plugins[0].plugin.options.silent).to.be.undefined;
         // after enabling plugin, check typescript loader has right config
-        const actualLoaders = tsLoader.getLoaders(config);
+        const actualLoaders = await tsLoader.getLoaders(config);
         expect(actualLoaders[1].options.transpileOnly).to.be.true;
     });
 

@@ -16,9 +16,6 @@ import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 import webpack from 'webpack';
 import path from 'path';
 import logger from '../lib/logger.js';
-import { createRequire } from 'module';
-
-const require = createRequire(import.meta.url);
 
 const isWindows = (process.platform === 'win32');
 
@@ -530,7 +527,7 @@ describe('The config-generator function', function() {
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
 
             // check for the default env preset only
-            expect(jsRule.use[0].options.presets[0]).contains(require.resolve('@babel/preset-env'));
+            expect(jsRule.use[0].options.presets[0]).contains(import.meta.resolve('@babel/preset-env'));
         });
     });
 
@@ -873,7 +870,7 @@ describe('The config-generator function', function() {
             expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
 
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === import.meta.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
 
@@ -923,7 +920,7 @@ describe('The config-generator function', function() {
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === import.meta.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
             expect(babelEnvPreset[1].corejs).to.equal(3);
         });
@@ -940,7 +937,7 @@ describe('The config-generator function', function() {
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === import.meta.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
         });
 
@@ -957,7 +954,7 @@ describe('The config-generator function', function() {
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === require.resolve('@babel/preset-env'));
+            const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === import.meta.resolve('@babel/preset-env'));
             expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
         });
     });
