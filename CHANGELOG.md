@@ -6,6 +6,24 @@ This is a new major version that contains several backwards-compatibility breaks
 
 ### BC Breaks
 
+* Migrate from CommonJS to ESM — the package now requires `"type": "module"` in your project or 
+  the use of `.mjs` file extensions. Update your `webpack.config.js`:
+  ```js
+  // Before (CJS)
+  const Encore = require('@symfony/webpack-encore');
+  // ...
+  module.exports = Encore.getWebpackConfig();
+
+  // After (ESM)
+  import Encore from '@symfony/webpack-encore';
+  // ...
+  export default await Encore.getWebpackConfig();
+  ```
+  Note: `Encore.getWebpackConfig()` is now **async** and returns a `Promise`. Use `await` at the
+  top level of your webpack config (webpack supports async config files natively).
+* The package `"exports"` field is now restrictive: only `"@symfony/webpack-encore"` and
+  `"@symfony/webpack-encore/lib/plugins/plugin-priorities.js"` are exposed as public entry points.
+  If you were importing other internal modules directly, those imports will no longer work.
 * Remove support of Node.js <22.13.0
 * Remove support of babel-loader@^9.1.3, see possible BC breaks in [10.0.0 release notes](https://github.com/babel/babel-loader/releases/tag/v10.0.0)
 * Remove support of style-loader@^3.3.0, see possible BC breaks in [4.0.0 release notes](https://github.com/webpack/style-loader/releases/tag/v4.0.0)

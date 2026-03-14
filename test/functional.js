@@ -7,19 +7,18 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
+import { expect, use } from 'chai';
+import { createRequire } from 'module';
+import path from 'path';
+import * as testSetup from './helpers/setup.js';
+import fs from 'fs-extra';
+import getVueVersion from '../lib/utils/get-vue-version.js';
+import packageHelper from '../lib/package-helper.js';
+import semver from 'semver';
+import puppeteer from 'puppeteer';
 
-const chai = require('chai');
-chai.use(require('chai-fs'));
-chai.use(require('chai-subset'));
-const expect = chai.expect;
-const path = require('path');
-const testSetup = require('./helpers/setup');
-const fs = require('fs-extra');
-const getVueVersion = require('../lib/utils/get-vue-version');
-const packageHelper = require('../lib/package-helper');
-const semver = require('semver');
-const puppeteer = require('puppeteer');
+const require = createRequire(import.meta.url);
+use(require('chai-fs'));
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     const webpackConfig = testSetup.createWebpackConfig(
@@ -2035,7 +2034,7 @@ module.exports = {
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
             config.addEntry('main', './stimulus/assets/app.js');
-            config.enableStimulusBridge(__dirname + '/../fixtures/stimulus/assets/controllers.json');
+            config.enableStimulusBridge(import.meta.dirname + '/../fixtures/stimulus/assets/controllers.json');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([

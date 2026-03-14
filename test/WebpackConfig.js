@@ -7,19 +7,17 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const WebpackConfig = require('../lib/WebpackConfig');
-const RuntimeConfig = require('../lib/config/RuntimeConfig');
-const path = require('path');
-const fs = require('fs');
-const webpack = require('webpack');
-const logger = require('../lib/logger');
+import { expect } from 'chai';
+import WebpackConfig from '../lib/WebpackConfig.js';
+import RuntimeConfig from '../lib/config/RuntimeConfig.js';
+import path from 'path';
+import fs from 'fs';
+import webpack from 'webpack';
+import logger from '../lib/logger.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
 
     return new WebpackConfig(runtimeConfig);
@@ -47,8 +45,8 @@ describe('WebpackConfig object', function() {
         // Make sure the newly created directories are removed
         // before and after each test
         const cleanupNewDirectories = () => {
-            removeDirectory(path.resolve(__dirname, 'new_dir'));
-            removeDirectory(path.resolve(__dirname, '..', 'new_dir'));
+            removeDirectory(path.resolve(import.meta.dirname, 'new_dir'));
+            removeDirectory(path.resolve(import.meta.dirname, '..', 'new_dir'));
         };
 
         beforeEach(cleanupNewDirectories);
@@ -57,23 +55,23 @@ describe('WebpackConfig object', function() {
 
         it('use absolute, existent path', function() {
             const config = createConfig();
-            config.setOutputPath(__dirname);
+            config.setOutputPath(import.meta.dirname);
 
-            expect(config.outputPath).to.equal(__dirname);
+            expect(config.outputPath).to.equal(import.meta.dirname);
         });
 
         it('relative path, becomes absolute', function() {
             const config = createConfig();
             config.setOutputPath('new_dir');
 
-            // __dirname is the context
+            // import.meta.dirname is the context
             expect(config.outputPath).to.equal(
-                path.join(__dirname, '/new_dir')
+                path.join(import.meta.dirname, '/new_dir')
             );
         });
 
         it('non-existent path creates directory', function() {
-            const targetPath = path.join(__dirname, 'new_dir');
+            const targetPath = path.join(import.meta.dirname, 'new_dir');
             if (fs.existsSync(targetPath)) {
                 fs.rmdirSync(targetPath);
             }
@@ -84,7 +82,7 @@ describe('WebpackConfig object', function() {
         });
 
         it('non-existent directory, 3 levels deep is created correctly', function() {
-            var targetPath = path.join(__dirname, 'new_dir', 'subdir1', 'subdir2');
+            var targetPath = path.join(import.meta.dirname, 'new_dir', 'subdir1', 'subdir2');
             if (fs.existsSync(targetPath)) {
                 fs.rmdirSync(targetPath);
             }
@@ -95,7 +93,7 @@ describe('WebpackConfig object', function() {
         });
 
         it('non-existent path outside of the context directory works if only one directory has to be created', function() {
-            var targetPath = path.join(__dirname, '..', 'new_dir');
+            var targetPath = path.join(import.meta.dirname, '..', 'new_dir');
             if (fs.existsSync(targetPath)) {
                 fs.rmdirSync(targetPath);
             }
@@ -106,7 +104,7 @@ describe('WebpackConfig object', function() {
         });
 
         it('non-existent path outside of the context directory throws an error if more than one directory has to be created', function() {
-            var targetPath = path.join(__dirname, '..', 'new_dir', 'subdir');
+            var targetPath = path.join(import.meta.dirname, '..', 'new_dir', 'subdir');
             if (fs.existsSync(targetPath)) {
                 fs.rmdirSync(targetPath);
             }
