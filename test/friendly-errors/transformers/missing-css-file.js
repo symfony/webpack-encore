@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const transform = require('../../../lib/friendly-errors/transformers/missing-css-file');
+import { expect } from 'chai';
+import transform from '../../../lib/friendly-errors/transformers/missing-css-file.js';
 
 describe('transform/missing-css-file', function() {
 

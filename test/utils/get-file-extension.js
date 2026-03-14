@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const getFileExtension = require('../../lib/utils/get-file-extension');
+import { expect } from 'chai';
+import getFileExtension from '../../lib/utils/get-file-extension.js';
 
 describe('get-file-extension', function() {
     it('returns the extension of simple filenames', function() {

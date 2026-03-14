@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const formatter = require('../../../lib/friendly-errors/formatters/missing-loader');
+import { expect } from 'chai';
+import formatter from '../../../lib/friendly-errors/formatters/missing-loader.js';
 
 describe('formatters/missing-loader', function() {
 

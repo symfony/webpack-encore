@@ -7,15 +7,13 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const transformFactory = require('../../../lib/friendly-errors/transformers/missing-loader');
-const RuntimeConfig = require('../../../lib/config/RuntimeConfig');
-const WebpackConfig = require('../../../lib/WebpackConfig');
+import { expect } from 'chai';
+import transformFactory from '../../../lib/friendly-errors/transformers/missing-loader.js';
+import RuntimeConfig from '../../../lib/config/RuntimeConfig.js';
+import WebpackConfig from '../../../lib/WebpackConfig.js';
 
 const runtimeConfig = new RuntimeConfig();
-runtimeConfig.context = __dirname;
+runtimeConfig.context = import.meta.dirname;
 runtimeConfig.babelRcFileExists = false;
 const transform = transformFactory(new WebpackConfig(runtimeConfig));
 

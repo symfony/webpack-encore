@@ -7,13 +7,10 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const path = require('path');
-const fs = require('fs');
-const chai = require('chai');
-const expect = chai.expect;
-const regexEscaper = require('../../lib/utils/regexp-escaper');
+import path from 'path';
+import fs from 'fs';
+import { expect } from 'chai';
+import regexEscaper from '../../lib/utils/regexp-escaper.js';
 
 const loadManifest = function(webpackConfig) {
     return JSON.parse(
@@ -71,7 +68,7 @@ const convertFilenameToMatcher = function(filename) {
 
 class Assert {
     /**
-     * @param {import('../../lib/WebpackConfig')} webpackConfig
+     * @param {import('../../lib/WebpackConfig.js').default} webpackConfig
      */
     constructor(webpackConfig) {
         this.webpackConfig = webpackConfig;
@@ -275,6 +272,6 @@ class Assert {
     }
 }
 
-module.exports = function(webpackConfig) {
+export default function(webpackConfig) {
     return new Assert(webpackConfig);
-};
+}
