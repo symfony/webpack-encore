@@ -1,12 +1,29 @@
 # CHANGELOG
 
-## 6.0.0
+## 7.0.0 - The ESM-Only & Async-first Release
 
-This is a new major version that contains several backwards-compatibility breaks, but for the best!
+The Node.js ecosystem has largely moved to ESM (ECMAScript Modules) as the standard module format.
+Most actively maintained packages **now ship ESM-only**, and CommonJS is increasingly treated as a legacy format. 
+
+Continuing to publish as CJS would mean **fighting against the ecosystem**. Using older versions of dependencies, 
+adding workarounds for ESM-only packages, and missing out on benefits like static analysis, tree-shaking, and top-level `await`. 
+
+Since Encore 6.0 already requires Node.js `^22.13.0 || >=24.0`, which has full ESM support, there is no compatibility
+reason to keep CJS. **This release makes the move to ESM-only.**
+
+This migration also unlocks the use of `async`/`await` in Encore's internals, which was previously
+impossible due to compatibility issues. For example, when we migrated from `eslint-loader` to `eslint-webpack-plugin` in 
+[#985](https://github.com/symfony/webpack-encore/pull/985), the new ESLint API was async-only, but
+`Encore.getWebpackConfig()` was synchronous, forcing a `sync-rpc` workaround to bridge the gap.
+Even though the issue had been _resolved_ when ESLint support was removed, 
+it reappeared with Babel when Encore checks whether a Babel configuration file already exists.
+
+Now that `getWebpackConfig()` is natively async, this entire class of problems disappears, and **Encore
+can adopt modern async APIs from the ecosystem without hacks**.
 
 ### BC Breaks
 
-* Migrate from CommonJS to ESM — the package now requires `"type": "module"` in your project or 
+* Migrate from CommonJS to ESM — the package now requires `"type": "module"` in your project or
   the use of `.mjs` file extensions. Update your `webpack.config.js`:
   ```js
   // Before (CJS)
@@ -21,9 +38,17 @@ This is a new major version that contains several backwards-compatibility breaks
   ```
   Note: `Encore.getWebpackConfig()` is now **async** and returns a `Promise`. Use `await` at the
   top level of your webpack config (webpack supports async config files natively).
+
 * The package `"exports"` field is now restrictive: only `"@symfony/webpack-encore"` and
   `"@symfony/webpack-encore/lib/plugins/plugin-priorities.js"` are exposed as public entry points.
   If you were importing other internal modules directly, those imports will no longer work.
+
+## 6.0.0
+
+This is a new major version that contains several backwards-compatibility breaks, but for the best!
+
+### BC Breaks
+
 * Remove support of Node.js <22.13.0
 * Remove support of babel-loader@^9.1.3, see possible BC breaks in [10.0.0 release notes](https://github.com/babel/babel-loader/releases/tag/v10.0.0)
 * Remove support of style-loader@^3.3.0, see possible BC breaks in [4.0.0 release notes](https://github.com/webpack/style-loader/releases/tag/v4.0.0)
