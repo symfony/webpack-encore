@@ -7,16 +7,14 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const sinon = require('sinon');
-const api = require('../index');
-const path = require('path');
+import { expect } from 'chai';
+import sinon from 'sinon';
+import api from '../index.js';
+import path from 'path';
 
 describe('Public API', function() {
     beforeEach(function() {
-        process.chdir(path.join(__dirname, '..'));
+        process.chdir(path.join(import.meta.dirname, '..'));
         api.configureRuntimeEnvironment('dev', {}, false);
     });
 
@@ -431,7 +429,7 @@ describe('Public API', function() {
     describe('enableStimulusBridge', function() {
 
         it('should return the API object', function() {
-            const returnedValue = api.enableStimulusBridge(path.resolve(__dirname, '../', 'package.json'));
+            const returnedValue = api.enableStimulusBridge(path.resolve(import.meta.dirname, '../', 'package.json'));
             expect(returnedValue).to.equal(api);
         });
 
@@ -440,7 +438,7 @@ describe('Public API', function() {
     describe('enableBuildCache', function() {
 
         it('should return the API object', function() {
-            const returnedValue = api.enableBuildCache({ config: [__filename] });
+            const returnedValue = api.enableBuildCache({ config: [import.meta.filename] });
             expect(returnedValue).to.equal(api);
         });
 

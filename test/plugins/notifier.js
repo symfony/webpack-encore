@@ -7,54 +7,52 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const WebpackNotifier = require('webpack-notifier');
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const notifierPluginUtil = require('../../lib/plugins/notifier');
+import { expect } from 'chai';
+import WebpackNotifier from 'webpack-notifier';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import notifierPluginUtil from '../../lib/plugins/notifier.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
 
     return new WebpackConfig(runtimeConfig);
 }
 
 describe('plugins/notifier', function() {
-    it('disabled by default', function() {
+    it('disabled by default', async function() {
         const config = createConfig();
         const plugins = [];
 
-        notifierPluginUtil(plugins, config);
+        await notifierPluginUtil(plugins, config);
         expect(plugins.length).to.equal(0);
     });
 
-    it('explicitly disabled', function() {
+    it('explicitly disabled', async function() {
         const config = createConfig();
         const plugins = [];
 
         config.enableBuildNotifications(false);
 
-        notifierPluginUtil(plugins, config);
+        await notifierPluginUtil(plugins, config);
         expect(plugins.length).to.equal(0);
     });
 
-    it('enabled with default settings', function() {
+    it('enabled with default settings', async function() {
         const config = createConfig();
         const plugins = [];
 
         config.enableBuildNotifications();
 
-        notifierPluginUtil(plugins, config);
+        await notifierPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
         expect(plugins[0].plugin.options.title).to.equal('Webpack Encore');
     });
 
-    it('enabled with options callback', function() {
+    it('enabled with options callback', async function() {
         const config = createConfig();
         const plugins = [];
 
@@ -62,13 +60,13 @@ describe('plugins/notifier', function() {
             options.title = 'foo';
         });
 
-        notifierPluginUtil(plugins, config);
+        await notifierPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
         expect(plugins[0].plugin.options.title).to.equal('foo');
     });
 
-    it('enabled with options callback that returns an object', function() {
+    it('enabled with options callback that returns an object', async function() {
         const config = createConfig();
         const plugins = [];
 
@@ -79,7 +77,7 @@ describe('plugins/notifier', function() {
             return { foo: true };
         });
 
-        notifierPluginUtil(plugins, config);
+        await notifierPluginUtil(plugins, config);
         expect(plugins.length).to.equal(1);
         expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
         expect(plugins[0].plugin.options.title).to.be.undefined;

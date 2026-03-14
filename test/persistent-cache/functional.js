@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
+import { use } from 'chai';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+use(require('chai-fs'));
 
-const chai = require('chai');
-chai.use(require('chai-fs'));
-chai.use(require('chai-subset'));
-const path = require('path');
-const testSetup = require('../helpers/setup');
+import path from 'path';
+import * as testSetup from '../helpers/setup.js';
 
 function createWebpackConfig(outputDirName = '', testName, command, argv = {}) {
     // We need a static named test dir for the cache to work
@@ -26,7 +26,7 @@ function createWebpackConfig(outputDirName = '', testName, command, argv = {}) {
     );
 
     webpackConfig.enableSingleRuntimeChunk();
-    webpackConfig.enableBuildCache({ config: [__filename] }, (cache) => {
+    webpackConfig.enableBuildCache({ config: [import.meta.filename] }, (cache) => {
         cache.cacheDirectory = path.resolve(testAppDir, '..', '.webpack-cache');
     });
 

@@ -7,17 +7,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const miniCssExtractPluginUtil = require('../../lib/plugins/mini-css-extract');
+import { expect } from 'chai';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import miniCssExtractPluginUtil from '../../lib/plugins/mini-css-extract.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
 
     return new WebpackConfig(runtimeConfig);

@@ -7,11 +7,10 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-require('../lib/context').runtimeConfig = {};
-const logger = require('../lib/logger');
+import { expect } from 'chai';
+import context from '../lib/context.js';
+context.runtimeConfig = {};
+import logger from '../lib/logger.js';
 
 describe('logger', function() {
     beforeEach(function() {

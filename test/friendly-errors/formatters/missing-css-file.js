@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const formatter = require('../../../lib/friendly-errors/formatters/missing-css-file');
+import { expect } from 'chai';
+import formatter from '../../../lib/friendly-errors/formatters/missing-css-file.js';
 
 describe('formatters/missing-css-file', function() {
 

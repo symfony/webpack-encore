@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const stringEscaper = require('../../lib/utils/string-escaper');
+import { expect } from 'chai';
+import stringEscaper from '../../lib/utils/string-escaper.js';
 
 function expectEvaledStringToEqual(str, expectedStr) {
     // put the string in quotes & eval it: should match original

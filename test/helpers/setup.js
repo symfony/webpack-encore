@@ -7,28 +7,38 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
+import path from 'path';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import parseRuntime from '../../lib/config/parse-runtime.js';
+import webpack from 'webpack';
+import fs from 'fs-extra';
+import httpServer from 'http-server';
+import configGenerator from '../../lib/config-generator.js';
+import validator from '../../lib/config/validator.js';
+import assertUtil from './assert.js';
 
-const path = require('path');
-const WebpackConfig = require('../../lib/WebpackConfig');
-const parseRuntime = require('../../lib/config/parse-runtime');
-const webpack = require('webpack');
-const fs = require('fs-extra');
-const httpServer = require('http-server');
-const configGenerator = require('../../lib/config-generator');
-const validator = require('../../lib/config/validator');
-const assertUtil = require('./assert');
-
-const tmpDir = path.join(__dirname, '../', '../', 'test_tmp');
-const testFixturesDir = path.join(__dirname, '../', '../', 'fixtures');
+const tmpDir = path.join(import.meta.dirname, '../', '../', 'test_tmp');
+const testFixturesDir = path.join(import.meta.dirname, '../', '../', 'fixtures');
 
 let servers = [];
 
-function createTestAppDir(rootDir = null, subDir = null) {
+export function createTestAppDir(rootDir = null, subDir = null) {
     const testAppDir = path.join(rootDir ? rootDir : tmpDir, subDir ? subDir : Math.random().toString(36).substring(7));
 
     // copy the fixtures into this new directory
     fs.copySync(testFixturesDir, testAppDir);
+
+    // Write a default package.json so that this directory has its own
+    // package boundary. Without this, the .js fixture files would inherit
+    // "type": "module" from the project root's package.json, causing
+    // webpack to treat them as strict ESM (requiring fully-specified
+    // imports, disabling require.ensure, etc.).
+    if (!fs.existsSync(path.join(testAppDir, 'package.json'))) {
+        fs.writeFileSync(
+            path.join(testAppDir, 'package.json'),
+            JSON.stringify({ private: true })
+        );
+    }
 
     return testAppDir;
 }
@@ -40,7 +50,7 @@ function createTestAppDir(rootDir = null, subDir = null) {
  * @param {object} argv Additional argv commands
  * @returns {WebpackConfig}
  */
-function createWebpackConfig(testAppDir, outputDirName = '', command, argv = {}) {
+export function createWebpackConfig(testAppDir, outputDirName = '', command, argv = {}) {
     argv._ = [command];
     argv.context = testAppDir;
     const runtimeConfig = parseRuntime(
@@ -58,7 +68,7 @@ function createWebpackConfig(testAppDir, outputDirName = '', command, argv = {})
     return config;
 }
 
-function runWebpack(webpackConfig, callback, allowCompilationError = false) {
+export async function runWebpack(webpackConfig, callback, allowCompilationError = false) {
     const stdoutWrite = process.stdout.write;
     const stdOutContents = [];
 
@@ -70,33 +80,44 @@ function runWebpack(webpackConfig, callback, allowCompilationError = false) {
 
         validator(webpackConfig);
 
-        const compiler = webpack(configGenerator(webpackConfig));
-        compiler.run((err, stats) => {
-            // Restore stdout
-            process.stdout.write = stdoutWrite;
+        const webpackConfigObj = await configGenerator(webpackConfig);
+        const compiler = webpack(webpackConfigObj);
+        await new Promise((resolve, reject) => {
+            compiler.run((err, stats) => {
+                // Restore stdout
+                process.stdout.write = stdoutWrite;
 
-            if (err) {
-                console.error(err.stack || err);
-                if (err.details) {
-                    console.error(err.details);
+                if (err) {
+                    console.error(err.stack || err);
+                    if (err.details) {
+                        console.error(err.details);
+                    }
+
+                    reject(new Error('Error running webpack!'));
+                    return;
                 }
 
-                throw new Error('Error running webpack!');
-            }
+                const info = stats.toJson();
 
-            const info = stats.toJson();
+                if (stats.hasErrors() && !allowCompilationError) {
+                    console.error(info.errors);
 
-            if (stats.hasErrors() && !allowCompilationError) {
-                console.error(info.errors);
+                    reject(new Error('Compilation error running webpack!'));
+                    return;
+                }
 
-                throw new Error('Compilation error running webpack!');
-            }
+                if (stats.hasWarnings()) {
+                    console.warn(info.warnings);
+                }
 
-            if (stats.hasWarnings()) {
-                console.warn(info.warnings);
-            }
-
-            callback(assertUtil(webpackConfig), stats, stdOutContents.join('\n'));
+                try {
+                    const result = callback(assertUtil(webpackConfig), stats, stdOutContents.join('\n'));
+                    // Support async callbacks
+                    Promise.resolve(result).then(resolve, reject);
+                } catch (callbackError) {
+                    reject(callbackError);
+                }
+            });
         });
     } catch (e) {
         // Restore stdout and then re-throw the exception
@@ -105,11 +126,11 @@ function runWebpack(webpackConfig, callback, allowCompilationError = false) {
     }
 }
 
-function emptyTmpDir() {
+export function emptyTmpDir() {
     fs.emptyDirSync(tmpDir);
 }
 
-function touchFileInOutputDir(filename, webpackConfig) {
+export function touchFileInOutputDir(filename, webpackConfig) {
     const fullPath = path.join(webpackConfig.outputPath, filename);
     fs.ensureDirSync(path.dirname(fullPath));
 
@@ -150,7 +171,7 @@ function stopAllServers() {
  * ): void} callback Called after the page was requested.
  * @returns {Promise<void>}
  */
-async function requestTestPage(browser, webRootDir, scriptSrcs, callback) {
+export async function requestTestPage(browser, webRootDir, scriptSrcs, callback) {
     var scripts = '';
     for (let scriptSrc of scriptSrcs) {
         scripts += `<script src="${scriptSrc}"></script>`;
@@ -204,12 +225,3 @@ async function requestTestPage(browser, webRootDir, scriptSrcs, callback) {
     await callback({ page, loadedResources });
     await page.close();
 }
-
-module.exports = {
-    createWebpackConfig,
-    createTestAppDir,
-    runWebpack,
-    emptyTmpDir,
-    requestTestPage,
-    touchFileInOutputDir
-};
