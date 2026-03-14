@@ -8,6 +8,7 @@
  */
 
 import { expect } from 'chai';
+import { fileURLToPath } from 'url';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import babelLoader from '../../lib/loaders/babel.js';
@@ -74,7 +75,7 @@ describe('loaders/babel', function() {
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
         expect(actualLoaders[0].options.presets[0]).to.deep.equal([
-            import.meta.resolve('@babel/preset-env'),
+            fileURLToPath(import.meta.resolve('@babel/preset-env')),
             {
                 corejs: null,
                 modules: false,
@@ -83,7 +84,7 @@ describe('loaders/babel', function() {
             },
         ]);
         expect(actualLoaders[0].options.presets[1]).to.deep.equal([
-            import.meta.resolve('@babel/preset-react'),
+            fileURLToPath(import.meta.resolve('@babel/preset-react')),
             {
                 runtime: 'automatic',
             }
@@ -107,7 +108,7 @@ describe('loaders/babel', function() {
         // env, react & foo
         expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
         expect(actualLoaders[0].options.presets[0]).to.deep.equal([
-            import.meta.resolve('@babel/preset-env'),
+            fileURLToPath(import.meta.resolve('@babel/preset-env')),
             {
                 corejs: null,
                 modules: false,
@@ -116,7 +117,7 @@ describe('loaders/babel', function() {
             },
         ]);
         expect(actualLoaders[0].options.presets[1]).to.deep.equal([
-            import.meta.resolve('@babel/preset-react'),
+            fileURLToPath(import.meta.resolve('@babel/preset-react')),
             {
                 runtime: 'automatic',
                 development: true,
@@ -137,7 +138,7 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            [import.meta.resolve('@babel/plugin-transform-react-jsx'), { pragma: 'h' }],
+            [fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx')), { pragma: 'h' }],
             'foo'
         ]);
     });
@@ -153,7 +154,7 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            [import.meta.resolve('@babel/plugin-transform-react-jsx')],
+            [fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx'))],
             'foo'
         ]);
     });
@@ -187,7 +188,7 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            import.meta.resolve('@vue/babel-plugin-jsx'),
+            fileURLToPath(import.meta.resolve('@vue/babel-plugin-jsx')),
             'foo'
         ]);
     });
@@ -224,8 +225,8 @@ describe('loaders/babel', function() {
 
         const actualLoaders = await babelLoader.getLoaders(config);
 
-        expect(actualLoaders[0].options.presets[0][0]).to.equal(import.meta.resolve('@babel/preset-env'));
-        expect(actualLoaders[0].options.presets[1][0]).to.equal(import.meta.resolve('@babel/preset-typescript'));
+        expect(actualLoaders[0].options.presets[0][0]).to.equal(fileURLToPath(import.meta.resolve('@babel/preset-env')));
+        expect(actualLoaders[0].options.presets[1][0]).to.equal(fileURLToPath(import.meta.resolve('@babel/preset-typescript')));
         expect(actualLoaders[0].options.presets[1][1]).to.equal(presetTypeScriptOptions);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
             'foo'

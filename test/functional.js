@@ -8,6 +8,7 @@
  */
 
 import { expect, use } from 'chai';
+import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import path from 'path';
 import * as testSetup from './helpers/setup.js';
@@ -1904,7 +1905,7 @@ module.exports = {
             config.enableLessLoader();
             config.configureBabel(function(config) {
                 // throw new Error(JSON.stringify(config));
-                expect(config.presets[0][0]).to.equal(import.meta.resolve('@babel/preset-env'));
+                expect(config.presets[0][0]).to.equal(fileURLToPath(import.meta.resolve('@babel/preset-env')));
                 config.presets[0][1].targets = {
                     chrome: 109
                 };
