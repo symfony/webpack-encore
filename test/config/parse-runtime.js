@@ -7,16 +7,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const parseArgv = require('../../lib/config/parse-runtime');
-const testSetup = require('../helpers/setup');
-const fs = require('fs-extra');
-const path = require('path');
+import { expect } from 'chai';
+import parseArgv from '../../lib/config/parse-runtime.js';
+import * as testSetup from '../helpers/setup.js';
+import fs from 'fs-extra';
+import path from 'path';
+import yargsParser from 'yargs-parser';
 
 function createArgv(argv) {
-    return require('yargs-parser')(argv);
+    return yargsParser(argv);
 }
 
 function createTestDirectory() {
