@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const { execSync } = require('child_process');
-const { emptyTmpDir } = require('./test/helpers/setup');
+import { execSync } from 'child_process';
+import { emptyTmpDir } from './test/helpers/setup.js';
 
 emptyTmpDir();
 for (let i = 0; i < 2; i++) {

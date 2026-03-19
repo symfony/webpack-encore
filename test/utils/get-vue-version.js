@@ -7,18 +7,16 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const getVueVersion = require('../../lib/utils/get-vue-version');
-const sinon = require('sinon');
-const packageHelper = require('../../lib/package-helper');
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
+import { expect } from 'chai';
+import getVueVersion from '../../lib/utils/get-vue-version.js';
+import sinon from 'sinon';
+import packageHelper from '../../lib/package-helper.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 
 const createWebpackConfig = function() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.environment = 'dev';
     runtimeConfig.babelRcFileExists = false;
 

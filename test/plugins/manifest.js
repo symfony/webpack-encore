@@ -7,17 +7,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const manifestPluginUtil = require('../../lib/plugins/manifest');
+import { expect } from 'chai';
+import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import manifestPluginUtil from '../../lib/plugins/manifest.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
 
     const config = new WebpackConfig(runtimeConfig);

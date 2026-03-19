@@ -15,6 +15,14 @@ jobs:
               npm run encore dev
               npm run encore production
 
+          - name: npm (with .mjs config)
+            working_directory: test_apps/npm-mjs
+            script: |
+              npm install --ci
+              npm add --save-dev ../../webpack-encore.tgz
+              npm run encore dev
+              npm run encore production
+
           - name: npm (with Babel)
             working_directory: test_apps/npm-with-babel
             script: |
@@ -39,6 +47,14 @@ jobs:
               pnpm run encore dev
               pnpm run encore production
 
+          - name: pnpm (with .mjs config)
+            working_directory: test_apps/pnpm-mjs
+            script: |
+              pnpm install --frozen-lockfile
+              pnpm add --save-dev ../../webpack-encore.tgz
+              pnpm run encore dev
+              pnpm run encore production
+
           - name: pnpm (with Babel)
             working_directory: test_apps/pnpm-with-babel
             script: |
@@ -57,6 +73,15 @@ jobs:
 
           - name: Yarn Plug'n'Play
             working_directory: test_apps/yarn-pnp
+            script: |
+              yarn set version 4.3.0
+              yarn install --immutable
+              yarn add --dev ../../webpack-encore.tgz
+              yarn run encore dev
+              yarn run encore production
+
+          - name: Yarn Plug'n'Play (with .mjs config)
+            working_directory: test_apps/yarn-pnp-mjs
             script: |
               yarn set version 4.3.0
               yarn install --immutable

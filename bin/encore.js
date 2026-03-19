@@ -8,16 +8,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const parseRuntime = require('../lib/config/parse-runtime');
-const context = require('../lib/context');
-const pc = require('picocolors');
-const logger = require('../lib/logger');
-const featuresHelper = require("../lib/features");
+import parseRuntime from '../lib/config/parse-runtime.js';
+import context from '../lib/context.js';
+import pc from 'picocolors';
+import logger from '../lib/logger.js';
+import featuresHelper from '../lib/features.js';
+import yargsParser from 'yargs-parser';
 
 const runtimeConfig = parseRuntime(
-    require('yargs-parser')(process.argv.slice(2)),
+    yargsParser(process.argv.slice(2)),
     process.cwd()
 );
 context.runtimeConfig = runtimeConfig;
@@ -67,14 +66,14 @@ if (runtimeConfig.useDevServer) {
     console.log('Running webpack-dev-server ...');
     console.log();
 
-    return require('webpack-dev-server/bin/webpack-dev-server');
+    await import('webpack-dev-server/bin/webpack-dev-server.js');
 } else {
     if (!runtimeConfig.outputJson) {
         console.log('Running webpack ...');
         console.log();
     }
 
-    return require('webpack/bin/webpack');
+    await import('webpack/bin/webpack.js');
 }
 
 function showUsageInstructions() {
