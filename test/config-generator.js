@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import { fileURLToPath } from 'url';
 import WebpackConfig from '../lib/WebpackConfig.js';
 import RuntimeConfig from '../lib/config/RuntimeConfig.js';
@@ -78,7 +78,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.context).to.equal('/foo/dir');
+            expect(actualConfig.context).toBe('/foo/dir');
             expect(actualConfig.entry).to.be.an('object');
             expect(actualConfig.output).to.be.an('object');
             expect(actualConfig.module).to.be.an('object');
@@ -95,7 +95,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
+            expect(JSON.stringify(actualConfig.entry)).toBe(JSON.stringify({
                 main: './main',
                 main2: './main2',
                 style: ['./bootstrap.css', './main.css']
@@ -111,7 +111,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
+            expect(JSON.stringify(actualConfig.entry)).toBe(JSON.stringify({
                 main: './main',
                 main2: './main2',
             }));
@@ -126,7 +126,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
+            expect(JSON.stringify(actualConfig.entry)).toBe(JSON.stringify({
                 main: './main',
                 style: ['./bootstrap.css', './main.css'],
             }));
@@ -142,7 +142,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.entry)).to.equal(JSON.stringify({
+            expect(JSON.stringify(actualConfig.entry)).toBe(JSON.stringify({
                 main: './main',
                 main2: './main2',
                 style: ['./bootstrap.css', './main.css'],
@@ -158,9 +158,9 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.output.path).to.equal('/tmp/public-path');
-            expect(actualConfig.output.filename).to.equal('[name].js');
-            expect(actualConfig.output.publicPath).to.equal('/public-path/');
+            expect(actualConfig.output.path).toBe('/tmp/public-path');
+            expect(actualConfig.output.filename).toBe('[name].js');
+            expect(actualConfig.output.publicPath).toBe('/public-path/');
         });
     });
 
@@ -173,9 +173,9 @@ describe('The config-generator function', function() {
             config.useSourceMaps = false;
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.devtool).to.be.false;
+            expect(actualConfig.devtool).toBe(false);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('?sourceMap');
+            expect(JSON.stringify(actualConfig.module.rules)).not.toContain('?sourceMap');
         });
 
         it('with sourcemaps', async function() {
@@ -186,9 +186,9 @@ describe('The config-generator function', function() {
             config.useSourceMaps = true;
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.devtool).to.equal('inline-source-map');
+            expect(actualConfig.devtool).toBe('inline-source-map');
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":true');
+            expect(JSON.stringify(actualConfig.module.rules)).toContain('"sourceMap":true');
         });
     });
 
@@ -201,11 +201,11 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.output.publicPath).to.equal('/build/');
+            expect(actualConfig.output.publicPath).toBe('/build/');
             const manifestPlugin = findPlugin(WebpackManifestPlugin, actualConfig.plugins);
             // basePath matches publicPath, *without* the opening slash
             // we do that by convention: keys do not start with /
-            expect(manifestPlugin.options.basePath).to.equal('build/');
+            expect(manifestPlugin.options.basePath).toBe('build/');
         });
 
         it('when manifestKeyPrefix is set, that is used instead', async function() {
@@ -218,11 +218,11 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.output.publicPath).to.equal('/subdirectory/build/');
+            expect(actualConfig.output.publicPath).toBe('/subdirectory/build/');
             const manifestPlugin = findPlugin(WebpackManifestPlugin, actualConfig.plugins);
             // base path matches manifestKeyPrefix + trailing slash
             // the opening slash is kept, since the user is overriding this setting
-            expect(manifestPlugin.options.basePath).to.equal('/build/');
+            expect(manifestPlugin.options.basePath).toBe('/build/');
         });
 
         it('manifestKeyPrefix can be empty', async function() {
@@ -235,7 +235,7 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
 
             const manifestPlugin = findPlugin(WebpackManifestPlugin, actualConfig.plugins);
-            expect(manifestPlugin.options.basePath).to.equal('');
+            expect(manifestPlugin.options.basePath).toBe('');
         });
     });
 
@@ -248,11 +248,11 @@ describe('The config-generator function', function() {
             config.useVersioning = true;
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.output.filename).to.equal('[name].[contenthash:8].js');
+            expect(actualConfig.output.filename).toBe('[name].[contenthash:8].js');
 
             const miniCssPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
 
-            expect(miniCssPlugin.options.filename).to.equal('[name].[contenthash:8].css');
+            expect(miniCssPlugin.options.filename).toBe('[name].[contenthash:8].css');
         });
     });
 
@@ -270,9 +270,9 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
 
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
-            expect(definePlugin.definitions['process.env.NODE_ENV']).to.equal('"development"');
+            expect(definePlugin.definitions['process.env.NODE_ENV']).toBe('"development"');
 
-            expect(actualConfig.optimization.minimizer).to.be.undefined;
+            expect(actualConfig.optimization.minimizer).toBeUndefined();
         });
 
         it('YES to production', async function() {
@@ -286,7 +286,7 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
 
             const definePlugin = findPlugin(webpack.DefinePlugin, actualConfig.plugins);
-            expect(definePlugin.definitions['process.env.NODE_ENV']).to.equal('"production"');
+            expect(definePlugin.definitions['process.env.NODE_ENV']).toBe('"production"');
 
             expect(actualConfig.optimization.minimizer[0]).to.not.be.undefined;
         });
@@ -302,7 +302,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('sass-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).not.toContain('sass-loader');
         });
 
         it('enableSassLoader()', async function() {
@@ -314,7 +314,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('sass-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).toContain('sass-loader');
         });
     });
 
@@ -328,7 +328,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('less-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).not.toContain('less-loader');
         });
 
         it('enableLessLoader()', async function() {
@@ -340,7 +340,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('less-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).toContain('less-loader');
         });
     });
 
@@ -354,7 +354,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('stylus-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).not.toContain('stylus-loader');
         });
 
         it('enableStylusLoader()', async function() {
@@ -366,7 +366,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('stylus-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).toContain('stylus-loader');
         });
     });
 
@@ -379,7 +379,7 @@ describe('The config-generator function', function() {
             config.addEntry('main', './main');
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.not.contain('handlebars-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).not.toContain('handlebars-loader');
         });
 
         it('enableHandlebarsLoader()', async function() {
@@ -391,7 +391,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('handlebars-loader');
+            expect(JSON.stringify(actualConfig.module.rules)).toContain('handlebars-loader');
         });
     });
 
@@ -418,7 +418,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.resolve.alias).to.deep.equals({
+            expect(actualConfig.resolve.alias).toEqual({
                 'vue$': 'vue/dist/vue.esm-bundler.js',
             });
         });
@@ -444,7 +444,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.resolve.alias).to.deep.equals({});
+            expect(actualConfig.resolve.alias).toEqual({});
         });
 
         it('with addAliases()', async function() {
@@ -458,7 +458,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.resolve.alias).to.deep.equals({
+            expect(actualConfig.resolve.alias).toEqual({
                 'testA': 'src/testA',
                 'testB': 'src/testB'
             });
@@ -478,7 +478,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.resolve.alias).to.deep.equals({
+            expect(actualConfig.resolve.alias).toEqual({
                 'foo': 'bar',
                 'vue$': 'new-vue$',
                 'react-dom': 'new-react-dom',
@@ -495,7 +495,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.externals).to.deep.equals([]);
+            expect(actualConfig.externals).toEqual([]);
         });
 
         it('with addExternals()', async function() {
@@ -509,7 +509,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.externals).to.deep.equals([{
+            expect(actualConfig.externals).toEqual([{
                 'jquery': 'jQuery',
                 'react': 'react'
             }]);
@@ -541,7 +541,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.output.clean).to.be.false;
+            expect(actualConfig.output.clean).toBe(false);
         });
 
         it('with cleanupOutputBeforeBuild()', async function() {
@@ -553,7 +553,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.output.clean).to.deep.equals({});
+            expect(actualConfig.output.clean).toEqual({});
         });
     });
 
@@ -566,7 +566,7 @@ describe('The config-generator function', function() {
             config.addEntry('main', './main');
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.devServer).to.be.undefined;
+            expect(actualConfig.devServer).toBeUndefined();
         });
 
         it('devServer with custom options', async function() {
@@ -698,12 +698,12 @@ describe('The config-generator function', function() {
             });
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.output.filename).to.equal('[name].foo.js');
+            expect(actualConfig.output.filename).toBe('[name].foo.js');
 
-            expect(actualConfig.output.assetModuleFilename).to.equal('[name].assets[ext]');
+            expect(actualConfig.output.assetModuleFilename).toBe('[name].assets[ext]');
 
             const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
-            expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
+            expect(miniCssExtractPlugin.options.filename).toBe('[name].foo.css');
         });
 
         it('with versioning', async function() {
@@ -719,12 +719,12 @@ describe('The config-generator function', function() {
             });
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.output.filename).to.equal('[name].foo.js');
+            expect(actualConfig.output.filename).toBe('[name].foo.js');
 
-            expect(actualConfig.output.assetModuleFilename).to.equal('[name].assets[ext]');
+            expect(actualConfig.output.assetModuleFilename).toBe('[name].assets[ext]');
 
             const miniCssExtractPlugin = findPlugin(MiniCssExtractPlugin, actualConfig.plugins);
-            expect(miniCssExtractPlugin.options.filename).to.equal('[name].foo.css');
+            expect(miniCssExtractPlugin.options.filename).toBe('[name].foo.css');
         });
     });
 
@@ -738,13 +738,13 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, actualConfig.module.rules).oneOf[1];
-            expect(imagesRule.type).to.equal('asset/resource');
+            expect(imagesRule.type).toBe('asset/resource');
             expect(imagesRule.generator).to.eql({ filename: 'images/[name].[hash:8][ext]' });
             expect(imagesRule.parser).to.eql({});
             expect(imagesRule).to.include.keys('type', 'generator', 'parser');
 
             const fontsRule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, actualConfig.module.rules).oneOf[1];
-            expect(fontsRule.type).to.equal('asset/resource');
+            expect(fontsRule.type).toBe('asset/resource');
             expect(fontsRule.generator).to.eql({ filename: 'fonts/[name].[hash:8][ext]' });
         });
 
@@ -761,7 +761,7 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
 
             const imagesRule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, actualConfig.module.rules).oneOf[1];
-            expect(imagesRule.type).to.equal('asset/resource');
+            expect(imagesRule.type).toBe('asset/resource');
             expect(imagesRule.generator).to.eql({ filename: 'file.[hash][ext]' });
         });
 
@@ -794,7 +794,7 @@ describe('The config-generator function', function() {
 
             expect(function() {
                 findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, actualConfig.module.rules);
-            }).to.throw();
+            }).toThrow();
         });
     });
 
@@ -820,8 +820,8 @@ describe('The config-generator function', function() {
 
                 const actualConfig = await configGenerator(config);
                 expect(actualConfig.resolve.alias).to.include.keys('react', 'react-dom');
-                expect(actualConfig.resolve.alias['react']).to.equal('preact/compat');
-                expect(actualConfig.resolve.alias['react-dom']).to.equal('preact/compat');
+                expect(actualConfig.resolve.alias['react']).toBe('preact/compat');
+                expect(actualConfig.resolve.alias['react-dom']).toBe('preact/compat');
             });
         });
     });
@@ -852,9 +852,9 @@ describe('The config-generator function', function() {
             config.useSourceMaps = true;
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.devtool).to.equal('inline-source-map');
+            expect(actualConfig.devtool).toBe('inline-source-map');
 
-            expect(JSON.stringify(actualConfig.module.rules)).to.contain('"sourceMap":true');
+            expect(JSON.stringify(actualConfig.module.rules)).toContain('"sourceMap":true');
         });
     });
 
@@ -868,11 +868,11 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
-            expect(String(jsRule.exclude)).to.equal(String(/(node_modules|bower_components)/));
+            expect(String(jsRule.exclude)).toBe(String(/(node_modules|bower_components)/));
 
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === fileURLToPath(import.meta.resolve('@babel/preset-env')));
-            expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
+            expect(babelEnvPreset[1].useBuiltIns).toBe(false);
         });
 
         it('with configureBabel() and a different exclude rule', async function() {
@@ -887,7 +887,7 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
-            expect(String(jsRule.exclude)).to.equal(String(/foo/));
+            expect(String(jsRule.exclude)).toBe(String(/foo/));
         });
 
         it('with configureBabel() and some whitelisted modules', async function() {
@@ -903,8 +903,8 @@ describe('The config-generator function', function() {
 
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             expect(jsRule.exclude).to.be.a('Function');
-            expect(jsRule.exclude(path.join('test', 'node_modules', 'foo', 'index.js'))).to.be.false;
-            expect(jsRule.exclude(path.join('test', 'node_modules', 'bar', 'index.js'))).to.be.true;
+            expect(jsRule.exclude(path.join('test', 'node_modules', 'foo', 'index.js'))).toBe(false);
+            expect(jsRule.exclude(path.join('test', 'node_modules', 'bar', 'index.js'))).toBe(true);
         });
 
         it('with configureBabel() and a different useBuiltIns value', async function() {
@@ -922,8 +922,8 @@ describe('The config-generator function', function() {
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === fileURLToPath(import.meta.resolve('@babel/preset-env')));
-            expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
-            expect(babelEnvPreset[1].corejs).to.equal(3);
+            expect(babelEnvPreset[1].useBuiltIns).toBe('usage');
+            expect(babelEnvPreset[1].corejs).toBe(3);
         });
     });
 
@@ -939,7 +939,7 @@ describe('The config-generator function', function() {
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === fileURLToPath(import.meta.resolve('@babel/preset-env')));
-            expect(babelEnvPreset[1].useBuiltIns).to.equal(false);
+            expect(babelEnvPreset[1].useBuiltIns).toBe(false);
         });
 
         it('with configureBabelPresetEnv()', async function() {
@@ -956,7 +956,7 @@ describe('The config-generator function', function() {
             const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
             const babelLoader = jsRule.use.find(loader => /babel-loader/.test(loader.loader));
             const babelEnvPreset = babelLoader.options.presets.find(([name]) => name === fileURLToPath(import.meta.resolve('@babel/preset-env')));
-            expect(babelEnvPreset[1].useBuiltIns).to.equal('usage');
+            expect(babelEnvPreset[1].useBuiltIns).toBe('usage');
         });
     });
 
@@ -968,18 +968,18 @@ describe('The config-generator function', function() {
             config.splitEntryChunks();
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.optimization.splitChunks.chunks).to.equal('all');
-            expect(actualConfig.optimization.splitChunks.name).to.be.undefined;
+            expect(actualConfig.optimization.splitChunks.chunks).toBe('all');
+            expect(actualConfig.optimization.splitChunks.name).toBeUndefined();
         });
     });
 
     describe('Test shouldUseSingleRuntimeChunk', function() {
-        before(function() {
+        beforeAll(function() {
             logger.reset();
             logger.quiet();
         });
 
-        after(function() {
+        afterAll(function() {
             logger.quiet(false);
         });
 
@@ -990,7 +990,7 @@ describe('The config-generator function', function() {
             config.enableSingleRuntimeChunk();
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.optimization.runtimeChunk).to.equal('single');
+            expect(actualConfig.optimization.runtimeChunk).toBe('single');
             expect(logger.getMessages().deprecation).to.be.empty;
         });
 
@@ -1001,7 +1001,7 @@ describe('The config-generator function', function() {
             config.disableSingleRuntimeChunk();
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.optimization.runtimeChunk).to.be.undefined;
+            expect(actualConfig.optimization.runtimeChunk).toBeUndefined();
             expect(logger.getMessages().deprecation).to.be.empty;
         });
 
@@ -1015,7 +1015,7 @@ describe('The config-generator function', function() {
                 await configGenerator(config);
                 expect.fail('Expected configGenerator to throw');
             } catch (e) {
-                expect(e.message).to.contain('Either the Encore.enableSingleRuntimeChunk() or Encore.disableSingleRuntimeChunk() method should be called');
+                expect(e.message).toContain('Either the Encore.enableSingleRuntimeChunk() or Encore.disableSingleRuntimeChunk() method should be called');
             }
         });
     });
@@ -1030,7 +1030,7 @@ describe('The config-generator function', function() {
             });
 
             const actualConfig = await configGenerator(config);
-            expect(actualConfig.watchOptions).to.deep.equals({
+            expect(actualConfig.watchOptions).toEqual({
                 ignored: /node_modules/,
                 poll: 250,
             });
@@ -1056,9 +1056,9 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.m?js$/, webpackConfig.module.rules);
 
-            expect('file.js').to.match(rule.test);
-            expect('file.mjs').to.match(rule.test);
-            expect(rule.use[0].options.fooBar).to.equal('fooBar');
+            expect('file.js').toMatch(rule.test);
+            expect('file.mjs').toMatch(rule.test);
+            expect(rule.use[0].options.fooBar).toBe('fooBar');
         });
 
         it('configure rule for the alias "js"', async function() {
@@ -1070,9 +1070,9 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.m?js$/, webpackConfig.module.rules);
 
-            expect('file.js').to.match(rule.test);
-            expect('file.mjs').to.match(rule.test);
-            expect(rule.use[0].options.fooBar).to.equal('fooBar');
+            expect('file.js').toMatch(rule.test);
+            expect('file.mjs').toMatch(rule.test);
+            expect(rule.use[0].options.fooBar).toBe('fooBar');
         });
 
         it('configure rule for "css"', async function() {
@@ -1083,7 +1083,7 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.(css)$/, webpackConfig.module.rules);
 
-            expect(rule.camelCase).to.be.true;
+            expect(rule.camelCase).toBe(true);
         });
 
         it('configure rule for "images"', async function() {
@@ -1094,7 +1094,7 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.(png|jpg|jpeg|gif|ico|svg|webp|avif)$/, webpackConfig.module.rules).oneOf[1];
 
-            expect(rule.generator.filename).to.equal('dirname-images/[hash:42][ext]');
+            expect(rule.generator.filename).toBe('dirname-images/[hash:42][ext]');
         });
 
         it('configure rule for "fonts"', async function() {
@@ -1105,7 +1105,7 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.(woff|woff2|ttf|eot|otf)$/, webpackConfig.module.rules).oneOf[1];
 
-            expect(rule.generator.filename).to.equal('dirname-fonts/[hash:42][ext]');
+            expect(rule.generator.filename).toBe('dirname-fonts/[hash:42][ext]');
         });
 
         it('configure rule for "sass"', async function() {
@@ -1117,7 +1117,7 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
 
-            expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
+            expect(rule.oneOf[1].use[2].options.fooBar).toBe('fooBar');
         });
 
         it('configure rule for the alias "scss"', async function() {
@@ -1129,7 +1129,7 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.s[ac]ss$/, webpackConfig.module.rules);
 
-            expect(rule.oneOf[1].use[2].options.fooBar).to.equal('fooBar');
+            expect(rule.oneOf[1].use[2].options.fooBar).toBe('fooBar');
         });
 
         it('configure rule for "less"', async function() {
@@ -1143,8 +1143,8 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.less/, webpackConfig.module.rules);
 
-            expect(rule.oneOf[1].use[2].options.optionA).to.equal('optionA');
-            expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
+            expect(rule.oneOf[1].use[2].options.optionA).toBe('optionA');
+            expect(rule.oneOf[1].use[2].options.optionB).toBe('optionB');
         });
 
         it('configure rule for "stylus"', async function() {
@@ -1158,8 +1158,8 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.styl/, webpackConfig.module.rules);
 
-            expect(rule.oneOf[1].use[2].options.optionA).to.equal('optionA');
-            expect(rule.oneOf[1].use[2].options.optionB).to.equal('optionB');
+            expect(rule.oneOf[1].use[2].options.optionA).toBe('optionA');
+            expect(rule.oneOf[1].use[2].options.optionB).toBe('optionB');
         });
 
         it('configure rule for "vue"', async function() {
@@ -1173,8 +1173,8 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.vue$/, webpackConfig.module.rules);
 
-            expect(rule.use[0].options.shadowMode).to.be.true;
-            expect(rule.use[0].options.prettify).to.be.false;
+            expect(rule.use[0].options.shadowMode).toBe(true);
+            expect(rule.use[0].options.prettify).toBe(false);
         });
 
         it('configure rule for "typescript" and "ts"', async function() {
@@ -1188,8 +1188,8 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.tsx?$/, webpackConfig.module.rules);
 
-            expect(rule.use[1].options.silent).to.be.true;
-            expect(rule.use[1].options.happyPackMode).to.be.true;
+            expect(rule.use[1].options.silent).toBe(true);
+            expect(rule.use[1].options.happyPackMode).toBe(true);
         });
 
         it('configure rule for the alias "ts"', async function() {
@@ -1203,8 +1203,8 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.tsx?$/, webpackConfig.module.rules);
 
-            expect(rule.use[1].options.silent).to.be.true;
-            expect(rule.use[1].options.happyPackMode).to.be.true;
+            expect(rule.use[1].options.silent).toBe(true);
+            expect(rule.use[1].options.happyPackMode).toBe(true);
         });
 
         it('configure rule for "handlebars"', async function() {
@@ -1218,7 +1218,7 @@ describe('The config-generator function', function() {
             const webpackConfig = await configGenerator(config);
             const rule = findRule(/\.(handlebars|hbs)$/, webpackConfig.module.rules);
 
-            expect(rule.use[0].options.debug).to.be.true;
+            expect(rule.use[0].options.debug).toBe(true);
             expect(rule.use[0].options.fooBar).to.be.equal('fooBar');
         });
     });
@@ -1235,10 +1235,10 @@ describe('The config-generator function', function() {
 
             expect(function() {
                 findRule(/\.(css)$/, actualConfig.module.rules);
-            }).not.to.throw();
+            }).not.toThrow();
             expect(function() {
                 findRule(/\.(css|pcss|postcss)$/, actualConfig.module.rules);
-            }).to.throw();
+            }).toThrow();
         });
 
         it('with enablePostCssLoader()', async function() {
@@ -1253,7 +1253,7 @@ describe('The config-generator function', function() {
 
             expect(function() {
                 findRule(/\.(css)$/, actualConfig.module.rules);
-            }).to.throw();
+            }).toThrow();
             expect(function() {
                 findRule(/\.(css|pcss|postcss)$/, actualConfig.module.rules);
             }).to.not.throw();
@@ -1272,7 +1272,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+            expect(actualConfig.optimization.splitChunks.cacheGroups).toEqual({
                 foo: { name: 'foo', test: /foo/, chunks: 'all', enforce: true },
                 bar: { name: 'bar', test: /bar/, chunks: 'all', enforce: true },
             });
@@ -1288,7 +1288,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+            expect(actualConfig.optimization.splitChunks.cacheGroups).toEqual({
                 foo: {
                     name: 'foo',
                     test: /[\\/]node_modules[\\/](foo|bar|baz)[\\/]/,
@@ -1314,7 +1314,7 @@ describe('The config-generator function', function() {
 
             const actualConfig = await configGenerator(config);
 
-            expect(actualConfig.optimization.splitChunks.cacheGroups).to.deep.equal({
+            expect(actualConfig.optimization.splitChunks.cacheGroups).toEqual({
                 foo: {
                     name: 'bar',
                     test: /foo/,

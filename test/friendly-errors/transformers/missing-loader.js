@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import transformFactory from '../../../lib/friendly-errors/transformers/missing-loader.js';
 import RuntimeConfig from '../../../lib/config/RuntimeConfig.js';
 import WebpackConfig from '../../../lib/WebpackConfig.js';
@@ -28,7 +28,7 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError).to.deep.equal(startError);
+            expect(actualError).toEqual(startError);
         });
 
         it('Error not containing "appropriate loader" is ignored', function() {
@@ -39,7 +39,7 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError).to.deep.equal(startError);
+            expect(actualError).toEqual(startError);
         });
 
         it('Error with unsupported file extension is ignored', function() {
@@ -51,7 +51,7 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError).to.deep.equal(startError);
+            expect(actualError).toEqual(startError);
         });
 
         it('Matching error is properly transformed', function() {
@@ -62,9 +62,9 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError.name).to.deep.equal('Loader not enabled');
-            expect(actualError.type).to.deep.equal('loader-not-enabled');
-            expect(actualError.loaderName).to.deep.equal('sass');
+            expect(actualError.name).toEqual('Loader not enabled');
+            expect(actualError.type).toEqual('loader-not-enabled');
+            expect(actualError.loaderName).toEqual('sass');
         });
 
         it('Typescript error is properly transformed', function() {
@@ -75,9 +75,9 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError.name).to.deep.equal('Loader not enabled');
-            expect(actualError.type).to.deep.equal('loader-not-enabled');
-            expect(actualError.loaderName).to.deep.equal('typescript');
+            expect(actualError.name).toEqual('Loader not enabled');
+            expect(actualError.type).toEqual('loader-not-enabled');
+            expect(actualError.loaderName).toEqual('typescript');
         });
 
         it('vue-loader15 is handled correctly', function() {
@@ -88,10 +88,10 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError.name).to.deep.equal('Loader not enabled');
-            expect(actualError.type).to.deep.equal('loader-not-enabled');
-            expect(actualError.loaderName).to.deep.equal('sass');
-            expect(actualError.isVueLoader).to.be.true;
+            expect(actualError.name).toEqual('Loader not enabled');
+            expect(actualError.type).toEqual('loader-not-enabled');
+            expect(actualError.loaderName).toEqual('sass');
+            expect(actualError.isVueLoader).toBe(true);
         });
 
         it('vue-loader16 is handled correctly', function() {
@@ -102,10 +102,10 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError.name).to.deep.equal('Loader not enabled');
-            expect(actualError.type).to.deep.equal('loader-not-enabled');
-            expect(actualError.loaderName).to.deep.equal('sass');
-            expect(actualError.isVueLoader).to.be.true;
+            expect(actualError.name).toEqual('Loader not enabled');
+            expect(actualError.type).toEqual('loader-not-enabled');
+            expect(actualError.loaderName).toEqual('sass');
+            expect(actualError.isVueLoader).toBe(true);
         });
 
         it('vue-loader is handled correctly, more options after lang=', function() {
@@ -116,9 +116,9 @@ describe('transform/missing-loader', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError.name).to.deep.equal('Loader not enabled');
-            expect(actualError.type).to.deep.equal('loader-not-enabled');
-            expect(actualError.loaderName).to.deep.equal('sass');
+            expect(actualError.name).toEqual('Loader not enabled');
+            expect(actualError.type).toEqual('loader-not-enabled');
+            expect(actualError.loaderName).toEqual('sass');
         });
     });
 });

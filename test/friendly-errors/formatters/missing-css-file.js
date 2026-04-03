@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import formatter from '../../../lib/friendly-errors/formatters/missing-css-file.js';
 
 describe('formatters/missing-css-file', function() {
@@ -25,8 +25,8 @@ describe('formatters/missing-css-file', function() {
             ];
 
             const actualErrors = formatter(errors);
-            expect(JSON.stringify(actualErrors)).to.contain('some-file.sass');
-            expect(JSON.stringify(actualErrors)).to.not.contain('other-type.sass');
+            expect(JSON.stringify(actualErrors)).toContain('some-file.sass');
+            expect(JSON.stringify(actualErrors)).not.toContain('other-type.sass');
         });
 
         it('formats the error correctly', function() {
@@ -37,10 +37,10 @@ describe('formatters/missing-css-file', function() {
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).to.contain('\\"/some/file.css\\" contains a reference to the file \\"../images/foo.png\\"');
-            expect(JSON.stringify(actualErrors)).to.contain('This file can not be found, please check it for typos or update it if the file got moved.');
+            expect(JSON.stringify(actualErrors)).toContain('\\"/some/file.css\\" contains a reference to the file \\"../images/foo.png\\"');
+            expect(JSON.stringify(actualErrors)).toContain('This file can not be found, please check it for typos or update it if the file got moved.');
             // all needed packages will be present when running tests
-            expect(JSON.stringify(actualErrors)).to.not.contain('yarn add');
+            expect(JSON.stringify(actualErrors)).not.toContain('yarn add');
         });
     });
 });

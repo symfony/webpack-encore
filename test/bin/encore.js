@@ -7,12 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { use } from 'chai';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-use(require('chai-fs'));
-
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import path from 'path';
 import * as testSetup from '../helpers/setup.js';
 import fs from 'fs-extra';
@@ -22,7 +17,6 @@ const projectDir = path.resolve(import.meta.dirname, '../', '../');
 
 describe('bin/encore.js', function() {
     // being functional tests, these can take quite long
-    this.timeout(10000);
 
     it('Basic smoke test', function(done) {
         testSetup.emptyTmpDir();
@@ -58,11 +52,11 @@ export default await Encore.getWebpackConfig();
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
 
-            expect(stdout).to.contain('Compiled successfully');
+            expect(stdout).toContain('Compiled successfully');
 
-            expect(stdout).not.to.contain('Hash: ');
-            expect(stdout).not.to.contain('Version: ');
-            expect(stdout).not.to.contain('Time: ');
+            expect(stdout).not.toContain('Hash: ');
+            expect(stdout).not.toContain('Version: ');
+            expect(stdout).not.toContain('Time: ');
 
             done();
         });
@@ -108,7 +102,7 @@ export default await Encore.getWebpackConfig();
             // - webpack/runtime/jsonp chunk loading
             // - webpack/runtime/hasOwnProperty shorthand
             // - ./js/no_require.js
-            expect(parsedOutput.modules.length).to.equal(4);
+            expect(parsedOutput.modules.length).toBe(4);
 
 
             done();
@@ -140,10 +134,10 @@ export default await Encore.getWebpackConfig();
                 throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
             }
 
-            expect(stdout).to.contain('resolving: ');
-            expect(stdout).to.contain('restoring: ');
-            expect(stdout).to.contain('integration: ');
-            expect(stdout).to.contain('building: ');
+            expect(stdout).toContain('resolving: ');
+            expect(stdout).toContain('restoring: ');
+            expect(stdout).toContain('integration: ');
+            expect(stdout).toContain('building: ');
 
             done();
         });
@@ -209,10 +203,10 @@ export default await Encore.getWebpackConfig();
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
-            expect(err).not.to.be.null;
-            expect(stdout).to.contain('is not a recognized property');
-            expect(stdout).to.contain('or method');
-            expect(stdout).to.contain('Did you mean');
+            expect(err).not.toBeNull();
+            expect(stdout).toContain('is not a recognized property');
+            expect(stdout).toContain('or method');
+            expect(stdout).toContain('Did you mean');
             done();
         });
     });
@@ -269,25 +263,25 @@ export default await Encore.getWebpackConfig();
                 throw new Error('Error executing encore', { cause: error });
             }
 
-            expect(stdout).to.contain('Running webpack-dev-server ...');
-            expect(stdout).to.contain('Compiled successfully in');
-            expect(stdout).to.contain('webpack compiled successfully');
+            expect(stdout).toContain('Running webpack-dev-server ...');
+            expect(stdout).toContain('Compiled successfully in');
+            expect(stdout).toContain('webpack compiled successfully');
 
-            expect(stderr).to.contain('[webpack-dev-server] Project is running at:');
-            expect(stderr).to.contain('[webpack-dev-server] Loopback: http://localhost:8080/');
-            expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
+            expect(stderr).toContain('[webpack-dev-server] Project is running at:');
+            expect(stderr).toContain('[webpack-dev-server] Loopback: http://localhost:8080/');
+            expect(stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
 
             // Verify entrypoints.json contains http:// URLs
             const entrypoints = JSON.parse(
                 fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
             );
-            expect(entrypoints.entrypoints.main.js[0]).to.contain('http://localhost:8080/build/');
+            expect(entrypoints.entrypoints.main.js[0]).toContain('http://localhost:8080/build/');
 
             // Verify manifest.json contains http:// URLs
             const manifest = JSON.parse(
                 fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
             );
-            expect(manifest['build/main.js']).to.contain('http://localhost:8080/build/');
+            expect(manifest['build/main.js']).toContain('http://localhost:8080/build/');
 
             done();
         });
@@ -349,26 +343,26 @@ export default await Encore.getWebpackConfig();
                 throw new Error('Error executing encore', { cause: error });
             }
 
-            expect(stdout).to.contain('Running webpack-dev-server ...');
-            expect(stdout).to.contain('Compiled successfully in');
-            expect(stdout).to.contain('webpack compiled successfully');
+            expect(stdout).toContain('Running webpack-dev-server ...');
+            expect(stdout).toContain('Compiled successfully in');
+            expect(stdout).toContain('webpack compiled successfully');
 
-            expect(stderr).to.contain('[webpack-dev-server] Project is running at:');
-            expect(stderr).to.contain('[webpack-dev-server] Loopback: https://localhost:8080/');
-            expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
+            expect(stderr).toContain('[webpack-dev-server] Project is running at:');
+            expect(stderr).toContain('[webpack-dev-server] Loopback: https://localhost:8080/');
+            expect(stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
 
             // Verify entrypoints.json contains https:// URLs
             const entrypoints = JSON.parse(
                 fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
             );
 
-            expect(entrypoints.entrypoints.main.js[0]).to.contain('https://localhost:8080/build/');
+            expect(entrypoints.entrypoints.main.js[0]).toContain('https://localhost:8080/build/');
 
             // Verify manifest.json contains https:// URLs
             const manifest = JSON.parse(
                 fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
             );
-            expect(manifest['build/main.js']).to.contain('https://localhost:8080/build/');
+            expect(manifest['build/main.js']).toContain('https://localhost:8080/build/');
 
             done();
         });
@@ -379,11 +373,11 @@ export default await Encore.getWebpackConfig();
     });
 
     describe('Without webpack-dev-server installed', function() {
-        before(function() {
+        beforeAll(function() {
             execSync('yarn remove webpack-dev-server --dev', { cwd: projectDir });
         });
 
-        after(function() {
+        afterAll(function() {
             // Re-install webpack-dev-server and ensure the project is in a clean state
             execSync('git checkout package.json', { cwd: projectDir });
             execSync('yarn install', { cwd: projectDir });
@@ -425,13 +419,13 @@ export default await Encore.getWebpackConfig();
                     env: Object.assign({}, process.env, { NO_COLOR: 'true' })
                 },
                 (err, stdout, stderr) => {
-                    expect(stdout).to.contain('Install webpack-dev-server to use the webpack Development Server');
-                    expect(stdout).to.contain('npm install webpack-dev-server --save-dev');
-                    expect(stderr).to.equal('');
+                    expect(stdout).toContain('Install webpack-dev-server to use the webpack Development Server');
+                    expect(stdout).toContain('npm install webpack-dev-server --save-dev');
+                    expect(stderr).toBe('');
 
-                    expect(stdout).not.to.contain('Running webpack-dev-server ...');
-                    expect(stdout).not.to.contain('Compiled successfully in');
-                    expect(stdout).not.to.contain('webpack compiled successfully');
+                    expect(stdout).not.toContain('Running webpack-dev-server ...');
+                    expect(stdout).not.toContain('Compiled successfully in');
+                    expect(stdout).not.toContain('webpack compiled successfully');
 
                     done();
                 });

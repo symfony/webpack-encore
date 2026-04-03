@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import lessLoader from '../../lib/loaders/less.js';
 import cssLoader from '../../lib/loaders/css.js';
-import sinon from 'sinon';
+
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -28,15 +28,15 @@ describe('loaders/less', function() {
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         const actualLoaders = lessLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.sourceMap).to.be.true;
-        expect(cssLoaderStub.getCall(0).args[1]).to.be.false;
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.sourceMap).toBe(true);
+        expect(cssLoaderStub.mock.calls[0][1]).toBe(false);
 
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with options callback', function() {
@@ -44,8 +44,8 @@ describe('loaders/less', function() {
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         config.enableLessLoader(function(lessOptions) {
             lessOptions.custom_option = 'foo';
@@ -53,12 +53,12 @@ describe('loaders/less', function() {
         });
 
         const actualLoaders = lessLoader.getLoaders(config);
-        expect(actualLoaders[0].options).to.deep.equals({
+        expect(actualLoaders[0].options).toEqual({
             sourceMap: true,
             custom_option: 'foo',
             other_option: true
         });
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with a callback that returns an object', function() {
@@ -66,8 +66,8 @@ describe('loaders/less', function() {
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         config.enableLessLoader(function(lessOptions) {
             lessOptions.custom_option = 'foo';
@@ -77,8 +77,8 @@ describe('loaders/less', function() {
         });
 
         const actualLoaders = lessLoader.getLoaders(config);
-        expect(actualLoaders[0].options).to.deep.equals({ foo: true });
-        cssLoader.getLoaders.restore();
+        expect(actualLoaders[0].options).toEqual({ foo: true });
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with CSS modules enabled', function() {
@@ -86,14 +86,14 @@ describe('loaders/less', function() {
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         const actualLoaders = lessLoader.getLoaders(config, true);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.sourceMap).to.be.true;
-        expect(cssLoaderStub.getCall(0).args[1]).to.be.true;
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.sourceMap).toBe(true);
+        expect(cssLoaderStub.mock.calls[0][1]).toBe(true);
 
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 });

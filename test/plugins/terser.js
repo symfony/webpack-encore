@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import TerserPlugin from 'terser-webpack-plugin';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -28,7 +28,7 @@ describe('plugins/terser', function() {
 
         const plugin = terserPluginUtil(config);
         expect(plugin).to.be.instanceof(TerserPlugin);
-        expect(plugin.options.parallel).to.equal(true);
+        expect(plugin.options.parallel).toBe(true);
     });
 
     it('with options callback', function() {
@@ -41,10 +41,10 @@ describe('plugins/terser', function() {
         const plugin = terserPluginUtil(config);
 
         // Allows to override default options
-        expect(plugin.options.test).to.equal('custom_test');
+        expect(plugin.options.test).toBe('custom_test');
 
         // Doesn't remove default options
-        expect(plugin.options.parallel).to.equal(true);
+        expect(plugin.options.parallel).toBe(true);
     });
 
     it('with options callback that returns an object', function() {
@@ -58,7 +58,7 @@ describe('plugins/terser', function() {
         });
 
         const plugin = terserPluginUtil(config);
-        expect(plugin.options.test).to.not.equal('custom_test');
-        expect(plugin.options.parallel).to.equal(false);
+        expect(plugin.options.test).not.toBe('custom_test');
+        expect(plugin.options.parallel).toBe(false);
     });
 });

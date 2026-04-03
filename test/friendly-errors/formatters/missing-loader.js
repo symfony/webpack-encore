@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import formatter from '../../../lib/friendly-errors/formatters/missing-loader.js';
 
 describe('formatters/missing-loader', function() {
@@ -25,8 +25,8 @@ describe('formatters/missing-loader', function() {
             ];
 
             const actualErrors = formatter(errors);
-            expect(JSON.stringify(actualErrors)).to.contain('not-enabled.sass');
-            expect(JSON.stringify(actualErrors)).to.not.contain('other-type.sass');
+            expect(JSON.stringify(actualErrors)).toContain('not-enabled.sass');
+            expect(JSON.stringify(actualErrors)).not.toContain('other-type.sass');
         });
 
         it('error is formatted correctly', function() {
@@ -37,10 +37,10 @@ describe('formatters/missing-loader', function() {
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).to.contain('To load Sass files');
-            expect(JSON.stringify(actualErrors)).to.contain('Encore.enableSassLoader()');
+            expect(JSON.stringify(actualErrors)).toContain('To load Sass files');
+            expect(JSON.stringify(actualErrors)).toContain('Encore.enableSassLoader()');
             // all needed packages will be present when running tests
-            expect(JSON.stringify(actualErrors)).to.not.contain('yarn add');
+            expect(JSON.stringify(actualErrors)).not.toContain('yarn add');
         });
 
         it('error is formatted correctly without loaderName', function() {
@@ -50,8 +50,8 @@ describe('formatters/missing-loader', function() {
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).to.contain('To load \\"/some/file.jpg\\"');
-            expect(JSON.stringify(actualErrors)).to.contain('You may need to install and configure a special loader');
+            expect(JSON.stringify(actualErrors)).toContain('To load \\"/some/file.jpg\\"');
+            expect(JSON.stringify(actualErrors)).toContain('You may need to install and configure a special loader');
         });
 
         it('vue loader error includes original message & origin', function() {
@@ -65,9 +65,9 @@ describe('formatters/missing-loader', function() {
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).to.contain('I am a message from vue-loader');
-            expect(JSON.stringify(actualErrors)).to.contain('Some stacktrace info from origin');
-            expect(JSON.stringify(actualErrors)).to.not.contain('/path/to/project/node_modules/vue-loader');
+            expect(JSON.stringify(actualErrors)).toContain('I am a message from vue-loader');
+            expect(JSON.stringify(actualErrors)).toContain('Some stacktrace info from origin');
+            expect(JSON.stringify(actualErrors)).not.toContain('/path/to/project/node_modules/vue-loader');
         });
     });
 });

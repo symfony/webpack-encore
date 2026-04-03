@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import validator from '../../lib/config/validator.js';
@@ -31,7 +31,7 @@ describe('The validator function', function() {
 
         expect(() => {
             validator(config);
-        }).to.throw('No entries found!');
+        }).toThrow('No entries found!');
     });
 
     it('should accept use with copyFiles() only', function() {
@@ -44,7 +44,7 @@ describe('The validator function', function() {
             validator(config);
         }).not.throw();
 
-        expect(Object.keys(config.copyFilesConfigs).length).to.equal(1);
+        expect(Object.keys(config.copyFilesConfigs).length).toBe(1);
     });
 
     it('should accept use with addPlugin() only', function() {
@@ -65,7 +65,7 @@ describe('The validator function', function() {
 
         expect(() => {
             validator(config);
-        }).to.throw('Missing output path');
+        }).toThrow('Missing output path');
     });
 
     it('throws an error if there is no public path', function() {
@@ -75,7 +75,7 @@ describe('The validator function', function() {
 
         expect(() => {
             validator(config);
-        }).to.throw('Missing public path');
+        }).toThrow('Missing public path');
     });
 
     it('cannot use versioning with webpack-dev-server', function() {
@@ -88,7 +88,7 @@ describe('The validator function', function() {
 
         expect(() => {
             validator(config);
-        }).to.throw('Don\'t enable versioning with the dev-server');
+        }).toThrow('Don\'t enable versioning with the dev-server');
     });
 
     it('warning with dev-server and absolute publicPath', function() {
@@ -103,7 +103,7 @@ describe('The validator function', function() {
         logger.quiet();
         validator(config);
 
-        expect(logger.getMessages().warning).to.have.lengthOf(1);
+        expect(logger.getMessages().warning).toHaveLength(1);
         expect(logger.getMessages().warning[0]).to.include('Passing an absolute URL to setPublicPath() *and* using the dev-server can cause issues');
     });
 
@@ -120,7 +120,7 @@ describe('The validator function', function() {
         logger.quiet();
         validator(config);
 
-        expect(logger.getMessages().warning).to.have.lengthOf(1);
+        expect(logger.getMessages().warning).toHaveLength(1);
         expect(logger.getMessages().warning[0]).to.include('Passing "defaultVendors" to addCacheGroup() is not recommended');
     });
 });

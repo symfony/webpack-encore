@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import transform from '../../../lib/friendly-errors/transformers/missing-css-file.js';
 
 describe('transform/missing-css-file', function() {
@@ -21,7 +21,7 @@ describe('transform/missing-css-file', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError).to.deep.equal(startError);
+            expect(actualError).toEqual(startError);
         });
 
         it('Error not containing "Module not found: Error: Can\'t resolve" is ignored', function() {
@@ -32,7 +32,7 @@ describe('transform/missing-css-file', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError).to.deep.equal(startError);
+            expect(actualError).toEqual(startError);
         });
 
         it('Matching error is properly transformed', function() {
@@ -43,9 +43,9 @@ describe('transform/missing-css-file', function() {
             };
             const actualError = transform(Object.assign({}, startError));
 
-            expect(actualError.ref).to.deep.equal('./../images/symfony_logo.png2');
-            expect(actualError.type).to.deep.equal('missing-css-file');
-            expect(actualError.file).to.deep.equal('/Users/weaverryan/Sites/os/webpack-encore/tmp_project_playing/css');
+            expect(actualError.ref).toEqual('./../images/symfony_logo.png2');
+            expect(actualError.type).toEqual('missing-css-file');
+            expect(actualError.file).toEqual('/Users/weaverryan/Sites/os/webpack-encore/tmp_project_playing/css');
         });
     });
 });

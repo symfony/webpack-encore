@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import pathUtil from '../../lib/config/path-util.js';
@@ -37,7 +37,7 @@ describe('path-util getContentBase()', function() {
             const actualContentBase = pathUtil.getContentBase(config);
             // contentBase should point to the "document root", which
             // is calculated as outputPath, but without the publicPath portion
-            expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
+            expect(actualContentBase).toBe(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
         });
 
         it('contentBase works ok with manifestKeyPrefix', function() {
@@ -50,7 +50,7 @@ describe('path-util getContentBase()', function() {
             config.addEntry('main', './main');
 
             const actualContentBase = pathUtil.getContentBase(config);
-            expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
+            expect(actualContentBase).toBe(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
         });
 
         it('contentBase is calculated correctly with no public path', function() {
@@ -63,7 +63,7 @@ describe('path-util getContentBase()', function() {
             const actualContentBase = pathUtil.getContentBase(config);
             // contentBase should point to the "document root", which
             // is calculated as outputPath, but without the publicPath portion
-            expect(actualContentBase).to.equal(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
+            expect(actualContentBase).toBe(isWindows ? 'C:\\tmp\\public' : '/tmp/public');
         });
     });
 
@@ -87,7 +87,7 @@ describe('path-util getContentBase()', function() {
 
             expect(() => {
                 pathUtil.validatePublicPathAndManifestKeyPrefix(config);
-            }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
+            }).toThrow('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
         });
 
         it('when outputPath and publicPath are incompatible, manifestKeyPrefix must be set', function() {
@@ -100,7 +100,7 @@ describe('path-util getContentBase()', function() {
 
             expect(() => {
                 pathUtil.validatePublicPathAndManifestKeyPrefix(config);
-            }).to.throw('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
+            }).toThrow('Cannot determine how to prefix the keys in manifest.json. Call Encore.setManifestKeyPrefix() to choose what path (e.g. build/) to use');
         });
     });
 
@@ -116,7 +116,7 @@ describe('path-util getContentBase()', function() {
             }
 
             const actualPath = pathUtil.getRelativeOutputPath(config);
-            expect(actualPath).to.equal(isWindows ? 'public\\build' : 'public/build');
+            expect(actualPath).toBe(isWindows ? 'public\\build' : 'public/build');
         });
     });
 
@@ -128,7 +128,7 @@ describe('path-util getContentBase()', function() {
             runtimeConfig.devServerHost = 'localhost';
             runtimeConfig.devServerPort = '8080';
 
-            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('http://localhost:8080');
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).toBe('http://localhost:8080');
         });
 
         it('yes https, no public', function() {
@@ -138,7 +138,7 @@ describe('path-util getContentBase()', function() {
             runtimeConfig.devServerHost = 'localhost';
             runtimeConfig.devServerPort = '8080';
 
-            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('https://localhost:8080');
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).toBe('https://localhost:8080');
         });
 
         it('no https, yes public not absolute', function() {
@@ -146,7 +146,7 @@ describe('path-util getContentBase()', function() {
             runtimeConfig.devServerFinalIsHttps = false;
             runtimeConfig.devServerPublic = 'myhost.local:9090';
 
-            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('http://myhost.local:9090');
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).toBe('http://myhost.local:9090');
         });
 
         it('yes https, yes public not absolute', function() {
@@ -154,7 +154,7 @@ describe('path-util getContentBase()', function() {
             runtimeConfig.devServerFinalIsHttps = true;
             runtimeConfig.devServerPublic = 'myhost.local:9090';
 
-            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('https://myhost.local:9090');
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).toBe('https://myhost.local:9090');
         });
 
         it('yes public and is absolute', function() {
@@ -162,7 +162,7 @@ describe('path-util getContentBase()', function() {
             runtimeConfig.devServerFinalIsHttps = false;
             runtimeConfig.devServerPublic = 'https://myhost.local:9090';
 
-            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).to.equal('https://myhost.local:9090');
+            expect(pathUtil.calculateDevServerUrl(runtimeConfig)).toBe('https://myhost.local:9090');
         });
     });
 
@@ -180,7 +180,7 @@ describe('path-util getContentBase()', function() {
             // Run config generator to set devServerFinalIsHttps
             await configGenerator(config);
 
-            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('http://localhost:8080');
+            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).toBe('http://localhost:8080');
         });
 
         it('generates https URL with server: "https" option', async function() {
@@ -199,7 +199,7 @@ describe('path-util getContentBase()', function() {
             // Run config generator to set devServerFinalIsHttps
             await configGenerator(config);
 
-            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('https://localhost:8080');
+            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).toBe('https://localhost:8080');
         });
 
         it('generates https URL with server: { type: "https" } option', async function() {
@@ -218,7 +218,7 @@ describe('path-util getContentBase()', function() {
             // Run config generator to set devServerFinalIsHttps
             await configGenerator(config);
 
-            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('https://localhost:8080');
+            expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).toBe('https://localhost:8080');
         });
     });
 });

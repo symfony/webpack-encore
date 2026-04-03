@@ -9,7 +9,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import regexEscaper from '../../lib/utils/regexp-escaper.js';
 
 const loadManifest = function(webpackConfig) {
@@ -217,7 +217,7 @@ class Assert {
 
         const actualData = JSON.parse(actualContents);
 
-        expect(JSON.stringify(actualData, null, 2)).to.equal(JSON.stringify(expectedData, null, 2));
+        expect(JSON.stringify(actualData, null, 2)).toBe(JSON.stringify(expectedData, null, 2));
     }
 
     /**

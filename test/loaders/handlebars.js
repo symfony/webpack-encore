@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import handlebarsLoader from '../../lib/loaders/handlebars.js';
@@ -26,7 +26,7 @@ describe('loaders/handlebars', function() {
         config.enableHandlebarsLoader();
 
         const actualLoaders = handlebarsLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
+        expect(actualLoaders).toHaveLength(1);
         expect(actualLoaders[0].options).to.be.empty;
     });
 
@@ -37,8 +37,8 @@ describe('loaders/handlebars', function() {
         });
 
         const actualLoaders = handlebarsLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.debug).to.be.true;
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.debug).toBe(true);
     });
 
     it('getLoaders() with options callback that returns an object', function() {
@@ -51,7 +51,7 @@ describe('loaders/handlebars', function() {
         });
 
         const actualLoaders = handlebarsLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options).to.deep.equal({ foo: true });
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options).toEqual({ foo: true });
     });
 });

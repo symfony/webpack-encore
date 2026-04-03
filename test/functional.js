@@ -7,9 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { expect, use } from 'chai';
+import { expect } from 'vitest';
 import { fileURLToPath } from 'url';
-import { createRequire } from 'module';
 import path from 'path';
 import * as testSetup from './helpers/setup.js';
 import fs from 'fs-extra';
@@ -17,9 +16,6 @@ import getVueVersion from '../lib/utils/get-vue-version.js';
 import packageHelper from '../lib/package-helper.js';
 import semver from 'semver';
 import puppeteer from 'puppeteer';
-
-const require = createRequire(import.meta.url);
-use(require('chai-fs'));
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     const webpackConfig = testSetup.createWebpackConfig(
@@ -78,10 +74,8 @@ describe('Functional tests using webpack', function() {
     let browser;
 
     // being functional tests, these can take quite long
-    this.timeout(10000);
 
-    before(function(done) {
-        this.timeout(15000);
+    beforeAll(function(done) {
         puppeteer.launch({ headless: 'new', timeout: 14000, args: ['--no-sandbox', '--disable-setuid-sandbox'] }).then(_browser => {
             browser = _browser;
             done();
@@ -92,7 +86,7 @@ describe('Functional tests using webpack', function() {
         });
     });
 
-    after(function(done) {
+    afterAll(function(done) {
         browser.close().then(done);
     });
 
@@ -1264,7 +1258,7 @@ export default {
         it('Babel can be configured via package.json browserlist', function(done) {
             const cwd = process.cwd();
 
-            after(function() {
+            afterAll(function() {
                 process.chdir(cwd);
             });
 
@@ -1459,7 +1453,6 @@ export default {
         });
 
         it('TypeScript is compiled and type checking is done in a separate process!', async function() {
-            this.timeout(10000);
 
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -1476,7 +1469,7 @@ export default {
                 expect.fail('Expected runWebpack to throw "Cannot find the" error');
             } catch (error) {
                 // Cannot find the "/path/to/tsconfig.json" file
-                expect(error.message).to.contain('Cannot find the');
+                expect(error.message).toContain('Cannot find the');
             }
         });
 
@@ -1617,7 +1610,7 @@ module.exports = {
 
                         // make sure the styles are not inlined
                         const styleElementsCount = await page.evaluate(() => document.querySelectorAll('style').length);
-                        expect(styleElementsCount).to.equal(0);
+                        expect(styleElementsCount).toBe(0);
 
                         done();
                     }
@@ -1686,7 +1679,7 @@ module.exports = {
 
                         // make sure the styles are not inlined
                         const styleElementsCount = await page.evaluate(() => document.querySelectorAll('style').length);
-                        expect(styleElementsCount).to.equal(0);
+                        expect(styleElementsCount).toBe(0);
 
                         done();
                     }
@@ -1770,17 +1763,17 @@ module.exports = {
                     async({ page }) => {
                         const divClassArray = await page.evaluate(() => Array.from(document.body.querySelector('#app > div').classList.values()));
 
-                        expect(divClassArray.includes('red')).to.be.true; // Standard CSS
-                        expect(divClassArray.includes('large')).to.be.true; // Standard SCSS
-                        expect(divClassArray.includes('justified')).to.be.true; // Standard Less
-                        expect(divClassArray.includes('lowercase')).to.be.true; // Standard Stylus
-                        expect(divClassArray.includes('block')).to.be.true; // Standard PostCSS
+                        expect(divClassArray.includes('red')).toBe(true); // Standard CSS
+                        expect(divClassArray.includes('large')).toBe(true); // Standard SCSS
+                        expect(divClassArray.includes('justified')).toBe(true); // Standard Less
+                        expect(divClassArray.includes('lowercase')).toBe(true); // Standard Stylus
+                        expect(divClassArray.includes('block')).toBe(true); // Standard PostCSS
 
-                        expect(divClassArray.includes('italic_foo')).to.be.true; // CSS module
-                        expect(divClassArray.includes('bold_foo')).to.be.true; // SCSS module
-                        expect(divClassArray.includes('underline_foo')).to.be.true; // Less module
-                        expect(divClassArray.includes('rtl_foo')).to.be.true; // Stylus module
-                        expect(divClassArray.includes('hidden_foo')).to.be.true; // PostCSS module
+                        expect(divClassArray.includes('italic_foo')).toBe(true); // CSS module
+                        expect(divClassArray.includes('bold_foo')).toBe(true); // SCSS module
+                        expect(divClassArray.includes('underline_foo')).toBe(true); // Less module
+                        expect(divClassArray.includes('rtl_foo')).toBe(true); // Stylus module
+                        expect(divClassArray.includes('hidden_foo')).toBe(true); // PostCSS module
 
                         done();
                     }
@@ -1854,15 +1847,15 @@ module.exports = {
                     async({ page }) => {
                         const divClassArray = await page.evaluate(() => Array.from(document.body.querySelector('#app > div').classList.values()));
 
-                        expect(divClassArray.includes('red')).to.be.true; // Standard CSS
-                        expect(divClassArray.includes('large')).to.be.true; // Standard SCSS
-                        expect(divClassArray.includes('justified')).to.be.true; // Standard Less
-                        expect(divClassArray.includes('lowercase')).to.be.true; // Standard Stylus
+                        expect(divClassArray.includes('red')).toBe(true); // Standard CSS
+                        expect(divClassArray.includes('large')).toBe(true); // Standard SCSS
+                        expect(divClassArray.includes('justified')).toBe(true); // Standard Less
+                        expect(divClassArray.includes('lowercase')).toBe(true); // Standard Stylus
 
-                        expect(divClassArray.includes('italic_foo')).to.be.true; // CSS module
-                        expect(divClassArray.includes('bold_foo')).to.be.true; // SCSS module
-                        expect(divClassArray.includes('underline_foo')).to.be.true; // Less module
-                        expect(divClassArray.includes('rtl_foo')).to.be.true; // Stylus module
+                        expect(divClassArray.includes('italic_foo')).toBe(true); // CSS module
+                        expect(divClassArray.includes('bold_foo')).toBe(true); // SCSS module
+                        expect(divClassArray.includes('underline_foo')).toBe(true); // Less module
+                        expect(divClassArray.includes('rtl_foo')).toBe(true); // Stylus module
 
                         done();
                     }
@@ -1936,15 +1929,15 @@ module.exports = {
                     async({ page }) => {
                         const divClassArray = await page.evaluate(() => Array.from(document.body.querySelector('#app > div').classList.values()));
 
-                        expect(divClassArray.includes('red')).to.be.true; // Standard CSS
-                        expect(divClassArray.includes('large')).to.be.true; // Standard SCSS
-                        expect(divClassArray.includes('justified')).to.be.true; // Standard Less
-                        expect(divClassArray.includes('lowercase')).to.be.true; // Standard Stylus
+                        expect(divClassArray.includes('red')).toBe(true); // Standard CSS
+                        expect(divClassArray.includes('large')).toBe(true); // Standard SCSS
+                        expect(divClassArray.includes('justified')).toBe(true); // Standard Less
+                        expect(divClassArray.includes('lowercase')).toBe(true); // Standard Stylus
 
-                        expect(divClassArray.includes('italic_foo')).to.be.true; // CSS module
-                        expect(divClassArray.includes('bold_foo')).to.be.true; // SCSS module
-                        expect(divClassArray.includes('underline_foo')).to.be.true; // Less module
-                        expect(divClassArray.includes('rtl_foo')).to.be.true; // Stylus module
+                        expect(divClassArray.includes('italic_foo')).toBe(true); // CSS module
+                        expect(divClassArray.includes('bold_foo')).toBe(true); // SCSS module
+                        expect(divClassArray.includes('underline_foo')).toBe(true); // Less module
+                        expect(divClassArray.includes('rtl_foo')).toBe(true); // Stylus module
 
                         done();
                     }
@@ -1959,8 +1952,8 @@ module.exports = {
             config.enableVueLoader();
 
             testSetup.runWebpack(config, (webpackAssert, stats, output) => {
-                expect(output).to.contain('To load LESS files');
-                expect(output).to.contain('To load Sass files');
+                expect(output).toContain('To load LESS files');
+                expect(output).toContain('To load Sass files');
 
                 done();
             }, true);
@@ -1992,7 +1985,7 @@ module.exports = {
             config.enableLessLoader();
             config.configureBabel(function(config) {
                 // throw new Error(JSON.stringify(config));
-                expect(config.presets[0][0]).to.equal(fileURLToPath(import.meta.resolve('@babel/preset-env')));
+                expect(config.presets[0][0]).toBe(fileURLToPath(import.meta.resolve('@babel/preset-env')));
                 config.presets[0][1].targets = {
                     chrome: 109
                 };
@@ -2040,7 +2033,7 @@ module.exports = {
 
                         // make sure the styles are not inlined
                         const styleElementsCount = await page.evaluate(() => document.querySelectorAll('style').length);
-                        expect(styleElementsCount).to.equal(0);
+                        expect(styleElementsCount).toBe(0);
 
                         done();
                     }
@@ -2447,8 +2440,8 @@ module.exports = {
                             'manifest.json'
                         ]);
 
-                    expect(stdout).to.contain('should be set to an existing directory but "./foo" does not seem to exist');
-                    expect(stdout).to.contain('should be set to an existing directory but "./images/symfony_logo.png" seems to be a file');
+                    expect(stdout).toContain('should be set to an existing directory but "./foo" does not seem to exist');
+                    expect(stdout).toContain('should be set to an existing directory but "./images/symfony_logo.png" seems to be a file');
 
                     done();
                 });
@@ -3078,7 +3071,7 @@ module.exports = {
                     ];
 
                     expectedFilesWithHashes.forEach((file) => {
-                        expect(integrityData[file]).to.contain('sha384-');
+                        expect(integrityData[file]).toContain('sha384-');
                         expect(integrityData[file]).to.have.length(71);
                     });
 
@@ -3109,7 +3102,7 @@ module.exports = {
                     ];
 
                     expectedFilesWithHashes.forEach((file) => {
-                        expect(integrityData[file]).to.contain('sha256-');
+                        expect(integrityData[file]).toContain('sha256-');
                         expect(integrityData[file]).to.have.length(51);
                     });
 
@@ -3140,8 +3133,8 @@ module.exports = {
                     ];
 
                     expectedFilesWithHashes.forEach((file) => {
-                        expect(integrityData[file]).to.contain('sha256-');
-                        expect(integrityData[file]).to.contain('sha512-');
+                        expect(integrityData[file]).toContain('sha256-');
+                        expect(integrityData[file]).toContain('sha512-');
                         expect(integrityData[file]).to.have.length(147);
                     });
 
@@ -3173,7 +3166,7 @@ module.exports = {
                     });
 
                     expectedFilesWithHashes.forEach((file) => {
-                        expect(integrityData[file]).to.contain('sha384-');
+                        expect(integrityData[file]).toContain('sha384-');
                         expect(integrityData[file]).to.have.length(71);
                     });
 

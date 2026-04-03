@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import WebpackConfig from '../lib/WebpackConfig.js';
 import RuntimeConfig from '../lib/config/RuntimeConfig.js';
 import path from 'path';
@@ -57,7 +57,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.setOutputPath(import.meta.dirname);
 
-            expect(config.outputPath).to.equal(import.meta.dirname);
+            expect(config.outputPath).toBe(import.meta.dirname);
         });
 
         it('relative path, becomes absolute', function() {
@@ -65,7 +65,7 @@ describe('WebpackConfig object', function() {
             config.setOutputPath('new_dir');
 
             // import.meta.dirname is the context
-            expect(config.outputPath).to.equal(
+            expect(config.outputPath).toBe(
                 path.join(import.meta.dirname, '/new_dir')
             );
         });
@@ -78,7 +78,7 @@ describe('WebpackConfig object', function() {
 
             const config = createConfig();
             config.setOutputPath(targetPath);
-            expect(fs.existsSync(config.outputPath)).to.be.true;
+            expect(fs.existsSync(config.outputPath)).toBe(true);
         });
 
         it('non-existent directory, 3 levels deep is created correctly', function() {
@@ -89,7 +89,7 @@ describe('WebpackConfig object', function() {
 
             const config = createConfig();
             config.setOutputPath(targetPath);
-            expect(fs.existsSync(config.outputPath)).to.be.true;
+            expect(fs.existsSync(config.outputPath)).toBe(true);
         });
 
         it('non-existent path outside of the context directory works if only one directory has to be created', function() {
@@ -100,7 +100,7 @@ describe('WebpackConfig object', function() {
 
             const config = createConfig();
             config.setOutputPath(targetPath);
-            expect(fs.existsSync(config.outputPath)).to.be.true;
+            expect(fs.existsSync(config.outputPath)).toBe(true);
         });
 
         it('non-existent path outside of the context directory throws an error if more than one directory has to be created', function() {
@@ -110,7 +110,7 @@ describe('WebpackConfig object', function() {
             }
 
             const config = createConfig();
-            expect(() => config.setOutputPath(targetPath)).to.throw('create this directory');
+            expect(() => config.setOutputPath(targetPath)).toThrow('create this directory');
         });
     });
 
@@ -119,21 +119,21 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.setPublicPath('/foo');
 
-            expect(config.publicPath).to.equal('/foo/');
+            expect(config.publicPath).toBe('/foo/');
         });
 
         it('/foo/ => /foo/', function() {
             const config = createConfig();
             config.setPublicPath('/foo/');
 
-            expect(config.publicPath).to.equal('/foo/');
+            expect(config.publicPath).toBe('/foo/');
         });
 
         it('https://example.com => https://example.com/', function() {
             const config = createConfig();
             config.setPublicPath('https://example.com');
 
-            expect(config.publicPath).to.equal('https://example.com/');
+            expect(config.publicPath).toBe('https://example.com/');
         });
 
         it('You can omit the opening slash, but get a warning', function() {
@@ -142,7 +142,7 @@ describe('WebpackConfig object', function() {
             logger.quiet();
 
             config.setPublicPath('foo');
-            expect(logger.getMessages().warning).to.have.lengthOf(1);
+            expect(logger.getMessages().warning).toHaveLength(1);
         });
     });
 
@@ -151,7 +151,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.setPublicPath('/public');
 
-            expect(config.getRealPublicPath()).to.equal('/public/');
+            expect(config.getRealPublicPath()).toBe('/public/');
         });
 
         it('Prefix when using devServer', function() {
@@ -162,7 +162,7 @@ describe('WebpackConfig object', function() {
             config.runtimeConfig.devServerFinalIsHttps = false;
             config.setPublicPath('/public');
 
-            expect(config.getRealPublicPath()).to.equal('http://localhost:8080/public/');
+            expect(config.getRealPublicPath()).toBe('http://localhost:8080/public/');
         });
 
         it('No prefix with devServer & devServerKeepPublicPath option', function() {
@@ -174,7 +174,7 @@ describe('WebpackConfig object', function() {
             config.runtimeConfig.devServerKeepPublicPath = true;
             config.setPublicPath('/public');
 
-            expect(config.getRealPublicPath()).to.equal('/public/');
+            expect(config.getRealPublicPath()).toBe('/public/');
         });
 
         it('devServer does not prefix if publicPath is absolute', function() {
@@ -186,7 +186,7 @@ describe('WebpackConfig object', function() {
             config.setPublicPath('http://coolcdn.com/public');
             config.setManifestKeyPrefix('/public/');
 
-            expect(config.getRealPublicPath()).to.equal('http://coolcdn.com/public/');
+            expect(config.getRealPublicPath()).toBe('http://coolcdn.com/public/');
         });
     });
 
@@ -197,7 +197,7 @@ describe('WebpackConfig object', function() {
             config.setManifestKeyPrefix('foo');
 
             // trailing slash added
-            expect(config.manifestKeyPrefix).to.equal('foo/');
+            expect(config.manifestKeyPrefix).toBe('foo/');
         });
 
         it('You can set it blank', function() {
@@ -205,7 +205,7 @@ describe('WebpackConfig object', function() {
             config.setManifestKeyPrefix('');
 
             // trailing slash not added
-            expect(config.manifestKeyPrefix).to.equal('');
+            expect(config.manifestKeyPrefix).toBe('');
         });
 
         it('You can use an opening slash, but get a warning', function() {
@@ -214,7 +214,7 @@ describe('WebpackConfig object', function() {
             logger.reset();
             logger.quiet();
             config.setManifestKeyPrefix('/foo/');
-            expect(logger.getMessages().warning).to.have.lengthOf(1);
+            expect(logger.getMessages().warning).toHaveLength(1);
         });
     });
 
@@ -223,7 +223,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.cleanupOutputBeforeBuild();
 
-            expect(config.cleanupOutput).to.be.true;
+            expect(config.cleanupOutput).toBe(true);
         });
 
         it('Setting paths and callback', function() {
@@ -231,8 +231,8 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.cleanupOutputBeforeBuild(callback);
 
-            expect(config.cleanupOutput).to.be.true;
-            expect(config.cleanOptionsCallback).to.equal(callback);
+            expect(config.cleanupOutput).toBe(true);
+            expect(config.cleanOptionsCallback).toBe(callback);
         });
 
         it('Setting invalid callback argument', function() {
@@ -240,7 +240,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.cleanupOutputBeforeBuild('foo');
-            }).to.throw('Argument 1 to cleanupOutputBeforeBuild() must be a callback function');
+            }).toThrow('Argument 1 to cleanupOutputBeforeBuild() must be a callback function');
         });
     });
 
@@ -250,7 +250,7 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.configureDefinePlugin(callback);
 
-            expect(config.definePluginOptionsCallback).to.equal(callback);
+            expect(config.definePluginOptionsCallback).toBe(callback);
         });
 
         it('Setting invalid callback argument', function() {
@@ -258,7 +258,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureDefinePlugin('foo');
-            }).to.throw('Argument 1 to configureDefinePlugin() must be a callback function');
+            }).toThrow('Argument 1 to configureDefinePlugin() must be a callback function');
         });
     });
 
@@ -268,7 +268,7 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.configureFriendlyErrorsPlugin(callback);
 
-            expect(config.friendlyErrorsPluginOptionsCallback).to.equal(callback);
+            expect(config.friendlyErrorsPluginOptionsCallback).toBe(callback);
         });
 
         it('Setting invalid callback argument', function() {
@@ -276,7 +276,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureFriendlyErrorsPlugin('foo');
-            }).to.throw('Argument 1 to configureFriendlyErrorsPlugin() must be a callback function');
+            }).toThrow('Argument 1 to configureFriendlyErrorsPlugin() must be a callback function');
         });
     });
 
@@ -286,7 +286,7 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.configureManifestPlugin(callback);
 
-            expect(config.manifestPluginOptionsCallback).to.equal(callback);
+            expect(config.manifestPluginOptionsCallback).toBe(callback);
         });
 
         it('Setting invalid callback argument', function() {
@@ -295,7 +295,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureManifestPlugin(callback);
-            }).to.throw('Argument 1 to configureManifestPlugin() must be a callback function');
+            }).toThrow('Argument 1 to configureManifestPlugin() must be a callback function');
         });
     });
 
@@ -305,7 +305,7 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.configureTerserPlugin(callback);
 
-            expect(config.terserPluginOptionsCallback).to.equal(callback);
+            expect(config.terserPluginOptionsCallback).toBe(callback);
         });
 
         it('Setting invalid callback argument', function() {
@@ -313,7 +313,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureTerserPlugin('foo');
-            }).to.throw('Argument 1 to configureTerserPlugin() must be a callback function');
+            }).toThrow('Argument 1 to configureTerserPlugin() must be a callback function');
         });
     });
 
@@ -323,7 +323,7 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.configureCssMinimizerPlugin(callback);
 
-            expect(config.cssMinimizerPluginOptionsCallback).to.equal(callback);
+            expect(config.cssMinimizerPluginOptionsCallback).toBe(callback);
         });
 
         it('Setting invalid callback argument', function() {
@@ -331,7 +331,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureCssMinimizerPlugin('foo');
-            }).to.throw('Argument 1 to configureCssMinimizerPlugin() must be a callback function');
+            }).toThrow('Argument 1 to configureCssMinimizerPlugin() must be a callback function');
         });
     });
 
@@ -342,7 +342,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addEntry('entry_foo', './bar.js');
-            }).to.throw('already exists as an Entrypoint');
+            }).toThrow('already exists as an Entrypoint');
         });
 
         it('Calling with a duplicate of addStyleEntry', function() {
@@ -351,7 +351,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addEntry('main', './main.js');
-            }).to.throw('already exists as a Style Entrypoint');
+            }).toThrow('already exists as a Style Entrypoint');
         });
 
         it('Calling with a duplicate of addEntries', function() {
@@ -360,7 +360,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addEntry('main', './bar.js');
-            }).to.throw('already exists as an Entrypoint');
+            }).toThrow('already exists as an Entrypoint');
         });
     });
 
@@ -371,7 +371,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addEntries({ entry_foo: './bar.js' });
-            }).to.throw('already exists as an Entrypoint');
+            }).toThrow('already exists as an Entrypoint');
         });
 
         it('Calling with a duplicate of addStyleEntry', function() {
@@ -380,7 +380,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addEntries({ main: './main.js' });
-            }).to.throw('already exists as a Style Entrypoint');
+            }).toThrow('already exists as a Style Entrypoint');
         });
 
         it('Calling with a duplicate of addEntries', function() {
@@ -389,7 +389,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addEntries({ main: './bar.js' });
-            }).to.throw('already exists as an Entrypoint');
+            }).toThrow('already exists as an Entrypoint');
         });
     });
 
@@ -400,7 +400,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addStyleEntry('entry_foo', './bar.css');
-            }).to.throw('already exists as a Style Entrypoint');
+            }).toThrow('already exists as a Style Entrypoint');
         });
 
         it('Calling with a duplicate of addEntry', function() {
@@ -409,7 +409,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addStyleEntry('main', './main.js');
-            }).to.throw('already exists as an Entrypoint');
+            }).toThrow('already exists as an Entrypoint');
         });
 
         it('Calling with a duplicate of addEntries', function() {
@@ -418,7 +418,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addStyleEntry('main', './main.scss');
-            }).to.throw('already exists as an Entrypoint');
+            }).toThrow('already exists as an Entrypoint');
         });
     });
 
@@ -428,7 +428,7 @@ describe('WebpackConfig object', function() {
             config.addCacheGroup('foo', { test: /foo/ });
             config.addCacheGroup('bar', { test: /bar/ });
 
-            expect(config.cacheGroups).to.deep.equal({
+            expect(config.cacheGroups).toEqual({
                 foo: { test: /foo/ },
                 bar: { test: /bar/ },
             });
@@ -438,7 +438,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.addCacheGroup('foo', { node_modules: ['foo','bar', 'baz'] });
 
-            expect(config.cacheGroups).to.deep.equal({
+            expect(config.cacheGroups).toEqual({
                 foo: {
                     test: /[\\/]node_modules[\\/](foo|bar|baz)[\\/]/,
                 },
@@ -453,7 +453,7 @@ describe('WebpackConfig object', function() {
                 minChunks: 2
             });
 
-            expect(config.cacheGroups).to.deep.equal({
+            expect(config.cacheGroups).toEqual({
                 foo: {
                     test: /foo/,
                     chunks: 'initial',
@@ -466,14 +466,14 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             expect(() => {
                 config.addCacheGroup(true, { test: /foo/ });
-            }).to.throw('must be a string');
+            }).toThrow('must be a string');
         });
 
         it('Calling it with an invalid options parameter', function() {
             const config = createConfig();
             expect(() => {
                 config.addCacheGroup('foo', 'bar');
-            }).to.throw('must be an object');
+            }).toThrow('must be an object');
         });
 
         it('Calling it with an invalid node_modules option', function() {
@@ -482,14 +482,14 @@ describe('WebpackConfig object', function() {
                 config.addCacheGroup('foo', {
                     'node_modules': 'foo'
                 });
-            }).to.throw('must be an array');
+            }).toThrow('must be an array');
         });
 
         it('Calling it without the "test" or "node_modules" option', function() {
             const config = createConfig();
             expect(() => {
                 config.addCacheGroup('foo', { type: 'json' });
-            }).to.throw('Either the "test" option or the "node_modules" option');
+            }).toThrow('Either the "test" option or the "node_modules" option');
         });
     });
 
@@ -506,7 +506,7 @@ describe('WebpackConfig object', function() {
             // With a single config object
             config.copyFiles({ from: './baz' });
 
-            expect(config.copyFilesConfigs).to.deep.equal([{
+            expect(config.copyFilesConfigs).toEqual([{
                 from: './foo',
                 pattern: /.*/,
                 to: null,
@@ -532,11 +532,11 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.copyFiles('foo');
-            }).to.throw('must be called with either a config object or an array of config objects');
+            }).toThrow('must be called with either a config object or an array of config objects');
 
             expect(() => {
                 config.copyFiles([{ from: 'foo' }, 'foo']);
-            }).to.throw('must be called with either a config object or an array of config objects');
+            }).toThrow('must be called with either a config object or an array of config objects');
         });
 
         it('Calling it with a missing from key', function() {
@@ -544,11 +544,11 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.copyFiles({ to: 'foo' });
-            }).to.throw('must have a "from" property');
+            }).toThrow('must have a "from" property');
 
             expect(() => {
                 config.copyFiles([{ from: 'foo' }, { to: 'foo' }]);
-            }).to.throw('must have a "from" property');
+            }).toThrow('must have a "from" property');
         });
 
         it('Calling it with an unknown config property', function() {
@@ -556,7 +556,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.copyFiles({ from: 'images', foo: 'foo' });
-            }).to.throw('Invalid config option "foo"');
+            }).toThrow('Invalid config option "foo"');
         });
 
         it('Calling it with an invalid "pattern" option', function() {
@@ -564,11 +564,11 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.copyFiles({ from: 'images', pattern: true });
-            }).to.throw('Invalid pattern "true"');
+            }).toThrow('Invalid pattern "true"');
 
             expect(() => {
                 config.copyFiles({ from: 'images', pattern: 'foo' });
-            }).to.throw('Invalid pattern "foo"');
+            }).toThrow('Invalid pattern "foo"');
         });
     });
 
@@ -588,7 +588,7 @@ describe('WebpackConfig object', function() {
             });
 
             expect(JSON.stringify(config.providedVariables))
-                .to.equal(JSON.stringify({
+                .toBe(JSON.stringify({
                     $: 'jquery',
                     jQuery: 'jquery',
                     bar: './bar',
@@ -602,7 +602,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.autoProvideVariables('jquery');
-            }).to.throw('must pass an object');
+            }).toThrow('must pass an object');
         });
 
         it('Calling with an Array throws an error', function() {
@@ -610,7 +610,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.autoProvideVariables(['jquery']);
-            }).to.throw('must pass an object');
+            }).toThrow('must pass an object');
         });
     });
 
@@ -628,15 +628,15 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const testCallback = () => {};
             config.configureBabel(testCallback);
-            expect(config.babelConfigurationCallback).to.equal(testCallback);
-            expect(String(config.babelOptions.exclude)).to.equal(String(/(node_modules|bower_components)/));
+            expect(config.babelConfigurationCallback).toBe(testCallback);
+            expect(String(config.babelOptions.exclude)).toBe(String(/(node_modules|bower_components)/));
         });
 
         it('Calling with "exclude" option', function() {
             const config = createConfig();
             config.configureBabel(() => {}, { exclude: 'foo' });
 
-            expect(config.babelOptions.exclude).to.equal('foo');
+            expect(config.babelOptions.exclude).toBe('foo');
         });
 
         it('Calling with "includeNodeModules" option', function() {
@@ -662,11 +662,11 @@ describe('WebpackConfig object', function() {
             ];
 
             for (const filePath of includedPaths) {
-                expect(config.babelOptions.exclude(filePath)).to.equal(false);
+                expect(config.babelOptions.exclude(filePath)).toBe(false);
             }
 
             for (const filePath of excludedPaths) {
-                expect(config.babelOptions.exclude(filePath)).to.equal(true);
+                expect(config.babelOptions.exclude(filePath)).toBe(true);
             }
         });
 
@@ -674,7 +674,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.configureBabel(() => { }, { useBuiltIns: 'foo' });
 
-            expect(config.babelOptions.useBuiltIns).to.equal('foo');
+            expect(config.babelOptions.useBuiltIns).toBe('foo');
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -682,7 +682,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureBabel('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
 
         it('Calling with a callback when .babelrc is present throws an error', function() {
@@ -691,7 +691,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureBabel(() => {});
-            }).to.throw('your app already provides an external Babel configuration');
+            }).toThrow('your app already provides an external Babel configuration');
         });
 
         it('Calling with a whitelisted option when .babelrc is present works fine', function() {
@@ -707,8 +707,8 @@ describe('WebpackConfig object', function() {
             config.configureBabel(null, { useBuiltIns: 'foo' });
 
             const warnings = logger.getMessages().warning;
-            expect(warnings).to.have.lengthOf(1);
-            expect(warnings[0]).to.contain('your app already provides an external Babel configuration');
+            expect(warnings).toHaveLength(1);
+            expect(warnings[0]).toContain('your app already provides an external Babel configuration');
         });
 
         it('Pass invalid config', function() {
@@ -716,7 +716,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureBabel(() => {}, { fake_option: 'foo' });
-            }).to.throw('Invalid option "fake_option" passed to configureBabel()');
+            }).toThrow('Invalid option "fake_option" passed to configureBabel()');
         });
 
         it('Calling with both "includeNodeModules" and "exclude" options', function() {
@@ -724,7 +724,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureBabel(() => {}, { exclude: 'foo', includeNodeModules: ['bar', 'baz'] });
-            }).to.throw('can\'t be used together');
+            }).toThrow('can\'t be used together');
         });
 
         it('Calling with an invalid "includeNodeModules" option value', function() {
@@ -732,7 +732,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureBabel(() => {}, { includeNodeModules: 'foo' });
-            }).to.throw('must be an Array');
+            }).toThrow('must be an Array');
         });
     });
 
@@ -750,7 +750,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const testCallback = () => {};
             config.configureBabelPresetEnv(testCallback);
-            expect(config.babelPresetEnvOptionsCallback).to.equal(testCallback);
+            expect(config.babelPresetEnvOptionsCallback).toBe(testCallback);
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -758,7 +758,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureBabelPresetEnv('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
 
         it('Calling with a callback when .babelrc is present throws an error', function() {
@@ -767,7 +767,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureBabelPresetEnv(() => {});
-            }).to.throw('your app already provides an external Babel configuration');
+            }).toThrow('your app already provides an external Babel configuration');
         });
     });
 
@@ -776,7 +776,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const testCallback = () => {};
             config.configureCssLoader(testCallback);
-            expect(config.cssLoaderConfigurationCallback).to.equal(testCallback);
+            expect(config.cssLoaderConfigurationCallback).toBe(testCallback);
 
         });
 
@@ -785,7 +785,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureCssLoader('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
     });
 
@@ -794,7 +794,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const testCallback = () => {};
             config.configureMiniCssExtractPlugin(testCallback);
-            expect(config.miniCssExtractLoaderConfigurationCallback).to.equal(testCallback);
+            expect(config.miniCssExtractLoaderConfigurationCallback).toBe(testCallback);
         });
 
         it('Calling method with its second parameter sets the plugin\'s options', function() {
@@ -802,8 +802,8 @@ describe('WebpackConfig object', function() {
             const testCallbackLoader = () => {};
             const testCallbackPlugin = () => {};
             config.configureMiniCssExtractPlugin(testCallbackLoader, testCallbackPlugin);
-            expect(config.miniCssExtractLoaderConfigurationCallback).to.equal(testCallbackLoader);
-            expect(config.miniCssExtractPluginConfigurationCallback).to.equal(testCallbackPlugin);
+            expect(config.miniCssExtractLoaderConfigurationCallback).toBe(testCallbackLoader);
+            expect(config.miniCssExtractPluginConfigurationCallback).toBe(testCallbackPlugin);
         });
 
         it('Calling with non-callback as 1st parameter throws an error', function() {
@@ -811,7 +811,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureMiniCssExtractPlugin('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
 
         it('Calling with non-callback as 2nd parameter throws an error', function() {
@@ -819,7 +819,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureMiniCssExtractPlugin(() => {}, 'FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
     });
 
@@ -828,7 +828,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const testCallback = () => {};
             config.configureSplitChunks(testCallback);
-            expect(config.splitChunksConfigurationCallback).to.equal(testCallback);
+            expect(config.splitChunksConfigurationCallback).toBe(testCallback);
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -836,7 +836,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureSplitChunks('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
     });
 
@@ -845,7 +845,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enablePostCssLoader();
 
-            expect(config.usePostCssLoader).to.be.true;
+            expect(config.usePostCssLoader).toBe(true);
         });
 
         it('Pass options callback', function() {
@@ -853,14 +853,14 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.enablePostCssLoader(callback);
 
-            expect(config.usePostCssLoader).to.be.true;
-            expect(config.postCssLoaderOptionsCallback).to.equal(callback);
+            expect(config.usePostCssLoader).toBe(true);
+            expect(config.postCssLoaderOptionsCallback).toBe(callback);
         });
 
         it('Pass invalid options callback', function() {
             const config = createConfig();
 
-            expect(() => config.enablePostCssLoader('FOO')).to.throw('must be a callback function');
+            expect(() => config.enablePostCssLoader('FOO')).toThrow('must be a callback function');
         });
     });
 
@@ -869,15 +869,15 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableSassLoader();
 
-            expect(config.useSassLoader).to.be.true;
+            expect(config.useSassLoader).toBe(true);
         });
 
         it('Pass valid config', function() {
             const config = createConfig();
             config.enableSassLoader(() => {}, { resolveUrlLoader: false });
 
-            expect(config.useSassLoader).to.be.true;
-            expect(config.sassOptions.resolveUrlLoader).to.be.false;
+            expect(config.useSassLoader).toBe(true);
+            expect(config.sassOptions.resolveUrlLoader).toBe(false);
         });
 
         it('Pass invalid config', function() {
@@ -885,7 +885,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableSassLoader(() => {}, { fake_option: false });
-            }).to.throw('Invalid option "fake_option" passed to enableSassLoader()');
+            }).toThrow('Invalid option "fake_option" passed to enableSassLoader()');
         });
 
         it('Pass options callback', function() {
@@ -893,7 +893,7 @@ describe('WebpackConfig object', function() {
             const callback = (options) => {};
             config.enableSassLoader(callback);
 
-            expect(config.sassLoaderOptionsCallback).to.equal(callback);
+            expect(config.sassLoaderOptionsCallback).toBe(callback);
         });
     });
 
@@ -902,7 +902,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableLessLoader();
 
-            expect(config.useLessLoader).to.be.true;
+            expect(config.useLessLoader).toBe(true);
         });
 
         it('Calling with callback', function() {
@@ -910,7 +910,7 @@ describe('WebpackConfig object', function() {
             const callback = (lessOptions) => {};
             config.enableLessLoader(callback);
 
-            expect(config.lessLoaderOptionsCallback).to.equal(callback);
+            expect(config.lessLoaderOptionsCallback).toBe(callback);
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -918,7 +918,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableLessLoader('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
     });
 
@@ -927,7 +927,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableStylusLoader();
 
-            expect(config.useStylusLoader).to.be.true;
+            expect(config.useStylusLoader).toBe(true);
         });
 
         it('Calling with callback', function() {
@@ -935,7 +935,7 @@ describe('WebpackConfig object', function() {
             const callback = (stylusOptions) => {};
             config.enableStylusLoader(callback);
 
-            expect(config.stylusLoaderOptionsCallback).to.equal(callback);
+            expect(config.stylusLoaderOptionsCallback).toBe(callback);
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -943,7 +943,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableStylusLoader('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
     });
 
@@ -952,7 +952,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableBuildCache({ config: ['foo.js'] });
 
-            expect(config.usePersistentCache).to.be.true;
+            expect(config.usePersistentCache).toBe(true);
             expect(config.persistentCacheBuildDependencies).to.eql({ config: ['foo.js'] });
         });
 
@@ -961,7 +961,7 @@ describe('WebpackConfig object', function() {
             const callback = (cache) => {};
             config.enableBuildCache({ config: ['foo.js'] }, callback);
 
-            expect(config.persistentCacheCallback).to.equal(callback);
+            expect(config.persistentCacheCallback).toBe(callback);
         });
 
         it('Calling without config key throws an error', function() {
@@ -969,7 +969,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableBuildCache({});
-            }).to.throw('should contain an object with at least a "config" key');
+            }).toThrow('should contain an object with at least a "config" key');
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -977,7 +977,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableBuildCache({ config: ['foo.js'] }, 'FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
     });
 
@@ -986,7 +986,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const testCallback = () => {};
             config.enableReactPreset(testCallback);
-            expect(config.babelReactPresetOptionsCallback).to.equal(testCallback);
+            expect(config.babelReactPresetOptionsCallback).toBe(testCallback);
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -994,7 +994,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableReactPreset('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
     });
 
@@ -1003,8 +1003,8 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enablePreactPreset();
 
-            expect(config.usePreact).to.be.true;
-            expect(config.preactOptions.preactCompat).to.be.false;
+            expect(config.usePreact).toBe(true);
+            expect(config.preactOptions.preactCompat).toBe(false);
         });
 
         it('With preact-compat', function() {
@@ -1013,8 +1013,8 @@ describe('WebpackConfig object', function() {
                 preactCompat: true
             });
 
-            expect(config.usePreact).to.be.true;
-            expect(config.preactOptions.preactCompat).to.be.true;
+            expect(config.usePreact).toBe(true);
+            expect(config.preactOptions.preactCompat).toBe(true);
         });
 
         it('With an invalid option', function() {
@@ -1023,7 +1023,7 @@ describe('WebpackConfig object', function() {
                 config.enablePreactPreset({
                     foo: true
                 });
-            }).to.throw('Invalid option "foo"');
+            }).toThrow('Invalid option "foo"');
         });
     });
 
@@ -1032,7 +1032,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const testCallback = () => {};
             config.enableTypeScriptLoader(testCallback);
-            expect(config.tsConfigurationCallback).to.equal(testCallback);
+            expect(config.tsConfigurationCallback).toBe(testCallback);
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -1040,7 +1040,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableTypeScriptLoader('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
 
         it('TypeScript can not be compiled by ts-loader if Babel is already handling TypeScript', function() {
@@ -1049,7 +1049,7 @@ describe('WebpackConfig object', function() {
 
             expect(function() {
                 config.enableTypeScriptLoader();
-            }).to.throw('Encore.enableTypeScriptLoader() can not be called when Encore.enableBabelTypeScriptPreset() has been called.');
+            }).toThrow('Encore.enableTypeScriptLoader() can not be called when Encore.enableBabelTypeScriptPreset() has been called.');
         });
     });
 
@@ -1060,7 +1060,7 @@ describe('WebpackConfig object', function() {
             const testCallback = () => {};
             config.enableForkedTypeScriptTypesChecking(testCallback);
             expect(config.forkedTypeScriptTypesCheckOptionsCallback)
-                .to.equal(testCallback);
+                .toBe(testCallback);
         });
 
         it('Calling with non-callback throws an error', function() {
@@ -1068,7 +1068,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.enableForkedTypeScriptTypesChecking('FOO');
-            }).to.throw('must be a callback function');
+            }).toThrow('must be a callback function');
         });
 
         it('TypeScript can not be compiled by Babel if forked types checking is enabled', function() {
@@ -1077,7 +1077,7 @@ describe('WebpackConfig object', function() {
 
             expect(function() {
                 config.enableForkedTypeScriptTypesChecking();
-            }).to.throw('Encore.enableForkedTypeScriptTypesChecking() can not be called when Encore.enableBabelTypeScriptPreset() has been called.');
+            }).toThrow('Encore.enableForkedTypeScriptTypesChecking() can not be called when Encore.enableBabelTypeScriptPreset() has been called.');
         });
     });
 
@@ -1088,7 +1088,7 @@ describe('WebpackConfig object', function() {
 
             expect(function() {
                 config.enableBabelTypeScriptPreset();
-            }).to.throw('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableTypeScriptLoader() has been called.');
+            }).toThrow('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableTypeScriptLoader() has been called.');
         });
 
         it('TypeScript can not be compiled by Babel if ts-loader is already enabled (with forked typescript types checking)', function() {
@@ -1097,7 +1097,7 @@ describe('WebpackConfig object', function() {
 
             expect(function() {
                 config.enableBabelTypeScriptPreset();
-            }).to.throw('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableForkedTypeScriptTypesChecking() has been called.');
+            }).toThrow('Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableForkedTypeScriptTypesChecking() has been called.');
         });
 
         it('Options should be defined', function() {
@@ -1106,7 +1106,7 @@ describe('WebpackConfig object', function() {
 
             config.enableBabelTypeScriptPreset(options);
 
-            expect(config.babelTypeScriptPresetOptions).to.equal(options);
+            expect(config.babelTypeScriptPresetOptions).toBe(options);
         });
     });
 
@@ -1115,7 +1115,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableVueLoader();
 
-            expect(config.useVueLoader).to.be.true;
+            expect(config.useVueLoader).toBe(true);
         });
 
         it('Pass config', function() {
@@ -1125,8 +1125,8 @@ describe('WebpackConfig object', function() {
             };
             config.enableVueLoader(callback);
 
-            expect(config.useVueLoader).to.be.true;
-            expect(config.vueLoaderOptionsCallback).to.equal(callback);
+            expect(config.useVueLoader).toBe(true);
+            expect(config.vueLoaderOptionsCallback).toBe(callback);
         });
 
         it('Should validate Encore-specific options', function() {
@@ -1136,7 +1136,7 @@ describe('WebpackConfig object', function() {
                 config.enableVueLoader(() => {}, {
                     notExisting: false,
                 });
-            }).to.throw('"notExisting" is not a valid key for enableVueLoader(). Valid keys: useJsx, version, runtimeCompilerBuild.');
+            }).toThrow('"notExisting" is not a valid key for enableVueLoader(). Valid keys: useJsx, version, runtimeCompilerBuild.');
         });
 
         it('Should set Encore-specific options', function() {
@@ -1145,7 +1145,7 @@ describe('WebpackConfig object', function() {
                 useJsx: true,
             });
 
-            expect(config.vueOptions).to.deep.equal({
+            expect(config.vueOptions).toEqual({
                 runtimeCompilerBuild: null,
                 useJsx: true,
                 version: null,
@@ -1159,7 +1159,7 @@ describe('WebpackConfig object', function() {
                 config.enableVueLoader(() => {}, {
                     version: 4,
                 });
-            }).to.throw('"4" is not a valid value for the "version" option passed to enableVueLoader(). Valid versions are: 3.');
+            }).toThrow('"4" is not a valid value for the "version" option passed to enableVueLoader(). Valid versions are: 3.');
         });
     });
 
@@ -1169,14 +1169,14 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableBuildNotifications();
 
-            expect(config.useWebpackNotifier).to.be.true;
+            expect(config.useWebpackNotifier).toBe(true);
         });
 
         it('Calling method without enabling it', function() {
             const config = createConfig();
             config.enableBuildNotifications(false);
 
-            expect(config.useWebpackNotifier).to.be.false;
+            expect(config.useWebpackNotifier).toBe(false);
         });
 
         it('Calling method with options callback', function() {
@@ -1184,14 +1184,14 @@ describe('WebpackConfig object', function() {
             const callback = () => {};
             config.enableBuildNotifications(true, callback);
 
-            expect(config.useWebpackNotifier).to.be.true;
-            expect(config.notifierPluginOptionsCallback).to.equal(callback);
+            expect(config.useWebpackNotifier).toBe(true);
+            expect(config.notifierPluginOptionsCallback).toBe(callback);
         });
 
         it('Calling method with invalid options callback', function() {
             const config = createConfig();
 
-            expect(() => config.enableBuildNotifications(true, 'FOO')).to.throw('must be a callback function');
+            expect(() => config.enableBuildNotifications(true, 'FOO')).toThrow('must be a callback function');
         });
     });
 
@@ -1201,7 +1201,7 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableHandlebarsLoader();
 
-            expect(config.useHandlebarsLoader).to.be.true;
+            expect(config.useHandlebarsLoader).toBe(true);
         });
 
         it('Pass config', function() {
@@ -1211,8 +1211,8 @@ describe('WebpackConfig object', function() {
             };
             config.enableHandlebarsLoader(callback);
 
-            expect(config.useHandlebarsLoader).to.be.true;
-            expect(config.handlebarsConfigurationCallback).to.equal(callback);
+            expect(config.useHandlebarsLoader).toBe(true);
+            expect(config.handlebarsConfigurationCallback).toBe(callback);
         });
 
     });
@@ -1222,46 +1222,46 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const nbOfPlugins = config.plugins.length;
 
-            expect(nbOfPlugins).to.equal(0);
+            expect(nbOfPlugins).toBe(0);
 
             config.addPlugin(new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/
             }));
 
-            expect(config.plugins.length).to.equal(1);
+            expect(config.plugins.length).toBe(1);
             expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
-            expect(config.plugins[0].priority).to.equal(0);
+            expect(config.plugins[0].priority).toBe(0);
         });
 
         it('Calling it with a priority', function() {
             const config = createConfig();
             const nbOfPlugins = config.plugins.length;
 
-            expect(nbOfPlugins).to.equal(0);
+            expect(nbOfPlugins).toBe(0);
 
             config.addPlugin(new webpack.IgnorePlugin({
                 resourceRegExp: /^\.\/locale$/,
                 contextRegExp: /moment$/
             }), 10);
 
-            expect(config.plugins.length).to.equal(1);
+            expect(config.plugins.length).toBe(1);
             expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
-            expect(config.plugins[0].priority).to.equal(10);
+            expect(config.plugins[0].priority).toBe(10);
         });
 
         it('Calling it with an invalid priority', function() {
             const config = createConfig();
             const nbOfPlugins = config.plugins.length;
 
-            expect(nbOfPlugins).to.equal(0);
+            expect(nbOfPlugins).toBe(0);
 
             expect(() => {
                 config.addPlugin(new webpack.IgnorePlugin({
                     resourceRegExp: /^\.\/locale$/,
                     contextRegExp: /moment$/
                 }), 'foo');
-            }).to.throw('must be a number');
+            }).toThrow('must be a number');
         });
     });
 
@@ -1271,7 +1271,7 @@ describe('WebpackConfig object', function() {
 
             config.addLoader({ 'test': /\.custom$/, 'loader': 'custom-loader' });
 
-            expect(config.loaders).to.deep.equals([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
+            expect(config.loaders).toEqual([{ 'test': /\.custom$/, 'loader': 'custom-loader' }]);
         });
     });
 
@@ -1279,12 +1279,12 @@ describe('WebpackConfig object', function() {
         it('Adds new aliases', function() {
             const config = createConfig();
 
-            expect(config.aliases).to.deep.equals({});
+            expect(config.aliases).toEqual({});
 
             config.addAliases({ 'testA': 'src/testA', 'testB': 'src/testB' });
             config.addAliases({ 'testC': 'src/testC' });
 
-            expect(config.aliases).to.deep.equals({
+            expect(config.aliases).toEqual({
                 'testA': 'src/testA',
                 'testB': 'src/testB',
                 'testC': 'src/testC'
@@ -1296,7 +1296,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.addAliases('foo');
-            }).to.throw('must be an object');
+            }).toThrow('must be an object');
         });
     });
 
@@ -1304,13 +1304,13 @@ describe('WebpackConfig object', function() {
         it('Adds new externals', function() {
             const config = createConfig();
 
-            expect(config.externals).to.deep.equals([]);
+            expect(config.externals).toEqual([]);
 
             config.addExternals({ 'jquery': 'jQuery', 'react': 'react', 'svelte': 'svelte' });
             config.addExternals({ 'lodash': 'lodash' });
             config.addExternals(/^(jquery|\$)$/i);
 
-            expect(config.externals).to.deep.equals([
+            expect(config.externals).toEqual([
                 { 'jquery': 'jQuery', 'react': 'react', 'svelte': 'svelte' },
                 { 'lodash': 'lodash' },
                 /^(jquery|\$)$/i
@@ -1322,28 +1322,28 @@ describe('WebpackConfig object', function() {
         it('By default the CSS extraction is enabled', function() {
             const config = createConfig();
 
-            expect(config.extractCss).to.be.true;
+            expect(config.extractCss).toBe(true);
         });
 
         it('Calling it with no params disables the CSS extraction', function() {
             const config = createConfig();
             config.disableCssExtraction();
 
-            expect(config.extractCss).to.be.false;
+            expect(config.extractCss).toBe(false);
         });
 
         it('Calling it with boolean set to true disables CSS extraction', function() {
             const config = createConfig();
             config.disableCssExtraction(true);
 
-            expect(config.extractCss).to.be.false;
+            expect(config.extractCss).toBe(false);
         });
 
         it('Calling it with boolean set to false enables CSS extraction', function() {
             const config = createConfig();
             config.disableCssExtraction(false);
 
-            expect(config.extractCss).to.be.true;
+            expect(config.extractCss).toBe(true);
         });
 
     });
@@ -1357,7 +1357,7 @@ describe('WebpackConfig object', function() {
                 assets: 'assets/[name].[hash:8][ext]',
             });
 
-            expect(config.configuredFilenames).to.deep.equals({
+            expect(config.configuredFilenames).toEqual({
                 js: '[name].[contenthash].js',
                 css: '[name].[contenthash].css',
                 assets: 'assets/[name].[hash:8][ext]',
@@ -1369,7 +1369,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureFilenames('FOO');
-            }).to.throw('must be an object');
+            }).toThrow('must be an object');
         });
 
         it('Calling with an unknown key throws an error', function() {
@@ -1379,7 +1379,7 @@ describe('WebpackConfig object', function() {
                 config.configureFilenames({
                     foo: 'bar'
                 });
-            }).to.throw('"foo" is not a valid key');
+            }).toThrow('"foo" is not a valid key');
         });
     });
 
@@ -1401,7 +1401,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureImageRule({ fake: true });
-            }).to.throw('Invalid option "fake" passed');
+            }).toThrow('Invalid option "fake" passed');
         });
 
         it('Setting maxSize for type of not asset throws error', function() {
@@ -1409,7 +1409,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureImageRule({ type: 'asset/resource', maxSize: 1024 });
-            }).to.throw('this option is only valid when "type" is set to "asset"');
+            }).toThrow('this option is only valid when "type" is set to "asset"');
         });
 
         it('Passing non callback to 2nd arg throws error', function() {
@@ -1417,7 +1417,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureImageRule({}, {});
-            }).to.throw('Argument 2 to configureImageRule() must be a callback');
+            }).toThrow('Argument 2 to configureImageRule() must be a callback');
         });
     });
 
@@ -1439,7 +1439,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureFontRule({ fake: true });
-            }).to.throw('Invalid option "fake" passed');
+            }).toThrow('Invalid option "fake" passed');
         });
 
         it('Setting maxSize for type of not asset throws error', function() {
@@ -1447,7 +1447,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureFontRule({ type: 'asset/resource', maxSize: 1024 });
-            }).to.throw('this option is only valid when "type" is set to "asset"');
+            }).toThrow('this option is only valid when "type" is set to "asset"');
         });
 
         it('Passing non callback to 2nd arg throws error', function() {
@@ -1455,7 +1455,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureFontRule({}, {});
-            }).to.throw('Argument 2 to configureFontRule() must be a callback');
+            }).toThrow('Argument 2 to configureFontRule() must be a callback');
         });
     });
 
@@ -1468,7 +1468,7 @@ describe('WebpackConfig object', function() {
 
             config.configureWatchOptions(callback);
 
-            expect(config.watchOptionsConfigurationCallback).to.equal(callback);
+            expect(config.watchOptionsConfigurationCallback).toBe(callback);
         });
 
         it('Call method without a valid callback', function() {
@@ -1476,11 +1476,11 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureWatchOptions();
-            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
+            }).toThrow('Argument 1 to configureWatchOptions() must be a callback function.');
 
             expect(() => {
                 config.configureWatchOptions({});
-            }).to.throw('Argument 1 to configureWatchOptions() must be a callback function.');
+            }).toThrow('Argument 1 to configureWatchOptions() must be a callback function.');
         });
     });
 
@@ -1489,10 +1489,10 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             const callback = (loader) => {};
 
-            expect(config.loaderConfigurationCallbacks['javascript']).to.not.equal(callback);
+            expect(config.loaderConfigurationCallbacks['javascript']).not.toBe(callback);
 
             config.configureLoaderRule('javascript', callback);
-            expect(config.loaderConfigurationCallbacks['javascript']).to.equal(callback);
+            expect(config.loaderConfigurationCallbacks['javascript']).toBe(callback);
         });
 
         it('Call method with a not supported loader', function() {
@@ -1500,7 +1500,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureLoaderRule('reason');
-            }).to.throw('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "typescript", "handlebars", "svelte" and the aliases "js", "ts", "scss".');
+            }).toThrow('Loader "reason" is not configurable. Valid loaders are "javascript", "css", "images", "fonts", "sass", "less", "stylus", "vue", "typescript", "handlebars", "svelte" and the aliases "js", "ts", "scss".');
         });
 
         it('Call method with not a valid callback', function() {
@@ -1508,11 +1508,11 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.configureLoaderRule('javascript');
-            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+            }).toThrow('Argument 2 to configureLoaderRule() must be a callback function.');
 
             expect(() => {
                 config.configureLoaderRule('javascript', {});
-            }).to.throw('Argument 2 to configureLoaderRule() must be a callback function.');
+            }).toThrow('Argument 2 to configureLoaderRule() must be a callback function.');
         });
     });
 
@@ -1521,36 +1521,36 @@ describe('WebpackConfig object', function() {
             const config = createConfig();
             config.enableIntegrityHashes();
 
-            expect(config.integrityAlgorithms).to.deep.equal(['sha384']);
+            expect(config.integrityAlgorithms).toEqual(['sha384']);
         });
 
         it('Calling it without false as a first argument disables it', function() {
             const config = createConfig();
             config.enableIntegrityHashes(false, 'sha1');
 
-            expect(config.integrityAlgorithms).to.deep.equal([]);
+            expect(config.integrityAlgorithms).toEqual([]);
         });
 
         it('Calling it with a single algorithm', function() {
             const config = createConfig();
             config.enableIntegrityHashes(true, 'sha1');
 
-            expect(config.integrityAlgorithms).to.deep.equal(['sha1']);
+            expect(config.integrityAlgorithms).toEqual(['sha1']);
         });
 
         it('Calling it with multiple algorithms', function() {
             const config = createConfig();
             config.enableIntegrityHashes(true, ['sha1', 'sha256', 'sha512']);
 
-            expect(config.integrityAlgorithms).to.deep.equal(['sha1', 'sha256', 'sha512']);
+            expect(config.integrityAlgorithms).toEqual(['sha1', 'sha256', 'sha512']);
         });
 
         it('Calling it with an invalid algorithm', function() {
             const config = createConfig();
-            expect(() => config.enableIntegrityHashes(true, {})).to.throw('must be a string or an array of strings');
-            expect(() => config.enableIntegrityHashes(true, [1])).to.throw('must be a string or an array of strings');
-            expect(() => config.enableIntegrityHashes(true, 'foo')).to.throw('Invalid hash algorithm "foo"');
-            expect(() => config.enableIntegrityHashes(true, ['sha1', 'foo', 'sha256'])).to.throw('Invalid hash algorithm "foo"');
+            expect(() => config.enableIntegrityHashes(true, {})).toThrow('must be a string or an array of strings');
+            expect(() => config.enableIntegrityHashes(true, [1])).toThrow('must be a string or an array of strings');
+            expect(() => config.enableIntegrityHashes(true, 'foo')).toThrow('Invalid hash algorithm "foo"');
+            expect(() => config.enableIntegrityHashes(true, ['sha1', 'foo', 'sha256'])).toThrow('Invalid hash algorithm "foo"');
         });
     });
 
@@ -1570,7 +1570,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.validateNameIsNewEntry('entry_foo');
-            }).to.throw('already exists as an Entrypoint');
+            }).toThrow('already exists as an Entrypoint');
         });
 
         it('Providing a name exists within Style Entries does throw an error', function() {
@@ -1579,7 +1579,7 @@ describe('WebpackConfig object', function() {
 
             expect(() => {
                 config.validateNameIsNewEntry('entry_foo');
-            }).to.throw('already exists as a Style Entrypoint');
+            }).toThrow('already exists as a Style Entrypoint');
         });
     });
 });

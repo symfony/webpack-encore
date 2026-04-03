@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import sassLoader from '../../lib/loaders/sass.js';
 import cssLoader from '../../lib/loaders/css.js';
-import sinon from 'sinon';
+
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -28,19 +28,20 @@ describe('loaders/sass', function() {
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
-        expect(actualLoaders[0].options.sourceMap).to.be.true;
+        expect(actualLoaders).toHaveLength(2);
+        expect(actualLoaders[0].loader).toContain('resolve-url-loader');
+        expect(actualLoaders[0].options.sourceMap).toBe(true);
 
-        expect(actualLoaders[1].loader).to.contain('sass-loader');
-        expect(actualLoaders[1].options.sourceMap).to.be.true;
-        expect(cssLoaderStub.getCall(0).args[1]).to.be.false;
+        expect(actualLoaders[1].loader).toContain('sass-loader');
+        expect(actualLoaders[1].options.sourceMap).toBe(true);
+        expect(cssLoaderStub.mock.calls[0][1]).toBe(false);
 
-        cssLoader.getLoaders.restore();
+
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with resolve-url-loader but not sourcemaps', function() {
@@ -48,19 +49,19 @@ describe('loaders/sass', function() {
         config.enableSourceMaps(false);
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
-        expect(actualLoaders[0].options.sourceMap).to.be.false;
+        expect(actualLoaders).toHaveLength(2);
+        expect(actualLoaders[0].loader).toContain('resolve-url-loader');
+        expect(actualLoaders[0].options.sourceMap).toBe(false);
 
-        expect(actualLoaders[1].loader).to.contain('sass-loader');
+        expect(actualLoaders[1].loader).toContain('sass-loader');
         // sourcemaps always enabled when resolve-url-loader is enabled
-        expect(actualLoaders[1].options.sourceMap).to.be.true;
+        expect(actualLoaders[1].options.sourceMap).toBe(true);
 
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with resolve-url-loader options', function() {
@@ -72,15 +73,15 @@ describe('loaders/sass', function() {
         });
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
-        expect(actualLoaders[0].options.removeCR).to.be.true;
+        expect(actualLoaders).toHaveLength(2);
+        expect(actualLoaders[0].loader).toContain('resolve-url-loader');
+        expect(actualLoaders[0].options.removeCR).toBe(true);
 
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() without resolve-url-loader', function() {
@@ -91,23 +92,23 @@ describe('loaders/sass', function() {
         config.enableSourceMaps(false);
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].loader).to.contain('sass-loader');
-        expect(actualLoaders[0].options.sourceMap).to.be.false;
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].loader).toContain('sass-loader');
+        expect(actualLoaders[0].options.sourceMap).toBe(false);
 
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with options callback', function() {
         const config = createConfig();
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         config.enableSassLoader(function(options) {
             options.sassOptions.custom_option = 'baz';
@@ -116,7 +117,7 @@ describe('loaders/sass', function() {
 
         const actualLoaders = sassLoader.getLoaders(config);
 
-        expect(actualLoaders[1].options).to.deep.equals({
+        expect(actualLoaders[1].options).toEqual({
             sourceMap: true,
             sassOptions: {
                 outputStyle: 'expanded',
@@ -124,15 +125,15 @@ describe('loaders/sass', function() {
                 other_option: true
             }
         });
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with a callback that returns an object', function() {
         const config = createConfig();
 
         // make the cssLoader return nothing
-        sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         config.enableSassLoader(function(options) {
             options.custom_option = 'baz';
@@ -143,9 +144,9 @@ describe('loaders/sass', function() {
 
 
         const actualLoaders = sassLoader.getLoaders(config);
-        expect(actualLoaders[1].options).to.deep.equals({ foo: true });
+        expect(actualLoaders[1].options).toEqual({ foo: true });
 
-        cssLoader.getLoaders.restore();
+        cssLoader.getLoaders;
     });
 
     it('getLoaders() with CSS modules enabled', function() {
@@ -153,18 +154,19 @@ describe('loaders/sass', function() {
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        const cssLoaderStub = sinon.stub(cssLoader, 'getLoaders')
-            .callsFake(() => []);
+        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders')
+            .mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config, true);
-        expect(actualLoaders).to.have.lengthOf(2);
-        expect(actualLoaders[0].loader).to.contain('resolve-url-loader');
-        expect(actualLoaders[0].options.sourceMap).to.be.true;
+        expect(actualLoaders).toHaveLength(2);
+        expect(actualLoaders[0].loader).toContain('resolve-url-loader');
+        expect(actualLoaders[0].options.sourceMap).toBe(true);
 
-        expect(actualLoaders[1].loader).to.contain('sass-loader');
-        expect(actualLoaders[1].options.sourceMap).to.be.true;
-        expect(cssLoaderStub.getCall(0).args[1]).to.be.true;
+        expect(actualLoaders[1].loader).toContain('sass-loader');
+        expect(actualLoaders[1].options.sourceMap).toBe(true);
+        expect(cssLoaderStub.mock.calls[0][1]).toBe(true);
 
-        cssLoader.getLoaders.restore();
+
+        cssLoader.getLoaders;
     });
 });

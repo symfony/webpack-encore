@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -27,9 +27,9 @@ describe('plugins/friendly-errors', function() {
 
         const plugin = friendlyErrorsPluginUtil(config);
         expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
-        expect(plugin.shouldClearConsole).to.equal(false);
-        expect(plugin.formatters.length).to.equal(6);
-        expect(plugin.transformers.length).to.equal(6);
+        expect(plugin.shouldClearConsole).toBe(false);
+        expect(plugin.formatters.length).toBe(6);
+        expect(plugin.transformers.length).toBe(6);
     });
 
     it('with options callback', function() {
@@ -42,9 +42,9 @@ describe('plugins/friendly-errors', function() {
 
         const plugin = friendlyErrorsPluginUtil(config);
         expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
-        expect(plugin.shouldClearConsole).to.equal(true);
-        expect(plugin.formatters.length).to.equal(3);
-        expect(plugin.transformers.length).to.equal(6);
+        expect(plugin.shouldClearConsole).toBe(true);
+        expect(plugin.formatters.length).toBe(3);
+        expect(plugin.transformers.length).toBe(6);
     });
 
     it('with options callback that returns an object', function() {
@@ -59,8 +59,8 @@ describe('plugins/friendly-errors', function() {
 
         const plugin = friendlyErrorsPluginUtil(config);
         expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
-        expect(plugin.shouldClearConsole).to.equal(true);
-        expect(plugin.formatters.length).to.equal(3);
-        expect(plugin.transformers.length).to.equal(3);
+        expect(plugin.shouldClearConsole).toBe(true);
+        expect(plugin.formatters.length).toBe(3);
+        expect(plugin.transformers.length).toBe(3);
     });
 });

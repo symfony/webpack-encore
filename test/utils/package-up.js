@@ -8,7 +8,7 @@
  */
 
 import { resolve as resolvePath } from 'path';
-import { expect } from 'chai';
+import { expect, beforeAll, afterAll, vi } from 'vitest';
 import packageUp from '../../lib/utils/package-up.js';
 
 describe('package-up', function() {
@@ -38,7 +38,7 @@ describe('package-up', function() {
 
             const path = packageUp({ cwd });
 
-            expect(path).to.equal(expectedPath);
+            expect(path).toBe(expectedPath);
         });
     });
 });
