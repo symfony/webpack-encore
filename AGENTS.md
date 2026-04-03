@@ -39,7 +39,7 @@ Runs ESLint on all source files (`lib/`, `test/`, `index.js`).
 ### Testing
 
 ```bash
-# Run all tests
+# Run all tests (main + persistent-cache)
 yarn test
 
 # Run main test suite (excludes persistent cache tests)
@@ -48,15 +48,18 @@ yarn test:main
 # Run persistent cache tests only
 yarn test:persistent-cache
 
-# Run a single test file
-yarn mocha test/WebpackConfig.js
-yarn mocha test/loaders/sass.js
+# Run tests in watch mode
+yarn test:watch
 
-# Run tests matching a pattern (grep)
-yarn mocha test --grep "setOutputPath"
+# Run a single test file
+yarn vitest run test/WebpackConfig.js
+yarn vitest run test/loaders/sass.js
+
+# Run tests matching a pattern
+yarn vitest run -t "setOutputPath"
 
 # Run functional tests only
-yarn mocha test/functional.js
+yarn vitest run test/functional.js
 ```
 
 Test files mirror the source structure: `lib/loaders/sass.js` → `test/loaders/sass.js`
@@ -174,18 +177,18 @@ logger.deprecation('The "https" option is deprecated, use "server" instead');
 
 ### Test Structure
 
-Tests use Mocha with Chai assertions:
+Tests use Vitest with native expect assertions:
 
 ```javascript
-const expect = require('chai').expect;
-const WebpackConfig = require('../lib/WebpackConfig');
+import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
+import WebpackConfig from '../lib/WebpackConfig.js';
 
 describe('WebpackConfig object', function() {
     describe('setOutputPath', function() {
         it('use absolute, existent path', function() {
             const config = createConfig();
             config.setOutputPath(__dirname);
-            expect(config.outputPath).to.equal(__dirname);
+            expect(config.outputPath).toBe(__dirname);
         });
     });
 });
@@ -194,6 +197,8 @@ describe('WebpackConfig object', function() {
 Test helpers are in `test/helpers/`:
 - `setup.js`: `createWebpackConfig()`, `runWebpack()`, `createTestAppDir()`
 - `assert.js`: Custom assertions for webpack output
+
+Vitest automatically restores all mocks and stubs after each test via `test/setup-vitest.js`.
 
 ## Directory Structure
 
