@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { execSync } from 'child_process';
-import { emptyTmpDir } from './test/helpers/setup.js';
+// Setup for Vitest - can be extended if needed
+import { afterEach, vi } from 'vitest';
 
-emptyTmpDir();
-for (let i = 0; i < 2; i++) {
-    execSync('vitest run --config vitest.persistent-cache.config.js', { stdio: 'inherit' });
-}
+// Automatically restore all mocks after each test
+afterEach(() => {
+    vi.restoreAllMocks();
+});
+
