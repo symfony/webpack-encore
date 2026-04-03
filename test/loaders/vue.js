@@ -7,16 +7,14 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const vueLoader = require('../../lib/loaders/vue');
+import { expect } from 'chai';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import vueLoader from '../../lib/loaders/vue.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
 
     return new WebpackConfig(runtimeConfig);

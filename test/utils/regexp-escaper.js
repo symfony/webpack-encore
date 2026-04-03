@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const regexpEscaper = require('../../lib/utils/regexp-escaper');
+import { expect } from 'chai';
+import regexpEscaper from '../../lib/utils/regexp-escaper.js';
 
 describe('regexp-escaper', function() {
     it('escapes things properly', function() {

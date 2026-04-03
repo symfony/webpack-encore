@@ -7,23 +7,19 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const fs = require('fs');
-const childProcess = require('child_process');
-
-const vueLowVersion = '2.5.0';
-const vueLoaderLowVersion = '15.0.11';
+import fs from 'fs/promises';
+import childProcess from 'child_process';
 
 /**
  * @param {string} dependency
  * @param {string} range
- * @return {Promise}
+ * @return {Promise<[string, string]>}
  */
 function getLowestVersion(dependency, range) {
     return new Promise((resolve, reject) => {
         if (range.startsWith('file:')) {
             resolve([dependency, range]);
+            return;
         }
 
         childProcess.exec(
@@ -67,79 +63,52 @@ function getLowestVersion(dependency, range) {
     });
 }
 
-fs.readFile('package.json', (error, data) => {
-    if (error) {
-        throw error;
+const data = await fs.readFile('package.json', 'utf-8');
+const packageInfo = JSON.parse(data);
+
+const dependencyPromises = [];
+if (packageInfo.dependencies) {
+    for (const dependency in packageInfo.dependencies) {
+        dependencyPromises.push(getLowestVersion(
+            dependency,
+            packageInfo.dependencies[dependency]
+        ));
     }
+}
 
-    const packageInfo = JSON.parse(data);
-
-    const dependencyPromises = [];
-    if (packageInfo.dependencies) {
-        for (const dependency in packageInfo.dependencies) {
-            dependencyPromises.push(getLowestVersion(
-                dependency,
-                packageInfo.dependencies[dependency]
-            ));
-        }
+const devDependencyPromises = [];
+if (packageInfo.devDependencies) {
+    for (const devDependency in packageInfo.devDependencies) {
+        devDependencyPromises.push(getLowestVersion(
+            devDependency,
+            packageInfo.devDependencies[devDependency]
+        ));
     }
+}
 
-    const devDependencyPromises = [];
-    if (packageInfo.devDependencies) {
-        for (const devDependency in packageInfo.devDependencies) {
-            devDependencyPromises.push(getLowestVersion(
-                devDependency,
-                packageInfo.devDependencies[devDependency]
-            ));
-        }
-    }
+const [dependencyVersions, devDependencyVersions] = await Promise.all([
+    Promise.all(dependencyPromises),
+    Promise.all(devDependencyPromises),
+]);
 
-    const dependenciesUpdate = Promise.all(dependencyPromises).then(versions => {
-        versions.forEach(version => {
-            packageInfo.dependencies[version[0]] = version[1];
-        });
-    });
+for (const [name, version] of dependencyVersions) {
+    packageInfo.dependencies[name] = version;
+}
 
-    const devDependenciesUpdate = Promise.all(devDependencyPromises).then(versions => {
-        versions.forEach(version => {
-            packageInfo.devDependencies[version[0]] = version[1];
-        });
-    });
+for (const [name, version] of devDependencyVersions) {
+    packageInfo.devDependencies[name] = version;
+}
 
-    // Once all the lowest versions have been resolved, update the
-    // package.json file accordingly.
-    Promise
-        .all([dependenciesUpdate, devDependenciesUpdate])
-        .then(() => new Promise((resolve, reject) => {
-            fs.writeFile('package.json', JSON.stringify(packageInfo, null, 2), (error) => {
-                if (error) {
-                    reject(error);
-                    return;
-                }
+await fs.writeFile('package.json', JSON.stringify(packageInfo, null, 2));
 
-                resolve();
-            });
-        }))
-        .then(() => {
-            console.log('Manually forcing Vue to version 2');
-            packageInfo.devDependencies.vue = vueLowVersion;
-            packageInfo.devDependencies['vue-loader'] = vueLoaderLowVersion;
-        })
-        .then(() => {
-            console.log('Updated package.json file with lowest dependency versions: ');
+console.log('Updated package.json file with lowest dependency versions: ');
 
-            console.log('Dependencies:');
-            for (const dependency in packageInfo.dependencies) {
-                console.log(`  - ${dependency}: ${packageInfo.dependencies[dependency]}`);
-            }
+console.log('Dependencies:');
+for (const dependency in packageInfo.dependencies) {
+    console.log(`  - ${dependency}: ${packageInfo.dependencies[dependency]}`);
+}
 
-            console.log('Dev dependencies:');
-            for (const dependency in packageInfo.devDependencies) {
-                console.log(`  - ${dependency}: ${packageInfo.devDependencies[dependency]}`);
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            process.exit(1); // eslint-disable-line
-        });
-});
+console.log('Dev dependencies:');
+for (const dependency in packageInfo.devDependencies) {
+    console.log(`  - ${dependency}: ${packageInfo.devDependencies[dependency]}`);
+}

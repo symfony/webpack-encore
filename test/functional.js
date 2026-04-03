@@ -7,19 +7,19 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
+import { expect, use } from 'chai';
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+import path from 'path';
+import * as testSetup from './helpers/setup.js';
+import fs from 'fs-extra';
+import getVueVersion from '../lib/utils/get-vue-version.js';
+import packageHelper from '../lib/package-helper.js';
+import semver from 'semver';
+import puppeteer from 'puppeteer';
 
-const chai = require('chai');
-chai.use(require('chai-fs'));
-chai.use(require('chai-subset'));
-const expect = chai.expect;
-const path = require('path');
-const testSetup = require('./helpers/setup');
-const fs = require('fs-extra');
-const getVueVersion = require('../lib/utils/get-vue-version');
-const packageHelper = require('../lib/package-helper');
-const semver = require('semver');
-const puppeteer = require('puppeteer');
+const require = createRequire(import.meta.url);
+use(require('chai-fs'));
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     const webpackConfig = testSetup.createWebpackConfig(
@@ -1045,7 +1045,7 @@ describe('Functional tests using webpack', function() {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1077,6 +1077,53 @@ module.exports = {
                 // check that the .postcss file was also processed
                 // correctly (it also @import the autoprefixer_test.css
                 // file)
+                webpackAssert.assertOutputFileContains(
+                    'postcss.css',
+                    '-webkit-backdrop-filter'
+                );
+
+                done();
+            });
+        });
+
+        it('PostCSS works when enabled (ESM config)', function(done) {
+            const appDir = testSetup.createTestAppDir();
+
+            // Enable ESM so that postcss.config.js is treated as an ES module
+            fs.writeFileSync(
+                path.join(appDir, 'package.json'),
+                JSON.stringify({ private: true, type: 'module' })
+            );
+
+            fs.writeFileSync(
+                path.join(appDir, 'postcss.config.js'),
+                `
+import autoprefixer from 'autoprefixer';
+
+export default {
+  plugins: [
+    autoprefixer(),
+  ]
+}
+                `
+            );
+
+            // Force very old Safari to ensure that autoprefixer will prefix `backdrop-filter`
+            fs.writeFileSync(path.join(appDir, '.browserslistrc'), 'Safari 9');
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addStyleEntry('styles', ['./css/imports_autoprefixer.css']);
+            config.addStyleEntry('postcss', './css/postcss_extension.postcss');
+            config.enablePostCssLoader();
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                webpackAssert.assertOutputFileContains(
+                    'styles.css',
+                    '-webkit-backdrop-filter'
+                );
+
                 webpackAssert.assertOutputFileContains(
                     'postcss.css',
                     '-webkit-backdrop-filter'
@@ -1167,6 +1214,46 @@ module.exports = {
                 webpackAssert.assertOutputFileContains(
                     'main.js',
                     // chrome 45 supports class, so it's not transpiled
+                    'class A {}'
+                );
+
+                done();
+            });
+        });
+
+        it('Babel can be configured via babel.config.js (ESM)', function(done) {
+            const appDir = testSetup.createTestAppDir();
+
+            // Enable ESM so that babel.config.js is treated as an ES module
+            fs.writeFileSync(
+                path.join(appDir, 'package.json'),
+                JSON.stringify({ private: true, type: 'module' })
+            );
+
+            fs.writeFileSync(
+                path.join(appDir, 'babel.config.js'),
+                `
+export default {
+  presets: [
+    ["@babel/preset-env", {
+      targets: {
+        chrome: 52
+      }
+    }]
+  ]
+}
+`
+            );
+
+            const config = testSetup.createWebpackConfig(appDir, 'www/build', 'dev');
+            config.enableSingleRuntimeChunk();
+            config.setPublicPath('/build');
+            config.addEntry('main', './js/class-syntax');
+
+            testSetup.runWebpack(config, (webpackAssert) => {
+                // chrome 52 supports class, so it's not transpiled
+                webpackAssert.assertOutputFileContains(
+                    'main.js',
                     'class A {}'
                 );
 
@@ -1371,9 +1458,8 @@ module.exports = {
             });
         });
 
-        it('TypeScript is compiled and type checking is done in a separate process!', function(done) {
+        it('TypeScript is compiled and type checking is done in a separate process!', async function() {
             this.timeout(10000);
-            setTimeout(done, 9000);
 
             const config = createWebpackConfig('www/build', 'dev');
             config.setPublicPath('/build');
@@ -1384,12 +1470,14 @@ module.exports = {
 
             });
 
-            expect(function() {
-                testSetup.runWebpack(config, (webpackAssert) => {
-                    done();
-                });
+            try {
+                await testSetup.runWebpack(config, () => {});
+                // If we get here, webpack didn't throw — fail the test
+                expect.fail('Expected runWebpack to throw "Cannot find the" error');
+            } catch (error) {
                 // Cannot find the "/path/to/tsconfig.json" file
-            }).to.throw('Cannot find the');
+                expect(error.message).to.contain('Cannot find the');
+            }
         });
 
         it('TypeScript can be compiled by Babel', function(done) {
@@ -1473,7 +1561,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1541,7 +1629,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1635,7 +1723,7 @@ module.exports = {
             // Enable the PostCSS loader so we can use `lang="postcss"`
             config.enablePostCssLoader();
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1721,7 +1809,7 @@ module.exports = {
             // Enable the PostCSS loader so we can use `lang="postcss"`
             config.enablePostCssLoader();
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1803,7 +1891,7 @@ module.exports = {
             // Enable the PostCSS loader so we can use `lang="postcss"`
             config.enablePostCssLoader();
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1882,7 +1970,7 @@ module.exports = {
             const appDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
-                path.join(appDir, 'postcss.config.js'),
+                path.join(appDir, 'postcss.config.cjs'),
                 `
 module.exports = {
   plugins: [
@@ -1904,7 +1992,7 @@ module.exports = {
             config.enableLessLoader();
             config.configureBabel(function(config) {
                 // throw new Error(JSON.stringify(config));
-                expect(config.presets[0][0]).to.equal(require.resolve('@babel/preset-env'));
+                expect(config.presets[0][0]).to.equal(fileURLToPath(import.meta.resolve('@babel/preset-env')));
                 config.presets[0][1].targets = {
                     chrome: 109
                 };
@@ -2035,7 +2123,7 @@ module.exports = {
             config.enableSingleRuntimeChunk();
             config.setPublicPath('/build');
             config.addEntry('main', './stimulus/assets/app.js');
-            config.enableStimulusBridge(__dirname + '/../fixtures/stimulus/assets/controllers.json');
+            config.enableStimulusBridge(import.meta.dirname + '/../fixtures/stimulus/assets/controllers.json');
 
             testSetup.runWebpack(config, (webpackAssert) => {
                 expect(config.outputPath).to.be.a.directory().with.deep.files([

@@ -7,18 +7,16 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const stylusLoader = require('../../lib/loaders/stylus');
-const cssLoader = require('../../lib/loaders/css');
-const sinon = require('sinon');
+import { expect } from 'chai';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import stylusLoader from '../../lib/loaders/stylus.js';
+import cssLoader from '../../lib/loaders/css.js';
+import sinon from 'sinon';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
 
     return new WebpackConfig(runtimeConfig);

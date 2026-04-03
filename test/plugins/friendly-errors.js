@@ -7,17 +7,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const FriendlyErrorsWebpackPlugin = require('@kocal/friendly-errors-webpack-plugin');
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const friendlyErrorsPluginUtil = require('../../lib/plugins/friendly-errors');
+import { expect } from 'chai';
+import FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import friendlyErrorsPluginUtil from '../../lib/plugins/friendly-errors.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
 
     return new WebpackConfig(runtimeConfig);

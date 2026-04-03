@@ -7,17 +7,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const webpack = require('webpack');
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const definePluginUtil = require('../../lib/plugins/define');
+import { expect } from 'chai';
+import webpack from 'webpack';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import definePluginUtil from '../../lib/plugins/define.js';
 
 function createConfig(environment = 'production') {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.babelRcFileExists = false;
     runtimeConfig.environment = environment;
 

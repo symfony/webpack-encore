@@ -7,9 +7,6 @@
  * file that was distributed with this source code.
  */
 
-module.exports = {
-    'env': {
-        'node': true,
-        'mocha': true
-    }
-};
+'use strict';
+
+console.log('Hello world!');

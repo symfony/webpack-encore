@@ -1,5 +1,120 @@
 # CHANGELOG
 
+## 7.0.0 - The ESM-Only & Async-first Release
+
+The Node.js ecosystem has largely moved to ESM (ECMAScript Modules) as the standard module format.
+Most actively maintained packages **now ship ESM-only**, and CommonJS is increasingly treated as a legacy format.
+
+Continuing to publish as CJS would mean **fighting against the ecosystem**. Using older versions of dependencies,
+adding workarounds for ESM-only packages, and missing out on benefits like static analysis, tree-shaking, and top-level `await`.
+
+Since Encore 6.0 already requires Node.js `^22.13.0 || >=24.0`, which has full ESM support, there is no compatibility
+reason to keep CJS. **This release makes the move to ESM-only.**
+
+This migration also unlocks the use of `async`/`await` in Encore's internals, which was previously
+impossible due to compatibility issues. For example, when we migrated from `eslint-loader` to `eslint-webpack-plugin` in
+[#985](https://github.com/symfony/webpack-encore/pull/985), the new ESLint API was async-only, but
+`Encore.getWebpackConfig()` was synchronous, forcing a `sync-rpc` workaround to bridge the gap.
+Even though the issue had been _fixed_ when ESLint support was removed,
+it reappeared with Babel when Encore checks whether a Babel configuration file already exists.
+
+Now that `getWebpackConfig()` is natively async, this entire class of problems disappears, and **Encore
+can adopt modern async APIs from the ecosystem without hacks**.
+
+### BC Breaks and upgrade steps
+
+* Migrate from CommonJS to ESM — the package now requires `"type": "module"` in your project or
+  the use of `.mjs` file extensions. Update your `webpack.config.js`:
+  ```js
+  // Before (CJS)
+  const Encore = require('@symfony/webpack-encore');
+  // ...
+  module.exports = Encore.getWebpackConfig();
+
+  // After (ESM)
+  import Encore from '@symfony/webpack-encore';
+  // ...
+  export default await Encore.getWebpackConfig();
+  ```
+  Note: `Encore.getWebpackConfig()` is now **async** and returns a `Promise`. Use `await` at the
+  top level of your webpack config (webpack supports async config files natively).
+
+* If you prefer not to add `"type": "module"` to your project, you can rename your webpack config
+  file to `webpack.config.mjs` instead. Webpack detects the `.mjs` extension and treats it as ESM
+  automatically.
+
+* Replace `__dirname` and `__filename` with their ESM equivalents in your webpack config:
+  ```js
+  // Before (CJS)
+  path.resolve(__dirname, 'src/utilities/')
+  config: [__filename]
+
+  // After (ESM)
+  path.resolve(import.meta.dirname, 'src/utilities/')
+  config: [import.meta.filename]
+  ```
+
+* Replace `require()` calls in your webpack config with `import` statements:
+  ```js
+  // Before (CJS)
+  const path = require('path');
+
+  // After (ESM)
+  import path from 'path';
+  ```
+  Similarly, `require.resolve()` becomes `import.meta.resolve()`:
+  ```js
+  // Before (CJS)
+  options.implementation = require.resolve('sass-embedded');
+
+  // After (ESM)
+  import { fileURLToPath } from 'url';
+
+  options.implementation = fileURLToPath(import.meta.resolve('sass-embedded'));
+  ```
+
+  If you need to require a CJS-only package, use `createRequire`:
+  ```js
+  import { createRequire } from 'module';
+  const require = createRequire(import.meta.url);
+  const somePackage = require('cjs-only-package');
+  ```
+
+* Config files that use CJS syntax (`module.exports`, `require()`) must be renamed to `.cjs` if
+  your project has `"type": "module"` in its `package.json`. This affects files such as:
+  - `postcss.config.js` → `postcss.config.cjs`
+  - `babel.config.js` → `babel.config.cjs`
+
+  Alternatively, and preferably, rewrite them as ESM:
+  ```js
+  // postcss.config.js (ESM)
+  import autoprefixer from 'autoprefixer';
+
+  export default {
+      plugins: [
+          autoprefixer(),
+      ],
+  };
+  ```
+
+* With `"type": "module"`, webpack enables
+  [`resolve.fullySpecified`](https://webpack.js.org/configuration/module/#resolvefullyspecified)
+  by default. This means **file extensions are now required** in some imports that previously
+  worked without them:
+  - **Relative imports**: `import('./my-dependency')` → `import('./my-dependency.js')`
+  - **Deep package imports** from packages that do not have an `"exports"` field in their
+    `package.json`, for example:
+    - `import delegate from 'licia/delegate'` → `import delegate from 'licia/delegate.js'`
+    - `import 'jquery-ui/ui/widgets/progressbar'` → `import 'jquery-ui/ui/widgets/progressbar.js'`
+
+* The package `"exports"` field is now restrictive: only `"@symfony/webpack-encore"` and
+  `"@symfony/webpack-encore/lib/plugins/plugin-priorities.js"` are exposed as public entry points.
+  If you were importing other internal modules directly, those imports will no longer work.
+
+### Features
+
+* Update postcss-loader support from 8.1.0 to 8.1.1 for ESM compatibility
+
 ## 6.0.0
 
 This is a new major version that contains several backwards-compatibility breaks, but for the best!
@@ -13,8 +128,8 @@ This is a new major version that contains several backwards-compatibility breaks
 * Remove support of postcss-loader@^7.0.0, see possible BC breaks in [8.0.0 release notes](https://github.com/webpack/postcss-loader/releases/tag/v8.0.0)
 * Remove support of stylus-loader@^7.0.0, see possible BC breaks in [8.0.0 release notes](https://github.com/webpack/stylus-loader/releases/tag/v8.0.0)
 * Remove support of webpack-cli@^5.0.0, see possible BC breaks in [6.0.0 release notes](https://github.com/webpack/webpack-cli/releases/tag/webpack-cli%406.0.0)
-* Remove unmaintained file-loader dependency 
-  The `[N]` placeholder (regex capture groups in filename patterns) is no longer supported. 
+* Remove unmaintained file-loader dependency
+  The `[N]` placeholder (regex capture groups in filename patterns) is no longer supported.
   If you were using patterns like `[1]` or `[2]` in your `Encore.copyFiles()` filename option, you will need to restructure your file organization or use a different naming strategy.
 * Remove deprecated `--https` flag and `devServerConfig.https` option for webpack-dev-server, use `--server-type https` or `configureDevServerOptions()` with `server: 'https'` instead
 
@@ -29,7 +144,7 @@ This is a new major version that contains several backwards-compatibility breaks
 
 * Add support for Svelte 5
 
-## 5.2.0 
+## 5.2.0
 
 * Add support for Webpack CLI ^6.0.0
 
@@ -112,9 +227,9 @@ it helps to reduce the size of the `node_modules` directory and the number of po
 To use the `webpack-dev-server` again, you need to install it manually:
 ```shell
 npm install webpack-dev-server --save-dev
-# or 
+# or
 yarn add webpack-dev-server --dev
-# or 
+# or
 pnpm install webpack-dev-server --save-dev
 ```
 
@@ -131,7 +246,7 @@ pnpm install webpack-dev-server --save-dev
 
 * #1317 Drop support of sass-loader ^13 and ^14, add support for sass-loader ^16 (@Kocal)
 
-The sass-loader's options have changed, [the `modern` options](https://sass-lang.com/documentation/js-api/interfaces/options) are now used by default. 
+The sass-loader's options have changed, [the `modern` options](https://sass-lang.com/documentation/js-api/interfaces/options) are now used by default.
 Though not recommended,
 you must specify the option `api: 'legacy'`
 if you want to keep [the `legacy` options](https://sass-lang.com/documentation/js-api/interfaces/legacystringoptions/).
@@ -172,13 +287,13 @@ config.configureCssLoader(options => {
    if (options.modules) {
        options.modules.namedExport = false;
        options.modules.exportLocalsConvention = 'as-is';
-   } 
+   }
 });
 ```
 
-> [!IMPORTANT]  
+> [!IMPORTANT]
 > If you use CSS Modules inside `.vue` files,
-> until https://github.com/vuejs/vue-loader/pull/1909 is merged and released, you will need to restore the previous 
+> until https://github.com/vuejs/vue-loader/pull/1909 is merged and released, you will need to restore the previous
 > behavior by configuring Encore with the code above.
 
 * #1333 Replace `chalk` by `picocolors` (@Kocal)
@@ -227,7 +342,7 @@ config.configureCssLoader(options => {
 
 Enabling JSX support for Vue 3 is done with the `Encore.enableVueLoader()`:
 ```js
-Encore.enableVueLoader(() => {}, { 
+Encore.enableVueLoader(() => {}, {
     useJsx: true,
     version: 3,
 });
@@ -279,7 +394,7 @@ module.exports = {
 
 ### Features
 
-* #1235 Dropping support for Node 14 (16 is new min) and allowing `svelte` 4 (@weaverryan) 
+* #1235 Dropping support for Node 14 (16 is new min) and allowing `svelte` 4 (@weaverryan)
 
 * #1185 Bump `babel-loader` from 8.2.5 to 9.1.2 (@dppanteon) - the
   [CHANGELOG for babel 9](https://github.com/babel/babel-loader/releases/tag/v9.0.0)
@@ -349,7 +464,7 @@ and remove it from your Encore configuration:
 ```diff
 Encore.configureBabel((options) => {
 -    config.plugins.push('@babel/plugin-proposal-class-properties');
-+    
++
 })
 ```
 

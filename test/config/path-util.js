@@ -7,18 +7,16 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-const expect = require('chai').expect;
-const WebpackConfig = require('../../lib/WebpackConfig');
-const RuntimeConfig = require('../../lib/config/RuntimeConfig');
-const pathUtil = require('../../lib/config/path-util');
-const configGenerator = require('../../lib/config-generator');
-const process = require('process');
+import { expect } from 'chai';
+import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import pathUtil from '../../lib/config/path-util.js';
+import configGenerator from '../../lib/config-generator.js';
+import process from 'process';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.context = __dirname;
+    runtimeConfig.context = import.meta.dirname;
     runtimeConfig.environment = 'dev';
     runtimeConfig.babelRcFileExists = false;
 
@@ -169,7 +167,7 @@ describe('path-util getContentBase()', function() {
     });
 
     describe('calculateDevServerUrl with configGenerator integration', function() {
-        it('generates http URL without server option', function() {
+        it('generates http URL without server option', async function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerHost = 'localhost';
@@ -180,12 +178,12 @@ describe('path-util getContentBase()', function() {
             config.enableSingleRuntimeChunk();
 
             // Run config generator to set devServerFinalIsHttps
-            configGenerator(config);
+            await configGenerator(config);
 
             expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('http://localhost:8080');
         });
 
-        it('generates https URL with server: "https" option', function() {
+        it('generates https URL with server: "https" option', async function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerHost = 'localhost';
@@ -199,12 +197,12 @@ describe('path-util getContentBase()', function() {
             });
 
             // Run config generator to set devServerFinalIsHttps
-            configGenerator(config);
+            await configGenerator(config);
 
             expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('https://localhost:8080');
         });
 
-        it('generates https URL with server: { type: "https" } option', function() {
+        it('generates https URL with server: { type: "https" } option', async function() {
             const config = createConfig();
             config.runtimeConfig.useDevServer = true;
             config.runtimeConfig.devServerHost = 'localhost';
@@ -218,7 +216,7 @@ describe('path-util getContentBase()', function() {
             });
 
             // Run config generator to set devServerFinalIsHttps
-            configGenerator(config);
+            await configGenerator(config);
 
             expect(pathUtil.calculateDevServerUrl(config.runtimeConfig)).to.equal('https://localhost:8080');
         });
