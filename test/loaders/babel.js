@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import { fileURLToPath } from 'url';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -30,11 +30,11 @@ describe('loaders/babel', function() {
         });
 
         const actualLoaders = await babelLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
+        expect(actualLoaders).toHaveLength(1);
         // the env preset is enabled by default
-        expect(actualLoaders[0].options.presets).to.have.lengthOf(1);
+        expect(actualLoaders[0].options.presets).toHaveLength(1);
         // callback is used
-        expect(actualLoaders[0].options.foo).to.equal('bar');
+        expect(actualLoaders[0].options.foo).toBe('bar');
     });
 
     it('getLoaders() when .babelrc IS present', async function() {
@@ -43,7 +43,7 @@ describe('loaders/babel', function() {
 
         const actualLoaders = await babelLoader.getLoaders(config);
         // we only add cacheDirectory
-        expect(actualLoaders[0].options).to.deep.equal({
+        expect(actualLoaders[0].options).toEqual({
             cacheDirectory: true,
             sourceType: 'unambiguous',
         });
@@ -56,7 +56,7 @@ describe('loaders/babel', function() {
 
         const actualLoaders = await babelLoader.getLoaders(config);
         // cacheDirectory is disabled in production mode
-        expect(actualLoaders[0].options).to.deep.equal({
+        expect(actualLoaders[0].options).toEqual({
             cacheDirectory: false,
             sourceType: 'unambiguous',
         });
@@ -73,8 +73,8 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         // env, react & foo
-        expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
-        expect(actualLoaders[0].options.presets[0]).to.deep.equal([
+        expect(actualLoaders[0].options.presets).toHaveLength(3);
+        expect(actualLoaders[0].options.presets[0]).toEqual([
             fileURLToPath(import.meta.resolve('@babel/preset-env')),
             {
                 corejs: null,
@@ -83,14 +83,14 @@ describe('loaders/babel', function() {
                 useBuiltIns: false,
             },
         ]);
-        expect(actualLoaders[0].options.presets[1]).to.deep.equal([
+        expect(actualLoaders[0].options.presets[1]).toEqual([
             fileURLToPath(import.meta.resolve('@babel/preset-react')),
             {
                 runtime: 'automatic',
             }
         ]);
         // foo is also still there, not overridden
-        expect(actualLoaders[0].options.presets[2]).to.equal('foo');
+        expect(actualLoaders[0].options.presets[2]).toBe('foo');
     });
 
     it('getLoaders() with react and callback', async function() {
@@ -106,8 +106,8 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         // env, react & foo
-        expect(actualLoaders[0].options.presets).to.have.lengthOf(3);
-        expect(actualLoaders[0].options.presets[0]).to.deep.equal([
+        expect(actualLoaders[0].options.presets).toHaveLength(3);
+        expect(actualLoaders[0].options.presets[0]).toEqual([
             fileURLToPath(import.meta.resolve('@babel/preset-env')),
             {
                 corejs: null,
@@ -116,7 +116,7 @@ describe('loaders/babel', function() {
                 useBuiltIns: false,
             },
         ]);
-        expect(actualLoaders[0].options.presets[1]).to.deep.equal([
+        expect(actualLoaders[0].options.presets[1]).toEqual([
             fileURLToPath(import.meta.resolve('@babel/preset-react')),
             {
                 runtime: 'automatic',
@@ -124,7 +124,7 @@ describe('loaders/babel', function() {
             }
         ]);
         // foo is also still there, not overridden
-        expect(actualLoaders[0].options.presets[2]).to.equal('foo');
+        expect(actualLoaders[0].options.presets[2]).toBe('foo');
     });
 
     it('getLoaders() with preact', async function() {
@@ -171,7 +171,7 @@ describe('loaders/babel', function() {
         });
 
         const actualLoaders = await babelLoader.getLoaders(config);
-        expect(actualLoaders[0].options).to.deep.equal({ 'foo': true });
+        expect(actualLoaders[0].options).toEqual({ 'foo': true });
     });
 
     it('getLoaders() with Vue and JSX support', async function() {
@@ -209,7 +209,7 @@ describe('loaders/babel', function() {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         // options are overridden
-        expect(actualLoaders[0].options.presets[0][1].corejs).to.equal(3);
+        expect(actualLoaders[0].options.presets[0][1].corejs).toBe(3);
         expect(actualLoaders[0].options.presets[0][1].include).to.have.members(['bar']);
     });
 
@@ -225,9 +225,9 @@ describe('loaders/babel', function() {
 
         const actualLoaders = await babelLoader.getLoaders(config);
 
-        expect(actualLoaders[0].options.presets[0][0]).to.equal(fileURLToPath(import.meta.resolve('@babel/preset-env')));
-        expect(actualLoaders[0].options.presets[1][0]).to.equal(fileURLToPath(import.meta.resolve('@babel/preset-typescript')));
-        expect(actualLoaders[0].options.presets[1][1]).to.equal(presetTypeScriptOptions);
+        expect(actualLoaders[0].options.presets[0][0]).toBe(fileURLToPath(import.meta.resolve('@babel/preset-env')));
+        expect(actualLoaders[0].options.presets[1][0]).toBe(fileURLToPath(import.meta.resolve('@babel/preset-typescript')));
+        expect(actualLoaders[0].options.presets[1][1]).toBe(presetTypeScriptOptions);
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
             'foo'
         ]);

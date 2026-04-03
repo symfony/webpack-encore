@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import stringEscaper from '../../lib/utils/string-escaper.js';
 
 function expectEvaledStringToEqual(str, expectedStr) {
     // put the string in quotes & eval it: should match original
-    expect(eval(`'${str}'`)).to.equal(expectedStr);
+    expect(eval(`'${str}'`)).toBe(expectedStr);
 }
 
 describe('string-escaper', function() {

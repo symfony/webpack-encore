@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import context from '../lib/context.js';
 context.runtimeConfig = {};
 import logger from '../lib/logger.js';
@@ -47,7 +47,7 @@ describe('logger', function() {
         // clone the object so the afterEach doesn't clear out before
         // a failure message is shown
         const actualMessages = Object.assign({}, logger.getMessages());
-        expect(actualMessages).to.deep.equal(expectedMessages);
+        expect(actualMessages).toEqual(expectedMessages);
     });
 
     it('test reset()', function() {
@@ -56,6 +56,6 @@ describe('logger', function() {
 
         const actualMessages = Object.assign({}, logger.getMessages());
 
-        expect(actualMessages.debug).to.have.lengthOf(0);
+        expect(actualMessages.debug).toHaveLength(0);
     });
 });

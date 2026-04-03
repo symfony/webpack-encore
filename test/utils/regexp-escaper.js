@@ -7,18 +7,18 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import regexpEscaper from '../../lib/utils/regexp-escaper.js';
 
 describe('regexp-escaper', function() {
     it('escapes things properly', function() {
-        expect(regexpEscaper('.*')).to.equal('\\.\\*');
-        expect(regexpEscaper('[foo]')).to.equal('\\[foo\\]');
-        expect(regexpEscaper('(foo|bar)')).to.equal('\\(foo\\|bar\\)');
-        expect(regexpEscaper('foo{2}')).to.equal('foo\\{2\\}');
-        expect(regexpEscaper('\\foo\\')).to.equal('\\\\foo\\\\');
-        expect(regexpEscaper('^foo$')).to.equal('\\^foo\\$');
-        expect(regexpEscaper('foo?')).to.equal('foo\\?');
-        expect(regexpEscaper('foo+')).to.equal('foo\\+');
+        expect(regexpEscaper('.*')).toBe('\\.\\*');
+        expect(regexpEscaper('[foo]')).toBe('\\[foo\\]');
+        expect(regexpEscaper('(foo|bar)')).toBe('\\(foo\\|bar\\)');
+        expect(regexpEscaper('foo{2}')).toBe('foo\\{2\\}');
+        expect(regexpEscaper('\\foo\\')).toBe('\\\\foo\\\\');
+        expect(regexpEscaper('^foo$')).toBe('\\^foo\\$');
+        expect(regexpEscaper('foo?')).toBe('foo\\?');
+        expect(regexpEscaper('foo+')).toBe('foo\\+');
     });
 });

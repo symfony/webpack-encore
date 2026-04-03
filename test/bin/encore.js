@@ -7,25 +7,22 @@
  * file that was distributed with this source code.
  */
 
-import { use } from 'chai';
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-use(require('chai-fs'));
-
-import { expect } from 'chai';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import path from 'path';
-import * as testSetup from '../helpers/setup.js';
 import fs from 'fs-extra';
-import { exec, execSync, spawn } from 'child_process';
+import getPort from 'get-port';
+import { promisify } from 'node:util';
+import child_process from 'node:child_process';
+import * as testSetup from '../helpers/setup.js';
+
+const exec = promisify(child_process.exec);
 
 const projectDir = path.resolve(import.meta.dirname, '../', '../');
 
-describe('bin/encore.js', function() {
+describe.sequential('bin/encore.js', function() {
     // being functional tests, these can take quite long
-    this.timeout(10000);
 
-    it('Basic smoke test', function(done) {
-        testSetup.emptyTmpDir();
+    it('Basic smoke test', async function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -53,23 +50,16 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
-            if (err) {
-                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
-            }
+        const { stdout } = await exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir });
 
-            expect(stdout).to.contain('Compiled successfully');
+        expect(stdout).toContain('Compiled successfully');
 
-            expect(stdout).not.to.contain('Hash: ');
-            expect(stdout).not.to.contain('Version: ');
-            expect(stdout).not.to.contain('Time: ');
-
-            done();
-        });
+        expect(stdout).not.toContain('Hash: ');
+        expect(stdout).not.toContain('Version: ');
+        expect(stdout).not.toContain('Time: ');
     });
 
-    it('Smoke test using the --json option', function(done) {
-        testSetup.emptyTmpDir();
+    it('Smoke test using the --json option', async function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -88,35 +78,27 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        exec(`node ${binPath} dev --json --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
-            if (err) {
-                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
-            }
+        const { stdout } = await exec(`node ${binPath} dev --json --context=${testDir}`, { cwd: testDir });
 
-            let parsedOutput = null;
-            try {
-                parsedOutput = JSON.parse(stdout);
-            } catch {
-                throw `Webpack output does not contain a valid JSON object: ${stdout}`;
-            }
+        let parsedOutput = null;
+        try {
+            parsedOutput = JSON.parse(stdout);
+        } catch {
+            throw `Webpack output does not contain a valid JSON object: ${stdout}`;
+        }
 
-            expect(parsedOutput).to.be.an('object');
-            expect(parsedOutput.modules).to.be.an('array');
+        expect(parsedOutput).to.be.an('object');
+        expect(parsedOutput.modules).to.be.an('array');
 
-            // We expect 4 modules there:
-            // - webpack/runtime/chunk loaded
-            // - webpack/runtime/jsonp chunk loading
-            // - webpack/runtime/hasOwnProperty shorthand
-            // - ./js/no_require.js
-            expect(parsedOutput.modules.length).to.equal(4);
-
-
-            done();
-        });
+        // We expect 4 modules there:
+        // - webpack/runtime/chunk loaded
+        // - webpack/runtime/jsonp chunk loading
+        // - webpack/runtime/hasOwnProperty shorthand
+        // - ./js/no_require.js
+        expect(parsedOutput.modules.length).toBe(4);
     });
 
-    it('Smoke test using the --profile option', function(done) {
-        testSetup.emptyTmpDir();
+    it('Smoke test using the --profile option', async function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -135,22 +117,15 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        exec(`node ${binPath} dev --profile --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
-            if (err) {
-                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
-            }
+        const { stdout } = await exec(`node ${binPath} dev --profile --context=${testDir}`, { cwd: testDir });
 
-            expect(stdout).to.contain('resolving: ');
-            expect(stdout).to.contain('restoring: ');
-            expect(stdout).to.contain('integration: ');
-            expect(stdout).to.contain('building: ');
-
-            done();
-        });
+        expect(stdout).toContain('resolving: ');
+        expect(stdout).toContain('restoring: ');
+        expect(stdout).toContain('integration: ');
+        expect(stdout).toContain('building: ');
     });
 
-    it('Smoke test using the --keep-public-path option', function(done) {
-        testSetup.emptyTmpDir();
+    it('Smoke test using the --keep-public-path option', async function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -169,17 +144,12 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        exec(`node ${binPath} dev --keep-public-path --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
-            if (err) {
-                throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
-            }
+        const { stdout } = await exec(`node ${binPath} dev --keep-public-path --context=${testDir}`, { cwd: testDir });
 
-            done();
-        });
+        expect(stdout).toContain('Compiled successfully');
     });
 
-    it('Display an error when calling an unknown method', function(done) {
-        testSetup.emptyTmpDir();
+    it('Display an error when calling an unknown method', async function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -208,17 +178,19 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir }, (err, stdout, stderr) => {
-            expect(err).not.to.be.null;
-            expect(stdout).to.contain('is not a recognized property');
-            expect(stdout).to.contain('or method');
-            expect(stdout).to.contain('Did you mean');
-            done();
-        });
+        try {
+            await exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir });
+        } catch (err) {
+            expect(err.stdout).toContain('is not a recognized property');
+            expect(err.stdout).toContain('or method');
+            expect(err.stdout).toContain('Did you mean');
+            return;
+        }
+
+        throw new Error('This code should not be executed, it means that the `try` bloc didn\'t throw an exception.');
     });
 
-    it('Run the webpack-dev-server successfully', function(done) {
-        testSetup.emptyTmpDir();
+    it('Run the webpack-dev-server successfully', async function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -246,59 +218,42 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const port = await getPort();
+
         const abortController = new AbortController();
-        const node = spawn('node', [binPath, 'dev-server', `--context=${testDir}`], {
-            cwd: testDir,
-            env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
-            signal: abortController.signal
-        });
+        setTimeout(() => {
+            abortController.abort();
+        }, 5000);
 
-        let stdout = '';
-        let stderr = '';
-
-        node.stdout.on('data', (data) => {
-            stdout += data.toString();
-        });
-
-        node.stderr.on('data', (data) => {
-            stderr += data.toString();
-        });
-
-        node.on('error', (error) => {
-            if (error.name !== 'AbortError') {
-                throw new Error('Error executing encore', { cause: error });
+        try {
+            await exec(`node ${binPath} dev-server --context=${testDir} --port=${port}`, {
+                cwd: testDir,
+                env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
+                signal: abortController.signal,
+            });
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                throw new Error('Error executing encore', { cause: err });
             }
+            expect(err.stdout).toContain('Running webpack-dev-server ...');
+            expect(err.stdout).toContain('Compiled successfully in');
+            expect(err.stdout).toContain('webpack compiled successfully');
 
-            expect(stdout).to.contain('Running webpack-dev-server ...');
-            expect(stdout).to.contain('Compiled successfully in');
-            expect(stdout).to.contain('webpack compiled successfully');
-
-            expect(stderr).to.contain('[webpack-dev-server] Project is running at:');
-            expect(stderr).to.contain('[webpack-dev-server] Loopback: http://localhost:8080/');
-            expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
+            expect(err.stderr).toContain('[webpack-dev-server] Project is running at:');
+            expect(err.stderr).toContain(`[webpack-dev-server] Loopback: http://localhost:${port}/`);
+            expect(err.stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
 
             // Verify entrypoints.json contains http:// URLs
-            const entrypoints = JSON.parse(
-                fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
-            );
-            expect(entrypoints.entrypoints.main.js[0]).to.contain('http://localhost:8080/build/');
+            const entrypoints = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8'));
+            expect(entrypoints.entrypoints.main.js[0]).toContain(`http://localhost:${port}/build/`);
 
             // Verify manifest.json contains http:// URLs
-            const manifest = JSON.parse(
-                fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
-            );
-            expect(manifest['build/main.js']).to.contain('http://localhost:8080/build/');
-
-            done();
-        });
-
-        setTimeout(() => {
-            abortController.abort();
-        }, 5000);
+            const manifest = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8'));
+            expect(manifest['build/main.js']).toContain(`http://localhost:${port}/build/`);
+        }
     });
 
-    it('Run the webpack-dev-server with --server-type https', function(done) {
-        testSetup.emptyTmpDir();
+    it('Run the webpack-dev-server with --server-type https', async function() {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -326,71 +281,54 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const port = await getPort();
+
         const abortController = new AbortController();
-        const node = spawn('node', [binPath, 'dev-server', '--server-type', 'https', `--context=${testDir}`], {
-            cwd: testDir,
-            env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
-            signal: abortController.signal
-        });
-
-        let stdout = '';
-        let stderr = '';
-
-        node.stdout.on('data', (data) => {
-            stdout += data.toString();
-        });
-
-        node.stderr.on('data', (data) => {
-            stderr += data.toString();
-        });
-
-        node.on('error', (error) => {
-            if (error.name !== 'AbortError') {
-                throw new Error('Error executing encore', { cause: error });
-            }
-
-            expect(stdout).to.contain('Running webpack-dev-server ...');
-            expect(stdout).to.contain('Compiled successfully in');
-            expect(stdout).to.contain('webpack compiled successfully');
-
-            expect(stderr).to.contain('[webpack-dev-server] Project is running at:');
-            expect(stderr).to.contain('[webpack-dev-server] Loopback: https://localhost:8080/');
-            expect(stderr).to.contain('[webpack-dev-server] Content not from webpack is served from');
-
-            // Verify entrypoints.json contains https:// URLs
-            const entrypoints = JSON.parse(
-                fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
-            );
-
-            expect(entrypoints.entrypoints.main.js[0]).to.contain('https://localhost:8080/build/');
-
-            // Verify manifest.json contains https:// URLs
-            const manifest = JSON.parse(
-                fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
-            );
-            expect(manifest['build/main.js']).to.contain('https://localhost:8080/build/');
-
-            done();
-        });
-
         setTimeout(() => {
             abortController.abort();
         }, 5000);
+
+        try {
+            await exec(`node ${binPath} dev-server --server-type https --context=${testDir} --port=${port}`, {
+                cwd: testDir,
+                env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
+                signal: abortController.signal,
+            });
+        } catch (err) {
+            if (err.name !== 'AbortError') {
+                throw new Error('Error executing encore', { cause: err });
+            }
+
+            expect(err.stdout).toContain('Running webpack-dev-server ...');
+            expect(err.stdout).toContain('Compiled successfully in');
+            expect(err.stdout).toContain('webpack compiled successfully');
+
+            expect(err.stderr).toContain('[webpack-dev-server] Project is running at:');
+            expect(err.stderr).toContain(`[webpack-dev-server] Loopback: https://localhost:${port}/`);
+            expect(err.stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
+
+            // Verify entrypoints.json contains https:// URLs
+            const entrypoints = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8'));
+            expect(entrypoints.entrypoints.main.js[0]).toContain(`https://localhost:${port}/build/`);
+
+            // Verify manifest.json contains https:// URLs
+            const manifest = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8'));
+            expect(manifest['build/main.js']).toContain(`https://localhost:${port}/build/`);
+        }
     });
 
     describe('Without webpack-dev-server installed', function() {
-        before(function() {
-            execSync('yarn remove webpack-dev-server --dev', { cwd: projectDir });
+        beforeAll(async function() {
+            await exec('yarn remove webpack-dev-server --dev', { cwd: projectDir });
         });
 
-        after(function() {
+        afterAll(async function() {
             // Re-install webpack-dev-server and ensure the project is in a clean state
-            execSync('git checkout package.json', { cwd: projectDir });
-            execSync('yarn install', { cwd: projectDir });
-        });
+            await exec('git checkout package.json', { cwd: projectDir });
+            await exec('yarn install', { cwd: projectDir });
+        }, 20000);
 
-        it('Throw an error when trying to use the webpack-dev-server if not installed', function(done) {
-            testSetup.emptyTmpDir();
+        it('Throw an error when trying to use the webpack-dev-server if not installed', async function() {
             const testDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
@@ -418,23 +356,20 @@ export default await Encore.getWebpackConfig();
             );
 
             const binPath = path.resolve(projectDir, 'bin', 'encore.js');
-            exec(
-                `node ${binPath} dev-server --context=${testDir}`,
-                {
+            const port = await getPort();
+
+            try {
+                await exec(`node ${binPath} dev-server --context=${testDir} --port=${port}`, {
                     cwd: testDir,
                     env: Object.assign({}, process.env, { NO_COLOR: 'true' })
-                },
-                (err, stdout, stderr) => {
-                    expect(stdout).to.contain('Install webpack-dev-server to use the webpack Development Server');
-                    expect(stdout).to.contain('npm install webpack-dev-server --save-dev');
-                    expect(stderr).to.equal('');
-
-                    expect(stdout).not.to.contain('Running webpack-dev-server ...');
-                    expect(stdout).not.to.contain('Compiled successfully in');
-                    expect(stdout).not.to.contain('webpack compiled successfully');
-
-                    done();
                 });
+            } catch (err) {
+                expect(err.stdout).toContain('Install webpack-dev-server to use the webpack Development Server');
+                expect(err.stdout).toContain('npm install webpack-dev-server --save-dev');
+                expect(err.stdout).not.toContain('Running webpack-dev-server ...');
+                expect(err.stdout).not.toContain('Compiled successfully in');
+                expect(err.stdout).not.toContain('webpack compiled successfully');
+            }
         });
     });
 });

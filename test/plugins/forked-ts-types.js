@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import tsLoader from '../../lib/loaders/typescript.js';
@@ -28,14 +28,14 @@ describe('plugins/forkedtypecheck', function() {
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking();
 
-        expect(config.plugins).to.have.lengthOf(0);
+        expect(config.plugins).toHaveLength(0);
         tsTypeChecker(config);
-        expect(config.plugins).to.have.lengthOf(1);
+        expect(config.plugins).toHaveLength(1);
         expect(config.plugins[0].plugin).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
-        expect(config.plugins[0].plugin.options.silent).to.be.undefined;
+        expect(config.plugins[0].plugin.options.silent).toBeUndefined();
         // after enabling plugin, check typescript loader has right config
         const actualLoaders = await tsLoader.getLoaders(config);
-        expect(actualLoaders[1].options.transpileOnly).to.be.true;
+        expect(actualLoaders[1].options.transpileOnly).toBe(true);
     });
 
     it('getPlugins() with options callback', function() {
@@ -45,11 +45,11 @@ describe('plugins/forkedtypecheck', function() {
             options.async = true;
         });
 
-        expect(config.plugins).to.have.lengthOf(0);
+        expect(config.plugins).toHaveLength(0);
         tsTypeChecker(config);
-        expect(config.plugins).to.have.lengthOf(1);
+        expect(config.plugins).toHaveLength(1);
         expect(config.plugins[0].plugin).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
-        expect(config.plugins[0].plugin.options.async).to.equal(true);
+        expect(config.plugins[0].plugin.options.async).toBe(true);
     });
 
     it('getPlugins() with options callback that returns an object', function() {
@@ -62,11 +62,11 @@ describe('plugins/forkedtypecheck', function() {
             return { async: true };
         });
 
-        expect(config.plugins).to.have.lengthOf(0);
+        expect(config.plugins).toHaveLength(0);
         tsTypeChecker(config);
-        expect(config.plugins).to.have.lengthOf(1);
+        expect(config.plugins).toHaveLength(1);
         expect(config.plugins[0].plugin).to.be.an.instanceof(ForkTsCheckerWebpackPlugin);
-        expect(config.plugins[0].plugin.options.silent).to.be.undefined;
-        expect(config.plugins[0].plugin.options.async).to.equal(true);
+        expect(config.plugins[0].plugin.options.silent).toBeUndefined();
+        expect(config.plugins[0].plugin.options.async).toBe(true);
     });
 });

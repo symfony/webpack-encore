@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import webpack from 'webpack';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -28,9 +28,9 @@ describe('plugins/define', function() {
         const plugins = [];
 
         definePluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
-        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('development'));
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('development'));
     });
 
     it('production environment with default settings', function() {
@@ -38,9 +38,9 @@ describe('plugins/define', function() {
         const plugins = [];
 
         definePluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
-        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('production'));
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('production'));
     });
 
     it('production environment with options callback', function() {
@@ -53,15 +53,15 @@ describe('plugins/define', function() {
         });
 
         definePluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
 
         // Allows to add new definitions
-        expect(plugins[0].plugin.definitions.foo).to.equal(true);
-        expect(plugins[0].plugin.definitions['process.env.bar']).to.equal(true);
+        expect(plugins[0].plugin.definitions.foo).toBe(true);
+        expect(plugins[0].plugin.definitions['process.env.bar']).toBe(true);
 
         // Doesn't remove default definitions
-        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).to.equal(JSON.stringify('production'));
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('production'));
     });
 
     it('production environment with options callback that returns an object', function() {
@@ -76,9 +76,9 @@ describe('plugins/define', function() {
         });
 
         definePluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
-        expect(plugins[0].plugin.definitions.bar).to.be.undefined;
-        expect(plugins[0].plugin.definitions.foo).to.equal(true);
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
+        expect(plugins[0].plugin.definitions.bar).toBeUndefined();
+        expect(plugins[0].plugin.definitions.foo).toBe(true);
     });
 });

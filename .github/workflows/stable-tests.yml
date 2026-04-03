@@ -24,6 +24,7 @@ jobs:
                 uses: actions/setup-node@v4
                 with:
                     node-version: ${{matrix.node-versions}}
+                    cache: yarn
 
             -   name: Install Yarn Dependencies
                 run: yarn install

@@ -1192,8 +1192,6 @@ class Encore {
 
         return this;
     }
-
-
     /**
      * If enabled, a TypeScript preset will be applied to
      * the generated Webpack and Babel configuration.

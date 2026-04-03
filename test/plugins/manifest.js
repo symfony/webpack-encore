@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -29,9 +29,9 @@ describe('plugins/manifest', function() {
         const plugins = [];
 
         manifestPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
-        expect(plugins[0].plugin.options.fileName).to.equal('manifest.json');
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackManifestPlugin);
+        expect(plugins[0].plugin.options.fileName).toBe('manifest.json');
     });
 
     it('with options callback', function() {
@@ -43,11 +43,11 @@ describe('plugins/manifest', function() {
         });
 
         manifestPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackManifestPlugin);
 
         // Allows to override default options
-        expect(plugins[0].plugin.options.fileName).to.equal('bar');
+        expect(plugins[0].plugin.options.fileName).toBe('bar');
     });
 
     it('with options callback that returns an object', function() {
@@ -62,9 +62,9 @@ describe('plugins/manifest', function() {
         });
 
         manifestPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
-        expect(plugins[0].plugin.options.fileName).to.equal('manifest.json');
-        expect(plugins[0].plugin.options.foo).to.equal(true);
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackManifestPlugin);
+        expect(plugins[0].plugin.options.fileName).toBe('manifest.json');
+        expect(plugins[0].plugin.options.foo).toBe(true);
     });
 });
