@@ -15,7 +15,7 @@ import { exec, execSync, spawn } from 'child_process';
 
 const projectDir = path.resolve(import.meta.dirname, '../', '../');
 
-describe('bin/encore.js', function() {
+describe.sequential('bin/encore.js', function() {
     // being functional tests, these can take quite long
 
     it('Basic smoke test', function(done) {

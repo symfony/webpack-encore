@@ -75,19 +75,18 @@ describe('Functional tests using webpack', function() {
 
     // being functional tests, these can take quite long
 
-    beforeAll(function(done) {
-        puppeteer.launch({ headless: 'new', timeout: 14000, args: ['--no-sandbox', '--disable-setuid-sandbox'] }).then(_browser => {
-            browser = _browser;
-            done();
-        }).catch(err => {
+    beforeAll(async function() {
+        try {
+            browser = await puppeteer.launch({ headless: 'new', timeout: 14000, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+        } catch (err) {
             console.log('Unable to launch Puppeteer');
             console.log(err);
             throw err;
-        });
+        }
     });
 
-    afterAll(function(done) {
-        browser.close().then(done);
+    afterAll(async function() {
+        await browser.close()
     });
 
     describe('Basic scenarios.', function() {

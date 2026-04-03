@@ -30,10 +30,6 @@ function createTestDirectory() {
 }
 
 describe('parse-runtime', function() {
-    beforeEach(function() {
-        testSetup.emptyTmpDir();
-    });
-
     it('Basic usage', function() {
         const testDir = createTestDirectory();
         const config = parseArgv(createArgv(['foobar', '--bar', '--help']), testDir);
