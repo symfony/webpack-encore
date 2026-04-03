@@ -12,15 +12,13 @@ import js from '@eslint/js';
 import nodePlugin from 'eslint-plugin-n';
 import jsdoc from 'eslint-plugin-jsdoc';
 import headers from 'eslint-plugin-headers';
-import mochaPlugin from 'eslint-plugin-mocha';
-
-const mocha = mochaPlugin.default ?? mochaPlugin;
+import vitestPlugin from 'eslint-plugin-vitest';
 
 export default [
     js.configs.recommended,
     nodePlugin.configs['flat/recommended'],
     jsdoc.configs['flat/recommended'],
-    mocha.configs.recommended,
+    vitestPlugin.configs.recommended,
     {
         plugins: {
             headers,
@@ -104,10 +102,18 @@ file that was distributed with this source code.`,
             globals: {
                 // For Puppeteer when calling "page.evaluate()"
                 document: 'readonly',
+                // Vitest globals
+                describe: 'readonly',
+                it: 'readonly',
+                expect: 'readonly',
+                beforeEach: 'readonly',
+                afterEach: 'readonly',
+                before: 'readonly',
+                after: 'readonly',
+                beforeAll: 'readonly',
+                afterAll: 'readonly',
+                vi: 'readonly',
             },
         },
-        rules: {
-            'mocha/no-setup-in-describe': 'off',
-        }
     }
 ];
