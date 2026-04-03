@@ -102,17 +102,6 @@ file that was distributed with this source code.`,
             globals: {
                 // For Puppeteer when calling "page.evaluate()"
                 document: 'readonly',
-                // Vitest globals
-                describe: 'readonly',
-                it: 'readonly',
-                expect: 'readonly',
-                beforeEach: 'readonly',
-                afterEach: 'readonly',
-                before: 'readonly',
-                after: 'readonly',
-                beforeAll: 'readonly',
-                afterAll: 'readonly',
-                vi: 'readonly',
             },
         },
     }
