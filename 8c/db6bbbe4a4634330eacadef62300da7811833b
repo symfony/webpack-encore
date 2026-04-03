@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-15T21:54:18Z
+
+Technically this PR is legit ready to be merged, but I still need to deep-review:
+- lib/config-generator.js
+- lib/WebpackConfig.js
+
+I will wait for few weeks when Encore 6.0 will [have more downloads](https://www.npmjs.com/package/@symfony/webpack-encore?activeTab=versions)
+
+---------------------------------------------------------------------------
+
+by stof at 2026-03-16T12:26:54Z
+
+I don't think we should use non-fully-specified imports as those are non-standard.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-16T20:42:46Z
+
+> I don't think we should use non-fully-specified imports as those are non-standard.
+
+I'm not sure to understand, do you speak about https://webpack.js.org/configuration/module/#resolvefullyspecified? It's enabled by default in the user's `package.json` has `type: "module"`, and I would be in favor to keep the default setting.
+
+Or are you speaking about Encore's internal? Because If I run `yarn mocha test/bin/encore.js` after removing `.js` from `await import('webpack/bin/webpack.js');` (in `bin/encore.js` file), the tests fail. But if I re-add this `.js`, tests pass again.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-03-18T21:43:17Z
+
+Oh, everything is fine I think, imports are always fully-written
