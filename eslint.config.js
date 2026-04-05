@@ -104,5 +104,9 @@ file that was distributed with this source code.`,
                 document: 'readonly',
             },
         },
+        rules: {
+            'vitest/expect-expect': 'off',
+            'vitest/valid-expect': 'off'
+        }
     }
 ];

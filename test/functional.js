@@ -907,7 +907,7 @@ describe('Functional tests using webpack', function() {
                 /[\\/]node_modules[\\/]@vue[\\/]/
         });
 
-        const { webpackAssert } = await testSetup.runWebpack(config);
+        await testSetup.runWebpack(config);
         // Check if Vue.js code is still executed properly
         await testSetup.requestTestPage(
             browser,
@@ -942,7 +942,7 @@ describe('Functional tests using webpack', function() {
                 /[\\/]node_modules[\\/]@vue[\\/]/
         });
 
-        const { webpackAssert } = await testSetup.runWebpack(config);
+        await testSetup.runWebpack(config);
         // Check if Vue.js code is still executed properly
         await testSetup.requestTestPage(
             browser,
@@ -1401,7 +1401,7 @@ export default {
             expect.fail('Expected runWebpack to throw "Cannot find the" error');
         } catch (err) {
             // Cannot find the "/path/to/tsconfig.json" file
-            expect(error.message).toContain('Cannot find the');
+            expect(err.message).toContain('Cannot find the');
         }
     });
 
@@ -2312,7 +2312,7 @@ module.exports = {
                 includeSubdirectories: true
             }]);
 
-            const { webpackAssert, stats, stdout } = await testSetup.runWebpack(config);
+            const { stdout } = await testSetup.runWebpack(config);
             expect(config.outputPath).to.be.a.directory()
                 .with.files([
                     'entrypoints.json',
@@ -2973,7 +2973,7 @@ module.exports = {
             });
             config.enableIntegrityHashes();
 
-            const { webpackAssert } = await testSetup.runWebpack(config);
+            await testSetup.runWebpack(config);
             const integrityData = getIntegrityData(config);
             const expectedFilesWithHashes = Object.keys(integrityData).filter(file => {
                 if (!/\?v=[a-z0-9]{16}$/.test(file)) {

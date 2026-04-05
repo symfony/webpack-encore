@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { use } from 'chai';
 import { describe, it, expect } from 'vitest';
 import { createRequire } from 'module';
+
 const require = createRequire(import.meta.url);
-use(require('chai-fs'));
+expect.extend(require('chai-fs'));
 
 import path from 'path';
 import * as testSetup from '../helpers/setup.js';
