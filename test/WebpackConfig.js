@@ -1230,7 +1230,7 @@ describe('WebpackConfig object', function() {
             }));
 
             expect(config.plugins.length).toBe(1);
-            expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
+            expect(config.plugins[0].plugin).toBeInstanceOf(webpack.IgnorePlugin);
             expect(config.plugins[0].priority).toBe(0);
         });
 
@@ -1246,7 +1246,7 @@ describe('WebpackConfig object', function() {
             }), 10);
 
             expect(config.plugins.length).toBe(1);
-            expect(config.plugins[0].plugin).to.be.instanceof(webpack.IgnorePlugin);
+            expect(config.plugins[0].plugin).toBeInstanceOf(webpack.IgnorePlugin);
             expect(config.plugins[0].priority).toBe(10);
         });
 

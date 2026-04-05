@@ -30,7 +30,7 @@ describe('plugins/manifest', function() {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackManifestPlugin);
         expect(plugins[0].plugin.options.fileName).toBe('manifest.json');
     });
 
@@ -44,7 +44,7 @@ describe('plugins/manifest', function() {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackManifestPlugin);
 
         // Allows to override default options
         expect(plugins[0].plugin.options.fileName).toBe('bar');
@@ -63,7 +63,7 @@ describe('plugins/manifest', function() {
 
         manifestPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackManifestPlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackManifestPlugin);
         expect(plugins[0].plugin.options.fileName).toBe('manifest.json');
         expect(plugins[0].plugin.options.foo).toBe(true);
     });

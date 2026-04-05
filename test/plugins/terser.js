@@ -27,7 +27,7 @@ describe('plugins/terser', function() {
         const config = createConfig();
 
         const plugin = terserPluginUtil(config);
-        expect(plugin).to.be.instanceof(TerserPlugin);
+        expect(plugin).toBeInstanceOf(TerserPlugin);
         expect(plugin.options.parallel).toBe(true);
     });
 

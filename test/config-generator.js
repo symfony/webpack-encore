@@ -663,9 +663,9 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
             const plugins = actualConfig.plugins;
 
-            expect(plugins[plugins.length - 4]).to.be.instanceof(CustomPlugin1);
-            expect(plugins[plugins.length - 3]).to.be.instanceof(CustomPlugin2);
-            expect(plugins[plugins.length - 2]).to.be.instanceof(CustomPlugin3);
+            expect(plugins[plugins.length - 4]).toBeInstanceOf(CustomPlugin1);
+            expect(plugins[plugins.length - 3]).toBeInstanceOf(CustomPlugin2);
+            expect(plugins[plugins.length - 2]).toBeInstanceOf(CustomPlugin3);
         });
 
         it('plugins can be sorted relatively to each other', async function() {
@@ -679,9 +679,9 @@ describe('The config-generator function', function() {
             const actualConfig = await configGenerator(config);
             const plugins = actualConfig.plugins;
 
-            expect(plugins[0]).to.be.instanceof(CustomPlugin1);
-            expect(plugins[1]).to.be.instanceof(CustomPlugin3);
-            expect(plugins[plugins.length - 1]).to.be.instanceof(CustomPlugin2);
+            expect(plugins[0]).toBeInstanceOf(CustomPlugin1);
+            expect(plugins[1]).toBeInstanceOf(CustomPlugin3);
+            expect(plugins[plugins.length - 1]).toBeInstanceOf(CustomPlugin2);
         });
     });
 

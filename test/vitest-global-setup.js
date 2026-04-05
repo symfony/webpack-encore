@@ -7,13 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { vi, beforeAll, afterEach } from 'vitest';
-import { emptyTmpDir } from './helpers/setup.js';
+import {emptyTmpDir} from './helpers/setup.js';
 
-beforeAll(() => {
+export function setup() {
     emptyTmpDir();
-});
-
-afterEach(() => {
-    vi.restoreAllMocks();
-});
+}

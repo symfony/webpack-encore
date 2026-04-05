@@ -29,7 +29,7 @@ describe('plugins/define', function() {
 
         definePluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
         expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('development'));
     });
 
@@ -39,7 +39,7 @@ describe('plugins/define', function() {
 
         definePluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
         expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('production'));
     });
 
@@ -54,7 +54,7 @@ describe('plugins/define', function() {
 
         definePluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
 
         // Allows to add new definitions
         expect(plugins[0].plugin.definitions.foo).toBe(true);
@@ -77,7 +77,7 @@ describe('plugins/define', function() {
 
         definePluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(webpack.DefinePlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
         expect(plugins[0].plugin.definitions.bar).toBeUndefined();
         expect(plugins[0].plugin.definitions.foo).toBe(true);
     });

@@ -28,7 +28,7 @@ describe('plugins/mini-css-extract', function() {
 
         miniCssExtractPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(MiniCssExtractPlugin);
         expect(plugins[0].plugin.options.filename).toBe('[name].css');
     });
 
@@ -40,7 +40,7 @@ describe('plugins/mini-css-extract', function() {
 
         miniCssExtractPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(MiniCssExtractPlugin);
         expect(plugins[0].plugin.options.filename).toBe('[name].[contenthash:8].css');
     });
 
@@ -67,7 +67,7 @@ describe('plugins/mini-css-extract', function() {
 
         miniCssExtractPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
+        expect(plugins[0].plugin).toBeInstanceOf(MiniCssExtractPlugin);
         expect(plugins[0].plugin.options.filename).toBe('[name].css');
     });
 });

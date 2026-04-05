@@ -26,7 +26,7 @@ describe('plugins/friendly-errors', function() {
         const config = createConfig();
 
         const plugin = friendlyErrorsPluginUtil(config);
-        expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
+        expect(plugin).toBeInstanceOf(FriendlyErrorsWebpackPlugin);
         expect(plugin.shouldClearConsole).toBe(false);
         expect(plugin.formatters.length).toBe(6);
         expect(plugin.transformers.length).toBe(6);
@@ -41,7 +41,7 @@ describe('plugins/friendly-errors', function() {
         });
 
         const plugin = friendlyErrorsPluginUtil(config);
-        expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
+        expect(plugin).toBeInstanceOf(FriendlyErrorsWebpackPlugin);
         expect(plugin.shouldClearConsole).toBe(true);
         expect(plugin.formatters.length).toBe(3);
         expect(plugin.transformers.length).toBe(6);
@@ -58,7 +58,7 @@ describe('plugins/friendly-errors', function() {
         });
 
         const plugin = friendlyErrorsPluginUtil(config);
-        expect(plugin).to.be.instanceof(FriendlyErrorsWebpackPlugin);
+        expect(plugin).toBeInstanceOf(FriendlyErrorsWebpackPlugin);
         expect(plugin.shouldClearConsole).toBe(true);
         expect(plugin.formatters.length).toBe(3);
         expect(plugin.transformers.length).toBe(3);

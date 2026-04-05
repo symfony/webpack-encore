@@ -21,7 +21,8 @@ export default defineConfig({
         ],
         testTimeout: 10000,
         hookTimeout: 15000,
-        setupFiles: ['./test/setup-vitest.js'],
+        globalSetup: ['./test/vitest-global-setup.js'],
+        setupFiles: ['./test/vitest-setup.js'],
     },
     resolve: {
         conditions: ['node', 'node-addons'],

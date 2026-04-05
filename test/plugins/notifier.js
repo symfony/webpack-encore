@@ -48,7 +48,7 @@ describe('plugins/notifier', function() {
 
         await notifierPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackNotifier);
         expect(plugins[0].plugin.options.title).toBe('Webpack Encore');
     });
 
@@ -62,7 +62,7 @@ describe('plugins/notifier', function() {
 
         await notifierPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackNotifier);
         expect(plugins[0].plugin.options.title).toBe('foo');
     });
 
@@ -79,7 +79,7 @@ describe('plugins/notifier', function() {
 
         await notifierPluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackNotifier);
         expect(plugins[0].plugin.options.title).toBeUndefined();
         expect(plugins[0].plugin.options.foo).toBe(true);
     });
