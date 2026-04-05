@@ -17,7 +17,8 @@ export default defineConfig({
         exclude: [
             'test/persistent-cache/**',
             'test/helpers/**',
-            'test/setup-vitest.js',
+            'test/vitest-global-setup.js',
+            'test/vitest-setup.js',
         ],
         testTimeout: 10000,
         hookTimeout: 15000,
