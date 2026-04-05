@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import vueLoader from '../../lib/loaders/vue.js';
@@ -29,8 +29,8 @@ describe('loaders/vue', function() {
 
         const actualLoaders = vueLoader.getLoaders(config);
 
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.postLoaders.foo).to.equal('foo-loader');
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.postLoaders.foo).toBe('foo-loader');
     });
 
     it('getLoaders() with a callback that returns an object', function() {
@@ -44,7 +44,7 @@ describe('loaders/vue', function() {
 
         const actualLoaders = vueLoader.getLoaders(config);
 
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options).to.deep.equal({ foo: true });
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options).toEqual({ foo: true });
     });
 });

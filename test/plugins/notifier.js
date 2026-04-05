@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import WebpackNotifier from 'webpack-notifier';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -27,7 +27,7 @@ describe('plugins/notifier', function() {
         const plugins = [];
 
         await notifierPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(0);
+        expect(plugins.length).toBe(0);
     });
 
     it('explicitly disabled', async function() {
@@ -37,7 +37,7 @@ describe('plugins/notifier', function() {
         config.enableBuildNotifications(false);
 
         await notifierPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(0);
+        expect(plugins.length).toBe(0);
     });
 
     it('enabled with default settings', async function() {
@@ -47,9 +47,9 @@ describe('plugins/notifier', function() {
         config.enableBuildNotifications();
 
         await notifierPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
-        expect(plugins[0].plugin.options.title).to.equal('Webpack Encore');
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackNotifier);
+        expect(plugins[0].plugin.options.title).toBe('Webpack Encore');
     });
 
     it('enabled with options callback', async function() {
@@ -61,9 +61,9 @@ describe('plugins/notifier', function() {
         });
 
         await notifierPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
-        expect(plugins[0].plugin.options.title).to.equal('foo');
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackNotifier);
+        expect(plugins[0].plugin.options.title).toBe('foo');
     });
 
     it('enabled with options callback that returns an object', async function() {
@@ -78,9 +78,9 @@ describe('plugins/notifier', function() {
         });
 
         await notifierPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(WebpackNotifier);
-        expect(plugins[0].plugin.options.title).to.be.undefined;
-        expect(plugins[0].plugin.options.foo).to.equal(true);
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(WebpackNotifier);
+        expect(plugins[0].plugin.options.title).toBeUndefined();
+        expect(plugins[0].plugin.options.foo).toBe(true);
     });
 });

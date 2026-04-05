@@ -7,10 +7,11 @@
  * file that was distributed with this source code.
  */
 
-import { use } from 'chai';
+import { describe, it, chai } from 'vitest';
 import { createRequire } from 'module';
+
 const require = createRequire(import.meta.url);
-use(require('chai-fs'));
+chai.use(require('chai-fs'));
 
 import path from 'path';
 import * as testSetup from '../helpers/setup.js';
@@ -38,25 +39,22 @@ describe('Functional persistent cache tests using webpack', function() {
     this.timeout(10000);
 
     describe('Basic scenarios.', function() {
-        it('Persistent caching does not cause problems', function(done) {
+        it('Persistent caching does not cause problems', async function() {
             const config = createWebpackConfig('www/build', 'basic_cache', 'dev');
             config.setPublicPath('/build');
             config.addEntry('main', './js/code_splitting');
 
-            testSetup.runWebpack(config, (webpackAssert) => {
-                // sanity check
-                webpackAssert.assertManifestPath(
-                    'build/main.js',
-                    '/build/main.js',
-                );
-
-                done();
-            });
+            const { webpackAssert } = await testSetup.runWebpack(config);
+            // sanity check
+            webpackAssert.assertManifestPath(
+                'build/main.js',
+                '/build/main.js',
+            );
         });
     });
 
     describe('copyFiles() allows to copy files and folders', function() {
-        it('Persistent caching does not cause problems', function(done) {
+        it('Persistent caching does not cause problems', async function() {
             const config = createWebpackConfig('www/build', 'copy_files_cache', 'production');
             config.addEntry('main', './js/no_require');
             config.setPublicPath('/build');
@@ -66,28 +64,25 @@ describe('Functional persistent cache tests using webpack', function() {
                 includeSubdirectories: false,
             }]);
 
-            testSetup.runWebpack(config, (webpackAssert) => {
-                webpackAssert.assertDirectoryContents([
-                    'entrypoints.json',
-                    'runtime.[hash:8].js',
-                    'main.[hash:8].js',
-                    'manifest.json',
-                    'symfony_logo.[hash:8].png',
-                    'symfony_logo_alt.[hash:8].png',
-                ]);
+            const { webpackAssert } = await testSetup.runWebpack(config);
+            webpackAssert.assertDirectoryContents([
+                'entrypoints.json',
+                'runtime.[hash:8].js',
+                'main.[hash:8].js',
+                'manifest.json',
+                'symfony_logo.[hash:8].png',
+                'symfony_logo_alt.[hash:8].png',
+            ]);
 
-                webpackAssert.assertManifestPath(
-                    'build/symfony_logo.png',
-                    '/build/symfony_logo.91beba37.png',
-                );
+            webpackAssert.assertManifestPath(
+                'build/symfony_logo.png',
+                '/build/symfony_logo.91beba37.png',
+            );
 
-                webpackAssert.assertManifestPath(
-                    'build/symfony_logo_alt.png',
-                    '/build/symfony_logo_alt.f880ba14.png',
-                );
-
-                done();
-            });
+            webpackAssert.assertManifestPath(
+                'build/symfony_logo_alt.png',
+                '/build/symfony_logo_alt.f880ba14.png',
+            );
         });
     });
 });

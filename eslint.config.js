@@ -12,15 +12,13 @@ import js from '@eslint/js';
 import nodePlugin from 'eslint-plugin-n';
 import jsdoc from 'eslint-plugin-jsdoc';
 import headers from 'eslint-plugin-headers';
-import mochaPlugin from 'eslint-plugin-mocha';
-
-const mocha = mochaPlugin.default ?? mochaPlugin;
+import vitestPlugin from 'eslint-plugin-vitest';
 
 export default [
     js.configs.recommended,
     nodePlugin.configs['flat/recommended'],
     jsdoc.configs['flat/recommended'],
-    mocha.configs.recommended,
+    vitestPlugin.configs.recommended,
     {
         plugins: {
             headers,
@@ -107,7 +105,8 @@ file that was distributed with this source code.`,
             },
         },
         rules: {
-            'mocha/no-setup-in-describe': 'off',
+            'vitest/expect-expect': 'off',
+            'vitest/valid-expect': 'off'
         }
     }
 ];

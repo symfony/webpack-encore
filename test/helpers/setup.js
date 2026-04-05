@@ -15,7 +15,7 @@ import fs from 'fs-extra';
 import httpServer from 'http-server';
 import configGenerator from '../../lib/config-generator.js';
 import validator from '../../lib/config/validator.js';
-import assertUtil from './assert.js';
+import { Assert } from './assert.js';
 
 const tmpDir = path.join(import.meta.dirname, '../', '../', 'test_tmp');
 const testFixturesDir = path.join(import.meta.dirname, '../', '../', 'fixtures');
@@ -68,24 +68,34 @@ export function createWebpackConfig(testAppDir, outputDirName = '', command, arg
     return config;
 }
 
-export async function runWebpack(webpackConfig, callback, allowCompilationError = false) {
+/**
+ * @param {WebpackConfig} webpackConfig
+ * @param {object} root0
+ * @param {boolean} root0.allowCompilationError
+ * @returns {Promise<{ webpackAssert: Assert, stats: import('webpack').Stats, output: string }>}
+ */
+export async function runWebpack(webpackConfig, { allowCompilationError = false } = {}) {
     const stdoutWrite = process.stdout.write;
+    const consoleLog = console.log;
+    const consoleWarn = console.warn;
     const stdOutContents = [];
 
     try {
         // Mute stdout
-        process.stdout.write = (message) => {
-            stdOutContents.push(message);
-        };
+        process.stdout.write = (message) => stdOutContents.push(message);
+        console.log = (message) => stdOutContents.push(message);
+        console.warn = (message) => stdOutContents.push(message);
 
         validator(webpackConfig);
 
         const webpackConfigObj = await configGenerator(webpackConfig);
         const compiler = webpack(webpackConfigObj);
-        await new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             compiler.run((err, stats) => {
                 // Restore stdout
                 process.stdout.write = stdoutWrite;
+                console.log = consoleLog;
+                console.warn = consoleWarn;
 
                 if (err) {
                     console.error(err.stack || err);
@@ -110,13 +120,11 @@ export async function runWebpack(webpackConfig, callback, allowCompilationError 
                     console.warn(info.warnings);
                 }
 
-                try {
-                    const result = callback(assertUtil(webpackConfig), stats, stdOutContents.join('\n'));
-                    // Support async callbacks
-                    Promise.resolve(result).then(resolve, reject);
-                } catch (callbackError) {
-                    reject(callbackError);
-                }
+                resolve({
+                    webpackAssert: new Assert(webpackConfig),
+                    stats,
+                    output: stdOutContents.join('\n')
+                });
             });
         });
     } catch (e) {

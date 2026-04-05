@@ -9,7 +9,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { expect } from 'chai';
+import { expect } from 'vitest';
 import regexEscaper from '../../lib/utils/regexp-escaper.js';
 
 const loadManifest = function(webpackConfig) {
@@ -66,7 +66,7 @@ const convertFilenameToMatcher = function(filename) {
     );
 };
 
-class Assert {
+export class Assert {
     /**
      * @param {import('../../lib/WebpackConfig.js').default} webpackConfig
      */
@@ -217,7 +217,7 @@ class Assert {
 
         const actualData = JSON.parse(actualContents);
 
-        expect(JSON.stringify(actualData, null, 2)).to.equal(JSON.stringify(expectedData, null, 2));
+        expect(JSON.stringify(actualData, null, 2)).toBe(JSON.stringify(expectedData, null, 2));
     }
 
     /**
@@ -270,8 +270,4 @@ class Assert {
             throw new Error(`Files ${Object.keys(expectedFileStrings).join(', ')} were expected to be found in the directory but were not. Actual files: ${actualFiles.join(', ')}`);
         }
     }
-}
-
-export default function(webpackConfig) {
-    return new Assert(webpackConfig);
 }

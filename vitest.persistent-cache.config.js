@@ -7,10 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { execSync } from 'child_process';
-import { emptyTmpDir } from './test/helpers/setup.js';
+import { defineConfig } from 'vitest/config';
 
-emptyTmpDir();
-for (let i = 0; i < 2; i++) {
-    execSync('vitest run --config vitest.persistent-cache.config.js', { stdio: 'inherit' });
-}
+export default defineConfig({
+    test: {
+        globals: true,
+        environment: 'node',
+        include: ['test/persistent-cache/**/*.js'],
+        testTimeout: 10000,
+    },
+});

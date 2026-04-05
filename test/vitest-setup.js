@@ -7,10 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { execSync } from 'child_process';
-import { emptyTmpDir } from './test/helpers/setup.js';
+import { vi, beforeEach, afterEach } from 'vitest';
+import logger from '../lib/logger.js';
 
-emptyTmpDir();
-for (let i = 0; i < 2; i++) {
-    execSync('vitest run --config vitest.persistent-cache.config.js', { stdio: 'inherit' });
-}
+beforeEach(() => {
+    logger.reset();
+});
+
+afterEach(() => {
+    vi.restoreAllMocks();
+});

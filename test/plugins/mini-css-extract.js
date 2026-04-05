@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -27,9 +27,9 @@ describe('plugins/mini-css-extract', function() {
         const plugins = [];
 
         miniCssExtractPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
-        expect(plugins[0].plugin.options.filename).to.equal('[name].css');
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(MiniCssExtractPlugin);
+        expect(plugins[0].plugin.options.filename).toBe('[name].css');
     });
 
     it('with default settings and versioning enabled', function() {
@@ -39,9 +39,9 @@ describe('plugins/mini-css-extract', function() {
         config.enableVersioning();
 
         miniCssExtractPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
-        expect(plugins[0].plugin.options.filename).to.equal('[name].[contenthash:8].css');
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(MiniCssExtractPlugin);
+        expect(plugins[0].plugin.options.filename).toBe('[name].[contenthash:8].css');
     });
 
     it('with CSS extraction disabled', function() {
@@ -51,7 +51,7 @@ describe('plugins/mini-css-extract', function() {
         config.disableCssExtraction();
 
         miniCssExtractPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(0);
+        expect(plugins.length).toBe(0);
     });
 
     it('with options callback', function() {
@@ -66,8 +66,8 @@ describe('plugins/mini-css-extract', function() {
         );
 
         miniCssExtractPluginUtil(plugins, config);
-        expect(plugins.length).to.equal(1);
-        expect(plugins[0].plugin).to.be.instanceof(MiniCssExtractPlugin);
-        expect(plugins[0].plugin.options.filename).to.equal('[name].css');
+        expect(plugins.length).toBe(1);
+        expect(plugins[0].plugin).toBeInstanceOf(MiniCssExtractPlugin);
+        expect(plugins[0].plugin.options.filename).toBe('[name].css');
     });
 });

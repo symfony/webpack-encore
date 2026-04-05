@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import tsLoader from '../../lib/loaders/typescript.js';
@@ -28,9 +28,9 @@ describe('loaders/typescript', function() {
         });
 
         const actualLoaders = await tsLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(2);
+        expect(actualLoaders).toHaveLength(2);
         // callback is used
-        expect(actualLoaders[1].options.foo).to.equal('bar');
+        expect(actualLoaders[1].options.foo).toBe('bar');
     });
 
     it('getLoaders() check defaults configuration values', async function() {
@@ -41,9 +41,9 @@ describe('loaders/typescript', function() {
 
         const actualLoaders = await tsLoader.getLoaders(config);
         // callback is used
-        expect(actualLoaders[1].options.foo).to.equal('bar');
+        expect(actualLoaders[1].options.foo).toBe('bar');
         // defaults
-        expect(actualLoaders[1].options.silent).to.be.true;
+        expect(actualLoaders[1].options.silent).toBe(true);
     });
 
     it('getLoaders() with a callback that returns an object', async function() {
@@ -56,6 +56,6 @@ describe('loaders/typescript', function() {
         });
 
         const actualLoaders = await tsLoader.getLoaders(config);
-        expect(actualLoaders[1].options).to.deep.equal({ foo: true });
+        expect(actualLoaders[1].options).toEqual({ foo: true });
     });
 });
