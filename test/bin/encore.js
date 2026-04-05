@@ -324,8 +324,10 @@ export default await Encore.getWebpackConfig();
 
         afterAll(async function() {
             // Re-install webpack-dev-server and ensure the project is in a clean state
-            await exec('git checkout package.json yarn.lock', { cwd: projectDir });
-            await exec('yarn install', { cwd: projectDir });
+            const { stdout: gcoStdout } = await exec('git checkout package.json yarn.lock', { cwd: projectDir });
+            console.log({ gcoStdout})
+            const { stdout: yarnStdout } = await exec('yarn install', { cwd: projectDir });
+            console.log({ yarnStdout})
         }, 20000);
 
         it('Throw an error when trying to use the webpack-dev-server if not installed', async function() {
