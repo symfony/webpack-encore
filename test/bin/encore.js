@@ -326,7 +326,7 @@ export default await Encore.getWebpackConfig();
             // Re-install webpack-dev-server and ensure the project is in a clean state
             await exec('git checkout package.json yarn.lock', { cwd: projectDir });
             await exec('yarn install', { cwd: projectDir });
-        });
+        }, 20000);
 
         it('Throw an error when trying to use the webpack-dev-server if not installed', async function() {
             const testDir = testSetup.createTestAppDir();
