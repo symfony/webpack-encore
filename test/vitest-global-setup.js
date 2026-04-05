@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import {emptyTmpDir} from './helpers/setup.js';
+import { emptyTmpDir } from './helpers/setup.js';
 
 export function setup() {
     emptyTmpDir();

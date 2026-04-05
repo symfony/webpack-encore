@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import { afterAll, beforeAll, describe, expect, it, chai } from 'vitest';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import * as testSetup from './helpers/setup.js';
@@ -16,6 +16,10 @@ import getVueVersion from '../lib/utils/get-vue-version.js';
 import packageHelper from '../lib/package-helper.js';
 import semver from 'semver';
 import puppeteer from 'puppeteer';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+chai.use(require('chai-fs'));
 
 function createWebpackConfig(outputDirName = '', command, argv = {}) {
     const webpackConfig = testSetup.createWebpackConfig(
@@ -1264,7 +1268,7 @@ export default {
             corejs: 3,
         });
 
-        const { webpackAssert } = testSetup.runWebpack(config);
+        const { webpackAssert } = await testSetup.runWebpack(config);
         for (const scriptName of ['commonjs.js', 'ecmascript.js']) {
             // Check that the polyfills are included correctly
             // in both files.
