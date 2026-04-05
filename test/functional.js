@@ -1866,7 +1866,7 @@ module.exports = {
         config.addEntry('main', `./vuejs/main_v${getVueVersion(config)}`);
         config.enableVueLoader();
 
-        const { output } = testSetup.runWebpack(config, true);
+        const { output } = await testSetup.runWebpack(config, true);
         expect(output).toContain('To load LESS files');
         expect(output).toContain('To load Sass files');
     });

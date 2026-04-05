@@ -9,10 +9,11 @@
 
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 import path from 'path';
-import * as testSetup from '../helpers/setup.js';
 import fs from 'fs-extra';
+import getPort from 'get-port';
 import { promisify } from 'node:util';
 import child_process from 'node:child_process';
+import * as testSetup from '../helpers/setup.js';
 
 const exec = promisify(child_process.exec);
 
@@ -223,7 +224,7 @@ export default await Encore.getWebpackConfig();
         }, 5000);
 
         try {
-            await exec(`node ${binPath} dev-server --context=${testDir}`, {
+            await exec(`node ${binPath} dev-server --context=${testDir} --port=${await getPort()}`, {
                 cwd: testDir,
                 env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
                 signal: abortController.signal,
@@ -284,7 +285,7 @@ export default await Encore.getWebpackConfig();
         }, 5000);
 
         try {
-            await exec(`node ${binPath} dev-server --server-type https --context=${testDir}`, {
+            await exec(`node ${binPath} dev-server --server-type https --context=${testDir} --port=${await getPort()}`, {
                 cwd: testDir,
                 env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
                 signal: abortController.signal,
@@ -352,7 +353,7 @@ export default await Encore.getWebpackConfig();
 
             const binPath = path.resolve(projectDir, 'bin', 'encore.js');
             try {
-                await exec(`node ${binPath} dev-server --context=${testDir}`, {
+                await exec(`node ${binPath} dev-server --context=${testDir} --port=${await getPort()}`, {
                     cwd: testDir,
                     env: Object.assign({}, process.env, { NO_COLOR: 'true' })
                 });

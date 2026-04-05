@@ -72,6 +72,7 @@
     "eslint-plugin-vitest": "^0.5.4",
     "fork-ts-checker-webpack-plugin": "^7.0.0 || ^8.0.0 || ^9.0.0",
     "fs-extra": "^10.0.0",
+    "get-port": "^7.2.0",
     "globals": "^16.3.0",
     "handlebars": "^4.7.7",
     "handlebars-loader": "^1.7.0",
