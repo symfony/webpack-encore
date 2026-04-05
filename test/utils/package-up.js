@@ -8,7 +8,7 @@
  */
 
 import { resolve as resolvePath } from 'path';
-import { expect, beforeAll, afterAll, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect, vi } from 'vitest';
 import packageUp from '../../lib/utils/package-up.js';
 
 describe('package-up', function() {

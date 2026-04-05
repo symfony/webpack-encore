@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect, vi } from 'vitest';
 import getVueVersion from '../../lib/utils/get-vue-version.js';
 
 import packageHelper from '../../lib/package-helper.js';

@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect } from 'vitest'
 import { fileURLToPath } from 'url';
 import path from 'path';
 import * as testSetup from './helpers/setup.js';
@@ -2100,13 +2100,13 @@ module.exports = {
             });
         });
 
-        it('Symfony - Stimulus standard app is built correctly', function(done) {
+        it('Symfony - Stimulus standard app is built correctly', function({ skip }) {
             const appDir = testSetup.createTestAppDir();
 
             const version = packageHelper.getPackageVersion('@symfony/stimulus-bridge');
             if (!semver.satisfies(version, '^3.0.0')) {
                 // we support the old version, but it's not tested
-                this.skip();
+                skip()
 
                 return;
             }

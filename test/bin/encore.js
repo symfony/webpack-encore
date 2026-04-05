@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect, beforeAll, afterAll, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect, vi } from 'vitest';
 import path from 'path';
 import * as testSetup from '../helpers/setup.js';
 import fs from 'fs-extra';
