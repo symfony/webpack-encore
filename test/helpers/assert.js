@@ -9,7 +9,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import { describe, it, expect } from 'vitest';
+import { expect } from 'vitest';
 import regexEscaper from '../../lib/utils/regexp-escaper.js';
 
 const loadManifest = function(webpackConfig) {

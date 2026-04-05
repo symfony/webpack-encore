@@ -33,7 +33,7 @@ describe('package-up', function() {
             cwd: resolvePath(import.meta.dirname, '../../fixtures/copy'),
             expectedPath: resolvePath(import.meta.dirname, '../../package.json'),
         },
-    ])('$test', ({ cwd, expectedPath}) => {
+    ])('$test', ({ cwd, expectedPath }) => {
         const path = packageUp({ cwd });
 
         expect(path).toBe(expectedPath);

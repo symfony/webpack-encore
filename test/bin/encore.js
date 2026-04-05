@@ -198,6 +198,9 @@ export default await Encore.getWebpackConfig();
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
         const { err, stdout, stderr } = await exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir });
+        if (err) {
+            throw new Error(`Error executing encore: ${err} ${stderr} ${stdout}`);
+        }
         expect(err).not.toBeNull();
         expect(stdout).toContain('is not a recognized property');
         expect(stdout).toContain('or method');

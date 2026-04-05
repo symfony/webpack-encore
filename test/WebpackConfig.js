@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import WebpackConfig from '../lib/WebpackConfig.js';
 import RuntimeConfig from '../lib/config/RuntimeConfig.js';
 import path from 'path';

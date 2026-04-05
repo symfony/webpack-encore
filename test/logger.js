@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import context from '../lib/context.js';
 context.runtimeConfig = {};
 import logger from '../lib/logger.js';
