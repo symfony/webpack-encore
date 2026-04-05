@@ -12,6 +12,9 @@
                     "@symfony/mock-module/dist/style.css": true
                 }
             }
+        },
+        "entrypoints": {
+            "@symfony/mock-module/entrypoint": "@symfony/mock-module/dist/entrypoint.js"
         }
     }
 }
