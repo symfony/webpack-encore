@@ -68,7 +68,7 @@ export function createWebpackConfig(testAppDir, outputDirName = '', command, arg
     return config;
 }
 
-export async function runWebpack(webpackConfig, callback, allowCompilationError = false) {
+export async function runWebpack(webpackConfig, { allowCompilationError = false } = {}) {
     const stdoutWrite = process.stdout.write;
     const stdOutContents = [];
 
@@ -82,7 +82,7 @@ export async function runWebpack(webpackConfig, callback, allowCompilationError 
 
         const webpackConfigObj = await configGenerator(webpackConfig);
         const compiler = webpack(webpackConfigObj);
-        await new Promise((resolve, reject) => {
+        return await new Promise((resolve, reject) => {
             compiler.run((err, stats) => {
                 // Restore stdout
                 process.stdout.write = stdoutWrite;
@@ -110,13 +110,11 @@ export async function runWebpack(webpackConfig, callback, allowCompilationError 
                     console.warn(info.warnings);
                 }
 
-                try {
-                    const result = callback(assertUtil(webpackConfig), stats, stdOutContents.join('\n'));
-                    // Support async callbacks
-                    Promise.resolve(result).then(resolve, reject);
-                } catch (callbackError) {
-                    reject(callbackError);
-                }
+                resolve({
+                    webpackAssert: assertUtil(webpackConfig),
+                    stats,
+                    output: stdOutContents.join('\n')
+                });
             });
         });
     } catch (e) {
