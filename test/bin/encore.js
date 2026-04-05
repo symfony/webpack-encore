@@ -218,13 +218,15 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const port = await getPort();
+
         const abortController = new AbortController();
         setTimeout(() => {
             abortController.abort();
         }, 5000);
 
         try {
-            await exec(`node ${binPath} dev-server --context=${testDir} --port=${await getPort()}`, {
+            await exec(`node ${binPath} dev-server --context=${testDir} --port=${port}`, {
                 cwd: testDir,
                 env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
                 signal: abortController.signal,
@@ -238,16 +240,16 @@ export default await Encore.getWebpackConfig();
             expect(err.stdout).toContain('webpack compiled successfully');
 
             expect(err.stderr).toContain('[webpack-dev-server] Project is running at:');
-            expect(err.stderr).toContain('[webpack-dev-server] Loopback: http://localhost:8080/');
+            expect(err.stderr).toContain(`[webpack-dev-server] Loopback: http://localhost:${port}/`);
             expect(err.stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
 
             // Verify entrypoints.json contains http:// URLs
             const entrypoints = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8'));
-            expect(entrypoints.entrypoints.main.js[0]).toContain('http://localhost:8080/build/');
+            expect(entrypoints.entrypoints.main.js[0]).toContain(`http://localhost:${port}/build/`);
 
             // Verify manifest.json contains http:// URLs
             const manifest = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8'));
-            expect(manifest['build/main.js']).toContain('http://localhost:8080/build/');
+            expect(manifest['build/main.js']).toContain(`http://localhost:${port}/build/`);
         }
     });
 
@@ -279,13 +281,15 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const port = await getPort();
+
         const abortController = new AbortController();
         setTimeout(() => {
             abortController.abort();
         }, 5000);
 
         try {
-            await exec(`node ${binPath} dev-server --server-type https --context=${testDir} --port=${await getPort()}`, {
+            await exec(`node ${binPath} dev-server --server-type https --context=${testDir} --port=${port}`, {
                 cwd: testDir,
                 env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
                 signal: abortController.signal,
@@ -300,16 +304,16 @@ export default await Encore.getWebpackConfig();
             expect(err.stdout).toContain('webpack compiled successfully');
 
             expect(err.stderr).toContain('[webpack-dev-server] Project is running at:');
-            expect(err.stderr).toContain('[webpack-dev-server] Loopback: https://localhost:8080/');
+            expect(err.stderr).toContain(`[webpack-dev-server] Loopback: https://localhost:${port}/`);
             expect(err.stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
 
             // Verify entrypoints.json contains https:// URLs
             const entrypoints = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8'));
-            expect(entrypoints.entrypoints.main.js[0]).toContain('https://localhost:8080/build/');
+            expect(entrypoints.entrypoints.main.js[0]).toContain(`https://localhost:${port}/build/`);
 
             // Verify manifest.json contains https:// URLs
             const manifest = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8'));
-            expect(manifest['build/main.js']).toContain('https://localhost:8080/build/');
+            expect(manifest['build/main.js']).toContain(`https://localhost:${port}/build/`);
         }
     });
 
@@ -352,8 +356,10 @@ export default await Encore.getWebpackConfig();
             );
 
             const binPath = path.resolve(projectDir, 'bin', 'encore.js');
+            const port = await getPort();
+
             try {
-                await exec(`node ${binPath} dev-server --context=${testDir} --port=${await getPort()}`, {
+                await exec(`node ${binPath} dev-server --context=${testDir} --port=${port}`, {
                     cwd: testDir,
                     env: Object.assign({}, process.env, { NO_COLOR: 'true' })
                 });
