@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import parseArgv from '../../lib/config/parse-runtime.js';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import * as testSetup from '../helpers/setup.js';

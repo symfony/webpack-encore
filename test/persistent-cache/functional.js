@@ -8,7 +8,7 @@
  */
 
 import { use } from 'chai';
-import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 use(require('chai-fs'));

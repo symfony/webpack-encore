@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import getFileExtension from '../../lib/utils/get-file-extension.js';
 
 describe('get-file-extension', function() {

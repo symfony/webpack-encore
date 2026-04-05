@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { afterAll, afterEach, beforeAll, beforeEach, describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import transformFactory from '../../../lib/friendly-errors/transformers/missing-loader.js';
 import RuntimeConfig from '../../../lib/config/RuntimeConfig.js';
 import WebpackConfig from '../../../lib/WebpackConfig.js';
