@@ -7,7 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { vi, afterEach } from 'vitest';
+import { vi, beforeEach, afterEach } from 'vitest';
+import logger from '../lib/logger.js';
+
+beforeEach(() => {
+    logger.reset();
+});
 
 afterEach(() => {
     vi.restoreAllMocks();

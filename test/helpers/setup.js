@@ -76,13 +76,15 @@ export function createWebpackConfig(testAppDir, outputDirName = '', command, arg
  */
 export async function runWebpack(webpackConfig, { allowCompilationError = false } = {}) {
     const stdoutWrite = process.stdout.write;
+    const consoleLog = console.log;
+    const consoleWarn = console.warn;
     const stdOutContents = [];
 
     try {
         // Mute stdout
-        process.stdout.write = (message) => {
-            stdOutContents.push(message);
-        };
+        process.stdout.write = (message) => stdOutContents.push(message);
+        console.log = (message) => stdOutContents.push(message);
+        console.warn = (message) => stdOutContents.push(message);
 
         validator(webpackConfig);
 
@@ -92,6 +94,8 @@ export async function runWebpack(webpackConfig, { allowCompilationError = false 
             compiler.run((err, stats) => {
                 // Restore stdout
                 process.stdout.write = stdoutWrite;
+                console.log = consoleLog;
+                console.warn = consoleWarn;
 
                 if (err) {
                     console.error(err.stack || err);

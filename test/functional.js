@@ -17,7 +17,7 @@ import packageHelper from '../lib/package-helper.js';
 import semver from 'semver';
 import puppeteer from 'puppeteer';
 import { createRequire } from 'module';
-import logger from '../lib/logger.js';
+import { assertWarning } from './helpers/logger-assert.js';
 
 const require = createRequire(import.meta.url);
 chai.use(require('chai-fs'));
@@ -2326,8 +2326,8 @@ module.exports = {
                     'manifest.json'
                 ]);
 
-            expect(logger.getMessages().warning[0]).toContain('should be set to an existing directory but "./foo" does not seem to exist');
-            expect(logger.getMessages().warning[1]).toContain('should be set to an existing directory but "./images/symfony_logo.png" seems to be a file');
+            assertWarning('should be set to an existing directory but "./foo" does not seem to exist');
+            assertWarning('should be set to an existing directory but "./images/symfony_logo.png" seems to be a file');
         });
 
         it('Copy with a custom context', async function() {
