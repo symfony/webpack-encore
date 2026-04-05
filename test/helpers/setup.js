@@ -15,7 +15,7 @@ import fs from 'fs-extra';
 import httpServer from 'http-server';
 import configGenerator from '../../lib/config-generator.js';
 import validator from '../../lib/config/validator.js';
-import assertUtil from './assert.js';
+import assertUtil, { Assert } from './assert.js';
 
 const tmpDir = path.join(import.meta.dirname, '../', '../', 'test_tmp');
 const testFixturesDir = path.join(import.meta.dirname, '../', '../', 'fixtures');
@@ -68,6 +68,12 @@ export function createWebpackConfig(testAppDir, outputDirName = '', command, arg
     return config;
 }
 
+/**
+ * @param webpackConfig
+ * @param root0
+ * @param root0.allowCompilationError
+ * @returns {Promise<{ webpackAssert: Assert, stats: import('webpack').Stats, output: string }>}
+ */
 export async function runWebpack(webpackConfig, { allowCompilationError = false } = {}) {
     const stdoutWrite = process.stdout.write;
     const stdOutContents = [];
@@ -111,7 +117,7 @@ export async function runWebpack(webpackConfig, { allowCompilationError = false 
                 }
 
                 resolve({
-                    webpackAssert: assertUtil(webpackConfig),
+                    webpackAssert: new Assert(webpackConfig),
                     stats,
                     output: stdOutContents.join('\n')
                 });

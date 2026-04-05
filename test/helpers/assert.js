@@ -66,7 +66,7 @@ const convertFilenameToMatcher = function(filename) {
     );
 };
 
-class Assert {
+export class Assert {
     /**
      * @param {import('../../lib/WebpackConfig.js').default} webpackConfig
      */
@@ -270,8 +270,4 @@ class Assert {
             throw new Error(`Files ${Object.keys(expectedFileStrings).join(', ')} were expected to be found in the directory but were not. Actual files: ${actualFiles.join(', ')}`);
         }
     }
-}
-
-export default function(webpackConfig) {
-    return new Assert(webpackConfig);
 }

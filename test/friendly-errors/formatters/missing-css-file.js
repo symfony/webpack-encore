@@ -18,7 +18,7 @@ describe('formatters/missing-css-file', function() {
             expect(actualErrors).to.be.empty;
         });
 
-        it(' filters errors that dont have the correct type', function() {
+        it('filters errors that dont have the correct type', function() {
             const errors = [
                 { type: 'missing-css-file', file: 'some-file.sass', ref: '../images/foo.png' },
                 { type: 'other-type', file: 'other-type.sass' }
