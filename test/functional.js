@@ -1396,11 +1396,10 @@ export default {
         });
 
         try {
-            await testSetup.runWebpack(config, () => {
-            });
+            await testSetup.runWebpack(config);
             // If we get here, webpack didn't throw — fail the test
             expect.fail('Expected runWebpack to throw "Cannot find the" error');
-        } catch (error) {
+        } catch (err) {
             // Cannot find the "/path/to/tsconfig.json" file
             expect(error.message).toContain('Cannot find the');
         }

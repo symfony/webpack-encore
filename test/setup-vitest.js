@@ -7,11 +7,13 @@
  * file that was distributed with this source code.
  */
 
-// Setup for Vitest - can be extended if needed
-import { afterEach, vi } from 'vitest';
+import { vi, beforeAll, afterEach } from 'vitest';
+import { emptyTmpDir } from './helpers/setup.js';
 
-// Automatically restore all mocks after each test
+beforeAll(() => {
+    emptyTmpDir();
+});
+
 afterEach(() => {
     vi.restoreAllMocks();
 });
-
