@@ -18,6 +18,12 @@ import semver from 'semver';
 import puppeteer from 'puppeteer';
 import { createRequire } from 'module';
 import { assertWarning } from './helpers/logger-assert.js';
+import packageJson from '../package.json' with { type: 'json' };
+
+const isLowestDependencies = packageJson.config && packageJson.config["lowest-dependencies"] === true;
+const chunkVueJs = isLowestDependencies
+    ? 'vendors-node_modules_pnpm_vue_3_2_14_node_modules_vue_dist_vue_runtime_esm-bundler_js.js'
+    : 'vendors-node_modules_pnpm_vue_3_5_32_typescript_5_9_3_node_modules_vue_dist_vue_runtime_esm-b-4f542a.js';
 
 const require = createRequire(import.meta.url);
 chai.use(require('chai-fs'));
@@ -217,7 +223,7 @@ describe('Functional tests using webpack', function() {
                     main: {
                         js: [
                             '/build/runtime.js',
-                            '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            '/build/' + chunkVueJs,
                             '/build/css_roboto_font_css.js',
                             '/build/main.js'
                         ],
@@ -226,7 +232,7 @@ describe('Functional tests using webpack', function() {
                     other: {
                         js: [
                             '/build/runtime.js',
-                            '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            '/build/' + chunkVueJs,
                             '/build/css_roboto_font_css.js',
                             '/build/other.js'
                         ],
@@ -756,33 +762,33 @@ describe('Functional tests using webpack', function() {
             // Vue.js code should be present in common.js but not in page1.js/page2.js
             webpackAssert.assertOutputFileContains(
                 'vuejs.js',
-                '/***/ "../../node_modules/@vue/'
+                '/***/ "../../node_modules/.pnpm/@vue+'
             );
 
             webpackAssert.assertOutputFileDoesNotContain(
                 'page1.js',
-                '/***/ "../../node_modules/@vue/'
+                '/***/ "../../node_modules/.pnpm/@vue+'
             );
 
             webpackAssert.assertOutputFileDoesNotContain(
                 'page2.js',
-                '/***/ "../../node_modules/@vue/'
+                '/***/ "../../node_modules/.pnpm/@vue+'
             );
 
             // Preact code should be present in page2.js only
             webpackAssert.assertOutputFileDoesNotContain(
                 'vuejs.js',
-                '/***/ "../../node_modules/preact/'
+                '/***/ "../../node_modules/.pnpm/preact@'
             );
 
             webpackAssert.assertOutputFileDoesNotContain(
                 'page1.js',
-                '/***/ "../../node_modules/preact/'
+                '/***/ "../../node_modules/.pnpm/preact@'
             );
 
             webpackAssert.assertOutputFileContains(
                 'page2.js',
-                '/***/ "../../node_modules/preact/'
+                '/***/ "../../node_modules/.pnpm/preact@'
             );
 
             // Check if each entrypoint is associated to the right chunks
@@ -837,33 +843,33 @@ describe('Functional tests using webpack', function() {
         // Vue.js code should be present in common.js but not in page1.js/page2.js
         webpackAssert.assertOutputFileContains(
             'common.js',
-            '/***/ "../../node_modules/@vue/'
+            '/***/ "../../node_modules/.pnpm/@vue+'
         );
 
         webpackAssert.assertOutputFileDoesNotContain(
             'page1.js',
-            '/***/ "../../node_modules/@vue/'
+            '/***/ "../../node_modules/.pnpm/@vue+'
         );
 
         webpackAssert.assertOutputFileDoesNotContain(
             'page2.js',
-            '/***/ "../../node_modules/@vue/'
+            '/***/ "../../node_modules/.pnpm/@vue+'
         );
 
         // Preact code should be present in common.js but not in page1.js/page2.js
         webpackAssert.assertOutputFileContains(
             'common.js',
-            '/***/ "../../node_modules/preact/'
+            '/***/ "../../node_modules/.pnpm/preact@'
         );
 
         webpackAssert.assertOutputFileDoesNotContain(
             'page1.js',
-            '/***/ "../../node_modules/preact/'
+            '/***/ "../../node_modules/.pnpm/preact@'
         );
 
         webpackAssert.assertOutputFileDoesNotContain(
             'page2.js',
-            '/***/ "../../node_modules/preact/'
+            '/***/ "../../node_modules/.pnpm/preact@'
         );
 
         // Check if each entrypoint is associated to the right chunks
@@ -1997,19 +2003,23 @@ module.exports = {
         config.addEntry('main', './stimulus/assets/app.js');
         config.enableStimulusBridge(import.meta.dirname + '/../fixtures/stimulus/assets/controllers.json');
 
+        const chunkStimulusBridgeMock =             isLowestDependencies
+            ? 'node_modules_pnpm_symfony_mock-module_file_fixtures_stimulus_mock-module_node_modules_symfony-99479d.js'
+            : 'node_modules_symfony_mock-module_dist_controller_js.js'
+
         const { webpackAssert } = await testSetup.runWebpack(config);
         expect(config.outputPath).to.be.a.directory().with.deep.files([
             'main.js',
             'main.css',
             'manifest.json',
-            'node_modules_symfony_mock-module_dist_controller_js.js',
+            chunkStimulusBridgeMock,
             'entrypoints.json',
             'runtime.js',
         ]);
 
         // test controllers and style are shipped
         webpackAssert.assertOutputFileContains('main.js', 'app-controller');
-        webpackAssert.assertOutputFileContains('node_modules_symfony_mock-module_dist_controller_js.js', 'mock-module-controller');
+        webpackAssert.assertOutputFileContains(chunkStimulusBridgeMock, 'mock-module-controller');
         webpackAssert.assertOutputFileContains('main.css', 'body {}');
     });
 
@@ -2512,7 +2522,7 @@ module.exports = {
                     main: {
                         js: [
                             '/build/runtime.js',
-                            '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            '/build/' + chunkVueJs,
                             '/build/css_roboto_font_css.js',
                             '/build/main.js'
                         ],
@@ -2521,7 +2531,7 @@ module.exports = {
                     other: {
                         js: [
                             '/build/runtime.js',
-                            '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            '/build/' + chunkVueJs,
                             '/build/css_roboto_font_css.js',
                             '/build/other.js'
                         ],
@@ -2531,7 +2541,7 @@ module.exports = {
             });
 
             // make split chunks are correct in manifest
-            webpackAssert.assertManifestKeyExists('build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js');
+            webpackAssert.assertManifestKeyExists('build/' + chunkVueJs);
         });
 
         it('Custom public path does affect entrypoints.json but does not affect manifest.json', async function() {
@@ -2551,7 +2561,7 @@ module.exports = {
                     main: {
                         js: [
                             'http://localhost:8080/build/runtime.js',
-                            'http://localhost:8080/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            'http://localhost:8080/build/' + chunkVueJs,
                             'http://localhost:8080/build/css_roboto_font_css.js',
                             'http://localhost:8080/build/main.js'
                         ],
@@ -2560,7 +2570,7 @@ module.exports = {
                     other: {
                         js: [
                             'http://localhost:8080/build/runtime.js',
-                            'http://localhost:8080/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            'http://localhost:8080/build/' + chunkVueJs,
                             'http://localhost:8080/build/css_roboto_font_css.js',
                             'http://localhost:8080/build/other.js'
                         ],
@@ -2570,7 +2580,7 @@ module.exports = {
             });
 
             // make split chunks are correct in manifest
-            webpackAssert.assertManifestKeyExists('custom_prefix/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js');
+            webpackAssert.assertManifestKeyExists('custom_prefix/' + chunkVueJs);
         });
 
         it('Subdirectory public path affects entrypoints.json but does not affect manifest.json', async function() {
@@ -2590,7 +2600,7 @@ module.exports = {
                     main: {
                         js: [
                             '/subdirectory/build/runtime.js',
-                            '/subdirectory/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            '/subdirectory/build/' + chunkVueJs,
                             '/subdirectory/build/css_roboto_font_css.js',
                             '/subdirectory/build/main.js'
                         ],
@@ -2599,7 +2609,7 @@ module.exports = {
                     other: {
                         js: [
                             '/subdirectory/build/runtime.js',
-                            '/subdirectory/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                            '/subdirectory/build/' + chunkVueJs,
                             '/subdirectory/build/css_roboto_font_css.js',
                             '/subdirectory/build/other.js'
                         ],
@@ -2609,7 +2619,7 @@ module.exports = {
             });
 
             // make split chunks are correct in manifest
-            webpackAssert.assertManifestKeyExists('custom_prefix/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js');
+            webpackAssert.assertManifestKeyExists('custom_prefix/' + chunkVueJs);
         });
 
         it('Use splitChunks in production mode', async function() {
@@ -2655,16 +2665,16 @@ module.exports = {
             webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                 entrypoints: {
                     main: {
-                        js: ['/build/runtime.js', '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js', '/build/main.js']
+                        js: ['/build/runtime.js', '/build/' + chunkVueJs, '/build/main.js']
                     },
                     other: {
-                        js: ['/build/runtime.js', '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js', '/build/js_no_require_js.js', '/build/other.js']
+                        js: ['/build/runtime.js', '/build/' + chunkVueJs, '/build/js_no_require_js.js', '/build/other.js']
                     }
                 }
             });
 
             // make split chunks are correct in manifest
-            webpackAssert.assertManifestKeyExists('build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js');
+            webpackAssert.assertManifestKeyExists('build/' + chunkVueJs);
             webpackAssert.assertManifestKeyExists('build/js_no_require_js.js');
         });
 
@@ -2872,7 +2882,7 @@ module.exports = {
                 '/build/css_roboto_font_css.js',
                 '/build/css_roboto_font_css.css',
                 '/build/other.js',
-                '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                '/build/' + chunkVueJs,
             ];
 
             expectedFilesWithHashes.forEach((file) => {
@@ -2928,7 +2938,7 @@ module.exports = {
                 '/build/css_roboto_font_css.js',
                 '/build/css_roboto_font_css.css',
                 '/build/other.js',
-                '/build/vendors-node_modules_vue_dist_vue_runtime_esm-bundler_js.js',
+                '/build/' + chunkVueJs,
             ];
 
             expectedFilesWithHashes.forEach((file) => {

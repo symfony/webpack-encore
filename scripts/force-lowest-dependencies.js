@@ -99,6 +99,9 @@ for (const [name, version] of devDependencyVersions) {
     packageInfo.devDependencies[name] = version;
 }
 
+packageInfo.config = packageInfo.config || {};
+packageInfo.config['lowest-dependencies'] = true;
+
 await fs.writeFile('package.json', JSON.stringify(packageInfo, null, 2));
 
 console.log('Updated package.json file with lowest dependency versions: ');

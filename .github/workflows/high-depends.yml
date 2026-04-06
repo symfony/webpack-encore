@@ -13,27 +13,35 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                os: [ubuntu-latest, windows-latest]
+                os: [ubuntu-latest]
                 node-versions: ['22.13.0', '22', '24']
+                include:
+                    - node-versions: '22.13.0'
+                      os: windows-latest
+                    - node-versions: '24'
+                      os: windows-latest
 
         steps:
             -   name: Checkout
                 uses: actions/checkout@v4
 
+            -   name: Install pnpm
+                uses: pnpm/action-setup@v5
+
             -   name: Node ${{matrix.node-versions}}
                 uses: actions/setup-node@v4
                 with:
                     node-version: ${{matrix.node-versions}}
-                    cache: yarn
+                    cache: pnpm
 
             -   name: Remove Lock File
-                run: rm yarn.lock
+                run: rm pnpm-lock.yaml
 
-            -   name: Install Yarn Dependencies
-                run: yarn install
+            -   name: Install Node.js Dependencies
+                run: pnpm install
 
             -   name: Show Installed Versions
-                run: yarn list --depth=0
+                run: pnpm list --depth=0
 
             -   name: Run Tests
-                run: yarn test
+                run: pnpm test

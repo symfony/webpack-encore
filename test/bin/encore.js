@@ -319,13 +319,13 @@ export default await Encore.getWebpackConfig();
 
     describe('Without webpack-dev-server installed', function() {
         beforeAll(async function() {
-            await exec('yarn remove webpack-dev-server --dev', { cwd: projectDir });
+            await exec('pnpm remove webpack-dev-server', { cwd: projectDir });
         });
 
         afterAll(async function() {
             // Re-install webpack-dev-server and ensure the project is in a clean state
             await exec('git checkout package.json', { cwd: projectDir });
-            await exec('yarn install', { cwd: projectDir });
+            await exec('pnpm install --no-frozen-lockfile', { cwd: projectDir });
         }, 20000);
 
         it('Throw an error when trying to use the webpack-dev-server if not installed', async function() {

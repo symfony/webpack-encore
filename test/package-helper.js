@@ -95,7 +95,7 @@ describe('package-helper', function() {
                 { name: 'foo' }, { name: 'bar', version: '^3.0' }
             ]);
 
-            expect(packageRecommendations.installCommand).toContain('yarn add foo bar@^3.0');
+            expect(packageRecommendations.installCommand).toContain('pnpm add foo bar@^3.0');
         });
 
         it('Recommends correct install on 0 version', function() {
@@ -104,7 +104,7 @@ describe('package-helper', function() {
                 { name: 'bar' }
             ]);
 
-            expect(packageRecommendations.installCommand).toContain('yarn add foo@^0.1.0 bar');
+            expect(packageRecommendations.installCommand).toContain('pnpm add foo@^0.1.0 bar');
         });
 
         it('Recommends correct install with a more complex constraint', function() {
@@ -113,7 +113,7 @@ describe('package-helper', function() {
                 { name: 'bar' }
             ]);
 
-            expect(packageRecommendations.installCommand).toContain('yarn add foo@^8.0 bar');
+            expect(packageRecommendations.installCommand).toContain('pnpm add foo@^8.0 bar');
         });
 
         it('Recommends correct install with a more complex constraint (spaces around ||)', function() {
@@ -122,7 +122,7 @@ describe('package-helper', function() {
                 { name: 'bar' }
             ]);
 
-            expect(packageRecommendations.installCommand).toContain('yarn add foo@^8.0 bar');
+            expect(packageRecommendations.installCommand).toContain('pnpm add foo@^8.0 bar');
         });
 
         it('Recommends correct install with alternative packages', function() {
@@ -132,7 +132,7 @@ describe('package-helper', function() {
                 [{ name: 'qux', version: '^1.0' }, { name: 'quux', version: '^2.0' }]
             ]);
 
-            expect(packageRecommendations.installCommand).toContain('yarn add foo@^8.0 bar qux@^1.0');
+            expect(packageRecommendations.installCommand).toContain('pnpm add foo@^8.0 bar qux@^1.0');
         });
     });
 
