@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect, afterAll } from 'vitest';
 import packageHelper from '../lib/package-helper.js';
 import path from 'path';
 import process from 'process';
@@ -18,7 +18,7 @@ describe('package-helper', function() {
     const baseCwd = process.cwd();
 
     describe('recommended install command is based on the existing lock files', function() {
-        after(function() {
+        afterAll(function() {
             process.chdir(baseCwd);
         });
 
@@ -27,8 +27,8 @@ describe('package-helper', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
-            expect(packageRecommendations.installCommand).to.contain('npm install foo bar');
-            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+            expect(packageRecommendations.installCommand).toContain('npm install foo bar');
+            expect(stripAnsi(packageRecommendations.message)).toContain('foo & bar');
         });
 
         it('missing packages with package-lock.json only', function() {
@@ -36,8 +36,8 @@ describe('package-helper', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
-            expect(packageRecommendations.installCommand).to.contain('npm install foo bar');
-            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+            expect(packageRecommendations.installCommand).toContain('npm install foo bar');
+            expect(stripAnsi(packageRecommendations.message)).toContain('foo & bar');
         });
 
         it('missing packages with yarn.lock only', function() {
@@ -45,8 +45,8 @@ describe('package-helper', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
-            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).toContain('foo & bar');
         });
 
         it('missing packages with pnpm-lock.yaml only', function() {
@@ -54,8 +54,8 @@ describe('package-helper', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
-            expect(packageRecommendations.installCommand).to.contain('pnpm add foo bar');
-            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+            expect(packageRecommendations.installCommand).toContain('pnpm add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).toContain('foo & bar');
         });
 
         it('missing packages with both package-lock.json and yarn.lock', function() {
@@ -63,8 +63,8 @@ describe('package-helper', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo bar');
-            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).toContain('foo & bar');
         });
 
         it('missing packages with package-lock.json, yarn.lock and pnpm-lock.yaml', function() {
@@ -72,8 +72,8 @@ describe('package-helper', function() {
             const packageRecommendations = packageHelper.getMissingPackageRecommendations([
                 { name: 'foo' }, { name: 'webpack' }, { name: 'bar' }
             ]);
-            expect(packageRecommendations.installCommand).to.contain('pnpm add foo bar');
-            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar');
+            expect(packageRecommendations.installCommand).toContain('pnpm add foo bar');
+            expect(stripAnsi(packageRecommendations.message)).toContain('foo & bar');
         });
 
         it('missing packages with alternative packages', function() {
@@ -84,8 +84,8 @@ describe('package-helper', function() {
                 [{ name: 'qux' }, { name: 'corge' }, { name: 'grault' }],
                 [{ name: 'quux' }, { name: 'webpack' }],
             ]);
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo bar qux');
-            expect(stripAnsi(packageRecommendations.message)).to.contain('foo & bar (or baz) & qux (or corge or grault)');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo bar qux');
+            expect(stripAnsi(packageRecommendations.message)).toContain('foo & bar (or baz) & qux (or corge or grault)');
         });
     });
 
@@ -95,7 +95,7 @@ describe('package-helper', function() {
                 { name: 'foo' }, { name: 'bar', version: '^3.0' }
             ]);
 
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo bar@^3.0');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo bar@^3.0');
         });
 
         it('Recommends correct install on 0 version', function() {
@@ -104,7 +104,7 @@ describe('package-helper', function() {
                 { name: 'bar' }
             ]);
 
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo@^0.1.0 bar');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo@^0.1.0 bar');
         });
 
         it('Recommends correct install with a more complex constraint', function() {
@@ -113,7 +113,7 @@ describe('package-helper', function() {
                 { name: 'bar' }
             ]);
 
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo@^8.0 bar');
         });
 
         it('Recommends correct install with a more complex constraint (spaces around ||)', function() {
@@ -122,7 +122,7 @@ describe('package-helper', function() {
                 { name: 'bar' }
             ]);
 
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo@^8.0 bar');
         });
 
         it('Recommends correct install with alternative packages', function() {
@@ -132,7 +132,7 @@ describe('package-helper', function() {
                 [{ name: 'qux', version: '^1.0' }, { name: 'quux', version: '^2.0' }]
             ]);
 
-            expect(packageRecommendations.installCommand).to.contain('yarn add foo@^8.0 bar qux@^1.0');
+            expect(packageRecommendations.installCommand).toContain('yarn add foo@^8.0 bar qux@^1.0');
         });
     });
 
@@ -153,7 +153,7 @@ describe('package-helper', function() {
             ]);
 
             expect(versionProblems).to.have.length(2);
-            expect(versionProblems[0]).to.contain('is too old');
+            expect(versionProblems[0]).toContain('is too old');
         });
 
         it('Check package with a version too new', function() {
@@ -163,7 +163,7 @@ describe('package-helper', function() {
             ]);
 
             expect(versionProblems).to.have.length(2);
-            expect(versionProblems[0]).to.contain('is too new');
+            expect(versionProblems[0]).toContain('is too new');
         });
 
         it('Missing "version" key is ok', function() {
@@ -204,7 +204,7 @@ describe('package-helper', function() {
             ];
 
             const actualPackages = packageHelper.addPackagesVersionConstraint(inputPackages);
-            expect(JSON.stringify(actualPackages)).to.equal(JSON.stringify(expectedPackages));
+            expect(JSON.stringify(actualPackages)).toBe(JSON.stringify(expectedPackages));
         });
     });
 });

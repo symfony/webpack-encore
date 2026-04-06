@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import cssLoader from '../../lib/loaders/css.js';
@@ -26,9 +26,9 @@ describe('loaders/css', function() {
         config.enableSourceMaps(true);
 
         const actualLoaders = cssLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.sourceMap).to.be.true;
-        expect(actualLoaders[0].options.modules).to.be.false;
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.sourceMap).toBe(true);
+        expect(actualLoaders[0].options.modules).toBe(false);
     });
 
     it('getLoaders() for production', function() {
@@ -37,9 +37,9 @@ describe('loaders/css', function() {
         config.runtimeConfig.environment = 'production';
 
         const actualLoaders = cssLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.sourceMap).to.be.false;
-        expect(actualLoaders[0].options.modules).to.be.false;
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.sourceMap).toBe(false);
+        expect(actualLoaders[0].options.modules).toBe(false);
     });
 
     it('getLoaders() with options callback', function() {
@@ -51,10 +51,10 @@ describe('loaders/css', function() {
         });
 
         const actualLoaders = cssLoader.getLoaders(config);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.foo).to.be.true;
-        expect(actualLoaders[0].options.url).to.be.false;
-        expect(actualLoaders[0].options.modules).to.be.false;
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.foo).toBe(true);
+        expect(actualLoaders[0].options.url).toBe(false);
+        expect(actualLoaders[0].options.modules).toBe(false);
     });
 
     it('getLoaders() with CSS modules enabled', function() {
@@ -66,10 +66,10 @@ describe('loaders/css', function() {
         });
 
         const actualLoaders = cssLoader.getLoaders(config, true);
-        expect(actualLoaders).to.have.lengthOf(1);
-        expect(actualLoaders[0].options.foo).to.be.true;
-        expect(actualLoaders[0].options.url).to.be.false;
-        expect(actualLoaders[0].options.modules).to.deep.equals({
+        expect(actualLoaders).toHaveLength(1);
+        expect(actualLoaders[0].options.foo).toBe(true);
+        expect(actualLoaders[0].options.url).toBe(false);
+        expect(actualLoaders[0].options.modules).toEqual({
             localIdentName: '[local]_[hash:base64:5]',
         });
     });
@@ -82,8 +82,8 @@ describe('loaders/css', function() {
 
             const actualLoaders = cssLoader.getLoaders(config);
             // css-loader & postcss-loader
-            expect(actualLoaders).to.have.lengthOf(2);
-            expect(actualLoaders[1].options.sourceMap).to.be.true;
+            expect(actualLoaders).toHaveLength(2);
+            expect(actualLoaders[1].options.sourceMap).toBe(true);
         });
 
         it('with options callback', function() {
@@ -97,9 +97,9 @@ describe('loaders/css', function() {
 
             const actualLoaders = cssLoader.getLoaders(config);
             // css-loader & postcss-loader
-            expect(actualLoaders).to.have.lengthOf(2);
-            expect(actualLoaders[1].options.sourceMap).to.be.true;
-            expect(actualLoaders[1].options.config.path).to.equal('config/postcss.config.js');
+            expect(actualLoaders).toHaveLength(2);
+            expect(actualLoaders[1].options.sourceMap).toBe(true);
+            expect(actualLoaders[1].options.config.path).toBe('config/postcss.config.js');
         });
 
         it('with options callback that returns an object', function() {
@@ -116,8 +116,8 @@ describe('loaders/css', function() {
 
             const actualLoaders = cssLoader.getLoaders(config);
             // css-loader & postcss-loader
-            expect(actualLoaders).to.have.lengthOf(2);
-            expect(actualLoaders[1].options).to.deep.equal({ foo: true });
+            expect(actualLoaders).toHaveLength(2);
+            expect(actualLoaders[1].options).toEqual({ foo: true });
         });
     });
 });

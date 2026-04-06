@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { vi, describe, it, expect } from 'vitest';
 import getVueVersion from '../../lib/utils/get-vue-version.js';
-import sinon from 'sinon';
+
 import packageHelper from '../../lib/package-helper.js';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
@@ -24,60 +24,55 @@ const createWebpackConfig = function() {
 };
 
 describe('get-vue-version', function() {
-    let getPackageVersionStub = null;
-
-    before(function() {
-        getPackageVersionStub = sinon.stub(packageHelper, 'getPackageVersion');
-    });
-
-    after(function() {
-        packageHelper.getPackageVersion.restore();
-    });
-
     it('returns the value configured in Webpack.config.js', function() {
         const config = createWebpackConfig();
         config.vueOptions.version = 4;
 
-        expect(getVueVersion(config)).to.equal(4);
+        expect(getVueVersion(config)).toBe(4);
     });
 
     it('returns the default recommended version when vue is not installed', function() {
         const config = createWebpackConfig();
-        getPackageVersionStub
-            .callsFake(() => null);
+        const getPackageVersionStub = vi.spyOn(packageHelper, 'getPackageVersion')
+            .mockImplementation(() => null);
 
-        expect(getVueVersion(config)).to.equal(3);
+        expect(getVueVersion(config)).toBe(3);
+        getPackageVersionStub.mockRestore();
     });
 
     it('throw an error when Vue 2 is installed', function() {
         const config = createWebpackConfig();
-        getPackageVersionStub
-            .callsFake(() => '2.2.4');
+        const getPackageVersionStub = vi.spyOn(packageHelper, 'getPackageVersion')
+            .mockImplementation(() => '2.2.4');
 
-        expect(() => getVueVersion(config)).to.throw('The support for Vue 2 has been removed.');
+        expect(() => getVueVersion(config)).toThrow(/The support for Vue 2 has been removed/);
+        getPackageVersionStub.mockRestore();
     });
 
     it('returns 3 when Vue 3 beta is installed', function() {
         const config = createWebpackConfig();
-        getPackageVersionStub
-            .callsFake(() => '3.0.0-beta.9');
+        const getPackageVersionStub = vi.spyOn(packageHelper, 'getPackageVersion')
+            .mockImplementation(() => '3.0.0-beta.9');
 
-        expect(getVueVersion(config)).to.equal(3);
+        expect(getVueVersion(config)).toBe(3);
+        getPackageVersionStub.mockRestore();
     });
 
     it('returns 3 when Vue 3 is installed', function() {
         const config = createWebpackConfig();
-        getPackageVersionStub
-            .callsFake(() => '3.0.0');
+        const getPackageVersionStub = vi.spyOn(packageHelper, 'getPackageVersion')
+            .mockImplementation(() => '3.0.0');
 
-        expect(getVueVersion(config)).to.equal(3);
+        expect(getVueVersion(config)).toBe(3);
+        getPackageVersionStub.mockRestore();
     });
 
     it('returns 3 when a version is too new', function() {
         const config = createWebpackConfig();
-        getPackageVersionStub
-            .callsFake(() => '4.0.0'); // unsupported version
+        const getPackageVersionStub = vi.spyOn(packageHelper, 'getPackageVersion')
+            .mockImplementation(() => '4.0.0'); // unsupported version
 
-        expect(getVueVersion(config)).to.equal(3);
+        expect(getVueVersion(config)).toBe(3);
+        getPackageVersionStub.mockRestore();
     });
 });

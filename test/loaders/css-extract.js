@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import cssExtractLoader from '../../lib/loaders/css-extract.js';
@@ -27,8 +27,8 @@ describe('loaders/css-extract', function() {
 
         const loaders = cssExtractLoader.prependLoaders(config, ['foo']);
 
-        expect(loaders).to.have.lengthOf(2);
-        expect(loaders[0].loader).to.equal(MiniCssExtractPlugin.loader);
+        expect(loaders).toHaveLength(2);
+        expect(loaders[0].loader).toBe(MiniCssExtractPlugin.loader);
     });
 
     it('prependLoaders() with CSS extraction disabled', function() {
@@ -38,8 +38,8 @@ describe('loaders/css-extract', function() {
 
         const loaders = cssExtractLoader.prependLoaders(config, ['foo']);
 
-        expect(loaders).to.have.lengthOf(2);
-        expect(loaders[0].loader).to.contain('style-loader');
+        expect(loaders).toHaveLength(2);
+        expect(loaders[0].loader).toContain('style-loader');
     });
 
     it('prependLoaders() options callback', function() {
@@ -50,8 +50,8 @@ describe('loaders/css-extract', function() {
 
         const loaders = cssExtractLoader.prependLoaders(config, ['foo']);
 
-        expect(loaders).to.have.lengthOf(2);
-        expect(loaders[0].loader).to.equal(MiniCssExtractPlugin.loader);
-        expect(loaders[0].options.ignoreOrder).to.be.true;
+        expect(loaders).toHaveLength(2);
+        expect(loaders[0].loader).toBe(MiniCssExtractPlugin.loader);
+        expect(loaders[0].options.ignoreOrder).toBe(true);
     });
 });

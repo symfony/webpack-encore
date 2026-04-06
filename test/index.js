@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import { expect } from 'chai';
-import sinon from 'sinon';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
+
 import api from '../index.js';
 import path from 'path';
 
@@ -22,7 +22,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.setOutputPath('/');
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -31,7 +31,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.setPublicPath('/');
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -40,7 +40,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.setManifestKeyPrefix('/build');
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -49,7 +49,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.addEntry('entry', 'main.js');
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -58,7 +58,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.addStyleEntry('styleEntry', 'main.css');
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -67,7 +67,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.addPlugin(null);
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -76,7 +76,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.addLoader(null);
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -85,7 +85,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.addRule(null);
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -94,7 +94,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.addAliases({});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -103,7 +103,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.addExternals({});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -112,7 +112,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableVersioning();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -121,7 +121,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableSourceMaps();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -132,7 +132,7 @@ describe('Public API', function() {
             const returnedValue = api.addCacheGroup('sharedEntry', {
                 test: /vendor\.js/
             });
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -141,7 +141,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.copyFiles({ from: './foo' });
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -150,7 +150,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableSingleRuntimeChunk();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -159,17 +159,15 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.disableSingleRuntimeChunk();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
-
-
     describe('splitEntryChunks', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.splitEntryChunks();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -178,7 +176,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.configureSplitChunks(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -187,7 +185,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.autoProvideVariables({});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -196,7 +194,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.autoProvidejQuery();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -205,7 +203,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enablePostCssLoader();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -214,7 +212,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableSassLoader();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -223,7 +221,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableLessLoader();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -232,7 +230,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableStylusLoader();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -241,7 +239,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.configureBabel(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -250,7 +248,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.configureBabelPresetEnv(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -259,7 +257,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableReactPreset();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -268,7 +266,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableSvelte();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -277,7 +275,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enablePreactPreset();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -286,7 +284,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableTypeScriptLoader();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -295,7 +293,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableForkedTypeScriptTypesChecking();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -304,7 +302,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableVueLoader();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -313,7 +311,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableBuildNotifications();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -322,7 +320,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.enableHandlebarsLoader();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -331,7 +329,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.disableCssExtraction();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -340,7 +338,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.configureFilenames({});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -349,7 +347,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.configureImageRule();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -358,7 +356,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.configureFontRule();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -367,7 +365,7 @@ describe('Public API', function() {
 
         it('must return the API object', function() {
             const returnedValue = api.cleanupOutputBeforeBuild();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -376,7 +374,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.configureRuntimeEnvironment('dev');
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -385,7 +383,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.configureDefinePlugin(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -394,7 +392,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.configureFriendlyErrorsPlugin(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -403,7 +401,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.configureManifestPlugin(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -412,7 +410,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.configureTerserPlugin(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -421,7 +419,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.configureCssMinimizerPlugin(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -430,7 +428,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.enableStimulusBridge(path.resolve(import.meta.dirname, '../', 'package.json'));
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -439,17 +437,15 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.enableBuildCache({ config: [import.meta.filename] });
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
-
-
     describe('configureMiniCssExtractPlugin', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.configureMiniCssExtractPlugin(() => {});
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -458,7 +454,7 @@ describe('Public API', function() {
 
         it('should return the API object', function() {
             const returnedValue = api.enableIntegrityHashes();
-            expect(returnedValue).to.equal(api);
+            expect(returnedValue).toBe(api);
         });
 
     });
@@ -467,14 +463,14 @@ describe('Public API', function() {
         it('should call or not callbacks depending of the conditions', function() {
             api.configureRuntimeEnvironment('dev', {}, false);
 
-            const spy = sinon.spy();
+            const spy = vi.fn();
             api
                 .when((Encore) => Encore.isDev(), (Encore) => spy('is dev'))
                 .when((Encore) => Encore.isProduction(), (Encore) => spy('is production'))
                 .when(true, (Encore) => spy('true'));
-            expect(spy.calledWith('is dev'), 'callback for "is dev" should be called').to.be.true;
-            expect(spy.calledWith('is production'), 'callback for "is production" should NOT be called').to.be.false;
-            expect(spy.calledWith('true'), 'callback for "true" should be called').to.be.true;
+            expect(spy.mock.calls.some(call => call[0] === 'is dev'), 'callback for "is dev" should be called').toBe(true);
+            expect(spy.mock.calls.some(call => call[0] === 'is production'), 'callback for "is production" should NOT be called').toBe(false);
+            expect(spy.mock.calls.some(call => call[0] === 'true'), 'callback for "true" should be called').toBe(true);
         });
     });
 
@@ -482,14 +478,14 @@ describe('Public API', function() {
 
         it('should return true if the runtime environment has been configured', function() {
             const returnedValue = api.isRuntimeEnvironmentConfigured();
-            expect(returnedValue).to.be.true;
+            expect(returnedValue).toBe(true);
         });
 
         it('should return false if the runtime environment has not been configured', function() {
             api.clearRuntimeEnvironment();
 
             const returnedValue = api.isRuntimeEnvironmentConfigured();
-            expect(returnedValue).to.be.false;
+            expect(returnedValue).toBe(false);
         });
 
     });
@@ -504,7 +500,7 @@ describe('Public API', function() {
         });
 
         it('unsafe methods should NOT be callable if the runtime environment has not been configured', function() {
-            expect(() => api.setOutputPath('/')).to.throw('Encore.setOutputPath() cannot be called yet');
+            expect(() => api.setOutputPath('/')).toThrow('Encore.setOutputPath() cannot be called yet');
         });
     });
 });
