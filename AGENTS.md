@@ -22,7 +22,7 @@ nvm use 22
 Then install dependencies:
 
 ```bash
-yarn install
+pnpm install
 ```
 
 ## Build/Lint/Test Commands
@@ -30,8 +30,8 @@ yarn install
 ### Linting
 
 ```bash
-yarn lint
-yarn lint --fix
+pnpm lint
+pnpm lint --fix
 ```
 
 Runs ESLint on all source files (`lib/`, `test/`, `index.js`).
@@ -40,17 +40,17 @@ Runs ESLint on all source files (`lib/`, `test/`, `index.js`).
 
 ```bash
 # Run tests
-yarn test
+pnpm test
 
 # Run a single test file
-yarn vitest run test/WebpackConfig.js
-yarn vitest run test/loaders/sass.js
+pnpm vitest run test/WebpackConfig.js
+pnpm vitest run test/loaders/sass.js
 
 # Run tests matching a pattern
-yarn vitest run -t "setOutputPath"
+pnpm vitest run -t "setOutputPath"
 
 # Run functional tests only
-yarn vitest run test/functional.js
+pnpm vitest run test/functional.js
 ```
 
 Test files mirror the source structure: `lib/loaders/sass.js` → `test/loaders/sass.js`

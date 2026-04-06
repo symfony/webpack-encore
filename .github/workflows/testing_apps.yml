@@ -129,11 +129,8 @@ jobs:
       -   name: Checkout
           uses: actions/checkout@v4
 
-      -   if: ${{ matrix.app.pkg_manager == 'pnpm' }}
-          name: Install pnpm
-          uses: pnpm/action-setup@v4
-          with:
-            package_json_file: '${{ matrix.app.working_directory }}/package.json'
+      -   name: Install pnpm
+          uses: pnpm/action-setup@v5
 
       -   name: Compute testing app's lockfile
           run: echo "LOCKFILE=${{ matrix.app.pkg_manager == 'yarn' && 'yarn.lock' || matrix.app.pkg_manager == 'pnpm' && 'pnpm-lock.yaml' || matrix.app.pkg_manager == 'npm' && 'package-lock.json' }}" >> $GITHUB_ENV
@@ -146,7 +143,7 @@ jobs:
             cache-dependency-path: ${{ matrix.app.working_directory }}/${{ env.LOCKFILE }}
 
       -   name: Packing Encore
-          run: yarn pack --filename webpack-encore.tgz
+          run: pnpm pack --out webpack-encore.tgz
 
       -   name: Running script
           working-directory: ${{ matrix.app.working_directory }}
