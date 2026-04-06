@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-04-06T20:13:09Z
+
+Let's ignore the ESLint failing check, I don't want to deal with it, and I will remove it in favor of oxfmt/oxlint
