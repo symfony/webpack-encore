@@ -114,6 +114,7 @@ can adopt modern async APIs from the ecosystem without hacks**.
 ### Features
 
 * Update postcss-loader support from 8.1.0 to 8.1.1 for ESM compatibility
+* Add support for [webpack-cli@7.0.0](https://github.com/webpack/webpack-cli/releases/tag/webpack-cli%407.0.0)
 
 ## 6.0.0
 
