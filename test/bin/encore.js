@@ -7,22 +7,24 @@
  * file that was distributed with this source code.
  */
 
-import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+import child_process from 'node:child_process';
+import { promisify } from 'node:util';
 import path from 'path';
+
 import fs from 'fs-extra';
 import getPort from 'get-port';
-import { promisify } from 'node:util';
-import child_process from 'node:child_process';
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
 import * as testSetup from '../helpers/setup.js';
 
 const exec = promisify(child_process.exec);
 
 const projectDir = path.resolve(import.meta.dirname, '../', '../');
 
-describe.sequential('bin/encore.js', function() {
+describe.sequential('bin/encore.js', function () {
     // being functional tests, these can take quite long
 
-    it('Basic smoke test', async function() {
+    it('Basic smoke test', async function () {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -59,7 +61,7 @@ export default await Encore.getWebpackConfig();
         expect(stdout).not.toContain('Time: ');
     });
 
-    it('Smoke test using the --json option', async function() {
+    it('Smoke test using the --json option', async function () {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -78,7 +80,9 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        const { stdout } = await exec(`node ${binPath} dev --json --context=${testDir}`, { cwd: testDir });
+        const { stdout } = await exec(`node ${binPath} dev --json --context=${testDir}`, {
+            cwd: testDir,
+        });
 
         let parsedOutput = null;
         try {
@@ -98,7 +102,7 @@ export default await Encore.getWebpackConfig();
         expect(parsedOutput.modules.length).toBe(4);
     });
 
-    it('Smoke test using the --profile option', async function() {
+    it('Smoke test using the --profile option', async function () {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -117,7 +121,9 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        const { stdout } = await exec(`node ${binPath} dev --profile --context=${testDir}`, { cwd: testDir });
+        const { stdout } = await exec(`node ${binPath} dev --profile --context=${testDir}`, {
+            cwd: testDir,
+        });
 
         expect(stdout).toContain('resolving: ');
         expect(stdout).toContain('restoring: ');
@@ -125,7 +131,7 @@ export default await Encore.getWebpackConfig();
         expect(stdout).toContain('building: ');
     });
 
-    it('Smoke test using the --keep-public-path option', async function() {
+    it('Smoke test using the --keep-public-path option', async function () {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -144,12 +150,15 @@ export default await Encore.getWebpackConfig();
         );
 
         const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
-        const { stdout } = await exec(`node ${binPath} dev --keep-public-path --context=${testDir}`, { cwd: testDir });
+        const { stdout } = await exec(
+            `node ${binPath} dev --keep-public-path --context=${testDir}`,
+            { cwd: testDir }
+        );
 
         expect(stdout).toContain('Compiled successfully');
     });
 
-    it('Display an error when calling an unknown method', async function() {
+    it('Display an error when calling an unknown method', async function () {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -187,10 +196,12 @@ export default await Encore.getWebpackConfig();
             return;
         }
 
-        throw new Error('This code should not be executed, it means that the `try` bloc didn\'t throw an exception.');
+        throw new Error(
+            "This code should not be executed, it means that the `try` bloc didn't throw an exception."
+        );
     });
 
-    it('Run the webpack-dev-server successfully', async function() {
+    it('Run the webpack-dev-server successfully', async function () {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -240,20 +251,28 @@ export default await Encore.getWebpackConfig();
             expect(err.stdout).toContain('webpack compiled successfully');
 
             expect(err.stderr).toContain('[webpack-dev-server] Project is running at:');
-            expect(err.stderr).toContain(`[webpack-dev-server] Loopback: http://localhost:${port}/`);
-            expect(err.stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
+            expect(err.stderr).toContain(
+                `[webpack-dev-server] Loopback: http://localhost:${port}/`
+            );
+            expect(err.stderr).toContain(
+                '[webpack-dev-server] Content not from webpack is served from'
+            );
 
             // Verify entrypoints.json contains http:// URLs
-            const entrypoints = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8'));
+            const entrypoints = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
+            );
             expect(entrypoints.entrypoints.main.js[0]).toContain(`http://localhost:${port}/build/`);
 
             // Verify manifest.json contains http:// URLs
-            const manifest = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8'));
+            const manifest = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
+            );
             expect(manifest['build/main.js']).toContain(`http://localhost:${port}/build/`);
         }
     });
 
-    it('Run the webpack-dev-server with --server-type https', async function() {
+    it('Run the webpack-dev-server with --server-type https', async function () {
         const testDir = testSetup.createTestAppDir();
 
         fs.writeFileSync(
@@ -289,11 +308,14 @@ export default await Encore.getWebpackConfig();
         }, 5000);
 
         try {
-            await exec(`node ${binPath} dev-server --server-type https --context=${testDir} --port=${port}`, {
-                cwd: testDir,
-                env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
-                signal: abortController.signal,
-            });
+            await exec(
+                `node ${binPath} dev-server --server-type https --context=${testDir} --port=${port}`,
+                {
+                    cwd: testDir,
+                    env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
+                    signal: abortController.signal,
+                }
+            );
         } catch (err) {
             if (err.name !== 'AbortError') {
                 throw new Error('Error executing encore', { cause: err });
@@ -304,31 +326,41 @@ export default await Encore.getWebpackConfig();
             expect(err.stdout).toContain('webpack compiled successfully');
 
             expect(err.stderr).toContain('[webpack-dev-server] Project is running at:');
-            expect(err.stderr).toContain(`[webpack-dev-server] Loopback: https://localhost:${port}/`);
-            expect(err.stderr).toContain('[webpack-dev-server] Content not from webpack is served from');
+            expect(err.stderr).toContain(
+                `[webpack-dev-server] Loopback: https://localhost:${port}/`
+            );
+            expect(err.stderr).toContain(
+                '[webpack-dev-server] Content not from webpack is served from'
+            );
 
             // Verify entrypoints.json contains https:// URLs
-            const entrypoints = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8'));
-            expect(entrypoints.entrypoints.main.js[0]).toContain(`https://localhost:${port}/build/`);
+            const entrypoints = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'entrypoints.json'), 'utf8')
+            );
+            expect(entrypoints.entrypoints.main.js[0]).toContain(
+                `https://localhost:${port}/build/`
+            );
 
             // Verify manifest.json contains https:// URLs
-            const manifest = JSON.parse(fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8'));
+            const manifest = JSON.parse(
+                fs.readFileSync(path.join(testDir, 'build', 'manifest.json'), 'utf8')
+            );
             expect(manifest['build/main.js']).toContain(`https://localhost:${port}/build/`);
         }
     });
 
-    describe('Without webpack-dev-server installed', function() {
-        beforeAll(async function() {
+    describe('Without webpack-dev-server installed', function () {
+        beforeAll(async function () {
             await exec('pnpm remove webpack-dev-server', { cwd: projectDir });
         });
 
-        afterAll(async function() {
+        afterAll(async function () {
             // Re-install webpack-dev-server and ensure the project is in a clean state
             await exec('git checkout package.json', { cwd: projectDir });
             await exec('pnpm install --no-frozen-lockfile', { cwd: projectDir });
         }, 20000);
 
-        it('Throw an error when trying to use the webpack-dev-server if not installed', async function() {
+        it('Throw an error when trying to use the webpack-dev-server if not installed', async function () {
             const testDir = testSetup.createTestAppDir();
 
             fs.writeFileSync(
@@ -361,10 +393,12 @@ export default await Encore.getWebpackConfig();
             try {
                 await exec(`node ${binPath} dev-server --context=${testDir} --port=${port}`, {
                     cwd: testDir,
-                    env: Object.assign({}, process.env, { NO_COLOR: 'true' })
+                    env: Object.assign({}, process.env, { NO_COLOR: 'true' }),
                 });
             } catch (err) {
-                expect(err.stdout).toContain('Install webpack-dev-server to use the webpack Development Server');
+                expect(err.stdout).toContain(
+                    'Install webpack-dev-server to use the webpack Development Server'
+                );
                 expect(err.stdout).toContain('npm install webpack-dev-server --save-dev');
                 expect(err.stdout).not.toContain('Running webpack-dev-server ...');
                 expect(err.stdout).not.toContain('Compiled successfully in');

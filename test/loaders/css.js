@@ -8,9 +8,10 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import cssLoader from '../../lib/loaders/css.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -20,8 +21,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/css', function() {
-    it('getLoaders() basic usage', function() {
+describe('loaders/css', function () {
+    it('getLoaders() basic usage', function () {
         const config = createConfig();
         config.enableSourceMaps(true);
 
@@ -31,7 +32,7 @@ describe('loaders/css', function() {
         expect(actualLoaders[0].options.modules).toBe(false);
     });
 
-    it('getLoaders() for production', function() {
+    it('getLoaders() for production', function () {
         const config = createConfig();
         config.enableSourceMaps(false);
         config.runtimeConfig.environment = 'production';
@@ -42,10 +43,10 @@ describe('loaders/css', function() {
         expect(actualLoaders[0].options.modules).toBe(false);
     });
 
-    it('getLoaders() with options callback', function() {
+    it('getLoaders() with options callback', function () {
         const config = createConfig();
 
-        config.configureCssLoader(function(options) {
+        config.configureCssLoader(function (options) {
             options.foo = true;
             options.url = false;
         });
@@ -57,10 +58,10 @@ describe('loaders/css', function() {
         expect(actualLoaders[0].options.modules).toBe(false);
     });
 
-    it('getLoaders() with CSS modules enabled', function() {
+    it('getLoaders() with CSS modules enabled', function () {
         const config = createConfig();
 
-        config.configureCssLoader(function(options) {
+        config.configureCssLoader(function (options) {
             options.foo = true;
             options.url = false;
         });
@@ -74,8 +75,8 @@ describe('loaders/css', function() {
         });
     });
 
-    describe('getLoaders() with PostCSS', function() {
-        it('without options callback', function() {
+    describe('getLoaders() with PostCSS', function () {
+        it('without options callback', function () {
             const config = createConfig();
             config.enableSourceMaps();
             config.enablePostCssLoader();
@@ -86,12 +87,12 @@ describe('loaders/css', function() {
             expect(actualLoaders[1].options.sourceMap).toBe(true);
         });
 
-        it('with options callback', function() {
+        it('with options callback', function () {
             const config = createConfig();
             config.enableSourceMaps();
             config.enablePostCssLoader((options) => {
                 options.config = {
-                    path: 'config/postcss.config.js'
+                    path: 'config/postcss.config.js',
                 };
             });
 
@@ -102,12 +103,12 @@ describe('loaders/css', function() {
             expect(actualLoaders[1].options.config.path).toBe('config/postcss.config.js');
         });
 
-        it('with options callback that returns an object', function() {
+        it('with options callback that returns an object', function () {
             const config = createConfig();
             config.enableSourceMaps(true);
             config.enablePostCssLoader((options) => {
                 options.config = {
-                    path: 'config/postcss.config.js'
+                    path: 'config/postcss.config.js',
                 };
 
                 // This should override the original config

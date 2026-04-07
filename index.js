@@ -19,13 +19,14 @@
  * @typedef {{from: string, pattern?: RegExp|string, to?: string|null, includeSubdirectories?: boolean, context?: string}} CopyFilesOptions
  */
 
+import yargsParser from 'yargs-parser';
+
+import configGenerator from './lib/config-generator.js';
+import parseRuntime from './lib/config/parse-runtime.js';
+import validator from './lib/config/validator.js';
+import context from './lib/context.js';
 import EncoreProxy from './lib/EncoreProxy.js';
 import WebpackConfig from './lib/WebpackConfig.js';
-import configGenerator from './lib/config-generator.js';
-import validator from './lib/config/validator.js';
-import parseRuntime from './lib/config/parse-runtime.js';
-import context from './lib/context.js';
-import yargsParser from 'yargs-parser';
 
 let runtimeConfig = context.runtimeConfig;
 let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig) : null;
@@ -1607,7 +1608,10 @@ class Encore {
      * @returns {Encore}
      */
     when(condition, callback) {
-        if (typeof condition === 'function' && condition(this) || typeof condition === 'boolean' && condition) {
+        if (
+            (typeof condition === 'function' && condition(this)) ||
+            (typeof condition === 'boolean' && condition)
+        ) {
             callback(this);
         }
 
@@ -1672,11 +1676,7 @@ class Encore {
      */
     configureRuntimeEnvironment(environment, options = {}) {
         runtimeConfig = parseRuntime(
-            Object.assign(
-                {},
-                yargsParser([environment]),
-                options
-            ),
+            Object.assign({}, yargsParser([environment]), options),
             process.cwd()
         );
 

@@ -8,27 +8,22 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+
 import context from '../lib/context.js';
 context.runtimeConfig = {};
 import logger from '../lib/logger.js';
 
-describe('logger', function() {
-    beforeEach(function() {
+describe('logger', function () {
+    beforeEach(function () {
         logger.reset();
     });
 
-    afterEach(function() {
+    afterEach(function () {
         logger.reset();
     });
 
-    it('Smoke test for log methods', function() {
-
-        const methods = [
-            'debug',
-            'recommendation',
-            'warning',
-            'deprecation',
-        ];
+    it('Smoke test for log methods', function () {
+        const methods = ['debug', 'recommendation', 'warning', 'deprecation'];
         const testString = 'TEST MESSAGE';
         const expectedMessages = {
             debug: [testString],
@@ -50,7 +45,7 @@ describe('logger', function() {
         expect(actualMessages).toEqual(expectedMessages);
     });
 
-    it('test reset()', function() {
+    it('test reset()', function () {
         logger.debug('DEBUG!');
         logger.reset();
 

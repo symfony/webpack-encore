@@ -22,26 +22,26 @@ jobs:
                       os: windows-latest
 
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v4
+            - name: Checkout
+              uses: actions/checkout@v4
 
-            -   name: Install pnpm
-                uses: pnpm/action-setup@v5
+            - name: Install pnpm
+              uses: pnpm/action-setup@v5
 
-            -   name: Node ${{matrix.node-versions}}
-                uses: actions/setup-node@v4
-                with:
-                    node-version: ${{matrix.node-versions}}
-                    cache: pnpm
+            - name: Node ${{matrix.node-versions}}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{matrix.node-versions}}
+                  cache: pnpm
 
-            -   name: Remove Lock File
-                run: rm pnpm-lock.yaml
+            - name: Remove Lock File
+              run: rm pnpm-lock.yaml
 
-            -   name: Install Node.js Dependencies
-                run: pnpm install
+            - name: Install Node.js Dependencies
+              run: pnpm install
 
-            -   name: Show Installed Versions
-                run: pnpm list --depth=0
+            - name: Show Installed Versions
+              run: pnpm list --depth=0
 
-            -   name: Run Tests
-                run: pnpm test
+            - name: Run Tests
+              run: pnpm test

@@ -2,149 +2,149 @@ name: Testing in real apps
 on: [push, pull_request]
 
 jobs:
-  testing_app:
-    strategy:
-      fail-fast: false
-      matrix:
-        app:
-          - name: npm
-            pkg_manager: npm
-            working_directory: test_apps/npm
-            script: |
-              npm install --ci
-              npm add --save-dev ../../webpack-encore.tgz
-              npm run encore dev
-              npm run encore production
+    testing_app:
+        strategy:
+            fail-fast: false
+            matrix:
+                app:
+                    - name: npm
+                      pkg_manager: npm
+                      working_directory: test_apps/npm
+                      script: |
+                          npm install --ci
+                          npm add --save-dev ../../webpack-encore.tgz
+                          npm run encore dev
+                          npm run encore production
 
-          - name: npm (with .mjs config)
-            pkg_manager: npm
-            working_directory: test_apps/npm-mjs
-            script: |
-              npm install --ci
-              npm add --save-dev ../../webpack-encore.tgz
-              npm run encore dev
-              npm run encore production
+                    - name: npm (with .mjs config)
+                      pkg_manager: npm
+                      working_directory: test_apps/npm-mjs
+                      script: |
+                          npm install --ci
+                          npm add --save-dev ../../webpack-encore.tgz
+                          npm run encore dev
+                          npm run encore production
 
-          - name: npm (with Babel)
-            pkg_manager: npm
-            working_directory: test_apps/npm-with-babel
-            script: |
-              npm install --ci
-              npm add --save-dev ../../webpack-encore.tgz
-              npm run encore dev
-              npm run encore production
+                    - name: npm (with Babel)
+                      pkg_manager: npm
+                      working_directory: test_apps/npm-with-babel
+                      script: |
+                          npm install --ci
+                          npm add --save-dev ../../webpack-encore.tgz
+                          npm run encore dev
+                          npm run encore production
 
-          - name: npm (with external Babel configuration file)
-            pkg_manager: npm
-            working_directory: test_apps/npm-with-external-babel-config
-            script: |
-              npm install --ci
-              npm add --save-dev ../../webpack-encore.tgz
-              npm run encore dev
-              npm run encore production
+                    - name: npm (with external Babel configuration file)
+                      pkg_manager: npm
+                      working_directory: test_apps/npm-with-external-babel-config
+                      script: |
+                          npm install --ci
+                          npm add --save-dev ../../webpack-encore.tgz
+                          npm run encore dev
+                          npm run encore production
 
-          - name: pnpm
-            pkg_manager: pnpm
-            working_directory: test_apps/pnpm
-            script: |
-              pnpm install --frozen-lockfile
-              pnpm add --save-dev ../../webpack-encore.tgz
-              pnpm run encore dev
-              pnpm run encore production
+                    - name: pnpm
+                      pkg_manager: pnpm
+                      working_directory: test_apps/pnpm
+                      script: |
+                          pnpm install --frozen-lockfile
+                          pnpm add --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
 
-          - name: pnpm (with .mjs config)
-            pkg_manager: pnpm
-            working_directory: test_apps/pnpm-mjs
-            script: |
-              pnpm install --frozen-lockfile
-              pnpm add --save-dev ../../webpack-encore.tgz
-              pnpm run encore dev
-              pnpm run encore production
+                    - name: pnpm (with .mjs config)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/pnpm-mjs
+                      script: |
+                          pnpm install --frozen-lockfile
+                          pnpm add --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
 
-          - name: pnpm (with Babel)
-            pkg_manager: pnpm
-            working_directory: test_apps/pnpm-with-babel
-            script: |
-              pnpm install --frozen-lockfile
-              pnpm add --save-dev ../../webpack-encore.tgz
-              pnpm run encore dev
-              pnpm run encore production
+                    - name: pnpm (with Babel)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/pnpm-with-babel
+                      script: |
+                          pnpm install --frozen-lockfile
+                          pnpm add --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
 
-          - name: pnpm (with external Babel configuration file)
-            pkg_manager: pnpm
-            working_directory: test_apps/pnpm-with-external-babel-config
-            script: |
-              pnpm install --frozen-lockfile
-              pnpm add --save-dev ../../webpack-encore.tgz
-              pnpm run encore dev
-              pnpm run encore production
+                    - name: pnpm (with external Babel configuration file)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/pnpm-with-external-babel-config
+                      script: |
+                          pnpm install --frozen-lockfile
+                          pnpm add --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
 
-          - name: Yarn Plug'n'Play
-            pkg_manager: yarn
-            working_directory: test_apps/yarn-pnp
-            script: |
-              yarn set version 4.3.0
-              yarn install --immutable
-              yarn add --dev ../../webpack-encore.tgz
-              yarn run encore dev
-              yarn run encore production
+                    - name: Yarn Plug'n'Play
+                      pkg_manager: yarn
+                      working_directory: test_apps/yarn-pnp
+                      script: |
+                          yarn set version 4.3.0
+                          yarn install --immutable
+                          yarn add --dev ../../webpack-encore.tgz
+                          yarn run encore dev
+                          yarn run encore production
 
-          - name: Yarn Plug'n'Play (with .mjs config)
-            pkg_manager: yarn
-            working_directory: test_apps/yarn-pnp-mjs
-            script: |
-              yarn set version 4.3.0
-              yarn install --immutable
-              yarn add --dev ../../webpack-encore.tgz
-              yarn run encore dev
-              yarn run encore production
+                    - name: Yarn Plug'n'Play (with .mjs config)
+                      pkg_manager: yarn
+                      working_directory: test_apps/yarn-pnp-mjs
+                      script: |
+                          yarn set version 4.3.0
+                          yarn install --immutable
+                          yarn add --dev ../../webpack-encore.tgz
+                          yarn run encore dev
+                          yarn run encore production
 
-          - name: Yarn Plug'n'Play (with Babel)
-            pkg_manager: yarn
-            working_directory: test_apps/yarn-pnp-with-babel
-            script: |
-              yarn set version 4.3.0
-              yarn install --immutable
-              yarn add --dev ../../webpack-encore.tgz
-              yarn run encore dev
-              yarn run encore production
+                    - name: Yarn Plug'n'Play (with Babel)
+                      pkg_manager: yarn
+                      working_directory: test_apps/yarn-pnp-with-babel
+                      script: |
+                          yarn set version 4.3.0
+                          yarn install --immutable
+                          yarn add --dev ../../webpack-encore.tgz
+                          yarn run encore dev
+                          yarn run encore production
 
-          - name: Yarn Plug'n'Play (with external Babel configuration file)
-            pkg_manager: yarn
-            working_directory: test_apps/yarn-pnp-with-external-babel-config
-            script: |
-              yarn set version 4.3.0
-              yarn install --immutable
-              yarn add --dev ../../webpack-encore.tgz
-              yarn run encore dev
-              yarn run encore production
+                    - name: Yarn Plug'n'Play (with external Babel configuration file)
+                      pkg_manager: yarn
+                      working_directory: test_apps/yarn-pnp-with-external-babel-config
+                      script: |
+                          yarn set version 4.3.0
+                          yarn install --immutable
+                          yarn add --dev ../../webpack-encore.tgz
+                          yarn run encore dev
+                          yarn run encore production
 
-    name: ${{ matrix.app.name }}
-    runs-on: ubuntu-latest
-    env:
-      # We don't want Puppeteer to automatically download a browser when dependencies are being installed
-      PUPPETEER_SKIP_DOWNLOAD: 'true'
+        name: ${{ matrix.app.name }}
+        runs-on: ubuntu-latest
+        env:
+            # We don't want Puppeteer to automatically download a browser when dependencies are being installed
+            PUPPETEER_SKIP_DOWNLOAD: 'true'
 
-    steps:
-      -   name: Checkout
-          uses: actions/checkout@v4
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
 
-      -   name: Install pnpm
-          uses: pnpm/action-setup@v5
+            - name: Install pnpm
+              uses: pnpm/action-setup@v5
 
-      -   name: Compute testing app's lockfile
-          run: echo "LOCKFILE=${{ matrix.app.pkg_manager == 'yarn' && 'yarn.lock' || matrix.app.pkg_manager == 'pnpm' && 'pnpm-lock.yaml' || matrix.app.pkg_manager == 'npm' && 'package-lock.json' }}" >> $GITHUB_ENV
+            - name: Compute testing app's lockfile
+              run: echo "LOCKFILE=${{ matrix.app.pkg_manager == 'yarn' && 'yarn.lock' || matrix.app.pkg_manager == 'pnpm' && 'pnpm-lock.yaml' || matrix.app.pkg_manager == 'npm' && 'package-lock.json' }}" >> $GITHUB_ENV
 
-      -   name: Node ${{matrix.node-versions}}
-          uses: actions/setup-node@v4
-          with:
-            node-version: '22.13.0'
-            cache: ${{ matrix.app.pkg_manager }}
-            cache-dependency-path: ${{ matrix.app.working_directory }}/${{ env.LOCKFILE }}
+            - name: Node ${{matrix.node-versions}}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: '22.13.0'
+                  cache: ${{ matrix.app.pkg_manager }}
+                  cache-dependency-path: ${{ matrix.app.working_directory }}/${{ env.LOCKFILE }}
 
-      -   name: Packing Encore
-          run: pnpm pack --out webpack-encore.tgz
+            - name: Packing Encore
+              run: pnpm pack --out webpack-encore.tgz
 
-      -   name: Running script
-          working-directory: ${{ matrix.app.working_directory }}
-          run: ${{ matrix.app.script }}
+            - name: Running script
+              working-directory: ${{ matrix.app.working_directory }}
+              run: ${{ matrix.app.script }}

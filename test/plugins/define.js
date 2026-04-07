@@ -9,9 +9,10 @@
 
 import { describe, it, expect } from 'vitest';
 import webpack from 'webpack';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import definePluginUtil from '../../lib/plugins/define.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig(environment = 'production') {
     const runtimeConfig = new RuntimeConfig();
@@ -22,28 +23,32 @@ function createConfig(environment = 'production') {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/define', function() {
-    it('dev environment', function() {
+describe('plugins/define', function () {
+    it('dev environment', function () {
         const config = createConfig('dev');
         const plugins = [];
 
         definePluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
         expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
-        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('development'));
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(
+            JSON.stringify('development')
+        );
     });
 
-    it('production environment with default settings', function() {
+    it('production environment with default settings', function () {
         const config = createConfig();
         const plugins = [];
 
         definePluginUtil(plugins, config);
         expect(plugins.length).toBe(1);
         expect(plugins[0].plugin).toBeInstanceOf(webpack.DefinePlugin);
-        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('production'));
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(
+            JSON.stringify('production')
+        );
     });
 
-    it('production environment with options callback', function() {
+    it('production environment with options callback', function () {
         const config = createConfig();
         const plugins = [];
 
@@ -61,10 +66,12 @@ describe('plugins/define', function() {
         expect(plugins[0].plugin.definitions['process.env.bar']).toBe(true);
 
         // Doesn't remove default definitions
-        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(JSON.stringify('production'));
+        expect(plugins[0].plugin.definitions['process.env.NODE_ENV']).toBe(
+            JSON.stringify('production')
+        );
     });
 
-    it('production environment with options callback that returns an object', function() {
+    it('production environment with options callback that returns an object', function () {
         const config = createConfig();
         const plugins = [];
 

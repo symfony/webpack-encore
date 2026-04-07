@@ -22,37 +22,37 @@ jobs:
                       os: windows-latest
 
         steps:
-            -   name: Checkout
-                uses: actions/checkout@v4
+            - name: Checkout
+              uses: actions/checkout@v4
 
-            -   name: Install pnpm
-                uses: pnpm/action-setup@v5
+            - name: Install pnpm
+              uses: pnpm/action-setup@v5
 
-            -   name: Node ${{matrix.node-versions}}
-                uses: actions/setup-node@v4
-                with:
-                    node-version: ${{matrix.node-versions}}
-                    cache: pnpm
+            - name: Node ${{matrix.node-versions}}
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{matrix.node-versions}}
+                  cache: pnpm
 
-            -   name: Remove Lock File
-                run: rm pnpm-lock.yaml
+            - name: Remove Lock File
+              run: rm pnpm-lock.yaml
 
-            -   name: Force Lowest Dependencies
-                run: node ./scripts/force-lowest-dependencies
+            - name: Force Lowest Dependencies
+              run: node ./scripts/force-lowest-dependencies
 
             # We have some tests that need to "git checkout" package.json file.
             # Commit them prevent the tests from re-using the locked dependencies.
-            -   name: Commit Changes, to preserve a clean working directory
-                run: |
-                    git config --global user.email ""
-                    git config --global user.name "Symfony"
-                    git commit -am "Force Lowest Dependencies"
+            - name: Commit Changes, to preserve a clean working directory
+              run: |
+                  git config --global user.email ""
+                  git config --global user.name "Symfony"
+                  git commit -am "Force Lowest Dependencies"
 
-            -   name: Install Node.js Dependencies
-                run: pnpm install
+            - name: Install Node.js Dependencies
+              run: pnpm install
 
-            -   name: Show Installed Versions
-                run: pnpm list --depth=0
+            - name: Show Installed Versions
+              run: pnpm list --depth=0
 
-            -   name: Run Tests
-                run: pnpm test
+            - name: Run Tests
+              run: pnpm test

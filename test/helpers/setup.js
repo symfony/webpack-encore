@@ -8,13 +8,15 @@
  */
 
 import path from 'path';
-import WebpackConfig from '../../lib/WebpackConfig.js';
-import parseRuntime from '../../lib/config/parse-runtime.js';
-import webpack from 'webpack';
+
 import fs from 'fs-extra';
 import httpServer from 'http-server';
+import webpack from 'webpack';
+
 import configGenerator from '../../lib/config-generator.js';
+import parseRuntime from '../../lib/config/parse-runtime.js';
 import validator from '../../lib/config/validator.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 import { Assert } from './assert.js';
 
 const tmpDir = path.join(import.meta.dirname, '../', '../', 'test_tmp');
@@ -23,7 +25,10 @@ const testFixturesDir = path.join(import.meta.dirname, '../', '../', 'fixtures')
 let servers = [];
 
 export function createTestAppDir(rootDir = null, subDir = null) {
-    const testAppDir = path.join(rootDir ? rootDir : tmpDir, subDir ? subDir : Math.random().toString(36).substring(7));
+    const testAppDir = path.join(
+        rootDir ? rootDir : tmpDir,
+        subDir ? subDir : Math.random().toString(36).substring(7)
+    );
 
     // copy the fixtures into this new directory
     fs.copySync(testFixturesDir, testAppDir);
@@ -34,10 +39,7 @@ export function createTestAppDir(rootDir = null, subDir = null) {
     // webpack to treat them as strict ESM (requiring fully-specified
     // imports, disabling require.ensure, etc.).
     if (!fs.existsSync(path.join(testAppDir, 'package.json'))) {
-        fs.writeFileSync(
-            path.join(testAppDir, 'package.json'),
-            JSON.stringify({ private: true })
-        );
+        fs.writeFileSync(path.join(testAppDir, 'package.json'), JSON.stringify({ private: true }));
     }
 
     return testAppDir;
@@ -53,10 +55,7 @@ export function createTestAppDir(rootDir = null, subDir = null) {
 export function createWebpackConfig(testAppDir, outputDirName = '', command, argv = {}) {
     argv._ = [command];
     argv.context = testAppDir;
-    const runtimeConfig = parseRuntime(
-        argv,
-        testAppDir
-    );
+    const runtimeConfig = parseRuntime(argv, testAppDir);
 
     const config = new WebpackConfig(runtimeConfig);
 
@@ -126,7 +125,7 @@ export async function runWebpack(webpackConfig, { allowCompilationError = false 
                 resolve({
                     webpackAssert: new Assert(webpackConfig),
                     stats,
-                    output: stdOutContents.join('\n')
+                    output: stdOutContents.join('\n'),
                 });
             });
         });
@@ -145,15 +144,12 @@ export function touchFileInOutputDir(filename, webpackConfig) {
     const fullPath = path.join(webpackConfig.outputPath, filename);
     fs.ensureDirSync(path.dirname(fullPath));
 
-    fs.writeFileSync(
-        fullPath,
-        ''
-    );
+    fs.writeFileSync(fullPath, '');
 }
 
 function startHttpServer(port, webRoot) {
     var server = httpServer.createServer({
-        root: webRoot
+        root: webRoot,
     });
 
     server.listen(port, '0.0.0.0');
@@ -200,10 +196,7 @@ export async function requestTestPage(browser, webRootDir, scriptSrcs, callback)
 `;
 
     // write the testing.html file
-    fs.writeFileSync(
-        path.join(webRootDir, 'testing.html'),
-        testHtml
-    );
+    fs.writeFileSync(path.join(webRootDir, 'testing.html'), testHtml);
 
     // start the main local server
     startHttpServer('8080', webRootDir);
@@ -220,7 +213,9 @@ export async function requestTestPage(browser, webRootDir, scriptSrcs, callback)
     });
 
     page.on('requestfailed', (request) => {
-        throw new Error(`Error "${request.failure().errorText}" when requesting resource "${request.url()}".`);
+        throw new Error(
+            `Error "${request.failure().errorText}" when requesting resource "${request.url()}".`
+        );
     });
 
     page.on('response', (response) => {

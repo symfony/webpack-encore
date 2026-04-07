@@ -8,20 +8,20 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import formatter from '../../../lib/friendly-errors/formatters/missing-css-file.js';
 
-describe('formatters/missing-css-file', function() {
-
-    describe('test format()', function() {
-        it('works with no errors', function() {
+describe('formatters/missing-css-file', function () {
+    describe('test format()', function () {
+        it('works with no errors', function () {
             const actualErrors = formatter([]);
             expect(actualErrors).to.be.empty;
         });
 
-        it('filters errors that dont have the correct type', function() {
+        it('filters errors that dont have the correct type', function () {
             const errors = [
                 { type: 'missing-css-file', file: 'some-file.sass', ref: '../images/foo.png' },
-                { type: 'other-type', file: 'other-type.sass' }
+                { type: 'other-type', file: 'other-type.sass' },
             ];
 
             const actualErrors = formatter(errors);
@@ -29,16 +29,20 @@ describe('formatters/missing-css-file', function() {
             expect(JSON.stringify(actualErrors)).not.toContain('other-type.sass');
         });
 
-        it('formats the error correctly', function() {
+        it('formats the error correctly', function () {
             const error = {
                 type: 'missing-css-file',
                 file: '/some/file.css',
-                ref: '../images/foo.png'
+                ref: '../images/foo.png',
             };
 
             const actualErrors = formatter([error]);
-            expect(JSON.stringify(actualErrors)).toContain('\\"/some/file.css\\" contains a reference to the file \\"../images/foo.png\\"');
-            expect(JSON.stringify(actualErrors)).toContain('This file can not be found, please check it for typos or update it if the file got moved.');
+            expect(JSON.stringify(actualErrors)).toContain(
+                '\\"/some/file.css\\" contains a reference to the file \\"../images/foo.png\\"'
+            );
+            expect(JSON.stringify(actualErrors)).toContain(
+                'This file can not be found, please check it for typos or update it if the file got moved.'
+            );
             // all needed packages will be present when running tests
             expect(JSON.stringify(actualErrors)).not.toContain('yarn add');
         });

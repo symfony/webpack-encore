@@ -8,9 +8,10 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import tsLoader from '../../lib/loaders/typescript.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -20,10 +21,10 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/typescript', function() {
-    it('getLoaders() basic usage', async function() {
+describe('loaders/typescript', function () {
+    it('getLoaders() basic usage', async function () {
         const config = createConfig();
-        config.enableTypeScriptLoader(function(config) {
+        config.enableTypeScriptLoader(function (config) {
             config.foo = 'bar';
         });
 
@@ -33,9 +34,9 @@ describe('loaders/typescript', function() {
         expect(actualLoaders[1].options.foo).toBe('bar');
     });
 
-    it('getLoaders() check defaults configuration values', async function() {
+    it('getLoaders() check defaults configuration values', async function () {
         const config = createConfig();
-        config.enableTypeScriptLoader(function(config) {
+        config.enableTypeScriptLoader(function (config) {
             config.foo = 'bar';
         });
 
@@ -46,9 +47,9 @@ describe('loaders/typescript', function() {
         expect(actualLoaders[1].options.silent).toBe(true);
     });
 
-    it('getLoaders() with a callback that returns an object', async function() {
+    it('getLoaders() with a callback that returns an object', async function () {
         const config = createConfig();
-        config.enableTypeScriptLoader(function(config) {
+        config.enableTypeScriptLoader(function (config) {
             config.foo = false;
 
             // This should override the original config

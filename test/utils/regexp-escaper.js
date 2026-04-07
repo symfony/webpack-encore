@@ -8,10 +8,11 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import regexpEscaper from '../../lib/utils/regexp-escaper.js';
 
-describe('regexp-escaper', function() {
-    it('escapes things properly', function() {
+describe('regexp-escaper', function () {
+    it('escapes things properly', function () {
         expect(regexpEscaper('.*')).toBe('\\.\\*');
         expect(regexpEscaper('[foo]')).toBe('\\[foo\\]');
         expect(regexpEscaper('(foo|bar)')).toBe('\\(foo\\|bar\\)');

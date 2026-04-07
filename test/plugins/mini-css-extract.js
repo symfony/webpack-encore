@@ -7,11 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { describe, it, expect } from 'vitest';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import { describe, it, expect } from 'vitest';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import miniCssExtractPluginUtil from '../../lib/plugins/mini-css-extract.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -21,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/mini-css-extract', function() {
-    it('with default settings and versioning disabled', function() {
+describe('plugins/mini-css-extract', function () {
+    it('with default settings and versioning disabled', function () {
         const config = createConfig();
         const plugins = [];
 
@@ -32,7 +33,7 @@ describe('plugins/mini-css-extract', function() {
         expect(plugins[0].plugin.options.filename).toBe('[name].css');
     });
 
-    it('with default settings and versioning enabled', function() {
+    it('with default settings and versioning enabled', function () {
         const config = createConfig();
         const plugins = [];
 
@@ -44,7 +45,7 @@ describe('plugins/mini-css-extract', function() {
         expect(plugins[0].plugin.options.filename).toBe('[name].[contenthash:8].css');
     });
 
-    it('with CSS extraction disabled', function() {
+    it('with CSS extraction disabled', function () {
         const config = createConfig();
         const plugins = [];
 
@@ -54,13 +55,13 @@ describe('plugins/mini-css-extract', function() {
         expect(plugins.length).toBe(0);
     });
 
-    it('with options callback', function() {
+    it('with options callback', function () {
         const config = createConfig();
         const plugins = [];
 
         config.configureMiniCssExtractPlugin(
             () => {},
-            options => {
+            (options) => {
                 options.filename = '[name].css';
             }
         );

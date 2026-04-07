@@ -8,6 +8,7 @@
  */
 
 import { vi, beforeEach, afterEach } from 'vitest';
+
 import logger from '../lib/logger.js';
 
 beforeEach(() => {

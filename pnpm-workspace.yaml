@@ -1,4 +1,4 @@
 allowBuilds:
-  '@parcel/watcher': false
-  core-js: true
-  puppeteer: true
+    '@parcel/watcher': false
+    core-js: true
+    puppeteer: true
