@@ -7,18 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
+
 import { expect } from 'vitest';
+
 import regexEscaper from '../../lib/utils/regexp-escaper.js';
 
-const loadManifest = function(webpackConfig) {
+const loadManifest = function (webpackConfig) {
     return JSON.parse(
         fs.readFileSync(path.join(webpackConfig.outputPath, 'manifest.json'), 'utf8')
     );
 };
 
-const readOutputFile = function(webpackConfig, filePath) {
+const readOutputFile = function (webpackConfig, filePath) {
     const fullPath = path.join(webpackConfig.outputPath, filePath);
 
     if (!fs.existsSync(fullPath)) {
@@ -28,7 +30,7 @@ const readOutputFile = function(webpackConfig, filePath) {
     return fs.readFileSync(fullPath, 'utf8');
 };
 
-const getMatchedFilename = function(targetDirectory, filenameRegex) {
+const getMatchedFilename = function (targetDirectory, filenameRegex) {
     const actualFiles = fs.readdirSync(targetDirectory);
     let foundFile = false;
     actualFiles.forEach((actualFile) => {
@@ -51,7 +53,7 @@ const getMatchedFilename = function(targetDirectory, filenameRegex) {
  * @param {string} filename Filename with possible [hash:8] wildcard
  * @returns {RegExp}
  */
-const convertFilenameToMatcher = function(filename) {
+const convertFilenameToMatcher = function (filename) {
     const hashMatch = filename.match(/\[hash:(\d+)\]/);
 
     if (hashMatch === null) {
@@ -61,8 +63,7 @@ const convertFilenameToMatcher = function(filename) {
     const [hashString, hashLength] = hashMatch;
 
     return new RegExp(
-        regexEscaper(filename)
-            .replace(regexEscaper(hashString), `([a-z0-9_-]){${hashLength}}`)
+        regexEscaper(filename).replace(regexEscaper(hashString), `([a-z0-9_-]){${hashLength}}`)
     );
 };
 
@@ -88,7 +89,9 @@ export class Assert {
 
         const actualContents = fs.readFileSync(fullPath, 'utf8');
         if (!actualContents.includes(expectedContents)) {
-            throw new Error(`Expected contents "${expectedContents}" not found in file ${fullPath}`);
+            throw new Error(
+                `Expected contents "${expectedContents}" not found in file ${fullPath}`
+            );
         }
     }
 
@@ -109,7 +112,9 @@ export class Assert {
 
         const actualContents = fs.readFileSync(fullPath, 'utf8');
         if (actualContents.includes(expectedContents)) {
-            throw new Error(`Contents "${expectedContents}" *were* found in file ${fullPath}, but should not have been.`);
+            throw new Error(
+                `Contents "${expectedContents}" *were* found in file ${fullPath}, but should not have been.`
+            );
         }
     }
 
@@ -151,7 +156,9 @@ export class Assert {
         const expectedRegex = convertFilenameToMatcher(expectedDestinationPath);
 
         if (!manifestData[sourcePath].match(expectedRegex)) {
-            throw new Error(`source path ${sourcePath} expected to match pattern ${expectedDestinationPath}, was actually ${manifestData[sourcePath]}`);
+            throw new Error(
+                `source path ${sourcePath} expected to match pattern ${expectedDestinationPath}, was actually ${manifestData[sourcePath]}`
+            );
         }
     }
 
@@ -167,7 +174,9 @@ export class Assert {
         const manifestData = loadManifest(this.webpackConfig);
 
         if (manifestData[sourcePath]) {
-            throw new Error(`Source ${sourcePath} key WAS found in manifest, but should not be there!`);
+            throw new Error(
+                `Source ${sourcePath} key WAS found in manifest, but should not be there!`
+            );
         }
     }
 
@@ -262,12 +271,16 @@ export class Assert {
             }
 
             if (!matchIsFound) {
-                throw new Error(`File "${foundFile}" was found in directory but was not expected. Expected patterns where ${expectedFiles.join(', ')}`);
+                throw new Error(
+                    `File "${foundFile}" was found in directory but was not expected. Expected patterns where ${expectedFiles.join(', ')}`
+                );
             }
         });
 
         if (Object.keys(expectedFileStrings).length > 0) {
-            throw new Error(`Files ${Object.keys(expectedFileStrings).join(', ')} were expected to be found in the directory but were not. Actual files: ${actualFiles.join(', ')}`);
+            throw new Error(
+                `Files ${Object.keys(expectedFileStrings).join(', ')} were expected to be found in the directory but were not. Actual files: ${actualFiles.join(', ')}`
+            );
         }
     }
 }

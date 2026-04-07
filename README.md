@@ -5,10 +5,10 @@
 ![Node](https://img.shields.io/node/v/@symfony/webpack-encore.svg)
 
 Webpack Encore is a simpler way to integrate [Webpack](https://webpack.js.org/) into your
-application. It *wraps* Webpack, giving you a clean & powerful API
+application. It _wraps_ Webpack, giving you a clean & powerful API
 for bundling JavaScript modules, pre-processing CSS & JS and compiling
 and minifying assets. Encore gives you a professional asset system
-that's a *delight* to use.
+that's a _delight_ to use.
 
 > [!TIP]
 > Symfony released an [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html) component, a production-ready simpler alternative to Webpack Encore
@@ -19,7 +19,7 @@ Encore is inspired by [Webpacker](https://github.com/rails/webpacker) and
 Webpack: using its features, concepts and naming conventions for a familiar
 feel. It aims to solve the most common Webpack use cases.
 
-> Encore is made by Symfony and works *beautifully* in Symfony applications.
+> Encore is made by Symfony and works _beautifully_ in Symfony applications.
 > But it can easily be used in any application... in any language!
 
 ## Documentation

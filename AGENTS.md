@@ -31,10 +31,18 @@ pnpm install
 
 ```bash
 pnpm lint
-pnpm lint --fix
 ```
 
-Runs ESLint on all source files (`lib/`, `test/`, `index.js`).
+Runs ESLint on whole codebase. Use `pnpm lint --fix` to automatically fix issues where possible.
+
+### Formatting
+
+```bash
+pnpm fmt:check
+pnpm fmt
+```
+
+Runs Oxfmt on whole codebase. Use `pnpm fmt` to automatically format code.
 
 ### Testing
 
@@ -125,13 +133,13 @@ Use JSDoc `@import` for type information:
 
 ### Naming Conventions
 
-| Type | Convention | Examples |
-|------|------------|----------|
-| Files (general) | kebab-case | `config-generator.js`, `path-util.js` |
-| Files (classes) | PascalCase | `WebpackConfig.js`, `RuntimeConfig.js` |
-| Variables/Functions | camelCase | `webpackConfig`, `getLoaders()` |
-| Classes | PascalCase | `WebpackConfig`, `RuntimeConfig` |
-| Constants | UPPER_SNAKE_CASE | (rarely used) |
+| Type                | Convention       | Examples                               |
+| ------------------- | ---------------- | -------------------------------------- |
+| Files (general)     | kebab-case       | `config-generator.js`, `path-util.js`  |
+| Files (classes)     | PascalCase       | `WebpackConfig.js`, `RuntimeConfig.js` |
+| Variables/Functions | camelCase        | `webpackConfig`, `getLoaders()`        |
+| Classes             | PascalCase       | `WebpackConfig`, `RuntimeConfig`       |
+| Constants           | UPPER_SNAKE_CASE | (rarely used)                          |
 
 ### Method Naming Patterns
 
@@ -141,7 +149,7 @@ Use JSDoc `@import` for type information:
 - **Configurers**: `configureBabel()`, `configureDefinePlugin()`
 - **Validators**: `validateRuntimeConfig()`, `validateNameIsNewEntry()`
 - **Booleans**: Prefix with `use`, `is`, `should`, `has`:
-  - `useVersioning`, `useSourceMaps`, `isProduction()`, `shouldUseSingleRuntimeChunk`
+    - `useVersioning`, `useSourceMaps`, `isProduction()`, `shouldUseSingleRuntimeChunk`
 
 ### Error Handling
 
@@ -153,7 +161,9 @@ if (typeof callback !== 'function') {
 }
 
 // Include valid options in error messages
-throw new Error(`Invalid option "${optionKey}" passed to method(). Valid keys are ${Object.keys(validOptions).join(', ')}`);
+throw new Error(
+    `Invalid option "${optionKey}" passed to method(). Valid keys are ${Object.keys(validOptions).join(', ')}`
+);
 ```
 
 Use the logger for warnings, recommendations, and deprecations:
@@ -174,9 +184,9 @@ Tests use Vitest with native expect assertions:
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import WebpackConfig from '../lib/WebpackConfig.js';
 
-describe('WebpackConfig object', function() {
-    describe('setOutputPath', function() {
-        it('use absolute, existent path', function() {
+describe('WebpackConfig object', function () {
+    describe('setOutputPath', function () {
+        it('use absolute, existent path', function () {
             const config = createConfig();
             config.setOutputPath(__dirname);
             expect(config.outputPath).toBe(__dirname);
@@ -186,6 +196,7 @@ describe('WebpackConfig object', function() {
 ```
 
 Test helpers are in `test/helpers/`:
+
 - `setup.js`: `createWebpackConfig()`, `runWebpack()`, `createTestAppDir()`
 - `assert.js`: Custom assertions for webpack output
 

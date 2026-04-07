@@ -7,11 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { describe, it, expect } from 'vitest';
 import TerserPlugin from 'terser-webpack-plugin';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import { describe, it, expect } from 'vitest';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import terserPluginUtil from '../../lib/plugins/terser.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig(environment = 'production') {
     const runtimeConfig = new RuntimeConfig();
@@ -22,8 +23,8 @@ function createConfig(environment = 'production') {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/terser', function() {
-    it('production environment default settings', function() {
+describe('plugins/terser', function () {
+    it('production environment default settings', function () {
         const config = createConfig();
 
         const plugin = terserPluginUtil(config);
@@ -31,7 +32,7 @@ describe('plugins/terser', function() {
         expect(plugin.options.parallel).toBe(true);
     });
 
-    it('with options callback', function() {
+    it('with options callback', function () {
         const config = createConfig();
 
         config.configureTerserPlugin((options) => {
@@ -47,7 +48,7 @@ describe('plugins/terser', function() {
         expect(plugin.options.parallel).toBe(true);
     });
 
-    it('with options callback that returns an object', function() {
+    it('with options callback that returns an object', function () {
         const config = createConfig();
 
         config.configureTerserPlugin((options) => {

@@ -7,11 +7,12 @@
  * file that was distributed with this source code.
  */
 
-import { describe, it, expect } from 'vitest';
 import FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import { describe, it, expect } from 'vitest';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import friendlyErrorsPluginUtil from '../../lib/plugins/friendly-errors.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -21,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/friendly-errors', function() {
-    it('with default settings', function() {
+describe('plugins/friendly-errors', function () {
+    it('with default settings', function () {
         const config = createConfig();
 
         const plugin = friendlyErrorsPluginUtil(config);
@@ -32,7 +33,7 @@ describe('plugins/friendly-errors', function() {
         expect(plugin.transformers.length).toBe(6);
     });
 
-    it('with options callback', function() {
+    it('with options callback', function () {
         const config = createConfig();
 
         config.configureFriendlyErrorsPlugin((options) => {
@@ -47,7 +48,7 @@ describe('plugins/friendly-errors', function() {
         expect(plugin.transformers.length).toBe(6);
     });
 
-    it('with options callback that returns an object', function() {
+    it('with options callback that returns an object', function () {
         const config = createConfig();
 
         config.configureFriendlyErrorsPlugin((options) => {

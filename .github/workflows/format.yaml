@@ -1,9 +1,9 @@
-name: ESLint
+name: Oxfmt
 on: [push, pull_request]
 
 jobs:
-    eslint:
-        name: ESLint
+    oxfmt:
+        name: Oxfmt
         runs-on: ubuntu-latest
         env:
             # We don't want Puppeteer to automatically download a browser when dependencies are being installed
@@ -25,5 +25,5 @@ jobs:
             - name: Install pnpm Dependencies
               run: pnpm install
 
-            - name: Run ESLint
-              run: pnpm lint
+            - name: Run Oxfmt
+              run: pnpm fmt:check

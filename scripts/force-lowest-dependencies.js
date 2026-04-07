@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import fs from 'fs/promises';
 import childProcess from 'child_process';
+import fs from 'fs/promises';
 
 /**
  * @param {string} dependency
@@ -31,9 +31,7 @@ function getLowestVersion(dependency, range) {
                     return;
                 }
 
-                const versions = stdout
-                    .split('\n')
-                    .filter(line => line);
+                const versions = stdout.split('\n').filter((line) => line);
 
                 if (versions.length === 0) {
                     reject(`Could not find a lowest version for "${dependency}@${range}"`);
@@ -69,20 +67,16 @@ const packageInfo = JSON.parse(data);
 const dependencyPromises = [];
 if (packageInfo.dependencies) {
     for (const dependency in packageInfo.dependencies) {
-        dependencyPromises.push(getLowestVersion(
-            dependency,
-            packageInfo.dependencies[dependency]
-        ));
+        dependencyPromises.push(getLowestVersion(dependency, packageInfo.dependencies[dependency]));
     }
 }
 
 const devDependencyPromises = [];
 if (packageInfo.devDependencies) {
     for (const devDependency in packageInfo.devDependencies) {
-        devDependencyPromises.push(getLowestVersion(
-            devDependency,
-            packageInfo.devDependencies[devDependency]
-        ));
+        devDependencyPromises.push(
+            getLowestVersion(devDependency, packageInfo.devDependencies[devDependency])
+        );
     }
 }
 

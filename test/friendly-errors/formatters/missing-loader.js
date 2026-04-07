@@ -8,20 +8,20 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import formatter from '../../../lib/friendly-errors/formatters/missing-loader.js';
 
-describe('formatters/missing-loader', function() {
-
-    describe('test format()', function() {
-        it('works with no errors', function() {
+describe('formatters/missing-loader', function () {
+    describe('test format()', function () {
+        it('works with no errors', function () {
             const actualErrors = formatter([]);
             expect(actualErrors).to.be.empty;
         });
 
-        it('errors without loader-not-enabled type are filtered', function() {
+        it('errors without loader-not-enabled type are filtered', function () {
             const errors = [
                 { type: 'loader-not-enabled', file: 'not-enabled.sass' },
-                { type: 'other-type', file: 'other-type.sass' }
+                { type: 'other-type', file: 'other-type.sass' },
             ];
 
             const actualErrors = formatter(errors);
@@ -29,11 +29,11 @@ describe('formatters/missing-loader', function() {
             expect(JSON.stringify(actualErrors)).not.toContain('other-type.sass');
         });
 
-        it('error is formatted correctly', function() {
+        it('error is formatted correctly', function () {
             const error = {
                 type: 'loader-not-enabled',
                 file: '/some/file.sass',
-                loaderName: 'sass'
+                loaderName: 'sass',
             };
 
             const actualErrors = formatter([error]);
@@ -43,31 +43,35 @@ describe('formatters/missing-loader', function() {
             expect(JSON.stringify(actualErrors)).not.toContain('yarn add');
         });
 
-        it('error is formatted correctly without loaderName', function() {
+        it('error is formatted correctly without loaderName', function () {
             const error = {
                 type: 'loader-not-enabled',
-                file: '/some/file.jpg'
+                file: '/some/file.jpg',
             };
 
             const actualErrors = formatter([error]);
             expect(JSON.stringify(actualErrors)).toContain('To load \\"/some/file.jpg\\"');
-            expect(JSON.stringify(actualErrors)).toContain('You may need to install and configure a special loader');
+            expect(JSON.stringify(actualErrors)).toContain(
+                'You may need to install and configure a special loader'
+            );
         });
 
-        it('vue loader error includes original message & origin', function() {
+        it('vue loader error includes original message & origin', function () {
             const error = {
                 message: 'I am a message from vue-loader',
                 isVueLoader: true,
                 loaderName: 'sass',
                 origin: 'Some stacktrace info from origin',
                 type: 'loader-not-enabled',
-                file: '/path/to/project/node_modules/vue-loader/lib??vue-loader-options!./vuejs/App.vue?vue&type=style&index=1&lang=scss'
+                file: '/path/to/project/node_modules/vue-loader/lib??vue-loader-options!./vuejs/App.vue?vue&type=style&index=1&lang=scss',
             };
 
             const actualErrors = formatter([error]);
             expect(JSON.stringify(actualErrors)).toContain('I am a message from vue-loader');
             expect(JSON.stringify(actualErrors)).toContain('Some stacktrace info from origin');
-            expect(JSON.stringify(actualErrors)).not.toContain('/path/to/project/node_modules/vue-loader');
+            expect(JSON.stringify(actualErrors)).not.toContain(
+                '/path/to/project/node_modules/vue-loader'
+            );
         });
     });
 });

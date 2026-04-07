@@ -17,11 +17,13 @@ export function assertWarning(expectedMessage) {
 
 function assertLogMessage(messages, description, expectedMessage) {
     if (messages.length === 0) {
-        throw new Error(`Found zero log ${description}s. And so, expected "${description} ${expectedMessage}" was not logged.`);
+        throw new Error(
+            `Found zero log ${description}s. And so, expected "${description} ${expectedMessage}" was not logged.`
+        );
     }
 
     let isFound = false;
-    messages.forEach(function(message, index) {
+    messages.forEach(function (message, index) {
         if (!isFound && message.includes(expectedMessage)) {
             isFound = true;
             // remove from the array now that it is found
@@ -30,6 +32,8 @@ function assertLogMessage(messages, description, expectedMessage) {
     });
 
     if (!isFound) {
-        throw new Error(`Did not find any log ${description}s matching ${expectedMessage}. Found: ${messages.join('\n')}`);
+        throw new Error(
+            `Did not find any log ${description}s matching ${expectedMessage}. Found: ${messages.join('\n')}`
+        );
     }
 }

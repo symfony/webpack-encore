@@ -9,9 +9,10 @@
 
 import { describe, it, expect } from 'vitest';
 import WebpackNotifier from 'webpack-notifier';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import notifierPluginUtil from '../../lib/plugins/notifier.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -21,8 +22,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/notifier', function() {
-    it('disabled by default', async function() {
+describe('plugins/notifier', function () {
+    it('disabled by default', async function () {
         const config = createConfig();
         const plugins = [];
 
@@ -30,7 +31,7 @@ describe('plugins/notifier', function() {
         expect(plugins.length).toBe(0);
     });
 
-    it('explicitly disabled', async function() {
+    it('explicitly disabled', async function () {
         const config = createConfig();
         const plugins = [];
 
@@ -40,7 +41,7 @@ describe('plugins/notifier', function() {
         expect(plugins.length).toBe(0);
     });
 
-    it('enabled with default settings', async function() {
+    it('enabled with default settings', async function () {
         const config = createConfig();
         const plugins = [];
 
@@ -52,7 +53,7 @@ describe('plugins/notifier', function() {
         expect(plugins[0].plugin.options.title).toBe('Webpack Encore');
     });
 
-    it('enabled with options callback', async function() {
+    it('enabled with options callback', async function () {
         const config = createConfig();
         const plugins = [];
 
@@ -66,7 +67,7 @@ describe('plugins/notifier', function() {
         expect(plugins[0].plugin.options.title).toBe('foo');
     });
 
-    it('enabled with options callback that returns an object', async function() {
+    it('enabled with options callback that returns an object', async function () {
         const config = createConfig();
         const plugins = [];
 

@@ -8,9 +8,10 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import handlebarsLoader from '../../lib/loaders/handlebars.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -20,8 +21,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/handlebars', function() {
-    it('getLoaders() basic usage', function() {
+describe('loaders/handlebars', function () {
+    it('getLoaders() basic usage', function () {
         const config = createConfig();
         config.enableHandlebarsLoader();
 
@@ -30,7 +31,7 @@ describe('loaders/handlebars', function() {
         expect(actualLoaders[0].options).to.be.empty;
     });
 
-    it('getLoaders() with options callback', function() {
+    it('getLoaders() with options callback', function () {
         const config = createConfig();
         config.enableHandlebarsLoader((options) => {
             options.debug = true;
@@ -41,7 +42,7 @@ describe('loaders/handlebars', function() {
         expect(actualLoaders[0].options.debug).toBe(true);
     });
 
-    it('getLoaders() with options callback that returns an object', function() {
+    it('getLoaders() with options callback that returns an object', function () {
         const config = createConfig();
         config.enableHandlebarsLoader((options) => {
             options.debug = true;

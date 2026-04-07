@@ -7,11 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import { describe, it, expect } from 'vitest';
 import { fileURLToPath } from 'url';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
+import { describe, it, expect } from 'vitest';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import babelLoader from '../../lib/loaders/babel.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -21,11 +23,11 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/babel', function() {
-    it('getLoaders() basic usage', async function() {
+describe('loaders/babel', function () {
+    it('getLoaders() basic usage', async function () {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = false;
-        config.configureBabel(function(config) {
+        config.configureBabel(function (config) {
             config.foo = 'bar';
         });
 
@@ -37,7 +39,7 @@ describe('loaders/babel', function() {
         expect(actualLoaders[0].options.foo).toBe('bar');
     });
 
-    it('getLoaders() when .babelrc IS present', async function() {
+    it('getLoaders() when .babelrc IS present', async function () {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = true;
 
@@ -49,7 +51,7 @@ describe('loaders/babel', function() {
         });
     });
 
-    it('getLoaders() for production', async function() {
+    it('getLoaders() for production', async function () {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = true;
         config.runtimeConfig.environment = 'production';
@@ -62,11 +64,11 @@ describe('loaders/babel', function() {
         });
     });
 
-    it('getLoaders() with react', async function() {
+    it('getLoaders() with react', async function () {
         const config = createConfig();
         config.enableReactPreset();
 
-        config.configureBabel(function(babelConfig) {
+        config.configureBabel(function (babelConfig) {
             babelConfig.presets.push('foo');
         });
 
@@ -87,19 +89,19 @@ describe('loaders/babel', function() {
             fileURLToPath(import.meta.resolve('@babel/preset-react')),
             {
                 runtime: 'automatic',
-            }
+            },
         ]);
         // foo is also still there, not overridden
         expect(actualLoaders[0].options.presets[2]).toBe('foo');
     });
 
-    it('getLoaders() with react and callback', async function() {
+    it('getLoaders() with react and callback', async function () {
         const config = createConfig();
         config.enableReactPreset((options) => {
             options.development = !config.isProduction();
         });
 
-        config.configureBabel(function(babelConfig) {
+        config.configureBabel(function (babelConfig) {
             babelConfig.presets.push('foo');
         });
 
@@ -121,33 +123,36 @@ describe('loaders/babel', function() {
             {
                 runtime: 'automatic',
                 development: true,
-            }
+            },
         ]);
         // foo is also still there, not overridden
         expect(actualLoaders[0].options.presets[2]).toBe('foo');
     });
 
-    it('getLoaders() with preact', async function() {
+    it('getLoaders() with preact', async function () {
         const config = createConfig();
         config.enablePreactPreset();
 
-        config.configureBabel(function(babelConfig) {
+        config.configureBabel(function (babelConfig) {
             babelConfig.plugins.push('foo');
         });
 
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            [fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx')), { pragma: 'h' }],
-            'foo'
+            [
+                fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx')),
+                { pragma: 'h' },
+            ],
+            'foo',
         ]);
     });
 
-    it('getLoaders() with preact and preact-compat', async function() {
+    it('getLoaders() with preact and preact-compat', async function () {
         const config = createConfig();
         config.enablePreactPreset({ preactCompat: true });
 
-        config.configureBabel(function(babelConfig) {
+        config.configureBabel(function (babelConfig) {
             babelConfig.plugins.push('foo');
         });
 
@@ -155,15 +160,15 @@ describe('loaders/babel', function() {
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
             [fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx'))],
-            'foo'
+            'foo',
         ]);
     });
 
-    it('getLoaders() with a callback that returns an object', async function() {
+    it('getLoaders() with a callback that returns an object', async function () {
         const config = createConfig();
         config.enablePreactPreset({ preactCompat: true });
 
-        config.configureBabel(function(babelConfig) {
+        config.configureBabel(function (babelConfig) {
             babelConfig.plugins.push('foo');
 
             // This should override the original config
@@ -171,17 +176,17 @@ describe('loaders/babel', function() {
         });
 
         const actualLoaders = await babelLoader.getLoaders(config);
-        expect(actualLoaders[0].options).toEqual({ 'foo': true });
+        expect(actualLoaders[0].options).toEqual({ foo: true });
     });
 
-    it('getLoaders() with Vue and JSX support', async function() {
+    it('getLoaders() with Vue and JSX support', async function () {
         const config = createConfig();
         config.enableVueLoader(() => {}, {
             version: 3,
             useJsx: true,
         });
 
-        config.configureBabel(function(babelConfig) {
+        config.configureBabel(function (babelConfig) {
             babelConfig.plugins.push('foo');
         });
 
@@ -189,19 +194,19 @@ describe('loaders/babel', function() {
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
             fileURLToPath(import.meta.resolve('@vue/babel-plugin-jsx')),
-            'foo'
+            'foo',
         ]);
     });
 
-    it('getLoaders() with configured babel env preset', async function() {
+    it('getLoaders() with configured babel env preset', async function () {
         const config = createConfig();
         config.runtimeConfig.babelRcFileExists = false;
 
-        config.configureBabel(function(config) {
+        config.configureBabel(function (config) {
             config.corejs = null;
         });
 
-        config.configureBabelPresetEnv(function(config) {
+        config.configureBabelPresetEnv(function (config) {
             config.corejs = 3;
             config.include = ['bar'];
         });
@@ -213,34 +218,36 @@ describe('loaders/babel', function() {
         expect(actualLoaders[0].options.presets[0][1].include).to.have.members(['bar']);
     });
 
-    it('getLoaders() with TypeScript', async function() {
+    it('getLoaders() with TypeScript', async function () {
         const config = createConfig();
         const presetTypeScriptOptions = { isTSX: true };
 
         config.enableBabelTypeScriptPreset(presetTypeScriptOptions);
 
-        config.configureBabel(function(babelConfig) {
+        config.configureBabel(function (babelConfig) {
             babelConfig.plugins.push('foo');
         });
 
         const actualLoaders = await babelLoader.getLoaders(config);
 
-        expect(actualLoaders[0].options.presets[0][0]).toBe(fileURLToPath(import.meta.resolve('@babel/preset-env')));
-        expect(actualLoaders[0].options.presets[1][0]).toBe(fileURLToPath(import.meta.resolve('@babel/preset-typescript')));
+        expect(actualLoaders[0].options.presets[0][0]).toBe(
+            fileURLToPath(import.meta.resolve('@babel/preset-env'))
+        );
+        expect(actualLoaders[0].options.presets[1][0]).toBe(
+            fileURLToPath(import.meta.resolve('@babel/preset-typescript'))
+        );
         expect(actualLoaders[0].options.presets[1][1]).toBe(presetTypeScriptOptions);
-        expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            'foo'
-        ]);
+        expect(actualLoaders[0].options.plugins).to.deep.include.members(['foo']);
     });
 
-    it('getTest() base behavior', function() {
+    it('getTest() base behavior', function () {
         const config = createConfig();
 
         const actualTest = babelLoader.getTest(config);
         expect(actualTest.toString()).to.equals(/\.(m?jsx?)$/.toString());
     });
 
-    it('getTest() with TypeScript', function() {
+    it('getTest() with TypeScript', function () {
         const config = createConfig();
         config.enableBabelTypeScriptPreset();
 

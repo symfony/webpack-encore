@@ -8,11 +8,11 @@
  */
 
 import { vi, describe, it, expect } from 'vitest';
-import WebpackConfig from '../../lib/WebpackConfig.js';
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import sassLoader from '../../lib/loaders/sass.js';
-import cssLoader from '../../lib/loaders/css.js';
 
+import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import cssLoader from '../../lib/loaders/css.js';
+import sassLoader from '../../lib/loaders/sass.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -22,14 +22,13 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('loaders/sass', function() {
-    it('getLoaders() basic usage', function() {
+describe('loaders/sass', function () {
+    it('getLoaders() basic usage', function () {
         const config = createConfig();
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders')
-            .mockImplementation(() => []);
+        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders').mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).toHaveLength(2);
@@ -41,13 +40,12 @@ describe('loaders/sass', function() {
         expect(cssLoaderStub.mock.calls[0][1]).toBe(false);
     });
 
-    it('getLoaders() with resolve-url-loader but not sourcemaps', function() {
+    it('getLoaders() with resolve-url-loader but not sourcemaps', function () {
         const config = createConfig();
         config.enableSourceMaps(false);
 
         // make the cssLoader return nothing
-        vi.spyOn(cssLoader, 'getLoaders')
-            .mockImplementation(() => []);
+        vi.spyOn(cssLoader, 'getLoaders').mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).toHaveLength(2);
@@ -59,17 +57,16 @@ describe('loaders/sass', function() {
         expect(actualLoaders[1].options.sourceMap).toBe(true);
     });
 
-    it('getLoaders() with resolve-url-loader options', function() {
+    it('getLoaders() with resolve-url-loader options', function () {
         const config = createConfig();
         config.enableSassLoader(() => {}, {
             resolveUrlLoaderOptions: {
-                removeCR: true
-            }
+                removeCR: true,
+            },
         });
 
         // make the cssLoader return nothing
-        vi.spyOn(cssLoader, 'getLoaders')
-            .mockImplementation(() => []);
+        vi.spyOn(cssLoader, 'getLoaders').mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).toHaveLength(2);
@@ -77,7 +74,7 @@ describe('loaders/sass', function() {
         expect(actualLoaders[0].options.removeCR).toBe(true);
     });
 
-    it('getLoaders() without resolve-url-loader', function() {
+    it('getLoaders() without resolve-url-loader', function () {
         const config = createConfig();
         config.enableSassLoader(() => {}, {
             resolveUrlLoader: false,
@@ -85,8 +82,7 @@ describe('loaders/sass', function() {
         config.enableSourceMaps(false);
 
         // make the cssLoader return nothing
-        vi.spyOn(cssLoader, 'getLoaders')
-            .mockImplementation(() => []);
+        vi.spyOn(cssLoader, 'getLoaders').mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config);
         expect(actualLoaders).toHaveLength(1);
@@ -94,14 +90,13 @@ describe('loaders/sass', function() {
         expect(actualLoaders[0].options.sourceMap).toBe(false);
     });
 
-    it('getLoaders() with options callback', function() {
+    it('getLoaders() with options callback', function () {
         const config = createConfig();
 
         // make the cssLoader return nothing
-        vi.spyOn(cssLoader, 'getLoaders')
-            .mockImplementation(() => []);
+        vi.spyOn(cssLoader, 'getLoaders').mockImplementation(() => []);
 
-        config.enableSassLoader(function(options) {
+        config.enableSassLoader(function (options) {
             options.sassOptions.custom_option = 'baz';
             options.sassOptions.other_option = true;
         });
@@ -113,20 +108,18 @@ describe('loaders/sass', function() {
             sassOptions: {
                 outputStyle: 'expanded',
                 custom_option: 'baz',
-                other_option: true
-            }
+                other_option: true,
+            },
         });
-
     });
 
-    it('getLoaders() with a callback that returns an object', function() {
+    it('getLoaders() with a callback that returns an object', function () {
         const config = createConfig();
 
         // make the cssLoader return nothing
-        vi.spyOn(cssLoader, 'getLoaders')
-            .mockImplementation(() => []);
+        vi.spyOn(cssLoader, 'getLoaders').mockImplementation(() => []);
 
-        config.enableSassLoader(function(options) {
+        config.enableSassLoader(function (options) {
             options.custom_option = 'baz';
 
             // This should override the original config
@@ -136,13 +129,12 @@ describe('loaders/sass', function() {
         expect(actualLoaders[1].options).toEqual({ foo: true });
     });
 
-    it('getLoaders() with CSS modules enabled', function() {
+    it('getLoaders() with CSS modules enabled', function () {
         const config = createConfig();
         config.enableSourceMaps(true);
 
         // make the cssLoader return nothing
-        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders')
-            .mockImplementation(() => []);
+        const cssLoaderStub = vi.spyOn(cssLoader, 'getLoaders').mockImplementation(() => []);
 
         const actualLoaders = sassLoader.getLoaders(config, true);
         expect(actualLoaders).toHaveLength(2);

@@ -8,10 +8,12 @@
  */
 
 import { resolve as resolvePath } from 'path';
+
 import { describe, it, expect } from 'vitest';
+
 import packageUp from '../../lib/utils/package-up.js';
 
-describe('package-up', function() {
+describe('package-up', function () {
     it.each([
         {
             test: 'package.json from Encore',
@@ -21,7 +23,10 @@ describe('package-up', function() {
         {
             test: 'package.json from a subdirectory',
             cwd: resolvePath(import.meta.dirname, '../../fixtures/stimulus/mock-module'),
-            expectedPath: resolvePath(import.meta.dirname, '../../fixtures/stimulus/mock-module/package.json'),
+            expectedPath: resolvePath(
+                import.meta.dirname,
+                '../../fixtures/stimulus/mock-module/package.json'
+            ),
         },
         {
             test: 'package.json from Encore when no package.json exists in the current directory',

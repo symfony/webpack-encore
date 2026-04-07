@@ -8,6 +8,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
+
 import stringEscaper from '../../lib/utils/string-escaper.js';
 
 function expectEvaledStringToEqual(str, expectedStr) {
@@ -15,17 +16,15 @@ function expectEvaledStringToEqual(str, expectedStr) {
     expect(eval(`'${str}'`)).toBe(expectedStr);
 }
 
-describe('string-escaper', function() {
-    it('escapes filenames with quotes', function() {
-        // eslint-disable-next-line quotes
+describe('string-escaper', function () {
+    it('escapes filenames with quotes', function () {
         const filename = "/foo/bar's/stuff";
 
         const escapedFilename = stringEscaper(filename);
         expectEvaledStringToEqual(escapedFilename, filename);
     });
 
-    it('escapes Windows filenames', function() {
-        // eslint-disable-next-line quotes
+    it('escapes Windows filenames', function () {
         const filename = `C:\\path\\to\\file`;
 
         const escapedFilename = stringEscaper(filename);

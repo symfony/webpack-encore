@@ -7,12 +7,13 @@
  * file that was distributed with this source code.
  */
 
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { describe, it, expect } from 'vitest';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import tsLoader from '../../lib/loaders/typescript.js';
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import tsTypeChecker from '../../lib/plugins/forked-ts-types.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -22,8 +23,8 @@ function createConfig() {
     return new WebpackConfig(runtimeConfig);
 }
 
-describe('plugins/forkedtypecheck', function() {
-    it('getPlugins() basic usage', async function() {
+describe('plugins/forkedtypecheck', function () {
+    it('getPlugins() basic usage', async function () {
         const config = createConfig();
         config.enableTypeScriptLoader();
         config.enableForkedTypeScriptTypesChecking();
@@ -38,10 +39,10 @@ describe('plugins/forkedtypecheck', function() {
         expect(actualLoaders[1].options.transpileOnly).toBe(true);
     });
 
-    it('getPlugins() with options callback', function() {
+    it('getPlugins() with options callback', function () {
         const config = createConfig();
         config.enableTypeScriptLoader();
-        config.enableForkedTypeScriptTypesChecking(function(options) {
+        config.enableForkedTypeScriptTypesChecking(function (options) {
             options.async = true;
         });
 
@@ -52,10 +53,10 @@ describe('plugins/forkedtypecheck', function() {
         expect(config.plugins[0].plugin.options.async).toBe(true);
     });
 
-    it('getPlugins() with options callback that returns an object', function() {
+    it('getPlugins() with options callback that returns an object', function () {
         const config = createConfig();
         config.enableTypeScriptLoader();
-        config.enableForkedTypeScriptTypesChecking(function(options) {
+        config.enableForkedTypeScriptTypesChecking(function (options) {
             options.silent = true;
 
             // This should override the original config

@@ -14,11 +14,7 @@ export default defineConfig({
         globals: true,
         environment: 'node',
         include: ['test/**/*.js'],
-        exclude: [
-            'test/helpers/**',
-            'test/vitest-global-setup.js',
-            'test/vitest-setup.js',
-        ],
+        exclude: ['test/helpers/**', 'test/vitest-global-setup.js', 'test/vitest-setup.js'],
         testTimeout: 10000,
         hookTimeout: 15000,
         globalSetup: ['./test/vitest-global-setup.js'],

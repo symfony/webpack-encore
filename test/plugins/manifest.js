@@ -9,9 +9,10 @@
 
 import { describe, it, expect } from 'vitest';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
 import manifestPluginUtil from '../../lib/plugins/manifest.js';
+import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();
@@ -23,8 +24,8 @@ function createConfig() {
     return config;
 }
 
-describe('plugins/manifest', function() {
-    it('default settings', function() {
+describe('plugins/manifest', function () {
+    it('default settings', function () {
         const config = createConfig();
         const plugins = [];
 
@@ -34,7 +35,7 @@ describe('plugins/manifest', function() {
         expect(plugins[0].plugin.options.fileName).toBe('manifest.json');
     });
 
-    it('with options callback', function() {
+    it('with options callback', function () {
         const config = createConfig();
         const plugins = [];
 
@@ -50,7 +51,7 @@ describe('plugins/manifest', function() {
         expect(plugins[0].plugin.options.fileName).toBe('bar');
     });
 
-    it('with options callback that returns an object', function() {
+    it('with options callback that returns an object', function () {
         const config = createConfig();
         const plugins = [];
 
