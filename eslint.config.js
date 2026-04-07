@@ -99,12 +99,19 @@ file that was distributed with this source code.`,
     {
         'files': ['test/**/*'],
         languageOptions: {
+            ecmaVersion: 2025,
             globals: {
                 // For Puppeteer when calling "page.evaluate()"
                 document: 'readonly',
             },
         },
         rules: {
+            'n/no-unsupported-features/node-builtins': ['error', {
+                'ignores': [
+                    'import.meta.dirname',
+                    'import.meta.filename',
+                ]
+            }],
             'vitest/expect-expect': 'off',
             'vitest/valid-expect': 'off',
             'vitest/valid-describe-callback': 'off'
