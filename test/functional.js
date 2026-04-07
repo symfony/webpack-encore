@@ -20,7 +20,7 @@ import { createRequire } from 'module';
 import { assertWarning } from './helpers/logger-assert.js';
 import packageJson from '../package.json' with { type: 'json' };
 
-const isLowestDependencies = packageJson.config && packageJson.config["lowest-dependencies"] === true;
+const isLowestDependencies = packageJson.config && packageJson.config['lowest-dependencies'] === true;
 const chunkVueJs = isLowestDependencies
     ? 'vendors-node_modules_pnpm_vue_3_2_14_node_modules_vue_dist_vue_runtime_esm-bundler_js.js'
     : 'vendors-node_modules_pnpm_vue_3_5_32_typescript_5_9_3_node_modules_vue_dist_vue_runtime_esm-b-4f542a.js';
@@ -2003,9 +2003,9 @@ module.exports = {
         config.addEntry('main', './stimulus/assets/app.js');
         config.enableStimulusBridge(import.meta.dirname + '/../fixtures/stimulus/assets/controllers.json');
 
-        const chunkStimulusBridgeMock =             isLowestDependencies
+        const chunkStimulusBridgeMock = isLowestDependencies
             ? 'node_modules_pnpm_symfony_mock-module_file_fixtures_stimulus_mock-module_node_modules_symfony-99479d.js'
-            : 'node_modules_symfony_mock-module_dist_controller_js.js'
+            : 'node_modules_symfony_mock-module_dist_controller_js.js';
 
         const { webpackAssert } = await testSetup.runWebpack(config);
         expect(config.outputPath).to.be.a.directory().with.deep.files([
