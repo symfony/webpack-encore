@@ -126,7 +126,7 @@ describe('Functional tests using webpack', function () {
     });
 
     afterAll(async function () {
-        await browser.close();
+        await browser?.close();
     });
 
     describe('Basic scenarios.', function () {
