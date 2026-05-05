@@ -4,4 +4,4 @@
 // @import '~lib/test-pkg';
 
 // Importing without the tilde seems to work for webpack aliases
-@import 'lib/test-pkg';
+@use 'lib/test-pkg';
