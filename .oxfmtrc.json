@@ -1,6 +1,6 @@
 {
     "$schema": "./node_modules/oxfmt/configuration_schema.json",
-    "ignorePatterns": ["fixtures/**", "test_apps/**"],
+    "ignorePatterns": [".github/PULL_REQUEST_TEMPLATE.md", "fixtures/**", "test_apps/**"],
     "singleQuote": true,
     "semi": true,
     "trailingComma": "es5",
