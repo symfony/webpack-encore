@@ -1,0 +1,104 @@
+# https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
+
+version: 2
+updates:
+    - package-ecosystem: 'npm'
+      directory: '/'
+      schedule:
+          interval: 'weekly'
+      groups:
+          babel:
+              patterns:
+                  - '@babel/*'
+                  - 'babel-loader'
+              update-types: ['minor', 'patch']
+          vue:
+              patterns:
+                  - 'vue'
+                  - 'vue-loader'
+                  - '@vue/*'
+              update-types: ['minor', 'patch']
+          react:
+              patterns:
+                  - 'react'
+                  - 'react-dom'
+              update-types: ['minor', 'patch']
+          preact:
+              patterns:
+                  - 'preact'
+                  - 'preact-compat'
+              update-types: ['minor', 'patch']
+          svelte:
+              patterns:
+                  - 'svelte'
+                  - 'svelte-loader'
+              update-types: ['minor', 'patch']
+          sass:
+              patterns:
+                  - 'sass'
+                  - 'sass-loader'
+              update-types: ['minor', 'patch']
+          less:
+              patterns:
+                  - 'less'
+                  - 'less-loader'
+              update-types: ['minor', 'patch']
+          stylus:
+              patterns:
+                  - 'stylus'
+                  - 'stylus-loader'
+              update-types: ['minor', 'patch']
+          postcss:
+              patterns:
+                  - 'postcss'
+                  - 'postcss-loader'
+                  - 'autoprefixer'
+              update-types: ['minor', 'patch']
+          typescript:
+              patterns:
+                  - 'typescript'
+                  - 'ts-loader'
+                  - 'fork-ts-checker-webpack-plugin'
+              update-types: ['minor', 'patch']
+          handlebars:
+              patterns:
+                  - 'handlebars'
+                  - 'handlebars-loader'
+              update-types: ['minor', 'patch']
+
+    # Test apps exercising package-manager compatibility — refresh lockfiles regularly.
+    - package-ecosystem: 'npm'
+      directories:
+          - '/test_apps/npm*'
+          - '/test_apps/pnpm*'
+          - '/test_apps/yarn-pnp*'
+      schedule:
+          interval: 'weekly'
+
+    # Test apps exercising lowest peer-dependency bounds — bump transitives only,
+    # never the explicitly pinned peer deps under test.
+    - package-ecosystem: 'npm'
+      directories:
+          - '/test_apps/lowest-peers-*'
+      schedule:
+          interval: 'weekly'
+      ignore:
+          - dependency-name: '@babel/*'
+          - dependency-name: '@hotwired/stimulus'
+          - dependency-name: '@symfony/stimulus-bridge'
+          - dependency-name: '@vue/*'
+          - dependency-name: 'fork-ts-checker-webpack-plugin'
+          - dependency-name: 'less'
+          - dependency-name: 'less-loader'
+          - dependency-name: 'postcss'
+          - dependency-name: 'postcss-loader'
+          - dependency-name: 'sass'
+          - dependency-name: 'sass-loader'
+          - dependency-name: 'svelte'
+          - dependency-name: 'svelte-loader'
+          - dependency-name: 'ts-loader'
+          - dependency-name: 'typescript'
+          - dependency-name: 'vue'
+          - dependency-name: 'vue-loader'
+          - dependency-name: 'webpack'
+          - dependency-name: 'webpack-cli'

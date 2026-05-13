@@ -19,3 +19,8 @@ for dir in $(find . -type d -name "pnpm*"); do
   echo "Installing dependencies for $dir"
   (cd "$dir" && pnpm install)
 done
+
+for dir in $(find . -type d -name "lowest-peers-*"); do
+  echo "Installing dependencies for $dir"
+  (cd "$dir" && pnpm install --ignore-workspace)
+done

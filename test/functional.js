@@ -18,15 +18,8 @@ import { afterAll, beforeAll, chai, describe, expect, it } from 'vitest';
 
 import packageHelper from '../lib/package-helper.js';
 import getVueVersion from '../lib/utils/get-vue-version.js';
-import packageJson from '../package.json' with { type: 'json' };
 import { assertWarning } from './helpers/logger-assert.js';
 import * as testSetup from './helpers/setup.js';
-
-const isLowestDependencies =
-    packageJson.config && packageJson.config['lowest-dependencies'] === true;
-const chunkVueJs = isLowestDependencies
-    ? 'vendors-node_modules_pnpm_vue_3_2_14_node_modules_vue_dist_vue_runtime_esm-bundler_js.js'
-    : 'vendors-node_modules_pnpm_vue_3_5_32_typescript_5_9_3_node_modules_vue_dist_vue_runtime_esm-b-4f542a.js';
 
 const require = createRequire(import.meta.url);
 chai.use(require('chai-fs'));
@@ -86,6 +79,22 @@ function getEntrypointData(config, entryName) {
 
     return entrypointsData.entrypoints[entryName];
 }
+
+function findChunkFilename(pattern) {
+    return (config) => {
+        const files = fs.readdirSync(config.outputPath);
+        const match = files.find((file) => pattern.test(file));
+        if (!match) {
+            throw new Error(
+                `No chunk matching ${pattern} found in ${config.outputPath} (got: ${files.join(', ')})`
+            );
+        }
+        return match;
+    };
+}
+
+const findVueChunkFilename = findChunkFilename(/^vendors-.*vue.*\.js$/);
+const findStimulusMockChunkFilename = findChunkFilename(/mock-module.*\.js$/);
 
 function getIntegrityData(config) {
     const entrypointsData = JSON.parse(readOutputFileContents('entrypoints.json', config));
@@ -205,6 +214,7 @@ describe('Functional tests using webpack', function () {
             });
 
             const { webpackAssert } = await testSetup.runWebpack(config);
+            const chunkVueJs = findVueChunkFilename(config);
             webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                 entrypoints: {
                     main: {
@@ -1843,11 +1853,9 @@ module.exports = {
             import.meta.dirname + '/../fixtures/stimulus/assets/controllers.json'
         );
 
-        const chunkStimulusBridgeMock = isLowestDependencies
-            ? 'node_modules_pnpm_symfony_mock-module_file_fixtures_stimulus_mock-module_node_modules_symfony-99479d.js'
-            : 'node_modules_symfony_mock-module_dist_controller_js.js';
-
         const { webpackAssert } = await testSetup.runWebpack(config);
+        const chunkStimulusBridgeMock = findStimulusMockChunkFilename(config);
+
         expect(config.outputPath)
             .to.be.a.directory()
             .with.deep.files([
@@ -2321,6 +2329,7 @@ module.exports = {
             });
 
             const { webpackAssert } = await testSetup.runWebpack(config);
+            const chunkVueJs = findVueChunkFilename(config);
             webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                 entrypoints: {
                     main: {
@@ -2360,6 +2369,7 @@ module.exports = {
             });
 
             const { webpackAssert } = await testSetup.runWebpack(config);
+            const chunkVueJs = findVueChunkFilename(config);
             webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                 entrypoints: {
                     main: {
@@ -2399,6 +2409,7 @@ module.exports = {
             });
 
             const { webpackAssert } = await testSetup.runWebpack(config);
+            const chunkVueJs = findVueChunkFilename(config);
             webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                 entrypoints: {
                     main: {
@@ -2466,6 +2477,7 @@ module.exports = {
             });
 
             const { webpackAssert } = await testSetup.runWebpack(config);
+            const chunkVueJs = findVueChunkFilename(config);
             webpackAssert.assertOutputJsonFileMatches('entrypoints.json', {
                 entrypoints: {
                     main: {
@@ -2674,6 +2686,7 @@ module.exports = {
             config.enableIntegrityHashes();
 
             await testSetup.runWebpack(config);
+            const chunkVueJs = findVueChunkFilename(config);
             const integrityData = getIntegrityData(config);
             const expectedFilesWithHashes = [
                 '/build/runtime.js',
@@ -2730,6 +2743,7 @@ module.exports = {
             config.enableIntegrityHashes(true, ['sha256', 'sha512']);
 
             await testSetup.runWebpack(config);
+            const chunkVueJs = findVueChunkFilename(config);
             const integrityData = getIntegrityData(config);
             const expectedFilesWithHashes = [
                 '/build/runtime.js',

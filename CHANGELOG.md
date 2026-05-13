@@ -120,6 +120,8 @@ can adopt modern async APIs from the ecosystem without hacks**.
 ### Features
 
 - Update postcss-loader support from 8.1.0 to 8.1.1 for ESM compatibility
+- Update minimum version of webpack to `^5.82.0`
+- Update minimum version of `@vue/compiler-sfc` to `^3.2.14`, to match `vue` peer dependency requirement
 - Add support for [webpack-cli@7.0.0](https://github.com/webpack/webpack-cli/releases/tag/webpack-cli%407.0.0)
 - `Encore.copyFiles()` now internally generates ESM exports for better webpack optimizations (scope hoisting, module concatenation)
 
