@@ -1,0 +1,18 @@
+{
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "encore": "encore"
+  },
+  "devDependencies": {
+    "@babel/core": "7.17.0",
+    "@babel/preset-env": "7.16.0",
+    "@vue/babel-plugin-jsx": "1.0.0",
+    "@vue/compiler-sfc": "3.2.14",
+    "vue": "3.2.14",
+    "vue-loader": "17.0.0",
+    "webpack": "5.82.0",
+    "webpack-cli": "6.0.0"
+  }
+}

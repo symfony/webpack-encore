@@ -119,6 +119,123 @@ jobs:
                           yarn run encore dev
                           yarn run encore production
 
+                    - name: lowest peers (sass)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-sass
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (less)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-less
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (postcss)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-postcss
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (react)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-react
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (vue)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-vue
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (vue with JSX)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-vue-jsx
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (TypeScript + fork-ts-checker v7)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-typescript-fork7
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (TypeScript + fork-ts-checker v8)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-typescript-fork8
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (TypeScript + fork-ts-checker v9)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-typescript-fork9
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (Svelte v3)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-svelte3
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (Svelte v4)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-svelte4
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (Stimulus Bridge v3)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-stimulus3
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
+                    - name: lowest peers (webpack-cli v6)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-webpack-cli6
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
         name: ${{ matrix.app.name }}
         runs-on: ubuntu-latest
         env:

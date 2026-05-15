@@ -1,0 +1,16 @@
+{
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "encore": "encore"
+  },
+  "devDependencies": {
+    "@babel/core": "7.17.0",
+    "@babel/preset-env": "7.16.0",
+    "svelte": "3.50.0",
+    "svelte-loader": "3.1.0",
+    "webpack": "5.82.0",
+    "webpack-cli": "6.0.0"
+  }
+}
