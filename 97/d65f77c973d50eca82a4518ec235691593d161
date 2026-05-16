@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-08T13:53:31Z
+
+Looks like checks are failing because of your changes too 🤔
+```
+ FAIL  test/functional.js > Functional tests using webpack > Code splitting a scss file works
+Error: Expected contents "background: top left" not found in file /home/runner/work/webpack-encore/webpack-encore/test_tmp/67hfr/www/build/css_sass_features_scss.css
+ ❯ Assert.assertOutputFileContains test/helpers/assert.js:92:19
+     90|         const actualContents = fs.readFileSync(fullPath, 'utf8');
+     91|         if (!actualContents.includes(expectedContents)) {
+     92|             throw new Error(
+       |                   ^
+     93|                 `Expected contents "${expectedContents}" not found in …
+     94|             );
+ ❯ test/functional.js:650:23
+```
