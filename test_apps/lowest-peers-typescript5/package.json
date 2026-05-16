@@ -10,7 +10,7 @@
     "@babel/preset-env": "7.16.0",
     "@babel/preset-typescript": "7.0.0",
     "typescript": "5.0.2",
-    "webpack": "5.82.0",
+    "webpack": "5.104.1",
     "webpack-cli": "6.0.0"
   }
 }
