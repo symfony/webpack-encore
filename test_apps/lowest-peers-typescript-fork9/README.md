@@ -6,8 +6,8 @@ Pins `fork-ts-checker-webpack-plugin@9.0.0` (plus TypeScript toolchain at its lo
 
 ```shell
 $ (cd ../..; pnpm pack --out webpack-encore.tgz)
-$ pnpm install --frozen-lockfile
-$ pnpm add --save-dev ../../webpack-encore.tgz
+$ pnpm install --ignore-workspace --frozen-lockfile
+$ pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
 ```
 
 ## Usage

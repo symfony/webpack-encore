@@ -173,6 +173,15 @@ jobs:
                           pnpm run encore dev
                           pnpm run encore production
 
+                    - name: lowest peers (TypeScript 5 with Babel preset)
+                      pkg_manager: pnpm
+                      working_directory: test_apps/lowest-peers-typescript5
+                      script: |
+                          pnpm install --ignore-workspace --frozen-lockfile
+                          pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
+                          pnpm run encore dev
+                          pnpm run encore production
+
                     - name: lowest peers (TypeScript + fork-ts-checker v7)
                       pkg_manager: pnpm
                       working_directory: test_apps/lowest-peers-typescript-fork7

@@ -6,7 +6,7 @@ This testing app is used to test how Encore installation and usage work when usi
 
 ```shell
 $ (cd ../..; yarn pack --filename webpack-encore.tgz)
-$ pnpm add --save-dev ../../webpack-encore.tgz
+$ pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
 $ pnpm install
 ```
 
