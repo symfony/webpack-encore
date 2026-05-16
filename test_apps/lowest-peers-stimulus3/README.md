@@ -6,8 +6,8 @@ Pins `@symfony/stimulus-bridge@3.0.0` (plus core peer deps) at its lowest suppor
 
 ```shell
 $ (cd ../..; pnpm pack --out webpack-encore.tgz)
-$ pnpm install --frozen-lockfile
-$ pnpm add --save-dev ../../webpack-encore.tgz
+$ pnpm install --ignore-workspace --frozen-lockfile
+$ pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
 ```
 
 ## Usage

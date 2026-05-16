@@ -6,8 +6,8 @@ This testing app pins `@babel/preset-react` and `@babel/plugin-transform-react-j
 
 ```shell
 $ (cd ../..; pnpm pack --out webpack-encore.tgz)
-$ pnpm install --frozen-lockfile
-$ pnpm add --save-dev ../../webpack-encore.tgz
+$ pnpm install --ignore-workspace --frozen-lockfile
+$ pnpm add --ignore-workspace --save-dev ../../webpack-encore.tgz
 ```
 
 ## Usage
