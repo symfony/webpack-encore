@@ -125,6 +125,7 @@ can adopt modern async APIs from the ecosystem without hacks**.
 - Add support for [webpack-cli@7.0.0](https://github.com/webpack/webpack-cli/releases/tag/webpack-cli%407.0.0)
 - `Encore.copyFiles()` now internally generates ESM exports for better webpack optimizations (scope hoisting, module concatenation)
 - Add support for [typescript@6.0.0](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-6-0.html)
+- The runtime version check for optional dependencies now reads supported version ranges from `peerDependencies` instead of `devDependencies`
 
 ## 6.0.0
 
