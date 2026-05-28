@@ -48,8 +48,8 @@ importers:
         specifier: ^5.3.0
         version: 5.6.0(postcss@8.5.14)(webpack@5.106.2)
       tmp:
-        specifier: ^0.2.5
-        version: 0.2.5
+        specifier: ^0.2.7
+        version: 0.2.7
       webpack-manifest-plugin:
         specifier: ^5.0.1
         version: 5.0.1(webpack@5.106.2)
@@ -4586,8 +4586,8 @@ packages:
     resolution: {integrity: sha512-Bf+ILmBgretUrdJxzXM0SgXLZ3XfiaUuOj/IKQHuTXip+05Xn+uyEYdVg0kYDipTBcLrCVyUzAPz7QmArb0mmw==}
     engines: {node: '>=14.0.0'}
 
-  tmp@0.2.5:
-    resolution: {integrity: sha512-voyz6MApa1rQGUxT3E+BK7/ROe8itEx7vD8/HEvt4xwXucvQ5G5oeEiHkmHZJuBO21RpOf+YYm9MOivj709jow==}
+  tmp@0.2.7:
+    resolution: {integrity: sha512-e0votIpp4Uo2AJYSzVHV6xCcawuiez3DzqDAbrTc3YxBkplN6e+dM13ZeIcZnDg/QpSuU2zfZ3rzwY8ukEnaXw==}
     engines: {node: '>=14.14'}
 
   to-regex-range@5.0.1:
@@ -9840,7 +9840,7 @@ snapshots:
 
   tinyrainbow@3.1.0: {}
 
-  tmp@0.2.5: {}
+  tmp@0.2.7: {}
 
   to-regex-range@5.0.1:
     dependencies:
