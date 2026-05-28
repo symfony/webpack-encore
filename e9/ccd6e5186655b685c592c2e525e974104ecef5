@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-05-27T19:05:31Z
+
+That's a good question, I manually edited to constraint version from `tmp` to `^0.2.7` (a new version has been released in the meantime), `pnpm install` and the lockfile only contains modifications about `tmp` 🤔
+
+---------------------------------------------------------------------------
+
+by frykten at 2026-05-28T06:48:12Z
+
+Yes, that new patch has some more refinements on the CVE issue.
+
+I did amend my commit with the new version and without postcss :shrug:
