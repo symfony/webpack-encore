@@ -222,7 +222,7 @@ describe('package-helper', function () {
             );
 
             const expectedPackages = [
-                { name: 'sass-loader', version: packageInfo.devDependencies['sass-loader'] },
+                { name: 'sass-loader', version: packageInfo.peerDependencies['sass-loader'] },
                 { name: 'node-sass' },
                 { name: 'vue', version: '^2' },
             ];
