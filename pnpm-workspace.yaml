@@ -1,4 +1,6 @@
 allowBuilds:
     '@parcel/watcher': false
+    '@swc/core': true
     core-js: true
+    esbuild: true
     puppeteer: true

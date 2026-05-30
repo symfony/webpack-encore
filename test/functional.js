@@ -891,6 +891,9 @@ describe('Functional tests using webpack', function () {
         config.setPublicPath('/build');
         config.addEntry('main', ['./js/no_require']);
         config.addEntry('styles', './css/h1_style.css');
+        config.configureCssMinimizerPlugin((options, MinimizerPlugin) => {
+            options.minify = MinimizerPlugin.lightningCssMinify;
+        });
 
         const { webpackAssert } = await testSetup.runWebpack(config);
         // the comment should not live in the file
@@ -2159,21 +2162,12 @@ module.exports = {
             config.setPublicPath('/build');
             config.copyFiles({ from: './copy' });
 
-            // By default the css-minimizer-webpack-plugin will
-            // run on ALL emitted CSS files, which includes the ones
-            // handled by `Encore.copyFiles()`.
-            // We disable it for this test since our CSS file will
-            // not be valid and can't be handled by this plugin.
-            config.configureCssMinimizerPlugin((options) => {
-                options.include = /^$/;
-            });
-
-            // By default the terser-webpack-plugin will run on
+            // By default the JS minimizer will run on
             // ALL emitted JS files, which includes the ones
             // handled by `Encore.copyFiles()`.
             // We disable it for this test since our JS file will
             // not be valid and can't be handled by this plugin.
-            config.configureTerserPlugin((options) => {
+            config.configureJsMinimizerPlugin((options) => {
                 options.include = /^$/;
             });
 
@@ -2219,21 +2213,12 @@ module.exports = {
                 pattern: /\.(?!(css|js)$)([^.]+$)/,
             });
 
-            // By default the css-minimizer-webpack-plugin will
-            // run on ALL emitted CSS files, which includes the ones
-            // handled by `Encore.copyFiles()`.
-            // We disable it for this test since our CSS file will
-            // not be valid and can't be handled by this plugin.
-            config.configureCssMinimizerPlugin((options) => {
-                options.include = /^$/;
-            });
-
-            // By default the terser-webpack-plugin will run on
+            // By default the JS minimizer will run on
             // ALL emitted JS files, which includes the ones
             // handled by `Encore.copyFiles()`.
             // We disable it for this test since our JS file will
             // not be valid and can't be handled by this plugin.
-            config.configureTerserPlugin((options) => {
+            config.configureJsMinimizerPlugin((options) => {
                 options.include = /^$/;
             });
 

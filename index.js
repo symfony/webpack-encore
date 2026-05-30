@@ -16,6 +16,10 @@
  */
 
 /**
+ * @import { MinimizerOptionsCallback } from './lib/WebpackConfig.js'
+ */
+
+/**
  * @typedef {{from: string, pattern?: RegExp|string, to?: string|null, includeSubdirectories?: boolean, context?: string}} CopyFilesOptions
  */
 
@@ -177,15 +181,14 @@ class Encore {
     }
 
     /**
-     * Allows you to configure the options passed to the terser-webpack-plugin.
-     * A list of available options can be found at https://github.com/webpack-contrib/terser-webpack-plugin
+     * Allows you to configure the options passed to the JS minimizer (Terser by default).
+     * A list of available options can be found at https://github.com/webpack/minimizer-webpack-plugin
      *
      * For example:
      *
      * ```
-     * Encore.configureTerserPlugin((options) => {
-     *     options.cache = true;
-     *     options.terserOptions = {
+     * Encore.configureJsMinimizerPlugin((options) => {
+     *     options.minimizerOptions = {
      *         output: {
      *             comments: false
      *         }
@@ -193,28 +196,54 @@ class Encore {
      * })
      * ```
      *
-     * @param {OptionsCallback<import('terser-webpack-plugin').BasePluginOptions & import('terser-webpack-plugin').DefinedDefaultMinimizerAndOptions<import('terser').MinifyOptions>>} terserPluginOptionsCallback
+     * You can also switch to another minimizer such as esbuild or SWC. The `MinimizerPlugin`
+     * class is passed as the second argument of the callback, so you don't need to import
+     * `minimizer-webpack-plugin` yourself:
+     *
+     * ```
+     * // install esbuild first
+     * Encore.configureJsMinimizerPlugin((options, MinimizerPlugin) => {
+     *     options.minify = MinimizerPlugin.esbuildMinify;
+     * })
+     * ```
+     *
+     * @param {MinimizerOptionsCallback} jsOptionsCallback
      * @returns {Encore}
      */
-    configureTerserPlugin(terserPluginOptionsCallback = () => {}) {
-        webpackConfig.configureTerserPlugin(terserPluginOptionsCallback);
+    configureJsMinimizerPlugin(jsOptionsCallback = () => {}) {
+        webpackConfig.configureJsMinimizerPlugin(jsOptionsCallback);
 
         return this;
     }
 
     /**
-     * Allows you to configure the options passed to the css-minimizer-webpack-plugin.
-     * A list of available options can be found at https://github.com/webpack-contrib/css-minimizer-webpack-plugin
+     * Allows you to configure the options passed to the CSS minimizer.
      *
-     * For example:
+     * No CSS minifier is enabled by default. Choose one and set it via `options.minify`;
+     * configuring the minimizer without a `minify` function fails the build with an explicit error.
+     * A list of available options can be found at https://github.com/webpack/minimizer-webpack-plugin
+     *
+     * The `MinimizerPlugin` class is passed as the second argument of the callback, so you
+     * don't need to import `minimizer-webpack-plugin` yourself.
+     *
+     * For example, using Lightning CSS (install lightningcss first):
      *
      * ```
-     * Encore.configureCssMinimizerPlugin((options) => {
-     *     options.parallel = false;
+     * Encore.configureCssMinimizerPlugin((options, MinimizerPlugin) => {
+     *     options.minify = MinimizerPlugin.lightningCssMinify;
      * })
      * ```
      *
-     * @param {OptionsCallback<import('css-minimizer-webpack-plugin').BasePluginOptions & import('css-minimizer-webpack-plugin').DefinedDefaultMinimizerAndOptions<import('css-minimizer-webpack-plugin').CssNanoOptionsExtended>>} cssMinimizerPluginOptionsCallback
+     * You can also switch to another minimizer such as cssnano, csso or esbuild:
+     *
+     * ```
+     * // install cssnano and postcss first
+     * Encore.configureCssMinimizerPlugin((options, MinimizerPlugin) => {
+     *     options.minify = MinimizerPlugin.cssnanoMinify;
+     * })
+     * ```
+     *
+     * @param {MinimizerOptionsCallback} cssMinimizerPluginOptionsCallback
      * @returns {Encore}
      */
     configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback = () => {}) {

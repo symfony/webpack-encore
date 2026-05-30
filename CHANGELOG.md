@@ -136,7 +136,63 @@ can adopt modern async APIs from the ecosystem without hacks**.
   default instead of compiling to ES5. Add a `browserslist` configuration to your project to transpile
   for older browsers.
 
+- The archived `css-minimizer-webpack-plugin` and `terser-webpack-plugin` packages have been
+  replaced by the unified [`minimizer-webpack-plugin`](https://github.com/webpack/minimizer-webpack-plugin).
+  Minifier packages (`lightningcss`, `cssnano`, `csso`, `clean-css`, `esbuild`, `@swc/*`, `uglify-js`) are now
+  optional peer dependencies, installed on demand. In particular `cssnano`, previously pulled in
+  transitively by `css-minimizer-webpack-plugin`, is no longer installed by default.
+
+- `Encore.configureTerserPlugin()` has been removed. Use `Encore.configureJsMinimizerPlugin()`
+  instead (it takes the same callback).
+
+- **CSS minification is no longer enforced by default.** You must now explicitly choose and
+  configure a CSS minifier via `configureCssMinimizerPlugin()`. If no CSS minifier is configured,
+  CSS will not be minified in production. The JS minimizer (Terser, bundled inside
+  `minimizer-webpack-plugin`) continues to work with no extra setup.
+
+    Install the CSS minifier of your choice and configure it. The `MinimizerPlugin` class is
+    passed as the second argument of the callback, so you don't need to import
+    `minimizer-webpack-plugin` yourself (which would not resolve under pnpm, since it is a
+    transitive dependency of Encore):
+
+    ```js
+    // Lightning CSS, fast Rust-based minifier (npm install --save-dev lightningcss)
+    Encore.configureCssMinimizerPlugin((options, MinimizerPlugin) => {
+        options.minify = MinimizerPlugin.lightningCssMinify;
+    });
+
+    // cssnano, PostCSS-based, closest to previous default (npm install --save-dev cssnano postcss)
+    Encore.configureCssMinimizerPlugin((options, MinimizerPlugin) => {
+        options.minify = MinimizerPlugin.cssnanoMinify;
+    });
+    ```
+
+    Other supported CSS minimizers: `csso`, `clean-css`, `esbuild` (`esbuildMinifyCss`),
+    `@swc/css` (`swcMinifyCss`). See the [minimizer-webpack-plugin documentation](https://github.com/webpack/minimizer-webpack-plugin)
+    for all available options.
+
 ### Features
+
+- Add new `configureJsMinimizerPlugin(callback)` method to configure JS minimization options.
+- `configureJsMinimizerPlugin()` and `configureCssMinimizerPlugin()` are now backed by
+  `minimizer-webpack-plugin` and support switching to alternative minimizers through the `minify`
+  option. Minifier packages are optional peer dependencies — install the one you actually use.
+  A clear error is thrown at build time if a minifier's backing package is not installed.
+
+    The `MinimizerPlugin` class is passed as the second argument of the callback, so you
+    don't need to import `minimizer-webpack-plugin` yourself:
+
+    ```js
+    // Switch JS minimizer to esbuild (npm install --save-dev esbuild)
+    Encore.configureJsMinimizerPlugin((options, MinimizerPlugin) => {
+        options.minify = MinimizerPlugin.esbuildMinify;
+    });
+    ```
+
+    Available JS minimizers: `terserMinify` (default, bundled), `uglifyJsMinify`, `swcMinify`,
+    `esbuildMinify`. See the
+    [minimizer-webpack-plugin documentation](https://github.com/webpack/minimizer-webpack-plugin)
+    for all available options.
 
 - Update postcss-loader support from 8.1.0 to 8.1.1 for ESM compatibility
 - Update minimum version of webpack to `^5.82.0`

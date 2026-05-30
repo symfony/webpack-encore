@@ -297,31 +297,31 @@ describe('WebpackConfig object', function () {
         });
     });
 
-    describe('configureTerserPlugin', function () {
-        it('Setting callback', function () {
+    describe('configureJsMinimizerPlugin', function () {
+        it('Setting JS callback', function () {
             const config = createConfig();
             const callback = () => {};
-            config.configureTerserPlugin(callback);
+            config.configureJsMinimizerPlugin(callback);
 
-            expect(config.terserPluginOptionsCallback).toBe(callback);
+            expect(config.minimizerPluginJsOptionsCallback).toBe(callback);
         });
 
-        it('Setting invalid callback argument', function () {
+        it('Setting invalid JS callback argument', function () {
             const config = createConfig();
 
             expect(() => {
-                config.configureTerserPlugin('foo');
-            }).toThrow('Argument 1 to configureTerserPlugin() must be a callback function');
+                config.configureJsMinimizerPlugin('foo');
+            }).toThrow('Argument 1 to configureJsMinimizerPlugin() must be a callback function.');
         });
     });
 
     describe('configureCssMinimizerPlugin', function () {
-        it('Setting callback', function () {
+        it('Setting CSS callback', function () {
             const config = createConfig();
             const callback = () => {};
             config.configureCssMinimizerPlugin(callback);
 
-            expect(config.cssMinimizerPluginOptionsCallback).toBe(callback);
+            expect(config.minimizerPluginCssOptionsCallback).toBe(callback);
         });
 
         it('Setting invalid callback argument', function () {

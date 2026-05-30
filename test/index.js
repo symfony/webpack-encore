@@ -321,9 +321,9 @@ describe('Public API', function () {
         });
     });
 
-    describe('configureTerserPlugin', function () {
+    describe('configureJsMinimizerPlugin', function () {
         it('should return the API object', function () {
-            const returnedValue = api.configureTerserPlugin(() => {});
+            const returnedValue = api.configureJsMinimizerPlugin(() => {});
             expect(returnedValue).toBe(api);
         });
     });
