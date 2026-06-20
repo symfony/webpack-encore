@@ -79,17 +79,6 @@ updates:
       cooldown:
           default-days: 7
 
-    # Test apps exercising package-manager compatibility — refresh lockfiles regularly.
-    - package-ecosystem: 'npm'
-      directories:
-          - '/test_apps/npm*'
-          - '/test_apps/pnpm*'
-          - '/test_apps/yarn-pnp*'
-      schedule:
-          interval: 'weekly'
-      cooldown:
-          default-days: 7
-
     # Test apps exercising lowest peer-dependency bounds — bump transitives only,
     # never the explicitly pinned peer deps under test.
     - package-ecosystem: 'npm'
