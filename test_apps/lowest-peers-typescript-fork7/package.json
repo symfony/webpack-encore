@@ -6,9 +6,9 @@
     "encore": "encore"
   },
   "devDependencies": {
-    "@babel/core": "7.17.0",
-    "@babel/preset-env": "7.16.0",
-    "@babel/preset-typescript": "7.0.0",
+    "@babel/core": "8.0.0",
+    "@babel/preset-env": "8.0.0",
+    "@babel/preset-typescript": "8.0.0",
     "fork-ts-checker-webpack-plugin": "7.0.0",
     "ts-loader": "9.0.0",
     "typescript": "5.0.2",

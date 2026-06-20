@@ -14,9 +14,9 @@ jobs:
             fail-fast: false
             matrix:
                 os: [ubuntu-latest]
-                node-versions: ['22.13.0', '22', '24', '26']
+                node-versions: ['22.18.0', '22', '24', '26']
                 include:
-                    - node-versions: '22.13.0'
+                    - node-versions: '22.18.0'
                       os: windows-latest
                     - node-versions: '24'
                       os: windows-latest

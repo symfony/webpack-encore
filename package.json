@@ -26,7 +26,7 @@
         "url": "https://github.com/symfony/webpack-encore/issues"
     },
     "engines": {
-        "node": "^22.13.0 || ^24.0.0 || >=26.0"
+        "node": "^22.18.0 || ^24.11.0 || >=26.0"
     },
     "homepage": "https://github.com/symfony/webpack-encore",
     "dependencies": {
@@ -48,12 +48,12 @@
         "yargs-parser": "^21.0.0"
     },
     "devDependencies": {
-        "@babel/core": "^7.17.0",
-        "@babel/eslint-parser": "^7.17.0",
-        "@babel/plugin-transform-react-jsx": "^7.12.11",
-        "@babel/preset-env": "^7.16.0",
-        "@babel/preset-react": "^7.9.0",
-        "@babel/preset-typescript": "^7.0.0",
+        "@babel/core": "^8.0.0",
+        "@babel/eslint-parser": "^8.0.0",
+        "@babel/plugin-transform-react-jsx": "^8.0.0",
+        "@babel/preset-env": "^8.0.0",
+        "@babel/preset-react": "^8.0.0",
+        "@babel/preset-typescript": "^8.0.0",
         "@eslint/js": "^9.32.0",
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/mock-module": "file:fixtures/stimulus/mock-module",
@@ -104,11 +104,11 @@
         "webpack-notifier": "^1.15.0"
     },
     "peerDependencies": {
-        "@babel/core": "^7.17.0",
-        "@babel/plugin-transform-react-jsx": "^7.12.11",
-        "@babel/preset-env": "^7.16.0",
-        "@babel/preset-react": "^7.9.0",
-        "@babel/preset-typescript": "^7.0.0",
+        "@babel/core": "^8.0.0",
+        "@babel/plugin-transform-react-jsx": "^8.0.0",
+        "@babel/preset-env": "^8.0.0",
+        "@babel/preset-react": "^8.0.0",
+        "@babel/preset-typescript": "^8.0.0",
         "@symfony/stimulus-bridge": "^3.0.0 || ^4.0.0",
         "@vue/babel-plugin-jsx": "^1.0.0",
         "@vue/compiler-sfc": "^3.2.14",

@@ -8,11 +8,10 @@ Encore
 
     // Configure Babel
     .configureBabel((config) => {
-        config.plugins.push(import.meta.resolve('@babel/plugin-proposal-partial-application'));
-    })
-    .configureBabelPresetEnv((config) => {
-        config.useBuiltIns = 'usage';
-        config.corejs = 3;
+        config.plugins.push([
+            import.meta.resolve('@babel/plugin-proposal-partial-application'),
+            { version: '2018-07' },
+        ]);
     })
 ;
 

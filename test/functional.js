@@ -1009,6 +1009,11 @@ export default {
         const config = createWebpackConfig('www/build', 'dev');
         config.setPublicPath('/build');
         config.addEntry('main', './js/class-syntax');
+        // Babel 8 targets modern browsers by default (which support classes),
+        // so an explicit old target is required to force the transformation.
+        config.configureBabelPresetEnv((options) => {
+            options.targets = { ie: '11' };
+        });
 
         const { webpackAssert } = await testSetup.runWebpack(config);
         // check that babel transformed the class
@@ -1126,48 +1131,19 @@ export default {
         );
     });
 
-    it('Babel adds polyfills correctly', async function () {
-        const cwd = process.cwd();
-        const appDir = testSetup.createTestAppDir();
-        process.chdir(appDir);
-
-        fs.writeFileSync(
-            path.join(appDir, 'package.json'),
-
-            // The test case uses Array.flat which
-            // isn't supported by IE11
-            '{"browserslist": "IE 11"}'
-        );
-
+    it('Babel useBuiltIns/corejs options throw (removed in Babel 8)', async function () {
+        // Babel 8 removed the "useBuiltIns" and "corejs" options from
+        // @babel/preset-env (polyfilling moved to babel-plugin-polyfill-corejs3),
+        // so Encore throws an explicit error when they are set.
         const config = createWebpackConfig('www/build', 'dev');
         config.setPublicPath('/build');
-        config.addEntry('commonjs', './js/import_polyfills_commonjs.js');
         config.addEntry('ecmascript', './js/import_polyfills_ecmascript.js');
         config.configureBabel(null, {
             useBuiltIns: 'usage',
             corejs: 3,
         });
 
-        const { webpackAssert } = await testSetup.runWebpack(config);
-        for (const scriptName of ['commonjs.js', 'ecmascript.js']) {
-            // Check that the polyfills are included correctly
-            // in both files.
-            webpackAssert.assertOutputFileContains(scriptName, 'Array.prototype.flat');
-
-            // Test that the generated scripts work fine
-            await testSetup.requestTestPage(
-                browser,
-                path.join(config.getContext(), 'www'),
-                ['build/runtime.js', `build/${scriptName}`],
-                async ({ page }) => {
-                    expect(await page.evaluate(() => document.body.textContent)).to.contains(
-                        '[1,2,3,4]'
-                    );
-                }
-            );
-        }
-
-        process.chdir(cwd);
+        await expect(testSetup.runWebpack(config)).rejects.toThrow(/useBuiltIns/);
     });
 
     it('When enabled, react JSX is transformed!', async function () {

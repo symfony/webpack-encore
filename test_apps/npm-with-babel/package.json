@@ -6,9 +6,9 @@
     "encore": "encore"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.0",
-    "@babel/plugin-proposal-partial-application": "^7.18.9",
-    "@babel/preset-env": "^7.16.0",
+    "@babel/core": "^8.0.0",
+    "@babel/plugin-proposal-partial-application": "^8.0.0",
+    "@babel/preset-env": "^8.0.0",
     "webpack": "^5.82.0",
     "webpack-cli": "^6.0.1"
   }

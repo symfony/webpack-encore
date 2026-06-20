@@ -6,10 +6,10 @@
     "encore": "encore"
   },
   "devDependencies": {
-    "@babel/core": "7.17.0",
-    "@babel/plugin-transform-react-jsx": "7.12.11",
-    "@babel/preset-env": "7.16.0",
-    "@babel/preset-react": "7.9.0",
+    "@babel/core": "8.0.0",
+    "@babel/plugin-transform-react-jsx": "8.0.0",
+    "@babel/preset-env": "8.0.0",
+    "@babel/preset-react": "8.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "webpack": "5.82.0",
