@@ -10,6 +10,8 @@ updates:
           github-actions:
               patterns:
                   - '*'
+      cooldown:
+          default-days: 7
 
     - package-ecosystem: 'npm'
       directory: '/'
@@ -74,6 +76,8 @@ updates:
                   - 'handlebars'
                   - 'handlebars-loader'
               update-types: ['minor', 'patch']
+      cooldown:
+          default-days: 7
 
     # Test apps exercising package-manager compatibility — refresh lockfiles regularly.
     - package-ecosystem: 'npm'
@@ -83,6 +87,8 @@ updates:
           - '/test_apps/yarn-pnp*'
       schedule:
           interval: 'weekly'
+      cooldown:
+          default-days: 7
 
     # Test apps exercising lowest peer-dependency bounds — bump transitives only,
     # never the explicitly pinned peer deps under test.
@@ -111,3 +117,5 @@ updates:
           - dependency-name: 'vue-loader'
           - dependency-name: 'webpack'
           - dependency-name: 'webpack-cli'
+      cooldown:
+          default-days: 7

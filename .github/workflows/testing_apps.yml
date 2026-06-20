@@ -247,22 +247,25 @@ jobs:
 
         name: ${{ matrix.app.name }}
         runs-on: ubuntu-latest
+        permissions: {}
         env:
             # We don't want Puppeteer to automatically download a browser when dependencies are being installed
             PUPPETEER_SKIP_DOWNLOAD: 'true'
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v7
+              uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+              with:
+                  persist-credentials: false
 
             - name: Install pnpm
-              uses: pnpm/action-setup@v6
+              uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
 
             - name: Compute testing app's lockfile
               run: echo "LOCKFILE=${{ matrix.app.pkg_manager == 'yarn' && 'yarn.lock' || matrix.app.pkg_manager == 'pnpm' && 'pnpm-lock.yaml' || matrix.app.pkg_manager == 'npm' && 'package-lock.json' }}" >> $GITHUB_ENV
 
             - name: Node ${{matrix.node-versions}}
-              uses: actions/setup-node@v6
+              uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
               with:
                   node-version: '22.13.0'
                   cache: ${{ matrix.app.pkg_manager }}
