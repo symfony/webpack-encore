@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by github-advanced-security[bot] at 2026-06-20T18:29:58Z
+
+You are seeing this message because GitHub Code Scanning has recently been set up for this repository, or this pull request contains the workflow file for the Code Scanning tool.
+
+### What Enabling Code Scanning Means:
+
+- The 'Security' tab will display more code scanning analysis results (e.g., for the default branch).
+- Depending on your configuration and choice of analysis tool, future pull requests will be annotated with code scanning analysis results.
+- You will be able to see the analysis results for the pull request's branch on this [overview](/symfony/webpack-encore/security/code-scanning?query=pr%3A1475+is%3Aopen) once the scans have completed and the checks have passed.
+
+For more information about GitHub Code Scanning, check out [the documentation](https://docs.github.com/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning).
