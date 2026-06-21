@@ -87,9 +87,7 @@ describe('loaders/babel', function () {
         ]);
         expect(actualLoaders[0].options.presets[1]).toEqual([
             fileURLToPath(import.meta.resolve('@babel/preset-react')),
-            {
-                runtime: 'automatic',
-            },
+            {},
         ]);
         // foo is also still there, not overridden
         expect(actualLoaders[0].options.presets[2]).toBe('foo');
@@ -121,7 +119,6 @@ describe('loaders/babel', function () {
         expect(actualLoaders[0].options.presets[1]).toEqual([
             fileURLToPath(import.meta.resolve('@babel/preset-react')),
             {
-                runtime: 'automatic',
                 development: true,
             },
         ]);
@@ -142,7 +139,7 @@ describe('loaders/babel', function () {
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
             [
                 fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx')),
-                { pragma: 'h' },
+                { runtime: 'classic', pragma: 'h' },
             ],
             'foo',
         ]);
@@ -159,7 +156,10 @@ describe('loaders/babel', function () {
         const actualLoaders = await babelLoader.getLoaders(config);
 
         expect(actualLoaders[0].options.plugins).to.deep.include.members([
-            [fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx'))],
+            [
+                fileURLToPath(import.meta.resolve('@babel/plugin-transform-react-jsx')),
+                { runtime: 'classic' },
+            ],
             'foo',
         ]);
     });

@@ -117,6 +117,25 @@ can adopt modern async APIs from the ecosystem without hacks**.
   `"@symfony/webpack-encore/lib/plugins/plugin-priorities.js"` are exposed as public entry points.
   If you were importing other internal modules directly, those imports will no longer work.
 
+- Raise the minimum Node.js version to `^22.18.0 || ^24.11.0 || >=26.0` (required by Babel 8).
+
+- Yarn Plug'n'Play users must upgrade to Yarn `>=4.6.0` for proper resolution of ESM-only Babel 8
+  packages: `yarn set version 4.6.0`.
+
+- Drop support for Babel 7 and require [Babel 8](https://babeljs.io/docs/v8-migration/): `@babel/core`,
+  `@babel/preset-env`, `@babel/preset-react`, `@babel/preset-typescript`, and
+  `@babel/plugin-transform-react-jsx` now require `^8.0.0`. Upgrade your Babel dependencies and follow
+  the [migration guide](https://babeljs.io/docs/v8-migration/).
+
+- The `useBuiltIns` and `corejs` options of `Encore.configureBabel()` / `Encore.configureBabelPresetEnv()`
+  are no longer supported: Babel 8 removed them from `@babel/preset-env`. Encore now throws an explicit
+  error when they are set. To polyfill, use [`babel-plugin-polyfill-corejs3`](https://github.com/babel/babel-polyfills)
+  via `Encore.configureBabel((babelConfig) => babelConfig.plugins.push(...))` or an external Babel config.
+
+- Without a `browserslist` configuration, Babel 8's `@babel/preset-env` targets modern browsers by
+  default instead of compiling to ES5. Add a `browserslist` configuration to your project to transpile
+  for older browsers.
+
 ### Features
 
 - Update postcss-loader support from 8.1.0 to 8.1.1 for ESM compatibility

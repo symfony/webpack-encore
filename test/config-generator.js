@@ -940,7 +940,7 @@ describe('The config-generator function', function () {
             expect(jsRule.exclude(path.join('test', 'node_modules', 'bar', 'index.js'))).toBe(true);
         });
 
-        it('with configureBabel() and a different useBuiltIns value', async function () {
+        it('with configureBabel() and a useBuiltIns value throws (removed in Babel 8)', async function () {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -950,15 +950,7 @@ describe('The config-generator function', function () {
                 corejs: 3,
             });
 
-            const actualConfig = await configGenerator(config);
-
-            const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
-            const babelLoader = jsRule.use.find((loader) => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(
-                ([name]) => name === fileURLToPath(import.meta.resolve('@babel/preset-env'))
-            );
-            expect(babelEnvPreset[1].useBuiltIns).toBe('usage');
-            expect(babelEnvPreset[1].corejs).toBe(3);
+            await expect(configGenerator(config)).rejects.toThrow(/useBuiltIns/);
         });
     });
 
@@ -979,7 +971,7 @@ describe('The config-generator function', function () {
             expect(babelEnvPreset[1].useBuiltIns).toBe(false);
         });
 
-        it('with configureBabelPresetEnv()', async function () {
+        it('with configureBabelPresetEnv() setting useBuiltIns throws (removed in Babel 8)', async function () {
             const config = createConfig();
             config.outputPath = '/tmp/output/public-path';
             config.publicPath = '/public-path';
@@ -988,14 +980,7 @@ describe('The config-generator function', function () {
                 options.useBuiltIns = 'usage';
             });
 
-            const actualConfig = await configGenerator(config);
-
-            const jsRule = findRule(/\.(m?jsx?)$/, actualConfig.module.rules);
-            const babelLoader = jsRule.use.find((loader) => /babel-loader/.test(loader.loader));
-            const babelEnvPreset = babelLoader.options.presets.find(
-                ([name]) => name === fileURLToPath(import.meta.resolve('@babel/preset-env'))
-            );
-            expect(babelEnvPreset[1].useBuiltIns).toBe('usage');
+            await expect(configGenerator(config)).rejects.toThrow(/useBuiltIns/);
         });
     });
 

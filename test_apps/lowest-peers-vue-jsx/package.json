@@ -6,8 +6,8 @@
     "encore": "encore"
   },
   "devDependencies": {
-    "@babel/core": "7.17.0",
-    "@babel/preset-env": "7.16.0",
+    "@babel/core": "8.0.0",
+    "@babel/preset-env": "8.0.0",
     "@vue/babel-plugin-jsx": "1.0.0",
     "@vue/compiler-sfc": "3.2.14",
     "vue": "3.2.14",
