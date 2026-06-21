@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by garak at 2026-06-19T08:11:41Z
+
+What about moving to Babel 8?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-19T10:37:50Z
+
+> What about moving to Babel 8?
+
+Unrelated with the PR
+
+---------------------------------------------------------------------------
+
+by garak at 2026-06-19T10:51:56Z
+
+> > What about moving to Babel 8?
+>
+> Unrelated with the PR
+
+Sorry, I'm not a node expert myself, but I thought that the major version change was a breaking change
+
+---------------------------------------------------------------------------
+
+by stof at 2026-06-19T12:00:38Z
+
+> Sorry, I'm not a node expert myself, but I thought that the major version change was a breaking change
+
+this does not make it related to the current PR
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-21T09:24:58Z
+
+I will take care of the rest, thank you for your work :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2026-06-21T14:57:51Z
+
+PR and description updated, I removed `Encore.configureTerserPlugin()` instead of deprecating it (it didn't make any sense since we are targeting a new major version).
+Added a bunch of tests, and checking for CSS/JS minimizers packages to be installed before using their associated minifiers.
