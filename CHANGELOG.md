@@ -2,6 +2,7 @@
 
 ## 7.1.0
 
+- Update minimum version of `webpack-manifest-plugin` to `^6.0.1`
 - Drop support of `@vue/babel-plugin-jsx` ^1.0.0, add support for [`@vue/babel-plugin-jsx` ^3.0.0](https://github.com/vuejs/babel-plugin-jsx)
 
 ## 7.0.0 - The ESM-Only & Async-first Release
@@ -177,11 +178,12 @@ natively async, **Encore can adopt modern async APIs from the ecosystem without 
 
 - Add new `configureJsMinimizerPlugin(callback)` method to configure JS minimization options.
   Both `configureJsMinimizerPlugin()` and `configureCssMinimizerPlugin()` are now backed by
-  `minimizer-webpack-plugin` and support switching to alternative minimizers through the `minify`
-  option. Minifier packages are optional peer dependencies, so install the one you actually use,
-  and a clear error is thrown at build time if a minifier's backing package is not installed.
-  As in `configureCssMinimizerPlugin()`, the `MinimizerPlugin` class is passed as the second
-  argument of the callback, so you don't need to import `minimizer-webpack-plugin` yourself:
+  `minimizer-webpack-plugin` and support switching to alternative minimizers through the `minify` option.
+
+    Minifier packages are optional peer dependencies, so install the one you actually use,
+    and a clear error is thrown at build time if a minifier's backing package is not installed.
+    As in `configureCssMinimizerPlugin()`, the `MinimizerPlugin` class is passed as the second
+    argument of the callback, so you don't need to import `minimizer-webpack-plugin` yourself:
 
     ```js
     // Switch JS minimizer to esbuild (npm install --save-dev esbuild)
@@ -191,11 +193,10 @@ natively async, **Encore can adopt modern async APIs from the ecosystem without 
     ```
 
     Available JS minimizers: `terserMinify` (default, bundled), `uglifyJsMinify`, `swcMinify`,
-    `esbuildMinify`. See the
-    [minimizer-webpack-plugin documentation](https://github.com/webpack/minimizer-webpack-plugin)
+    `esbuildMinify`. See the [minimizer-webpack-plugin documentation](https://github.com/webpack/minimizer-webpack-plugin)
     for all available options.
 
-- Update postcss-loader support from 8.1.0 to 8.1.1 for ESM compatibility
+- Update minimum version of postcss-loader support from `8.1.0` to `8.1.1`, for ESM compatibility
 - Update minimum version of webpack to `^5.82.0`
 - Update minimum version of `@vue/compiler-sfc` to `^3.2.14`, to match `vue` peer dependency requirement
 - Add support for [webpack-cli@7.0.0](https://github.com/webpack/webpack-cli/releases/tag/webpack-cli%407.0.0)

@@ -43,7 +43,7 @@
         "style-loader": "^4.0.0",
         "tapable": "^2.2.1",
         "tmp": "^0.2.7",
-        "webpack-manifest-plugin": "^5.0.1",
+        "webpack-manifest-plugin": "^6.0.1",
         "yargs-parser": "^21.0.0"
     },
     "devDependencies": {
