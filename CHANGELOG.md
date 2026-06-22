@@ -1,241 +1,34 @@
 # CHANGELOG
 
-## 7.1.0 - The "Wait, We Forgot Some Things" Release
+## 7.1.0
 
-> We were so excited shipping 7.0.0 that we moved a little too fast. A handful of
-> dependency major bumps didn't make the cut, lost in the rush. This release is us
-> catching up: the upgrades we owed you but forgot to pack.
+- Add support for `sass-loader` ^17.0.0
+- Add support for `@vue/babel-plugin-jsx` to ^3.0.0, remove support for `@vue/babel-plugin-jsx` to ^1.0.0
+- Update the minimum version of `webpack-manifest-plugin` to ^6.0.1
+- Declare the JS/CSS minifiers as optional peer dependencies without a version constraint, matching `minimizer-webpack-plugin` behavior
 
-- Update minimum version of `webpack-manifest-plugin` to `^6.0.1`
-- Add support for [`sass-loader` ^17.0.0](https://github.com/webpack-contrib/sass-loader/releases/tag/v17.0.0), version `^16.0.1` is still supported
-- Update support for [`@vue/babel-plugin-jsx` ^3.0.0](https://github.com/vuejs/babel-plugin-jsx), version `^1.0.0` has been removed
-- Declare the JS/CSS minifiers (`esbuild`, `@swc/core`, `@swc/css`, `uglify-js`, `clean-css`, `cssnano`, `csso`, `lightningcss`) as optional peer dependencies without a version constraint, matching `minimizer-webpack-plugin`.
-  Encore only forwards them to that plugin, so version compatibility is delegated to it and Encore no longer needs a release to support a new minifier major (such as cssnano 8).
+## 7.0.0
 
-## 7.0.0 - The ESM-Only & Async-first Release
+This is a new major version that contains several backwards-compatibility breaks.
 
-> [!IMPORTANT]
-> **v7.0.0 is one of the largest releases in Encore's history**, and honestly, we're excited about
-> this one. The project has been modernized top to bottom, inside and out.
->
-> **What changed for you:** Encore is now ESM-only, `Encore.getWebpackConfig()` is async, Babel 8 is
-> required, and CSS minification is no longer enabled by default. These are real breaking changes, so
-> please follow the upgrade steps below.
->
-> **What changed under the hood:** the codebase moved from CommonJS to ESM, the test suite from
-> Mocha/Sinon/Chai to Vitest, the package manager from Yarn to PNPM, and code formatting to Oxfmt.
-> Dependabot (grouped dependency updates) and Zizmor (GitHub Actions security audits) are now keeping
-> CI in check too. It's a much healthier codebase going into this next chapter.
+### BC Breaks
 
-The Node.js ecosystem has largely moved to ESM as the standard module format. Most actively maintained
-packages now ship ESM-only, and since Encore already requires Node.js `^22.13.0 || >=24.0` (which has
-full ESM support), continuing to publish as CJS would mean fighting the ecosystem: pinning to older
-dependencies, adding workarounds, and missing out on tree-shaking and static analysis.
-
-Moving to ESM also unlocks `async`/`await` in Encore's internals. Now that `getWebpackConfig()` is
-natively async, **Encore can adopt modern async APIs from the ecosystem without hacks**.
-
-### BC Breaks and upgrade steps
-
-- Migrate from CommonJS to ESM: the package now requires `"type": "module"` in your project or
-  the use of `.mjs` file extensions. Update your `webpack.config.js`:
-
-    ```js
-    // Before (CJS)
-    const Encore = require('@symfony/webpack-encore');
-    // ...
-    module.exports = Encore.getWebpackConfig();
-
-    // After (ESM)
-    import Encore from '@symfony/webpack-encore';
-    // ...
-    export default await Encore.getWebpackConfig();
-    ```
-
-    Note: `Encore.getWebpackConfig()` is now **async** and returns a `Promise`. Use `await` at the
-    top level of your webpack config (webpack supports async config files natively).
-
-- If you prefer not to add `"type": "module"`, rename your webpack config to `webpack.config.mjs`
-  instead; webpack detects the `.mjs` extension and treats it as ESM automatically.
-
-- Replace `__dirname` and `__filename` with their ESM equivalents in your webpack config:
-
-    ```js
-    // Before (CJS)
-    path.resolve(__dirname, 'src/utilities/');
-    config: [__filename];
-
-    // After (ESM)
-    path.resolve(import.meta.dirname, 'src/utilities/');
-    config: [import.meta.filename];
-    ```
-
-- Replace `require()` calls in your webpack config with `import` statements:
-
-    ```js
-    // Before (CJS)
-    const path = require('path');
-
-    // After (ESM)
-    import path from 'path';
-    ```
-
-    Similarly, `require.resolve()` becomes `import.meta.resolve()`:
-
-    ```js
-    // Before (CJS)
-    options.implementation = require.resolve('sass-embedded');
-
-    // After (ESM)
-    import { fileURLToPath } from 'url';
-
-    options.implementation = fileURLToPath(import.meta.resolve('sass-embedded'));
-    ```
-
-    If you need to require a CJS-only package, use `createRequire`:
-
-    ```js
-    import { createRequire } from 'module';
-    const require = createRequire(import.meta.url);
-    const somePackage = require('cjs-only-package');
-    ```
-
-- If you use [StimulusBundle](https://symfony.com/bundles/StimulusBundle/current/index.html),
-  update the `require.context()` call in your `assets/stimulus_bootstrap.js` file (previously `assets/bootstrap.js`)
-  to webpack's ESM-friendly `import.meta.webpackContext()`, since `require.context()` is not available in ESM modules:
-
-    ```js
-    // Before (CJS)
-    export const app = startStimulusApp(
-        require.context(
-            '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
-            true,
-            /\.[jt]sx?$/
-        )
-    );
-
-    // After (ESM)
-    export const app = startStimulusApp(
-        import.meta.webpackContext(
-            '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
-            {
-                recursive: true,
-                regExp: /\.[jt]sx?$/,
-            }
-        )
-    );
-    ```
-
-- Config files using CJS syntax (`module.exports`, `require()`) must be renamed to `.cjs` if your
-  project has `"type": "module"` in its `package.json`, for example:
-    - `postcss.config.js` -> `postcss.config.cjs`
-    - `babel.config.js` -> `babel.config.cjs`
-
-    Or, preferably, rewrite them as ESM:
-
-    ```js
-    // postcss.config.js (ESM)
-    import autoprefixer from 'autoprefixer';
-
-    export default {
-        plugins: [autoprefixer()],
-    };
-    ```
-
-- With `"type": "module"`, webpack enables
-  [`resolve.fullySpecified`](https://webpack.js.org/configuration/module/#resolvefullyspecified)
-  by default, so **file extensions are now required** in some imports that previously worked without
-  them:
-    - **Relative imports**: `import('./my-dependency')` -> `import('./my-dependency.js')`
-    - **Deep package imports** from packages without an `"exports"` field, for example:
-        - `import delegate from 'licia/delegate'` -> `import delegate from 'licia/delegate.js'`
-        - `import 'jquery-ui/ui/widgets/progressbar'` -> `import 'jquery-ui/ui/widgets/progressbar.js'`
-
-- The package `"exports"` field is now restrictive: only `"@symfony/webpack-encore"` and
-  `"@symfony/webpack-encore/lib/plugins/plugin-priorities.js"` are exposed as public entry points.
-  Direct imports of other internal modules will no longer work.
-
-- Drop support for Babel 7 and require [Babel 8](https://babeljs.io/docs/v8-migration/): `@babel/core`,
-  `@babel/preset-env`, `@babel/preset-react`, `@babel/preset-typescript`, and
-  `@babel/plugin-transform-react-jsx` now require `^8.0.0`. Upgrade your Babel dependencies and follow
-  the [migration guide](https://babeljs.io/docs/v8-migration/).
-
-- Raise the minimum Node.js version to `^22.18.0 || ^24.11.0 || >=26.0` (required by Babel 8).
-
-- Yarn Plug'n'Play users must upgrade to Yarn `>=4.6.0` for proper resolution of ESM-only Babel 8
-  packages: `yarn set version 4.6.0`.
-
-- The `useBuiltIns` and `corejs` options of `Encore.configureBabel()` / `Encore.configureBabelPresetEnv()`
-  are no longer supported: Babel 8 removed them from `@babel/preset-env`. Encore now throws an explicit
-  error when they are set. To polyfill, use [`babel-plugin-polyfill-corejs3`](https://github.com/babel/babel-polyfills)
-  via `Encore.configureBabel((babelConfig) => babelConfig.plugins.push(...))` or an external Babel config.
-
-- Without a `browserslist` configuration, Babel 8's `@babel/preset-env` targets modern browsers by
-  default instead of compiling to ES5. Add a `browserslist` configuration to your project to transpile
-  for older browsers.
-
-- The archived `css-minimizer-webpack-plugin` and `terser-webpack-plugin` packages have been
-  replaced by the unified [`minimizer-webpack-plugin`](https://github.com/webpack/minimizer-webpack-plugin).
-  Minifier packages (`lightningcss`, `cssnano`, `csso`, `clean-css`, `esbuild`, `@swc/*`, `uglify-js`) are now
-  optional peer dependencies, installed on demand. In particular `cssnano`, previously pulled in
-  transitively by `css-minimizer-webpack-plugin`, is no longer installed by default.
-
-- `Encore.configureTerserPlugin()` has been removed. Use `Encore.configureJsMinimizerPlugin()`
-  instead (it takes the same callback).
-
-- **CSS minification is no longer enabled by default.** Choose and configure a CSS minifier via
-  `configureCssMinimizerPlugin()`; otherwise CSS is not minified in production. The JS minimizer
-  (Terser, bundled inside `minimizer-webpack-plugin`) still works with no extra setup.
-
-    The `MinimizerPlugin` class is passed as the second argument of the callback, so you don't need
-    to import `minimizer-webpack-plugin` yourself (it would not resolve under pnpm, being a
-    transitive dependency of Encore):
-
-    ```js
-    // Lightning CSS, fast Rust-based minifier (npm install --save-dev lightningcss)
-    Encore.configureCssMinimizerPlugin((options, MinimizerPlugin) => {
-        options.minify = MinimizerPlugin.lightningCssMinify;
-    });
-
-    // cssnano, PostCSS-based, closest to previous default (npm install --save-dev cssnano postcss)
-    Encore.configureCssMinimizerPlugin((options, MinimizerPlugin) => {
-        options.minify = MinimizerPlugin.cssnanoMinify;
-    });
-    ```
-
-    Other supported CSS minimizers: `csso`, `clean-css`, `esbuild` (`esbuildMinifyCss`),
-    `@swc/css` (`swcMinifyCss`). See the [minimizer-webpack-plugin documentation](https://github.com/webpack/minimizer-webpack-plugin)
-    for all available options.
+- Migrate from CJS (CommonJS) to ESM (ES Modules)
+- Migrate synchronous API to asynchronous API
+- Drop support of Babel 7 in favor of Babel 8
+- Remove `Encore.configureTerserPlugin()` in favor of `Encore.configureJsMinimizerPlugin()`
 
 ### Features
 
-- Add new `configureJsMinimizerPlugin(callback)` method to configure JS minimization options.
-  Both `configureJsMinimizerPlugin()` and `configureCssMinimizerPlugin()` are now backed by
-  `minimizer-webpack-plugin` and support switching to alternative minimizers through the `minify` option.
+- Add support for `webpack-cli` ^7.0.0
+- Add support for `typescript` ^6.0.0
+- Add support for Node.js` ^26.0.0
+- Add support of Babel 8
+- Use ESM exports in `Encore.copyFiles()` for better webpack optimizations
+- Use `peerDependencies` instead of `devDependencies` for optional dependencies checking
+- Replace `css-minimizer-webpack-plugin` and `terser-webpack-plugin` by `minimizer-webpack-plugin` to unify the minification process
 
-    Minifier packages are optional peer dependencies, so install the one you actually use,
-    and a clear error is thrown at build time if a minifier's backing package is not installed.
-    As in `configureCssMinimizerPlugin()`, the `MinimizerPlugin` class is passed as the second
-    argument of the callback, so you don't need to import `minimizer-webpack-plugin` yourself:
-
-    ```js
-    // Switch JS minimizer to esbuild (npm install --save-dev esbuild)
-    Encore.configureJsMinimizerPlugin((options, MinimizerPlugin) => {
-        options.minify = MinimizerPlugin.esbuildMinify;
-    });
-    ```
-
-    Available JS minimizers: `terserMinify` (default, bundled), `uglifyJsMinify`, `swcMinify`,
-    `esbuildMinify`. See the [minimizer-webpack-plugin documentation](https://github.com/webpack/minimizer-webpack-plugin)
-    for all available options.
-
-- Update minimum version of postcss-loader support from `8.1.0` to `8.1.1`, for ESM compatibility
-- Update minimum version of webpack to `^5.82.0`
-- Update minimum version of `@vue/compiler-sfc` to `^3.2.14`, to match `vue` peer dependency requirement
-- Add support for [webpack-cli@7.0.0](https://github.com/webpack/webpack-cli/releases/tag/webpack-cli%407.0.0)
-- `Encore.copyFiles()` now internally generates ESM exports for better webpack optimizations (scope hoisting, module concatenation)
-- Add support for [typescript@6.0.0](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-6-0.html)
-- The runtime version check for optional dependencies now reads supported version ranges from `peerDependencies` instead of `devDependencies`
+See the [upgrade guide](UPGRADE.md#700) for the full list of breaking changes and upgrade steps.
 
 ## 6.0.0
 
