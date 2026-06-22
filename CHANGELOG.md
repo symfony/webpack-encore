@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 7.1.0
+## 7.1.0 - The "Wait, We Forgot Some Things" Release
+
+> We were so excited shipping 7.0.0 that we moved a little too fast. A handful of
+> dependency major bumps didn't make the cut, lost in the rush. This release is us
+> catching up: the upgrades we owed you but forgot to pack.
 
 - Update minimum version of `webpack-manifest-plugin` to `^6.0.1`
 - Add support for [`sass-loader` ^17.0.0](https://github.com/webpack-contrib/sass-loader/releases/tag/v17.0.0), version `^16.0.1` is still supported
