@@ -4,6 +4,8 @@
 
 - Update minimum version of `webpack-manifest-plugin` to `^6.0.1`
 - Drop support of `@vue/babel-plugin-jsx` ^1.0.0, add support for [`@vue/babel-plugin-jsx` ^3.0.0](https://github.com/vuejs/babel-plugin-jsx)
+- Declare the JS/CSS minifiers (`esbuild`, `@swc/core`, `@swc/css`, `uglify-js`, `clean-css`, `cssnano`, `csso`, `lightningcss`) as optional peer dependencies without a version constraint, matching `minimizer-webpack-plugin`.
+  Encore only forwards them to that plugin, so version compatibility is delegated to it and Encore no longer needs a release to support a new minifier major (such as cssnano 8).
 
 ## 7.0.0 - The ESM-Only & Async-first Release
 

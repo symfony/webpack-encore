@@ -12,12 +12,12 @@ done
 
 for dir in $(find . -type d -name "yarn*"); do
   echo "Installing dependencies for $dir"
-  (cd "$dir" && yarn)
+  (cd "$dir" && corepack enable && yarn)
 done
 
 for dir in $(find . -type d -name "pnpm*"); do
   echo "Installing dependencies for $dir"
-  (cd "$dir" && pnpm install)
+  (cd "$dir" && pnpm install --ignore-workspace)
 done
 
 for dir in $(find . -type d -name "lowest-peers-*"); do
