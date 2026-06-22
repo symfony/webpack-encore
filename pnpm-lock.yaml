@@ -175,7 +175,7 @@ importers:
         specifier: ^1.17.0
         version: 1.99.0
       sass-loader:
-        specifier: ^16.0.1
+        specifier: ^16.0.1 || ^17.0.0
         version: 16.0.8(sass@1.99.0)(webpack@5.106.2)
       strip-ansi:
         specifier: ^6.0.0
