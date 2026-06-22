@@ -96,6 +96,32 @@ natively async, **Encore can adopt modern async APIs from the ecosystem without 
     const somePackage = require('cjs-only-package');
     ```
 
+- If you use [StimulusBundle](https://symfony.com/bundles/StimulusBundle/current/index.html),
+  update the `require.context()` call in your `assets/stimulus_bootstrap.js` file (previously `assets/bootstrap.js`)
+  to webpack's ESM-friendly `import.meta.webpackContext()`, since `require.context()` is not available in ESM modules:
+
+    ```js
+    // Before (CJS)
+    export const app = startStimulusApp(
+        require.context(
+            '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
+            true,
+            /\.[jt]sx?$/
+        )
+    );
+
+    // After (ESM)
+    export const app = startStimulusApp(
+        import.meta.webpackContext(
+            '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
+            {
+                recursive: true,
+                regExp: /\.[jt]sx?$/,
+            }
+        )
+    );
+    ```
+
 - Config files using CJS syntax (`module.exports`, `require()`) must be renamed to `.cjs` if your
   project has `"type": "module"` in its `package.json`, for example:
     - `postcss.config.js` -> `postcss.config.cjs`
