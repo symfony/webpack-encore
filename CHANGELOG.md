@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 7.1.0
+
+- Drop support of `@vue/babel-plugin-jsx` ^1.0.0, add support for [`@vue/babel-plugin-jsx` ^3.0.0](https://github.com/vuejs/babel-plugin-jsx)
+
 ## 7.0.0 - The ESM-Only & Async-first Release
 
 > [!IMPORTANT]
