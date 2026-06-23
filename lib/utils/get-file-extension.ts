@@ -10,7 +10,7 @@
 import path from 'path';
 import url from 'url';
 
-export default function (filename) {
+export default function (filename: string): string {
     const parsedFilename = new url.URL(filename, 'http://foo');
     const extension = path.extname(parsedFilename.pathname);
     return extension ? extension.slice(1) : '';

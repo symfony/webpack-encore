@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 7.2.0
+
+- Migrate internal code to TypeScript, ship package with type definitions (better DX and IDE support!)
+
 ## 7.1.0
 
 - Add support for `sass-loader` ^17.0.0

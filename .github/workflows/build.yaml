@@ -1,0 +1,39 @@
+name: Build
+
+on: [push, pull_request]
+
+jobs:
+    build:
+        name: Type-check & build
+        runs-on: ubuntu-latest
+        permissions: {}
+        env:
+            # We don't want Puppeteer to automatically download a browser when dependencies are being installed
+            PUPPETEER_SKIP_DOWNLOAD: 'true'
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+              with:
+                  persist-credentials: false
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
+
+            - name: Node ${{matrix.node-versions}}
+              uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e
+              with:
+                  node-version: '22.13.0'
+                  cache: pnpm
+
+            - name: Install pnpm Dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Type-check
+              run: pnpm type-check
+
+            - name: Build (emit JS + type declarations)
+              run: pnpm build
+
+            - name: Ensure type declarations were generated
+              run: test -f dist/index.d.ts

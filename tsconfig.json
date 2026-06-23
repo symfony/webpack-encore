@@ -1,0 +1,30 @@
+{
+    // Inspired by https://www.totaltypescript.com/tsconfig-cheat-sheet
+    "extends": "@tsconfig/node22/tsconfig.json",
+    "compilerOptions": {
+        // Base options
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "allowJs": true,
+        "resolveJsonModule": true,
+        "moduleDetection": "force",
+        "isolatedModules": true,
+        "verbatimModuleSyntax": true,
+
+        // Library build
+        "rootDir": ".",
+        "outDir": "dist",
+        "declaration": true,
+        "noEmitOnError": true,
+
+        // Strictness
+        "strict": false, // Disabled for now to ease migration from JS to TS, but we should enable it in the future
+        "noUncheckedIndexedAccess": true,
+        "noImplicitOverride": true,
+
+        // Types
+        "types": ["node"]
+    },
+    "include": ["index.ts", "index.js", "lib/**/*.ts", "lib/**/*.js", "bin/**/*.ts", "bin/**/*.js"],
+    "exclude": ["node_modules", "dist", "test", "test_apps", "fixtures", "test_tmp"]
+}
