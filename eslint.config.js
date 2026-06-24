@@ -59,10 +59,6 @@ export default [
             ],
             'n/no-unsupported-features/node-builtins': ['error'],
             'n/no-deprecated-api': 'error',
-            // The TypeScript compiler owns module-resolution checking: `.js`
-            // import specifiers resolve to `.ts` source files during the TS
-            // migration, which eslint-plugin-n cannot follow.
-            'n/no-missing-import': 'off',
             'n/no-missing-require': 'off',
             'n/no-unpublished-bin': 'error',
             'n/no-unpublished-import': 'error',

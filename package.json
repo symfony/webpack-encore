@@ -16,7 +16,7 @@
     },
     "scripts": {
         "build": "rm -fr dist/ && tsc",
-        "type-check": "tsc --noEmit --allowImportingTsExtensions",
+        "type-check": "tsc --noEmit",
         "prepare": "pnpm build",
         "prepublishOnly": "pnpm type-check",
         "pretest": "pnpm build",

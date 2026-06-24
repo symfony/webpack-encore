@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import stringEscaper from '../../lib/utils/string-escaper.js';
+import stringEscaper from '../../lib/utils/string-escaper.ts';
 
 function expectEvaledStringToEqual(str, expectedStr) {
     // put the string in quotes & eval it: should match original

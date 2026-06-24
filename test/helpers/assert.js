@@ -12,7 +12,7 @@ import path from 'path';
 
 import { expect } from 'vitest';
 
-import regexEscaper from '../../lib/utils/regexp-escaper.js';
+import regexEscaper from '../../lib/utils/regexp-escaper.ts';
 
 const loadManifest = function (webpackConfig) {
     return JSON.parse(

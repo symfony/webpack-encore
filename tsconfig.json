@@ -11,6 +11,8 @@
         "isolatedModules": true,
         "verbatimModuleSyntax": true,
         "erasableSyntaxOnly": true,
+        "allowImportingTsExtensions": true,
+        "rewriteRelativeImportExtensions": true,
 
         // Library build
         "rootDir": ".",
