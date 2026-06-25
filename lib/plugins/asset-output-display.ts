@@ -7,27 +7,21 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
-/**
- * @import FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin'
- */
+import type FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
 
 import pathUtil from '../config/path-util.js';
 import AssetOutputDisplayPlugin from '../friendly-errors/asset-output-display-plugin.js';
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
 /**
  * Updates plugins array passed adding AssetOutputDisplayPlugin instance
- *
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @param {FriendlyErrorsWebpackPlugin} friendlyErrorsPlugin
- * @returns {void}
  */
-export default function (plugins, webpackConfig, friendlyErrorsPlugin) {
+export default function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig,
+    friendlyErrorsPlugin: FriendlyErrorsWebpackPlugin
+): void {
     if (webpackConfig.useDevServer()) {
         return;
     }

@@ -7,19 +7,14 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { EntryPointsPlugin } from '../webpack/entry-points-plugin.js';
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-/**
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @returns {void}
- */
-export default function (plugins, webpackConfig) {
+export default function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig
+): void {
     plugins.push({
         plugin: new EntryPointsPlugin({
             publicPath: webpackConfig.getRealPublicPath(),

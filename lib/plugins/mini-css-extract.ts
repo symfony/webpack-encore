@@ -7,21 +7,16 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-/**
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @returns {void}
- */
-export default function (plugins, webpackConfig) {
+export default function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig
+): void {
     // Don't add the plugin if CSS extraction is disabled
     if (!webpackConfig.extractCss) {
         return;
@@ -37,14 +32,15 @@ export default function (plugins, webpackConfig) {
     // This is related to setting optimization.runtimeChunk = 'single';
     // See https://github.com/webpack/webpack/issues/6598
     let chunkFilename = webpackConfig.useVersioning ? '[name].[contenthash:8].css' : '[name].css';
-    if (webpackConfig.configuredFilenames.css) {
-        filename = webpackConfig.configuredFilenames.css;
+    const configuredCssFilename = (webpackConfig.configuredFilenames as { css?: string }).css;
+    if (configuredCssFilename) {
+        filename = configuredCssFilename;
 
         // see above: originally we did NOT set this, because this was
         // only for split chunks. But now, sometimes the "entry" CSS chunk
         // will use chunkFilename. So, we need to always respect the
         // user's wishes
-        chunkFilename = webpackConfig.configuredFilenames.css;
+        chunkFilename = configuredCssFilename;
     }
 
     const miniCssPluginOptions = {

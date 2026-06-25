@@ -7,20 +7,13 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import MinimizerPlugin from 'minimizer-webpack-plugin';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
 import { checkJsMinifierPackages } from '../utils/minifier-check.ts';
+import type WebpackConfig from '../WebpackConfig.js';
 
-/**
- * @param {WebpackConfig} webpackConfig
- * @returns {object}
- */
-export default function (webpackConfig) {
+export default function (webpackConfig: WebpackConfig) {
     const minimizerPluginOptions = {
         parallel: true,
         minify: MinimizerPlugin.terserMinify,

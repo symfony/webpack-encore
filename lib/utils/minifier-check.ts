@@ -26,7 +26,11 @@ const CSS_MINIFIER_FEATURES = new Map<Function, string>([
     [MinimizerPlugin.swcMinifyCss, 'minify-css-swc'],
 ]);
 
-export function checkJsMinifierPackages(minifyFn: Function): void {
+export function checkJsMinifierPackages(minifyFn: Function | undefined): void {
+    if (!minifyFn) {
+        return;
+    }
+
     const feature = JS_MINIFIER_FEATURES.get(minifyFn);
     if (!feature) {
         // terserMinify (bundled) or a custom function: nothing to install

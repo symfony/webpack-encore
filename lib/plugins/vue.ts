@@ -7,18 +7,13 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-import PluginPriorities from './plugin-priorities.js';
-
-/**
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @returns {Promise<void>}
- */
-export default async function (plugins, webpackConfig) {
+export default async function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig
+): Promise<void> {
     if (!webpackConfig.useVueLoader) {
         return;
     }

@@ -7,10 +7,6 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
 
 import missingCssFileFormatter from '../friendly-errors/formatters/missing-css-file.js';
@@ -20,12 +16,9 @@ import missingCssFileTransformer from '../friendly-errors/transformers/missing-c
 import missingLoaderTransformerFactory from '../friendly-errors/transformers/missing-loader.js';
 import missingPostCssConfigTransformer from '../friendly-errors/transformers/missing-postcss-config.js';
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import type WebpackConfig from '../WebpackConfig.js';
 
-/**
- * @param {WebpackConfig} webpackConfig
- * @returns {FriendlyErrorsWebpackPlugin}
- */
-export default function (webpackConfig) {
+export default function (webpackConfig: WebpackConfig) {
     const friendlyErrorsPluginOptions = {
         clearConsole: false,
         additionalTransformers: [
