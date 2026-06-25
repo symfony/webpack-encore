@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import transform from '../../../lib/friendly-errors/transformers/missing-css-file.js';
+import transform from '../../../lib/friendly-errors/transformers/missing-css-file.ts';
 
 describe('transform/missing-css-file', function () {
     describe('test transform', function () {

@@ -7,9 +7,11 @@
  * file that was distributed with this source code.
  */
 
+import type { FriendlyError } from '@kocal/friendly-errors-webpack-plugin';
+
 const TYPE = 'missing-postcss-config';
 
-function isMissingConfigError(e) {
+function isMissingConfigError(e: FriendlyError): boolean {
     if (!e.message || !e.message.includes('No PostCSS Config found')) {
         return false;
     }
@@ -17,7 +19,7 @@ function isMissingConfigError(e) {
     return true;
 }
 
-function transform(error) {
+function transform(error: FriendlyError): FriendlyError {
     if (!isMissingConfigError(error)) {
         return error;
     }

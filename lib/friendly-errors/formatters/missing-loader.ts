@@ -7,22 +7,29 @@
  * file that was distributed with this source code.
  */
 
+import type { FriendlyError } from '@kocal/friendly-errors-webpack-plugin';
 import pc from 'picocolors';
 
 import loaderFeatures from '../../features.js';
 
-function formatErrors(errors) {
+interface MissingLoaderError extends FriendlyError {
+    loaderName?: string;
+    isVueLoader?: boolean;
+    origin?: string;
+}
+
+function formatErrors(errors: MissingLoaderError[]): string[] {
     if (errors.length === 0) {
         return [];
     }
 
-    let messages = [];
+    let messages: string[] = [];
 
-    for (let error of errors) {
-        const fixes = [];
+    for (const error of errors) {
+        const fixes: string[] = [];
 
         if (error.loaderName) {
-            let neededCode = `Encore.${loaderFeatures.getFeatureMethod(error.loaderName)}`;
+            const neededCode = `Encore.${loaderFeatures.getFeatureMethod(error.loaderName)}`;
             fixes.push(`Add ${pc.green(neededCode)} to your Webpack config file.`);
 
             const packageRecommendations = loaderFeatures.getMissingPackageRecommendations(
@@ -43,7 +50,7 @@ function formatErrors(errors) {
         // vue hides their filenames (via a stacktrace) inside error.origin
         if (error.isVueLoader) {
             messages.push(error.message);
-            messages.push(error.origin);
+            messages.push(error.origin ?? '');
             messages.push('');
         } else {
             messages = messages.concat([pc.red(`Error loading ${pc.yellow(error.file)}`), '']);
@@ -58,7 +65,7 @@ function formatErrors(errors) {
         }
 
         let index = 0;
-        for (let fix of fixes) {
+        for (const fix of fixes) {
             messages.push(`        ${++index}. ${fix}`);
         }
 
@@ -68,7 +75,7 @@ function formatErrors(errors) {
     return messages;
 }
 
-function format(errors) {
+function format(errors: FriendlyError[]): string[] {
     return formatErrors(errors.filter((e) => e.type === 'loader-not-enabled'));
 }
 
