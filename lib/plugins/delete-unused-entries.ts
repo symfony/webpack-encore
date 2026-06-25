@@ -7,20 +7,15 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import copyEntryTmpName from '../utils/copyEntryTmpName.ts';
 import DeleteUnusedEntriesJSPlugin from '../webpack/delete-unused-entries-js-plugin.js';
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-/**
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @returns {void}
- */
-export default function (plugins, webpackConfig) {
+export default function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig
+): void {
     const entries = [...webpackConfig.styleEntries.keys()];
 
     if (webpackConfig.copyFilesConfigs.length > 0) {

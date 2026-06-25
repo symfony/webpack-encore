@@ -7,20 +7,15 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import webpack from 'webpack';
 
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-/**
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @returns {void}
- */
-export default function (plugins, webpackConfig) {
+export default function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig
+): void {
     if (Object.keys(webpackConfig.providedVariables).length > 0) {
         plugins.push({
             plugin: new webpack.ProvidePlugin(webpackConfig.providedVariables),

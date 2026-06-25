@@ -7,21 +7,16 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import webpack from 'webpack';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-/**
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @returns {void}
- */
-export default function (plugins, webpackConfig) {
+export default function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig
+): void {
     const definePluginOptions = {
         'process.env.NODE_ENV': webpackConfig.isProduction() ? '"production"' : '"development"',
     };

@@ -7,24 +7,27 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
 import copyEntryTmpName from '../utils/copyEntryTmpName.ts';
 import manifestKeyPrefixHelper from '../utils/manifest-key-prefix-helper.ts';
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-/**
- * @param {Array} plugins
- * @param {WebpackConfig} webpackConfig
- * @returns {void}
- */
-export default function (plugins, webpackConfig) {
-    let manifestPluginOptions = {
+type ManifestPluginOptions = {
+    seed: object;
+    basePath: string;
+    writeToFileEmit: boolean;
+    filter: (file: any) => boolean;
+    map?: (file: any) => any;
+};
+
+export default function (
+    plugins: Array<{ plugin: object; priority: number }>,
+    webpackConfig: WebpackConfig
+): void {
+    let manifestPluginOptions: ManifestPluginOptions = {
         seed: {},
         basePath: manifestKeyPrefixHelper(webpackConfig),
         // always write a manifest.json file, even with webpack-dev-server
@@ -38,10 +41,10 @@ export default function (plugins, webpackConfig) {
         },
     };
 
-    manifestPluginOptions = applyOptionsCallback(
+    manifestPluginOptions = applyOptionsCallback<object>(
         webpackConfig.manifestPluginOptionsCallback,
         manifestPluginOptions
-    );
+    ) as ManifestPluginOptions;
 
     const userMapOption = manifestPluginOptions.map;
     manifestPluginOptions.map = (file) => {

@@ -7,20 +7,13 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
-import PluginPriorities from './plugin-priorities.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import PluginPriorities from './plugin-priorities.ts';
 
-/**
- * @param {WebpackConfig} webpackConfig
- * @returns {void}
- */
-export default function (webpackConfig) {
+export default function (webpackConfig: WebpackConfig): void {
     const config = {};
 
     webpackConfig.addPlugin(
