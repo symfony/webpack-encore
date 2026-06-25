@@ -17,7 +17,7 @@ const { checkCssMinifierPackages } = vi.hoisted(() => ({
     checkCssMinifierPackages: vi.fn(),
 }));
 
-vi.mock('../../lib/utils/minifier-check.js', () => ({
+vi.mock('../../lib/utils/minifier-check.ts', () => ({
     checkJsMinifierPackages: vi.fn(),
     checkCssMinifierPackages,
 }));

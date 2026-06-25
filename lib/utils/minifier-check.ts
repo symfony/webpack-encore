@@ -11,13 +11,13 @@ import MinimizerPlugin from 'minimizer-webpack-plugin';
 
 import Features from '../features.js';
 
-const JS_MINIFIER_FEATURES = new Map([
+const JS_MINIFIER_FEATURES = new Map<Function, string>([
     [MinimizerPlugin.esbuildMinify, 'minify-js-esbuild'],
     [MinimizerPlugin.swcMinify, 'minify-js-swc'],
     [MinimizerPlugin.uglifyJsMinify, 'minify-js-uglify'],
 ]);
 
-const CSS_MINIFIER_FEATURES = new Map([
+const CSS_MINIFIER_FEATURES = new Map<Function, string>([
     [MinimizerPlugin.lightningCssMinify, 'minify-css-lightningcss'],
     [MinimizerPlugin.cssnanoMinify, 'minify-css-cssnano'],
     [MinimizerPlugin.cssoMinify, 'minify-css-csso'],
@@ -26,10 +26,7 @@ const CSS_MINIFIER_FEATURES = new Map([
     [MinimizerPlugin.swcMinifyCss, 'minify-css-swc'],
 ]);
 
-/**
- * @param {Function} minifyFn
- */
-export function checkJsMinifierPackages(minifyFn) {
+export function checkJsMinifierPackages(minifyFn: Function): void {
     const feature = JS_MINIFIER_FEATURES.get(minifyFn);
     if (!feature) {
         // terserMinify (bundled) or a custom function: nothing to install
@@ -39,10 +36,7 @@ export function checkJsMinifierPackages(minifyFn) {
     Features.ensurePackagesExistAndAreCorrectVersion(feature);
 }
 
-/**
- * @param {Function|undefined} minifyFn
- */
-export function checkCssMinifierPackages(minifyFn) {
+export function checkCssMinifierPackages(minifyFn: Function | undefined): void {
     if (!minifyFn) {
         throw new Error(
             'CSS minification is enabled but no CSS minifier is configured. ' +

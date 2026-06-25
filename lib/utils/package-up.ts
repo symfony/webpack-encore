@@ -14,31 +14,25 @@ import { fileURLToPath } from 'url';
 /**
  * Inlined version of the package "package-up" (ESM only).
  *
- * @param {object} options
- * @param {string} options.cwd The directory to start searching from.
- * @returns {string|undefined} The path to the nearest package.json file or undefined if not found.
+ * Returns the path to the nearest package.json file, or undefined if not found.
  */
-export default function ({ cwd }) {
+export default function ({ cwd }: { cwd: string }): string | undefined {
     return findUpSync('package.json', { cwd });
 }
 
-/**
- * @param {string|URL} urlOrPath
- * @returns {string}
- */
-function toPath(urlOrPath) {
+function toPath(urlOrPath: string | URL): string {
     return urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath;
 }
 
 /**
  * Inlined and simplified version of the package "find-up-simple" (ESM only).
  *
- * @param {string} name The name of the file to find
- * @param {object} options
- * @param {string=} options.cwd The directory to start searching from.
- * @returns {string|undefined} The path to the file found or undefined if not found.
+ * Returns the path to the file found, or undefined if not found.
  */
-function findUpSync(name, { cwd = process.cwd() } = {}) {
+function findUpSync(
+    name: string,
+    { cwd = process.cwd() }: { cwd?: string } = {}
+): string | undefined {
     let directory = path.resolve(toPath(cwd) || '');
     const { root } = path.parse(directory);
 

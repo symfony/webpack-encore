@@ -7,20 +7,13 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import semver from 'semver';
 
 import logger from '../logger.js';
 import packageHelper from '../package-helper.js';
+import type WebpackConfig from '../WebpackConfig.js';
 
-/**
- * @param {WebpackConfig} webpackConfig
- * @returns {number|string|null}
- */
-export default function (webpackConfig) {
+export default function (webpackConfig: WebpackConfig): number | string | null {
     if (webpackConfig.vueOptions.version !== null) {
         return webpackConfig.vueOptions.version;
     }

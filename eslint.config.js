@@ -96,6 +96,11 @@ file that was distributed with this source code.`,
             // In TypeScript files, types live in the signature, not in JSDoc.
             'jsdoc/require-param': 'off',
             'jsdoc/require-returns': 'off',
+            // tsc owns module resolution for `.ts` files (strict, build fails on
+            // a missing import). eslint-plugin-n is not TS-aware: from a `.ts`
+            // file it rewrites `.js` -> `.ts` and cannot resolve imports of
+            // not-yet-migrated `.js` modules. `.js` files keep the rule.
+            'n/no-missing-import': 'off',
         },
     },
     {
