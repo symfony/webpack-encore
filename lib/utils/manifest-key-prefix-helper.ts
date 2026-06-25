@@ -7,17 +7,12 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
+import type WebpackConfig from '../WebpackConfig.js';
 
 /**
  * Helper for determining the manifest.json key prefix.
- *
- * @param {WebpackConfig} webpackConfig
- * @returns {string}
  */
-export default function (webpackConfig) {
+export default function (webpackConfig: WebpackConfig): string {
     let manifestPrefix = webpackConfig.manifestKeyPrefix;
     if (null === manifestPrefix) {
         if (null === webpackConfig.publicPath) {

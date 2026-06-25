@@ -7,19 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @typedef {function(this: T, T, ...*): T|void} OptionsCallback
- * @template {object} T
- */
+export type OptionsCallback<T extends object> = (
+    this: T,
+    options: T,
+    ...extraArgs: any[]
+) => T | void;
 
-/**
- * @template {object} T
- * @param {OptionsCallback<T>} optionsCallback
- * @param {T} options
- * @param {...*} extraArgs  Forwarded to the callback after `options`
- * @returns {T}
- */
-export default function (optionsCallback, options, ...extraArgs) {
+export default function <T extends object>(
+    optionsCallback: OptionsCallback<T>,
+    options: T,
+    ...extraArgs: any[]
+): T {
     const result = optionsCallback.call(options, options, ...extraArgs);
 
     if (typeof result === 'object') {

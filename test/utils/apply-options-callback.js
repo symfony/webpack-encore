@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import applyOptionsCallback from '../../lib/utils/apply-options-callback.js';
+import applyOptionsCallback from '../../lib/utils/apply-options-callback.ts';
 
 describe('utils/apply-options-callback', function () {
     it('mutates and returns the options object', function () {

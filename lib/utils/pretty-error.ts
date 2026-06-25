@@ -15,18 +15,14 @@ const PrettyError = require('pretty-error');
 /**
  * Render a pretty version of the given error.
  *
- * Supported options:
- *      - {Function} skipTrace
- *              An optional callback that defines whether
- *              or not each line of the eventual stacktrace
- *              should be kept. First argument is the content
- *              of the line, second argument is the line number.
- *
- * @param {*} error
- * @param {object} options
- * @returns {void}
+ * The optional `skipTrace` callback defines whether or not each line of the
+ * eventual stacktrace should be kept. First argument is the content of the
+ * line, second argument is the line number.
  */
-export default function (error, options = {}) {
+export default function (
+    error: unknown,
+    options: { skipTrace?: (line: string, lineNumber: number) => boolean } = {}
+): void {
     const pe = new PrettyError();
 
     // Use the default terminal's color

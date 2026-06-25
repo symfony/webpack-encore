@@ -11,7 +11,7 @@ import { resolve as resolvePath } from 'path';
 
 import { describe, it, expect } from 'vitest';
 
-import packageUp from '../../lib/utils/package-up.js';
+import packageUp from '../../lib/utils/package-up.ts';
 
 describe('package-up', function () {
     it.each([
