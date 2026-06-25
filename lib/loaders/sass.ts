@@ -7,23 +7,15 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { fileURLToPath } from 'url';
 
 import loaderFeatures from '../features.js';
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
-import cssLoader from './css.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import cssLoader from './css.ts';
 
 export default {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     * @param {boolean} useCssModules
-     * @returns {Array} of loaders to use for Sass files
-     */
-    getLoaders(webpackConfig, useCssModules = false) {
+    getLoaders(webpackConfig: WebpackConfig, useCssModules = false) {
         loaderFeatures.ensurePackagesExistAndAreCorrectVersion('sass');
 
         const sassLoaders = [...cssLoader.getLoaders(webpackConfig, useCssModules)];

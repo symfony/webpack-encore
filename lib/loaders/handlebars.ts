@@ -7,21 +7,14 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { fileURLToPath } from 'url';
 
 import loaderFeatures from '../features.js';
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import type WebpackConfig from '../WebpackConfig.js';
 
 export default {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     * @returns {Array} of loaders to use for Handlebars
-     */
-    getLoaders(webpackConfig) {
+    getLoaders(webpackConfig: WebpackConfig) {
         loaderFeatures.ensurePackagesExistAndAreCorrectVersion('handlebars');
 
         const options = {};

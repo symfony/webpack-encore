@@ -7,28 +7,17 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { fileURLToPath } from 'url';
 
 import loaderFeatures from '../features.js';
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import type WebpackConfig from '../WebpackConfig.js';
 
 export default {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     * @param {boolean} useCssModules
-     * @returns {Array} of loaders to use for CSS files
-     */
-    getLoaders(webpackConfig, useCssModules = false) {
+    getLoaders(webpackConfig: WebpackConfig, useCssModules = false) {
         const usePostCssLoader = webpackConfig.usePostCssLoader;
 
-        /**
-         * @type {boolean|object}
-         */
-        let modulesConfig = false;
+        let modulesConfig: boolean | object = false;
         if (useCssModules) {
             modulesConfig = {
                 localIdentName: '[local]_[hash:base64:5]',

@@ -7,22 +7,15 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { fileURLToPath } from 'url';
 
 import loaderFeatures from '../features.js';
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
 import getVueVersion from '../utils/get-vue-version.ts';
+import type WebpackConfig from '../WebpackConfig.js';
 
 export default {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     * @returns {Array} of loaders to use for Vue files
-     */
-    getLoaders(webpackConfig) {
+    getLoaders(webpackConfig: WebpackConfig) {
         const vueVersion = getVueVersion(webpackConfig);
         loaderFeatures.ensurePackagesExistAndAreCorrectVersion('vue' + vueVersion);
 
