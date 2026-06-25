@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import handlebarsLoader from '../../lib/loaders/handlebars.js';
+import handlebarsLoader from '../../lib/loaders/handlebars.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {

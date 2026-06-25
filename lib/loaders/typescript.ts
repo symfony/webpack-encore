@@ -7,31 +7,27 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { fileURLToPath } from 'url';
 
 import loaderFeatures from '../features.js';
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
-import babelLoader from './babel.js';
+import type WebpackConfig from '../WebpackConfig.js';
+import babelLoader from './babel.ts';
 
 export default {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     * @returns {Promise<Array>} of loaders to use for TypeScript
-     */
-    async getLoaders(webpackConfig) {
+    async getLoaders(webpackConfig: WebpackConfig) {
         loaderFeatures.ensurePackagesExistAndAreCorrectVersion('typescript');
 
         // some defaults
-        let config = {
+        let config: Record<string, any> = {
             silent: true,
         };
 
         // allow for ts-loader config to be controlled
-        config = applyOptionsCallback(webpackConfig.tsConfigurationCallback, config);
+        config = applyOptionsCallback<object>(
+            webpackConfig.tsConfigurationCallback,
+            config
+        ) as Record<string, any>;
 
         // fork-ts-checker-webpack-plugin integration
         if (webpackConfig.useForkedTypeScriptTypeChecking) {
@@ -39,10 +35,10 @@ export default {
             // force transpileOnly to speed up
             config.transpileOnly = true;
 
-            // add forked ts types plugin to the stack.
-            // eslint-disable-next-line n/no-missing-import -- this `.js` file dynamically imports a migrated `.ts` plugin; eslint-plugin-n can't resolve it and rewriteRelativeImportExtensions does not rewrite dynamic import() in `.js`. Remove once this loader is migrated to TS.
-            const forkedTs = await import('../plugins/forked-ts-types.js');
-            forkedTs.default(webpackConfig);
+            // add forked ts types plugin to the stack
+            const { default: forkedTypesPluginUtil } =
+                await import('../plugins/forked-ts-types.js');
+            forkedTypesPluginUtil(webpackConfig);
         }
 
         // allow to import .vue files
@@ -52,7 +48,7 @@ export default {
 
         // use ts alongside with babel
         // @see https://github.com/TypeStrong/ts-loader/blob/master/README.md#babel
-        let loaders = await babelLoader.getLoaders(webpackConfig);
+        const loaders = await babelLoader.getLoaders(webpackConfig);
         return loaders.concat([
             {
                 loader: fileURLToPath(import.meta.resolve('ts-loader')),

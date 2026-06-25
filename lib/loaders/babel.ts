@@ -7,22 +7,15 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { fileURLToPath } from 'url';
 
 import loaderFeatures from '../features.js';
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import type WebpackConfig from '../WebpackConfig.js';
 
 export default {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     * @returns {Promise<Array>} of loaders to use for Babel
-     */
-    async getLoaders(webpackConfig) {
-        let babelConfig = {
+    async getLoaders(webpackConfig: WebpackConfig) {
+        let babelConfig: Record<string, any> = {
             // improves performance by caching babel compiles
             // this option is always added but is set to FALSE in
             // production to avoid cache invalidation issues caused
@@ -39,7 +32,7 @@ export default {
         // configure babel (unless the user is specifying .babelrc)
         // todo - add a sanity check for their babelrc contents
         if (!(await webpackConfig.doesBabelRcFileExist())) {
-            let presetEnvOptions = {
+            let presetEnvOptions: Record<string, any> = {
                 // modules don't need to be transformed - webpack will parse
                 // the modules for us. This is a performance improvement
                 // https://babeljs.io/docs/en/babel-preset-env#modules
@@ -49,10 +42,10 @@ export default {
                 corejs: webpackConfig.babelOptions.corejs,
             };
 
-            presetEnvOptions = applyOptionsCallback(
+            presetEnvOptions = applyOptionsCallback<object>(
                 webpackConfig.babelPresetEnvOptionsCallback,
                 presetEnvOptions
-            );
+            ) as Record<string, any>;
 
             if (presetEnvOptions.useBuiltIns !== false) {
                 throw new Error(
@@ -117,10 +110,10 @@ export default {
                 );
             }
 
-            babelConfig = applyOptionsCallback(
+            babelConfig = applyOptionsCallback<object>(
                 webpackConfig.babelConfigurationCallback,
                 babelConfig
-            );
+            ) as Record<string, any>;
         }
 
         return [
@@ -131,11 +124,7 @@ export default {
         ];
     },
 
-    /**
-     * @param {WebpackConfig} webpackConfig
-     * @returns {RegExp} to use for the Babel loader `test` rule
-     */
-    getTest(webpackConfig) {
+    getTest(webpackConfig: WebpackConfig) {
         const extensions = [
             'm?jsx?', // match .js and .jsx and .mjs
         ];

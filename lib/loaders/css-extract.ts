@@ -7,25 +7,18 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
 import { fileURLToPath } from 'url';
 
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import type WebpackConfig from '../WebpackConfig.js';
 
 export default {
     /**
      * Prepends loaders with MiniCssExtractPlugin.loader
-     *
-     * @param {WebpackConfig} webpackConfig
-     * @param {Array} loaders An array of some style loaders
-     * @returns {Array}
      */
-    prependLoaders(webpackConfig, loaders) {
+    prependLoaders(webpackConfig: WebpackConfig, loaders: object[]) {
         if (!webpackConfig.extractCss) {
             const options = {};
 
