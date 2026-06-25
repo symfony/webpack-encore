@@ -13,10 +13,7 @@
  *
  * This is imperfect - is used to escape a filename (so, mostly,
  * it needs to escape the Window path slashes).
- *
- * @param {string} str
- * @returns {string}
  */
-export default function stringEscaper(str) {
+export default function stringEscaper(str: string): string {
     return str.replace(/\\/g, '\\\\').replace(/\x27/g, '\\\x27');
 }

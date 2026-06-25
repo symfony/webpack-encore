@@ -11,10 +11,7 @@
  * Function that escapes a string so it can be used in a RegExp.
  *
  * See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping
- *
- * @param {string} str
- * @returns {string}
  */
-export default function regexpEscaper(str) {
+export default function regexpEscaper(str: string): string {
     return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

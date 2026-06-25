@@ -3,18 +3,30 @@
     "version": "7.1.0",
     "description": "Webpack Encore is a simpler way to integrate Webpack into your application",
     "type": "module",
+    "types": "./dist/index.d.ts",
     "exports": {
-        ".": "./index.js",
-        "./lib/plugins/plugin-priorities.js": "./lib/plugins/plugin-priorities.js"
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./lib/plugins/plugin-priorities.js": {
+            "types": "./dist/lib/plugins/plugin-priorities.d.ts",
+            "default": "./dist/lib/plugins/plugin-priorities.js"
+        }
     },
     "scripts": {
+        "build": "rm -fr dist/ && tsc",
+        "type-check": "tsc --noEmit",
+        "prepare": "pnpm build",
+        "prepublishOnly": "pnpm type-check",
+        "pretest": "pnpm build",
         "test": "vitest run",
         "lint": "eslint lib test index.js eslint.config.js --report-unused-disable-directives --max-warnings=0",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check"
     },
     "bin": {
-        "encore": "bin/encore.js"
+        "encore": "dist/bin/encore.js"
     },
     "repository": {
         "type": "git",
@@ -57,6 +69,8 @@
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/mock-module": "file:fixtures/stimulus/mock-module",
         "@symfony/stimulus-bridge": "^3.0.0 || ^4.0.0",
+        "@tsconfig/node22": "^22.0.5",
+        "@types/node": "^22.18.0",
         "@vue/babel-plugin-jsx": "^3.0.0",
         "@vue/compiler-sfc": "^3.2.14",
         "autoprefixer": "^10.2.0",
@@ -95,6 +109,7 @@
         "svelte-loader": "^3.1.0",
         "ts-loader": "^9.0.0",
         "typescript": "^5.0.0 || ^6.0.0",
+        "typescript-eslint": "^8.39.0",
         "vitest": "^4.1.2",
         "vue": "^3.2.14",
         "vue-loader": "^17.0.0",
@@ -243,9 +258,7 @@
         }
     },
     "files": [
-        "lib/",
-        "bin/",
-        "index.js"
+        "dist/"
     ],
     "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }
