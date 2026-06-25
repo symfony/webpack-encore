@@ -7,11 +7,14 @@
  * file that was distributed with this source code.
  */
 
+import type { FriendlyError, Transformer } from '@kocal/friendly-errors-webpack-plugin';
+
 import getVueVersion from '../../utils/get-vue-version.ts';
+import type WebpackConfig from '../../WebpackConfig.js';
 
 const TYPE = 'loader-not-enabled';
 
-function isMissingLoaderError(e) {
+function isMissingLoaderError(e: FriendlyError): boolean {
     if (e.name !== 'ModuleParseError') {
         return false;
     }
@@ -23,7 +26,7 @@ function isMissingLoaderError(e) {
     return true;
 }
 
-function isErrorFromVueLoader(filename) {
+function isErrorFromVueLoader(filename: string): boolean {
     // vue3
     if (/vue-loader\/dist(\/index\.js)?\?\?/.test(filename)) {
         return true;
@@ -37,7 +40,7 @@ function isErrorFromVueLoader(filename) {
     return false;
 }
 
-function getFileExtension(filename) {
+function getFileExtension(filename: string): string {
     // ??vue-loader-options
     if (isErrorFromVueLoader(filename)) {
         // vue is strange, the "filename" is reported as something like
@@ -54,18 +57,20 @@ function getFileExtension(filename) {
     const str = filename.replace(/\?.*/, '');
     const split = str.split('.');
 
-    return split.pop();
+    return split.pop() ?? '';
 }
 
-function transform(error, webpackConfig) {
+function transform(error: FriendlyError, webpackConfig: WebpackConfig): FriendlyError {
     if (!isMissingLoaderError(error)) {
         return error;
     }
 
     error = Object.assign({}, error);
-    error.isVueLoader = isErrorFromVueLoader(error.file);
 
-    const extension = getFileExtension(error.file);
+    const filename = error.file ?? '';
+    error.isVueLoader = isErrorFromVueLoader(filename);
+
+    const extension = getFileExtension(filename);
     switch (extension) {
         case 'sass':
         case 'scss':
@@ -78,7 +83,7 @@ function transform(error, webpackConfig) {
             error.loaderName = 'react';
             break;
         case 'vue':
-            error.loaderName = 'vue' + getVueVersion(webpackConfig);
+            error.loaderName = `vue${getVueVersion(webpackConfig)}`;
             break;
         case 'tsx':
         case 'ts':
@@ -99,8 +104,8 @@ function transform(error, webpackConfig) {
 /*
  * Returns a factory to get the function.
  */
-export default function (webpackConfig) {
-    return function (error) {
+export default function (webpackConfig: WebpackConfig): Transformer {
+    return function (error: FriendlyError): FriendlyError {
         return transform(error, webpackConfig);
     };
 }

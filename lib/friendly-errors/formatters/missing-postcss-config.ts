@@ -7,14 +7,15 @@
  * file that was distributed with this source code.
  */
 
+import type { FriendlyError } from '@kocal/friendly-errors-webpack-plugin';
 import pc from 'picocolors';
 
-function formatErrors(errors) {
+function formatErrors(errors: FriendlyError[]): string[] {
     if (errors.length === 0) {
         return [];
     }
 
-    let messages = [];
+    const messages: string[] = [];
     // there will be an error for *every* file, but showing
     // the error over and over again is not helpful
 
@@ -50,7 +51,7 @@ module.exports = {
     return messages;
 }
 
-function format(errors) {
+function format(errors: FriendlyError[]): string[] {
     return formatErrors(errors.filter((e) => e.type === 'missing-postcss-config'));
 }
 

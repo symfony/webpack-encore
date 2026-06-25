@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 
 import RuntimeConfig from '../../../lib/config/RuntimeConfig.js';
-import transformFactory from '../../../lib/friendly-errors/transformers/missing-loader.js';
+import transformFactory from '../../../lib/friendly-errors/transformers/missing-loader.ts';
 import WebpackConfig from '../../../lib/WebpackConfig.js';
 
 const runtimeConfig = new RuntimeConfig();

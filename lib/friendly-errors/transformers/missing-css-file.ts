@@ -7,9 +7,11 @@
  * file that was distributed with this source code.
  */
 
+import type { FriendlyError } from '@kocal/friendly-errors-webpack-plugin';
+
 const TYPE = 'missing-css-file';
 
-function isMissingConfigError(e) {
+function isMissingConfigError(e: FriendlyError): boolean {
     if (e.name !== 'ModuleNotFoundError') {
         return false;
     }
@@ -21,14 +23,14 @@ function isMissingConfigError(e) {
     return true;
 }
 
-function getReference(error) {
+function getReference(error: FriendlyError): string {
     const index = error.message.indexOf("Can't resolve '") + 15;
     const endIndex = error.message.indexOf("' in '");
 
     return error.message.substring(index, endIndex);
 }
 
-function transform(error) {
+function transform(error: FriendlyError): FriendlyError {
     if (!isMissingConfigError(error)) {
         return error;
     }

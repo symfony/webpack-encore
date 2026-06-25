@@ -7,17 +7,22 @@
  * file that was distributed with this source code.
  */
 
+import type { FriendlyError } from '@kocal/friendly-errors-webpack-plugin';
 import pc from 'picocolors';
 
-function formatErrors(errors) {
+interface MissingCssFileError extends FriendlyError {
+    ref?: string;
+}
+
+function formatErrors(errors: MissingCssFileError[]): string[] {
     if (errors.length === 0) {
         return [];
     }
 
-    let messages = [];
+    const messages: string[] = [];
 
     messages.push(pc.red('Module build failed: Module not found:'));
-    for (let error of errors) {
+    for (const error of errors) {
         messages.push(`"${error.file}" contains a reference to the file "${error.ref}".`);
         messages.push(
             'This file can not be found, please check it for typos or update it if the file got moved.'
@@ -28,7 +33,7 @@ function formatErrors(errors) {
     return messages;
 }
 
-function format(errors) {
+function format(errors: FriendlyError[]): string[] {
     return formatErrors(errors.filter((e) => e.type === 'missing-css-file'));
 }
 

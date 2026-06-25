@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import formatter from '../../../lib/friendly-errors/formatters/missing-css-file.js';
+import formatter from '../../../lib/friendly-errors/formatters/missing-css-file.ts';
 
 describe('formatters/missing-css-file', function () {
     describe('test format()', function () {
