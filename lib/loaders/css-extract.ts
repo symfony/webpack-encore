@@ -10,6 +10,7 @@
 import { fileURLToPath } from 'url';
 
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import type { RuleSetUseItem } from 'webpack';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
 import type WebpackConfig from '../WebpackConfig.js';
@@ -18,7 +19,7 @@ export default {
     /**
      * Prepends loaders with MiniCssExtractPlugin.loader
      */
-    prependLoaders(webpackConfig: WebpackConfig, loaders: object[]) {
+    prependLoaders(webpackConfig: WebpackConfig, loaders: RuleSetUseItem[]): RuleSetUseItem[] {
         if (!webpackConfig.extractCss) {
             const options = {};
 

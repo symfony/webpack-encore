@@ -8,6 +8,7 @@
  */
 
 import type FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
+import type { WebpackPluginInstance } from 'webpack';
 
 import pathUtil from '../config/path-util.js';
 import AssetOutputDisplayPlugin from '../friendly-errors/asset-output-display-plugin.ts';
@@ -18,7 +19,7 @@ import PluginPriorities from './plugin-priorities.ts';
  * Updates plugins array passed adding AssetOutputDisplayPlugin instance
  */
 export default function (
-    plugins: Array<{ plugin: object; priority: number }>,
+    plugins: Array<{ plugin: WebpackPluginInstance; priority: number }>,
     webpackConfig: WebpackConfig,
     friendlyErrorsPlugin: FriendlyErrorsWebpackPlugin
 ): void {

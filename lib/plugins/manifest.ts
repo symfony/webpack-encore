@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+import type { WebpackPluginInstance } from 'webpack';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 
 import applyOptionsCallback from '../utils/apply-options-callback.ts';
@@ -24,7 +25,7 @@ type ManifestPluginOptions = {
 };
 
 export default function (
-    plugins: Array<{ plugin: object; priority: number }>,
+    plugins: Array<{ plugin: WebpackPluginInstance; priority: number }>,
     webpackConfig: WebpackConfig
 ): void {
     let manifestPluginOptions: ManifestPluginOptions = {

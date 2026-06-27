@@ -13,7 +13,7 @@ import type WebpackConfig from '../WebpackConfig.js';
 import PluginPriorities from './plugin-priorities.ts';
 
 export default function (
-    plugins: Array<{ plugin: object; priority: number }>,
+    plugins: Array<{ plugin: webpack.WebpackPluginInstance; priority: number }>,
     webpackConfig: WebpackConfig
 ): void {
     if (Object.keys(webpackConfig.providedVariables).length > 0) {
