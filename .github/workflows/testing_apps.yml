@@ -139,6 +139,10 @@ jobs:
                   cache: ${{ matrix.app.pkg_manager }}
                   cache-dependency-path: ${{ matrix.app.working_directory }}/${{ env.LOCKFILE }}
 
+            - name: Installing dependencies
+              run: |
+                  pnpm install --frozen-lockfile
+
             - name: Packing Encore
               run: pnpm pack --out webpack-encore.tgz
 

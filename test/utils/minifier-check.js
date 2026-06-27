@@ -19,7 +19,7 @@ vi.mock('../../lib/features.js', () => ({
 }));
 
 const { checkJsMinifierPackages, checkCssMinifierPackages } =
-    await import('../../lib/utils/minifier-check.js');
+    await import('../../lib/utils/minifier-check.ts');
 
 describe('utils/minifier-check', function () {
     beforeEach(() => ensurePackagesExistAndAreCorrectVersion.mockReset());

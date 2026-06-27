@@ -17,12 +17,12 @@ const { checkCssMinifierPackages } = vi.hoisted(() => ({
     checkCssMinifierPackages: vi.fn(),
 }));
 
-vi.mock('../../lib/utils/minifier-check.js', () => ({
+vi.mock('../../lib/utils/minifier-check.ts', () => ({
     checkJsMinifierPackages: vi.fn(),
     checkCssMinifierPackages,
 }));
 
-const { default: cssMinimizerPluginUtil } = await import('../../lib/plugins/css-minimizer.js');
+const { default: cssMinimizerPluginUtil } = await import('../../lib/plugins/css-minimizer.ts');
 
 function createConfig(environment = 'production') {
     const runtimeConfig = new RuntimeConfig();

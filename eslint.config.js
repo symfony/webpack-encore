@@ -13,6 +13,7 @@ import jsdoc from 'eslint-plugin-jsdoc';
 import nodePlugin from 'eslint-plugin-n';
 import vitestPlugin from 'eslint-plugin-vitest';
 import globals from 'globals';
+import tseslint from 'typescript-eslint';
 
 export default [
     js.configs.recommended,
@@ -58,7 +59,6 @@ export default [
             ],
             'n/no-unsupported-features/node-builtins': ['error'],
             'n/no-deprecated-api': 'error',
-            'n/no-missing-import': 'error',
             'n/no-missing-require': 'off',
             'n/no-unpublished-bin': 'error',
             'n/no-unpublished-import': 'error',
@@ -82,6 +82,25 @@ file that was distributed with this source code.`,
             jsdoc: {
                 mode: 'typescript',
             },
+        },
+    },
+    {
+        files: ['**/*.ts'],
+        languageOptions: {
+            parser: tseslint.parser,
+        },
+        rules: {
+            // The TypeScript compiler reports unused symbols; the core rule
+            // produces false positives on type-only syntax.
+            'no-unused-vars': 'off',
+            // In TypeScript files, types live in the signature, not in JSDoc.
+            'jsdoc/require-param': 'off',
+            'jsdoc/require-returns': 'off',
+            // tsc owns module resolution for `.ts` files (strict, build fails on
+            // a missing import). eslint-plugin-n is not TS-aware: from a `.ts`
+            // file it rewrites `.js` -> `.ts` and cannot resolve imports of
+            // not-yet-migrated `.js` modules. `.js` files keep the rule.
+            'n/no-missing-import': 'off',
         },
     },
     {

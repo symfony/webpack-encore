@@ -11,7 +11,7 @@ import FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
 import { describe, it, expect } from 'vitest';
 
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import friendlyErrorsPluginUtil from '../../lib/plugins/friendly-errors.js';
+import friendlyErrorsPluginUtil from '../../lib/plugins/friendly-errors.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {

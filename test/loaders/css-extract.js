@@ -11,7 +11,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import { describe, it, expect } from 'vitest';
 
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import cssExtractLoader from '../../lib/loaders/css-extract.js';
+import cssExtractLoader from '../../lib/loaders/css-extract.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {

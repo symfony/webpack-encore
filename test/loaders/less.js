@@ -10,8 +10,8 @@
 import { vi, describe, it, expect } from 'vitest';
 
 import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import cssLoader from '../../lib/loaders/css.js';
-import lessLoader from '../../lib/loaders/less.js';
+import cssLoader from '../../lib/loaders/css.ts';
+import lessLoader from '../../lib/loaders/less.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {
