@@ -10,7 +10,7 @@
 import type { WebpackPluginInstance } from 'webpack';
 
 import copyEntryTmpName from '../utils/copyEntryTmpName.ts';
-import DeleteUnusedEntriesJSPlugin from '../webpack/delete-unused-entries-js-plugin.js';
+import DeleteUnusedEntriesJSPlugin from '../webpack/delete-unused-entries-js-plugin.ts';
 import type WebpackConfig from '../WebpackConfig.js';
 import PluginPriorities from './plugin-priorities.ts';
 

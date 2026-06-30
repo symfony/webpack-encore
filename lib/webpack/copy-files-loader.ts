@@ -9,6 +9,16 @@
 
 import path from 'path';
 
+import type { AssetInfo, LoaderContext } from 'webpack';
+
+interface CopyFilesLoaderOptions {
+    context: string;
+    filename: string;
+    regExp?: RegExp;
+    patternSource: string;
+    patternFlags: string;
+}
+
 export const raw = true; // Needed to avoid corrupted binary files
 
 /**
@@ -20,14 +30,21 @@ export const raw = true; // Needed to avoid corrupted binary files
  *   - [path]: relative directory path from context, with trailing slash
  *   - [hash:N] or [contenthash:N]: content hash, optionally truncated to N characters
  *
- * @param {string} template - The filename template (e.g., '[path][name].[hash:8].[ext]')
- * @param {object} data
- * @param {string} data.resourcePath - Absolute path to the resource
- * @param {string} data.context - Context directory for computing relative paths
- * @param {string} data.contentHash - Pre-computed content hash
- * @returns {string} The interpolated filename
+ * @param template The filename template (e.g., '[path][name].[hash:8].[ext]')
+ * @param data
+ * @param data.resourcePath Absolute path to the resource
+ * @param data.context Context directory for computing relative paths
+ * @param data.contentHash Pre-computed content hash
+ * @returns The interpolated filename
  */
-function interpolateName(template, { resourcePath, context, contentHash }) {
+function interpolateName(
+    template: string,
+    {
+        resourcePath,
+        context,
+        contentHash,
+    }: { resourcePath: string; context: string; contentHash: string }
+): string {
     const parsed = path.parse(resourcePath);
     const ext = parsed.ext.slice(1); // Remove leading dot for file-loader compatibility
     const name = parsed.name;
@@ -57,10 +74,13 @@ function interpolateName(template, { resourcePath, context, contentHash }) {
  * native this.emitFile() API. It supports filtering files by pattern
  * and customizing output paths using template placeholders.
  *
- * @param {Buffer} source - The raw file content
- * @returns {string} An ESM module that exports the public URL of the copied file
+ * @param source The raw file content
+ * @returns An ESM module that exports the public URL of the copied file
  */
-export default function loader(source) {
+export default function loader(
+    this: LoaderContext<CopyFilesLoaderOptions>,
+    source: Buffer
+): string {
     const options = this.getOptions();
 
     // Retrieve the real path of the resource, relative
@@ -99,7 +119,7 @@ export default function loader(source) {
     });
 
     // Build asset info for webpack
-    const assetInfo = {
+    const assetInfo: AssetInfo = {
         sourceFilename: path.relative(this.rootContext, resourcePath).replace(/\\/g, '/'),
     };
 
@@ -109,7 +129,7 @@ export default function loader(source) {
     }
 
     // Emit the file to the output directory
-    this.emitFile(outputPath, source, null, assetInfo);
+    this.emitFile(outputPath, source, undefined, assetInfo);
 
     // Return a module that exports the public URL
     return `export default __webpack_public_path__ + ${JSON.stringify(outputPath)};`;

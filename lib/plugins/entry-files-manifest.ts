@@ -9,7 +9,7 @@
 
 import type { WebpackPluginInstance } from 'webpack';
 
-import { EntryPointsPlugin } from '../webpack/entry-points-plugin.js';
+import { EntryPointsPlugin } from '../webpack/entry-points-plugin.ts';
 import type WebpackConfig from '../WebpackConfig.js';
 import PluginPriorities from './plugin-priorities.ts';
 

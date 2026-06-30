@@ -7,16 +7,25 @@
  * file that was distributed with this source code.
  */
 
-function DeleteUnusedEntriesJSPlugin(entriesToDelete = []) {
-    this.entriesToDelete = entriesToDelete;
-}
-DeleteUnusedEntriesJSPlugin.prototype.apply = function (compiler) {
-    const deleteEntries = (compilation) => {
-        // loop over output chunks
-        compilation.chunks.forEach((chunk) => {
-            // see of this chunk is one that needs its .js deleted
-            if (this.entriesToDelete.includes(chunk.name)) {
-                const removedFiles = [];
+import type { Compilation, Compiler } from 'webpack';
+
+export default class DeleteUnusedEntriesJSPlugin {
+    entriesToDelete: string[];
+
+    constructor(entriesToDelete: string[] = []) {
+        this.entriesToDelete = entriesToDelete;
+    }
+
+    apply(compiler: Compiler): void {
+        const deleteEntries = (compilation: Compilation): void => {
+            // loop over output chunks
+            compilation.chunks.forEach((chunk) => {
+                // see of this chunk is one that needs its .js deleted
+                if (typeof chunk.name !== 'string' || !this.entriesToDelete.includes(chunk.name)) {
+                    return;
+                }
+
+                const removedFiles: string[] = [];
 
                 // look for main files to delete first
                 for (const filename of Array.from(chunk.files)) {
@@ -48,15 +57,13 @@ DeleteUnusedEntriesJSPlugin.prototype.apply = function (compiler) {
                         `Problem deleting JS entry for ${chunk.name}: ${removedFiles.length} files were deleted (${removedFiles.join(', ')})`
                     );
                 }
-            }
-        });
-    };
+            });
+        };
 
-    compiler.hooks.compilation.tap('DeleteUnusedEntriesJSPlugin', function (compilation) {
-        compilation.hooks.additionalAssets.tap('DeleteUnusedEntriesJsPlugin', function () {
-            deleteEntries(compilation);
+        compiler.hooks.compilation.tap('DeleteUnusedEntriesJSPlugin', function (compilation) {
+            compilation.hooks.additionalAssets.tap('DeleteUnusedEntriesJsPlugin', function () {
+                deleteEntries(compilation);
+            });
         });
-    });
-};
-
-export default DeleteUnusedEntriesJSPlugin;
+    }
+}
