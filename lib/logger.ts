@@ -9,16 +9,22 @@
 
 import pc from 'picocolors';
 
-const defaultConfig = {
+type MessageType = 'debug' | 'recommendation' | 'warning' | 'deprecation';
+
+interface LoggerConfig {
+    isVerbose: boolean;
+    quiet: boolean;
+}
+
+const defaultConfig: LoggerConfig = {
     isVerbose: false,
     quiet: false,
 };
 
-/** @type {Record<'debug'|'recommendation'|'warning'|'deprecation', Array<string>>} */
-let messages;
-let config = {};
+let messages: Record<MessageType, string[]>;
+let config: LoggerConfig = { ...defaultConfig };
 
-const reset = function () {
+const reset = function (): void {
     messages = {
         debug: [],
         recommendation: [],
@@ -29,7 +35,7 @@ const reset = function () {
 };
 reset();
 
-function log(message) {
+function log(message: string): void {
     if (config.quiet) {
         return;
     }
@@ -38,7 +44,7 @@ function log(message) {
 }
 
 export default {
-    debug(message) {
+    debug(message: string): void {
         messages.debug.push(message);
 
         if (config.isVerbose) {
@@ -46,40 +52,37 @@ export default {
         }
     },
 
-    recommendation(message) {
+    recommendation(message: string): void {
         messages.recommendation.push(message);
 
         log(`${pc.bgBlue(pc.white(' RECOMMEND '))} ${message}`);
     },
 
-    warning(message) {
+    warning(message: string): void {
         messages.warning.push(message);
 
         log(`${pc.bgYellow(pc.black(' WARNING '))} ${pc.yellow(message)}`);
     },
 
-    deprecation(message) {
+    deprecation(message: string): void {
         messages.deprecation.push(message);
 
         log(`${pc.bgYellow(pc.black(' DEPRECATION '))} ${pc.yellow(message)}`);
     },
 
-    /**
-     * @returns {Record<'debug'|'recommendation'|'warning'|'deprecation', Array<string>>}
-     */
-    getMessages() {
+    getMessages(): Record<MessageType, string[]> {
         return messages;
     },
 
-    quiet(setQuiet = true) {
+    quiet(setQuiet = true): void {
         config.quiet = setQuiet;
     },
 
-    verbose(setVerbose = true) {
+    verbose(setVerbose = true): void {
         config.isVerbose = setVerbose;
     },
 
-    reset() {
+    reset(): void {
         reset();
     },
 };

@@ -7,19 +7,20 @@
  * file that was distributed with this source code.
  */
 
-import packageHelper from './package-helper.js';
+import type { PackagesConfig } from './package-helper.js';
+import packageHelper from './package-helper.ts';
+
+interface Feature {
+    method: string;
+    packages: PackagesConfig;
+    description: string;
+}
 
 /**
  * An object that holds internal configuration about different
  * "loaders"/"plugins" that can be enabled/used.
- *
- * @type {{[key: string]: {
- *     method: string,
- *     packages: Array<{ name: string, enforce_version?: boolean } | Array<{ name: string }>>,
- *     description: string,
- * }}}
  */
-const features = {
+const features: Record<string, Feature> = {
     sass: {
         method: 'enableSassLoader()',
         packages: [
@@ -166,16 +167,20 @@ const features = {
     },
 };
 
-function getFeatureConfig(featureName) {
-    if (!features[featureName]) {
+function getFeatureConfig(featureName: string): Feature {
+    const config = features[featureName];
+    if (!config) {
         throw new Error(`Unknown feature ${featureName}`);
     }
 
-    return features[featureName];
+    return config;
 }
 
 export default {
-    ensurePackagesExistAndAreCorrectVersion: function (featureName, method = null) {
+    ensurePackagesExistAndAreCorrectVersion: function (
+        featureName: string,
+        method: string | null = null
+    ): void {
         const config = getFeatureConfig(featureName);
 
         packageHelper.ensurePackagesExist(
@@ -184,7 +189,7 @@ export default {
         );
     },
 
-    getMissingPackageRecommendations: function (featureName) {
+    getMissingPackageRecommendations: function (featureName: string) {
         const config = getFeatureConfig(featureName);
 
         return packageHelper.getMissingPackageRecommendations(
@@ -193,11 +198,11 @@ export default {
         );
     },
 
-    getFeatureMethod: function (featureName) {
+    getFeatureMethod: function (featureName: string): string {
         return getFeatureConfig(featureName).method;
     },
 
-    getFeatureDescription: function (featureName) {
+    getFeatureDescription: function (featureName: string): string {
         return getFeatureConfig(featureName).description;
     },
 };

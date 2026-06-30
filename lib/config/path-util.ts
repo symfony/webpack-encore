@@ -9,7 +9,7 @@
 
 import path from 'path';
 
-import logger from '../logger.js';
+import logger from '../logger.ts';
 import type WebpackConfig from '../WebpackConfig.js';
 // .js (not .ts): RuntimeConfig is exposed in this module's emitted .d.ts, and
 // rewriteRelativeImportExtensions does NOT rewrite .ts -> .js inside .d.ts files
@@ -22,11 +22,11 @@ export default {
      */
     getContentBase(webpackConfig: WebpackConfig): string {
         // strip trailing slash (for Unix or Windows)
-        const outputPath = webpackConfig.outputPath.replace(/\/$/, '').replace(/\\$/, '');
+        const outputPath = webpackConfig.outputPath!.replace(/\/$/, '').replace(/\\$/, '');
         // use the manifestKeyPrefix if available
         const publicPath = webpackConfig.manifestKeyPrefix
             ? webpackConfig.manifestKeyPrefix.replace(/\/$/, '')
-            : webpackConfig.publicPath.replace(/\/$/, '');
+            : webpackConfig.publicPath!.replace(/\/$/, '');
 
         /*
          * We use the intersection of the publicPath (or manifestKeyPrefix) and outputPath
@@ -62,7 +62,7 @@ export default {
      * Returns the output path, but as a relative string (e.g. web/build)
      */
     getRelativeOutputPath(webpackConfig: WebpackConfig): string {
-        return webpackConfig.outputPath.replace(webpackConfig.getContext() + path.sep, '');
+        return webpackConfig.outputPath!.replace(webpackConfig.getContext() + path.sep, '');
     },
 
     /**
@@ -77,7 +77,7 @@ export default {
             return;
         }
 
-        if (webpackConfig.publicPath.includes('://')) {
+        if (webpackConfig.publicPath!.includes('://')) {
             /*
              * If publicPath is absolute, you probably don't want your manifests.json
              * keys to be prefixed with the CDN URL. Instead, we force you to
@@ -89,13 +89,13 @@ export default {
             );
         }
 
-        let outputPath = webpackConfig.outputPath;
+        let outputPath = webpackConfig.outputPath!;
         // for comparison purposes, change \ to / on Windows
         outputPath = outputPath.replace(/\\/g, '/');
 
         // remove trailing slash on each
         outputPath = outputPath.replace(/\/$/, '');
-        const publicPath = webpackConfig.publicPath.replace(/\/$/, '');
+        const publicPath = webpackConfig.publicPath!.replace(/\/$/, '');
 
         /*
          * This is a sanity check. If, for example, you are deploying

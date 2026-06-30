@@ -7,10 +7,12 @@
  * file that was distributed with this source code.
  */
 
+import type RuntimeConfig from './config/RuntimeConfig.js';
+
 /**
  * Stores the current RuntimeConfig created by the encore executable.
  */
 
 export default {
-    runtimeConfig: null,
+    runtimeConfig: null as RuntimeConfig | null,
 };

@@ -13,7 +13,7 @@ import { describe, it, expect } from 'vitest';
 import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
 import tsLoader from '../../lib/loaders/typescript.ts';
 import tsTypeChecker from '../../lib/plugins/forked-ts-types.ts';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

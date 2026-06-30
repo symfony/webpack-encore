@@ -7,15 +7,12 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from './WebpackConfig.js'
- */
-
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 import tmp from 'tmp';
+import type webpack from 'webpack';
 
 import pathUtil from './config/path-util.ts';
 import babelLoaderUtil from './loaders/babel.ts';
@@ -28,7 +25,7 @@ import sassLoaderUtil from './loaders/sass.ts';
 import stylusLoaderUtil from './loaders/stylus.ts';
 import tsLoaderUtil from './loaders/typescript.ts';
 import vueLoaderUtil from './loaders/vue.ts';
-import logger from './logger.js';
+import logger from './logger.ts';
 // plugins utils
 import assetOutputDisplay from './plugins/asset-output-display.ts';
 import cssMinimizerPluginUtil from './plugins/css-minimizer.ts';
@@ -43,20 +40,20 @@ import notifierPluginUtil from './plugins/notifier.ts';
 import PluginPriorities from './plugins/plugin-priorities.ts';
 import variableProviderPluginUtil from './plugins/variable-provider.ts';
 import vuePluginUtil from './plugins/vue.ts';
-import applyOptionsCallback from './utils/apply-options-callback.ts';
+import applyOptionsCallback, { type OptionsCallback } from './utils/apply-options-callback.ts';
 import copyEntryTmpName from './utils/copyEntryTmpName.ts';
 import getVueVersion from './utils/get-vue-version.ts';
 import stringEscaper from './utils/string-escaper.ts';
+import type WebpackConfig from './WebpackConfig.js';
 
 class ConfigGenerator {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     */
-    constructor(webpackConfig) {
+    webpackConfig: WebpackConfig;
+
+    constructor(webpackConfig: WebpackConfig) {
         this.webpackConfig = webpackConfig;
     }
 
-    async getWebpackConfig() {
+    async getWebpackConfig(): Promise<webpack.Configuration> {
         // Perform deferred babel validation checks (moved from WebpackConfig
         // methods because they require async doesBabelRcFileExist()).
         await this._validateDeferredBabelConfig();
@@ -72,19 +69,16 @@ class ConfigGenerator {
          */
         if (
             this.webpackConfig.useDevServer() &&
-            (devServerConfig.server === 'https' ||
-                (typeof devServerConfig.server === 'object' &&
-                    devServerConfig.server.type === 'https'))
+            (devServerConfig!.server === 'https' ||
+                (typeof devServerConfig!.server === 'object' &&
+                    devServerConfig!.server.type === 'https'))
         ) {
             this.webpackConfig.runtimeConfig.devServerFinalIsHttps = true;
         } else {
             this.webpackConfig.runtimeConfig.devServerFinalIsHttps = false;
         }
 
-        /**
-         * @type {import('webpack').Configuration}
-         */
-        const config = {
+        const config: webpack.Configuration = {
             context: this.webpackConfig.getContext(),
             entry: this.buildEntryConfig(),
             mode: this.webpackConfig.isProduction() ? 'production' : 'development',
@@ -113,7 +107,9 @@ class ConfigGenerator {
         }
 
         if (null !== devServerConfig) {
-            config.devServer = devServerConfig;
+            // `devServer` is added to webpack's Configuration type by
+            // webpack-dev-server's type augmentation, which is not loaded here.
+            (config as { devServer?: unknown }).devServer = devServerConfig;
         }
 
         config.performance = {
@@ -127,6 +123,7 @@ class ConfigGenerator {
             extensions: ['.wasm', '.mjs', '.js', '.json', '.jsx', '.vue', '.ts', '.tsx', '.svelte'],
             alias: {},
         };
+        const resolveAlias = config.resolve.alias as Record<string, string>;
 
         if (
             this.webpackConfig.useVueLoader &&
@@ -142,7 +139,7 @@ class ConfigGenerator {
             const vueVersion = getVueVersion(this.webpackConfig);
             switch (vueVersion) {
                 case 3:
-                    config.resolve.alias['vue$'] = 'vue/dist/vue.esm-bundler.js';
+                    resolveAlias['vue$'] = 'vue/dist/vue.esm-bundler.js';
                     break;
                 default:
                     throw new Error(`Invalid vue version ${vueVersion}`);
@@ -150,11 +147,11 @@ class ConfigGenerator {
         }
 
         if (this.webpackConfig.usePreact && this.webpackConfig.preactOptions.preactCompat) {
-            config.resolve.alias['react'] = 'preact/compat';
-            config.resolve.alias['react-dom'] = 'preact/compat';
+            resolveAlias['react'] = 'preact/compat';
+            resolveAlias['react-dom'] = 'preact/compat';
         }
 
-        Object.assign(config.resolve.alias, this.webpackConfig.aliases);
+        Object.assign(resolveAlias, this.webpackConfig.aliases);
 
         config.externals = [...this.webpackConfig.externals];
 
@@ -166,10 +163,8 @@ class ConfigGenerator {
      * synchronously in WebpackConfig.configureBabel() and
      * WebpackConfig.configureBabelPresetEnv(). These checks require
      * the async doesBabelRcFileExist() call.
-     *
-     * @returns {Promise<void>}
      */
-    async _validateDeferredBabelConfig() {
+    async _validateDeferredBabelConfig(): Promise<void> {
         const babelRcFileExists = await this.webpackConfig.doesBabelRcFileExist();
 
         // Check from configureBabel(): if a callback was provided and an
@@ -203,11 +198,8 @@ class ConfigGenerator {
         }
     }
 
-    buildEntryConfig() {
-        /**
-         * @type {Record<string, string[]>}
-         */
-        const entry = {};
+    buildEntryConfig(): Record<string, string | string[]> {
+        const entry: Record<string, string | string[]> = {};
 
         for (const [entryName, entryChunks] of this.webpackConfig.entries) {
             // entryFile could be an array, we don't care
@@ -243,7 +235,8 @@ class ConfigGenerator {
             const tmpFileObject = tmp.fileSync();
             fs.writeFileSync(
                 tmpFileObject.name,
-                copyFilesConfigs.reduce((buffer, entry, index) => {
+                copyFilesConfigs.reduce((buffer: string, entry, index) => {
+                    const pattern = entry.pattern as RegExp;
                     const copyFrom = path.resolve(this.webpackConfig.getContext(), entry.from);
 
                     let copyTo = entry.to;
@@ -271,8 +264,8 @@ class ConfigGenerator {
                         // the patternSource is base64 encoded in case
                         // it contains characters that don't work with
                         // the "inline loader" syntax
-                        patternSource: Buffer.from(entry.pattern.source).toString('base64'),
-                        patternFlags: entry.pattern.flags,
+                        patternSource: Buffer.from(pattern.source).toString('base64'),
+                        patternFlags: pattern.flags,
                     })}`;
 
                     return (
@@ -281,7 +274,7 @@ class ConfigGenerator {
                         const context_${index} = require.context(
                             '${stringEscaper(`!!${copyFilesLoaderConfig}!${copyFrom}?copy-files-loader`)}',
                             ${!!entry.includeSubdirectories},
-                            ${entry.pattern}
+                            ${pattern}
                         );
                         context_${index}.keys().forEach(context_${index});
                     `
@@ -295,7 +288,7 @@ class ConfigGenerator {
         return entry;
     }
 
-    buildOutputConfig() {
+    buildOutputConfig(): webpack.Configuration['output'] {
         // Default filename can be overridden using Encore.configureFilenames({ js: '...' })
         let filename = this.webpackConfig.useVersioning ? '[name].[contenthash:8].js' : '[name].js';
         if (this.webpackConfig.configuredFilenames.js) {
@@ -304,7 +297,7 @@ class ConfigGenerator {
 
         return {
             clean: this.buildCleanConfig(),
-            path: this.webpackConfig.outputPath,
+            path: this.webpackConfig.outputPath as string,
             filename: filename,
             // default "asset module" filename
             // this is overridden for the image & font rules
@@ -318,10 +311,7 @@ class ConfigGenerator {
         };
     }
 
-    /**
-     * @returns {ConstructorParameters<typeof import('webpack').CleanPlugin>[0]|boolean}
-     */
-    buildCleanConfig() {
+    buildCleanConfig(): ConstructorParameters<typeof webpack.CleanPlugin>[0] | boolean {
         if (!this.webpackConfig.cleanupOutput) {
             return false;
         }
@@ -329,20 +319,33 @@ class ConfigGenerator {
         return applyOptionsCallback(this.webpackConfig.cleanOptionsCallback, {});
     }
 
-    async buildRulesConfig() {
-        const applyRuleConfigurationCallback = (name, defaultRules) => {
+    async buildRulesConfig(): Promise<webpack.RuleSetRule[]> {
+        const applyRuleConfigurationCallback = (
+            name: string,
+            defaultRules: webpack.RuleSetRule
+        ) => {
             return applyOptionsCallback(
-                this.webpackConfig.loaderConfigurationCallbacks[name],
+                this.webpackConfig.loaderConfigurationCallbacks[name]!,
                 defaultRules
             );
         };
 
-        const generateAssetRuleConfig = (testRegex, ruleOptions, ruleCallback, ruleName) => {
-            const generatorOptions = {};
+        const generateAssetRuleConfig = (
+            testRegex: RegExp,
+            ruleOptions: {
+                filename?: string;
+                maxSize?: number | null;
+                type?: string;
+                enabled?: boolean;
+            },
+            ruleCallback: OptionsCallback<webpack.RuleSetRule>,
+            ruleName: string
+        ) => {
+            const generatorOptions: { filename?: string } = {};
             if (ruleOptions.filename) {
                 generatorOptions.filename = ruleOptions.filename;
             }
-            const parserOptions = {};
+            const parserOptions: { dataUrlCondition?: { maxSize: number } } = {};
             if (ruleOptions.maxSize) {
                 parserOptions.dataUrlCondition = {
                     maxSize: ruleOptions.maxSize,
@@ -379,7 +382,7 @@ class ConfigGenerator {
             cssExtensions.push('postcss');
         }
 
-        let rules = [
+        const rules: webpack.RuleSetRule[] = [
             applyRuleConfigurationCallback('javascript', {
                 test: babelLoaderUtil.getTest(this.webpackConfig),
                 exclude: this.webpackConfig.babelOptions.exclude,
@@ -552,8 +555,8 @@ class ConfigGenerator {
         return rules;
     }
 
-    async buildPluginsConfig() {
-        const plugins = [];
+    async buildPluginsConfig(): Promise<webpack.WebpackPluginInstance[]> {
+        const plugins: Array<{ plugin: webpack.WebpackPluginInstance; priority: number }> = [];
 
         miniCssExtractPluginUtil(plugins, this.webpackConfig);
 
@@ -603,8 +606,8 @@ class ConfigGenerator {
             .map((plugin) => plugin.plugin);
     }
 
-    buildOptimizationConfig() {
-        const optimization = {};
+    buildOptimizationConfig(): webpack.Configuration['optimization'] {
+        const optimization: NonNullable<webpack.Configuration['optimization']> = {};
 
         if (this.webpackConfig.isProduction()) {
             const minimizers = [jsMinimizerPluginUtil(this.webpackConfig)];
@@ -614,11 +617,11 @@ class ConfigGenerator {
             optimization.minimizer = minimizers;
         }
 
-        const splitChunks = {
+        const splitChunks: Record<string, unknown> = {
             chunks: this.webpackConfig.shouldSplitEntryChunks ? 'all' : 'async',
         };
 
-        const cacheGroups = {};
+        const cacheGroups: Record<string, unknown> = {};
 
         for (const groupName in this.webpackConfig.cacheGroups) {
             cacheGroups[groupName] = Object.assign(
@@ -640,21 +643,21 @@ class ConfigGenerator {
         }
 
         if (this.webpackConfig.shouldUseSingleRuntimeChunk) {
-            optimization.runtimeChunk = /** @type {const} */ ('single');
+            optimization.runtimeChunk = 'single' as const;
         }
 
         optimization.splitChunks = applyOptionsCallback(
             this.webpackConfig.splitChunksConfigurationCallback,
             splitChunks
-        );
+        ) as NonNullable<webpack.Configuration['optimization']>['splitChunks'];
 
         return optimization;
     }
 
-    buildCacheConfig() {
-        const cache = {};
+    buildCacheConfig(): webpack.FileCacheOptions {
+        const cache: webpack.FileCacheOptions = {} as webpack.FileCacheOptions;
 
-        cache.type = /** @type {const} */ ('filesystem');
+        cache.type = 'filesystem' as const;
         cache.buildDependencies = this.webpackConfig.persistentCacheBuildDependencies;
 
         applyOptionsCallback(this.webpackConfig.persistentCacheCallback, cache);
@@ -662,10 +665,10 @@ class ConfigGenerator {
         return cache;
     }
 
-    buildStatsConfig() {
+    buildStatsConfig(): webpack.StatsOptions {
         // try to silence as much as possible: the output is rarely helpful
         // this still doesn't remove all output
-        let stats = {};
+        let stats: webpack.StatsOptions = {};
 
         if (
             !this.webpackConfig.runtimeConfig.outputJson &&
@@ -703,10 +706,10 @@ class ConfigGenerator {
         );
     }
 
-    buildDevServerConfig() {
+    buildDevServerConfig(): { server?: string | { type?: string }; [key: string]: unknown } {
         const contentBase = pathUtil.getContentBase(this.webpackConfig);
 
-        const devServerOptions = {
+        const devServerOptions: { server?: string | { type?: string }; [key: string]: unknown } = {
             static: {
                 directory: contentBase,
             },
@@ -737,15 +740,14 @@ class ConfigGenerator {
         return applyOptionsCallback(
             this.webpackConfig.devServerOptionsConfigurationCallback,
             devServerOptions
-        );
+        ) as { server?: string | { type?: string }; [key: string]: unknown };
     }
 }
 
 /**
- * @param {WebpackConfig} webpackConfig A configured WebpackConfig object
- * @returns {Promise<import('webpack').Configuration>} The final webpack config object
+ * @param webpackConfig A configured WebpackConfig object
  */
-export default async function (webpackConfig) {
+export default async function (webpackConfig: WebpackConfig): Promise<webpack.Configuration> {
     const generator = new ConfigGenerator(webpackConfig);
 
     return generator.getWebpackConfig();
