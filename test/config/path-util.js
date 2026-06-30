@@ -12,8 +12,8 @@ import process from 'process';
 import { describe, it, expect } from 'vitest';
 
 import configGenerator from '../../lib/config-generator.js';
-import pathUtil from '../../lib/config/path-util.js';
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import pathUtil from '../../lib/config/path-util.ts';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 
 function createConfig() {

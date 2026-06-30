@@ -72,6 +72,7 @@
         "@tsconfig/node22": "^22.0.5",
         "@types/node": "^22.18.0",
         "@types/semver": "^7.7.1",
+        "@types/yargs-parser": "21.0.3",
         "@vue/babel-plugin-jsx": "^3.0.0",
         "@vue/compiler-sfc": "^3.2.14",
         "autoprefixer": "^10.2.0",

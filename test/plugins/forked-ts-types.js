@@ -10,7 +10,7 @@
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { describe, it, expect } from 'vitest';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
 import tsLoader from '../../lib/loaders/typescript.ts';
 import tsTypeChecker from '../../lib/plugins/forked-ts-types.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';

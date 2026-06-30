@@ -16,7 +16,7 @@ import webpack from 'webpack';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 
 import configGenerator from '../lib/config-generator.js';
-import RuntimeConfig from '../lib/config/RuntimeConfig.js';
+import RuntimeConfig from '../lib/config/RuntimeConfig.ts';
 import logger from '../lib/logger.js';
 import WebpackConfig from '../lib/WebpackConfig.js';
 

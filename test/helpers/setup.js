@@ -14,8 +14,8 @@ import httpServer from 'http-server';
 import webpack from 'webpack';
 
 import configGenerator from '../../lib/config-generator.js';
-import parseRuntime from '../../lib/config/parse-runtime.js';
-import validator from '../../lib/config/validator.js';
+import parseRuntime from '../../lib/config/parse-runtime.ts';
+import validator from '../../lib/config/validator.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 import { Assert } from './assert.js';
 

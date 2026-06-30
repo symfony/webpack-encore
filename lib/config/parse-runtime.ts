@@ -9,17 +9,17 @@
 
 import path from 'path';
 
+import type { Arguments } from 'yargs-parser';
+
 import packageUp from '../utils/package-up.ts';
+// .js (not .ts): RuntimeConfig is exposed in this module's emitted .d.ts, and
+// rewriteRelativeImportExtensions does NOT rewrite .ts -> .js inside .d.ts files
+// (only in emitted .js). tsc still resolves .js -> the .ts source here.
 import RuntimeConfig from './RuntimeConfig.js';
 
-/**
- * @param {object} argv
- * @param {string} cwd
- * @returns {RuntimeConfig}
- */
-export default function (argv, cwd) {
+export default function (argv: Arguments, cwd: string): RuntimeConfig {
     const runtimeConfig = new RuntimeConfig();
-    runtimeConfig.command = argv._[0];
+    runtimeConfig.command = argv._[0] ?? null;
 
     switch (runtimeConfig.command) {
         case 'dev':
@@ -59,7 +59,7 @@ export default function (argv, cwd) {
     if (typeof runtimeConfig.context === 'undefined') {
         const packagesPath = packageUp({ cwd });
 
-        if (null === packagesPath) {
+        if (undefined === packagesPath) {
             throw new Error(
                 'Cannot determine webpack context. (Are you executing webpack from a directory outside of your project?). Try passing the --context option.'
             );

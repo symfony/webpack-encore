@@ -26,8 +26,8 @@
 import yargsParser from 'yargs-parser';
 
 import configGenerator from './lib/config-generator.js';
-import parseRuntime from './lib/config/parse-runtime.js';
-import validator from './lib/config/validator.js';
+import parseRuntime from './lib/config/parse-runtime.ts';
+import validator from './lib/config/validator.ts';
 import context from './lib/context.js';
 import EncoreProxy from './lib/EncoreProxy.js';
 import WebpackConfig from './lib/WebpackConfig.js';

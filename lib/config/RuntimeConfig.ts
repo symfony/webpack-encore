@@ -8,6 +8,27 @@
  */
 
 class RuntimeConfig {
+    command: string | number | null;
+    context: string | null;
+    isValidCommand: boolean;
+    environment: string;
+
+    useDevServer: boolean;
+    devServerServerType: string | null;
+    // see config-generator - getWebpackConfig()
+    devServerFinalIsHttps: boolean | null;
+    devServerHost: string | null;
+    devServerPort: string | number | null;
+    devServerPublic: string | null;
+    devServerKeepPublicPath: boolean;
+    outputJson: boolean;
+    profile: boolean;
+
+    babelRcFileExists: boolean | null;
+
+    helpRequested: boolean;
+    verbose: boolean;
+
     constructor() {
         this.command = null;
         this.context = null;
