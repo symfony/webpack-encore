@@ -94,8 +94,14 @@ file that was distributed with this source code.`,
             // produces false positives on type-only syntax.
             'no-unused-vars': 'off',
             // In TypeScript files, types live in the signature, not in JSDoc.
+            // JSDoc is kept only for prose descriptions, so neither the tags nor
+            // their types are required, and parameter names (e.g. destructured
+            // option bags) are validated by tsc rather than the JSDoc plugin.
             'jsdoc/require-param': 'off',
+            'jsdoc/require-param-type': 'off',
             'jsdoc/require-returns': 'off',
+            'jsdoc/require-returns-type': 'off',
+            'jsdoc/check-param-names': 'off',
             // tsc owns module resolution for `.ts` files (strict, build fails on
             // a missing import). eslint-plugin-n is not TS-aware: from a `.ts`
             // file it rewrites `.js` -> `.ts` and cannot resolve imports of

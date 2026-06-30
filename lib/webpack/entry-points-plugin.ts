@@ -11,39 +11,52 @@ import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
+import type webpack from 'webpack';
+
 import copyEntryTmpName from '../utils/copyEntryTmpName.ts';
+
+interface EntryPointsManifest {
+    entrypoints: Record<string, Record<string, string[]>>;
+    integrity?: Record<string, string>;
+}
 
 /**
  * Return the file extension from a filename, without the leading dot and without the query string (if any).
- *
- * @param {string} filename
- * @returns {string}
  */
-function getFileExtension(filename) {
-    return path.extname(filename).slice(1).split('?')[0];
+function getFileExtension(filename: string): string {
+    return path.extname(filename).slice(1).split('?')[0]!;
 }
 
 export class EntryPointsPlugin {
+    publicPath: string;
+    outputPath: string;
+    integrityAlgorithms: string[];
+
     /**
-     * @param {object} options
-     * @param {string} options.publicPath The public path of the assets, from where they are served
-     * @param {string} options.outputPath The output path of the assets, from where they are saved
-     * @param {Array<string>} options.integrityAlgorithms The algorithms to use for the integrity hash
+     * @param options
+     * @param options.publicPath The public path of the assets, from where they are served
+     * @param options.outputPath The output path of the assets, from where they are saved
+     * @param options.integrityAlgorithms The algorithms to use for the integrity hash
      */
-    constructor({ publicPath, outputPath, integrityAlgorithms }) {
+    constructor({
+        publicPath,
+        outputPath,
+        integrityAlgorithms,
+    }: {
+        publicPath: string;
+        outputPath: string;
+        integrityAlgorithms: string[];
+    }) {
         this.publicPath = publicPath;
         this.outputPath = outputPath;
         this.integrityAlgorithms = integrityAlgorithms;
     }
 
-    /**
-     * @param {import('webpack').Compiler} compiler
-     */
-    apply(compiler) {
+    apply(compiler: webpack.Compiler): void {
         compiler.hooks.afterEmit.tapAsync(
             { name: 'EntryPointsPlugin' },
             (compilation, callback) => {
-                const manifest = {
+                const manifest: EntryPointsManifest = {
                     entrypoints: {},
                 };
 
@@ -59,15 +72,16 @@ export class EntryPointsPlugin {
                     errorDetails: false,
                 });
 
-                for (const [entryName, entry] of Object.entries(stats.entrypoints)) {
+                for (const [entryName, entry] of Object.entries(stats.entrypoints ?? {})) {
                     // We don't want to include the temporary entry in the manifest
                     if (entryName === copyEntryTmpName) {
                         continue;
                     }
 
-                    manifest.entrypoints[entryName] = {};
+                    const entrypoint: Record<string, string[]> = {};
+                    manifest.entrypoints[entryName] = entrypoint;
 
-                    for (const asset of entry.assets) {
+                    for (const asset of entry.assets ?? []) {
                         // We don't want to include hot-update files in the manifest
                         if (asset.name.includes('.hot-update.')) {
                             continue;
@@ -79,29 +93,26 @@ export class EntryPointsPlugin {
                                 ? `${this.publicPath}${asset.name}`
                                 : `${this.publicPath}/${asset.name}`;
 
-                        if (!(fileExtension in manifest.entrypoints[entryName])) {
-                            manifest.entrypoints[entryName][fileExtension] = [];
-                        }
-
-                        manifest.entrypoints[entryName][fileExtension].push(assetPath);
+                        (entrypoint[fileExtension] ??= []).push(assetPath);
                     }
                 }
 
                 if (this.integrityAlgorithms.length > 0) {
-                    manifest.integrity = {};
+                    const integrity: Record<string, string> = {};
+                    manifest.integrity = integrity;
 
-                    for (const entryName in manifest.entrypoints) {
-                        for (const fileType in manifest.entrypoints[entryName]) {
-                            for (const asset of manifest.entrypoints[entryName][fileType]) {
-                                if (asset in manifest.integrity) {
+                    for (const fileTypes of Object.values(manifest.entrypoints)) {
+                        for (const assets of Object.values(fileTypes)) {
+                            for (const asset of assets) {
+                                if (asset in integrity) {
                                     continue;
                                 }
 
                                 // Drop query string if any
                                 const assetNormalized = asset.includes('?')
-                                    ? asset.split('?')[0]
+                                    ? asset.split('?')[0]!
                                     : asset;
-                                if (assetNormalized in manifest.integrity) {
+                                if (assetNormalized in integrity) {
                                     continue;
                                 }
 
@@ -111,7 +122,7 @@ export class EntryPointsPlugin {
                                 );
 
                                 if (fs.existsSync(filePath)) {
-                                    const fileHashes = [];
+                                    const fileHashes: string[] = [];
 
                                     for (const algorithm of this.integrityAlgorithms) {
                                         const hash = crypto.createHash(algorithm);
@@ -121,7 +132,7 @@ export class EntryPointsPlugin {
                                         fileHashes.push(`${algorithm}-${hash.digest('base64')}`);
                                     }
 
-                                    manifest.integrity[asset] = fileHashes.join(' ');
+                                    integrity[asset] = fileHashes.join(' ');
                                 }
                             }
                         }
