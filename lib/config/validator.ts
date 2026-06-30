@@ -7,22 +7,18 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
+import type WebpackConfig from '../WebpackConfig.js';
 import logger from './../logger.js';
-import pathUtil from './path-util.js';
+import pathUtil from './path-util.ts';
 
 class Validator {
-    /**
-     * @param {WebpackConfig} webpackConfig
-     */
-    constructor(webpackConfig) {
+    webpackConfig: WebpackConfig;
+
+    constructor(webpackConfig: WebpackConfig) {
         this.webpackConfig = webpackConfig;
     }
 
-    validate() {
+    validate(): void {
         this._validateBasic();
 
         this._validatePublicPathAndManifestKeyPrefix();
@@ -32,7 +28,7 @@ class Validator {
         this._validateCacheGroupNames();
     }
 
-    _validateBasic() {
+    _validateBasic(): void {
         if (this.webpackConfig.outputPath === null) {
             throw new Error(
                 'Missing output path: Call setOutputPath() to control where the files will be written.'
@@ -57,11 +53,11 @@ class Validator {
         }
     }
 
-    _validatePublicPathAndManifestKeyPrefix() {
+    _validatePublicPathAndManifestKeyPrefix(): void {
         pathUtil.validatePublicPathAndManifestKeyPrefix(this.webpackConfig);
     }
 
-    _validateDevServer() {
+    _validateDevServer(): void {
         if (!this.webpackConfig.useDevServer()) {
             return;
         }
@@ -86,7 +82,7 @@ class Validator {
         }
     }
 
-    _validateCacheGroupNames() {
+    _validateCacheGroupNames(): void {
         for (const groupName of Object.keys(this.webpackConfig.cacheGroups)) {
             if (['defaultVendors', 'default'].includes(groupName)) {
                 logger.warning(
@@ -97,7 +93,7 @@ class Validator {
     }
 }
 
-export default function (webpackConfig) {
+export default function (webpackConfig: WebpackConfig): void {
     const validator = new Validator(webpackConfig);
 
     validator.validate();

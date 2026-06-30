@@ -9,8 +9,8 @@
 
 import { describe, it, expect } from 'vitest';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import validator from '../../lib/config/validator.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
+import validator from '../../lib/config/validator.ts';
 import logger from '../../lib/logger.js';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 

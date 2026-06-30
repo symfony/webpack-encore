@@ -10,7 +10,7 @@
 import { describe, it, expect } from 'vitest';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
 import manifestPluginUtil from '../../lib/plugins/manifest.ts';
 import WebpackConfig from '../../lib/WebpackConfig.js';
 

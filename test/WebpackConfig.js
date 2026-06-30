@@ -13,7 +13,7 @@ import path from 'path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import webpack from 'webpack';
 
-import RuntimeConfig from '../lib/config/RuntimeConfig.js';
+import RuntimeConfig from '../lib/config/RuntimeConfig.ts';
 import logger from '../lib/logger.js';
 import WebpackConfig from '../lib/WebpackConfig.js';
 

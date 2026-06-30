@@ -10,7 +10,7 @@
 import type FriendlyErrorsWebpackPlugin from '@kocal/friendly-errors-webpack-plugin';
 import type { WebpackPluginInstance } from 'webpack';
 
-import pathUtil from '../config/path-util.js';
+import pathUtil from '../config/path-util.ts';
 import AssetOutputDisplayPlugin from '../friendly-errors/asset-output-display-plugin.ts';
 import type WebpackConfig from '../WebpackConfig.js';
 import PluginPriorities from './plugin-priorities.ts';

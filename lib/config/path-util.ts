@@ -7,26 +7,20 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import WebpackConfig from '../WebpackConfig.js'
- */
-
-/**
- * @import RuntimeConfig from './RuntimeConfig.js'
- */
-
 import path from 'path';
 
 import logger from '../logger.js';
+import type WebpackConfig from '../WebpackConfig.js';
+// .js (not .ts): RuntimeConfig is exposed in this module's emitted .d.ts, and
+// rewriteRelativeImportExtensions does NOT rewrite .ts -> .js inside .d.ts files
+// (only in emitted .js). tsc still resolves .js -> the .ts source here.
+import type RuntimeConfig from './RuntimeConfig.js';
 
 export default {
     /**
      * Determines the "contentBase" to use for the devServer.
-     *
-     * @param {WebpackConfig} webpackConfig
-     * @returns {string}
      */
-    getContentBase(webpackConfig) {
+    getContentBase(webpackConfig: WebpackConfig): string {
         // strip trailing slash (for Unix or Windows)
         const outputPath = webpackConfig.outputPath.replace(/\/$/, '').replace(/\\$/, '');
         // use the manifestKeyPrefix if available
@@ -66,11 +60,8 @@ export default {
 
     /**
      * Returns the output path, but as a relative string (e.g. web/build)
-     *
-     * @param {WebpackConfig} webpackConfig
-     * @returns {string}
      */
-    getRelativeOutputPath(webpackConfig) {
+    getRelativeOutputPath(webpackConfig: WebpackConfig): string {
         return webpackConfig.outputPath.replace(webpackConfig.getContext() + path.sep, '');
     },
 
@@ -79,11 +70,8 @@ export default {
      *
      * Most importantly, this runs some sanity checks to make sure that it's
      * ok to use the publicPath as the manifestKeyPrefix.
-     *
-     * @param {WebpackConfig} webpackConfig
-     * @returns {void}
      */
-    validatePublicPathAndManifestKeyPrefix(webpackConfig) {
+    validatePublicPathAndManifestKeyPrefix(webpackConfig: WebpackConfig): void {
         if (webpackConfig.manifestKeyPrefix !== null) {
             // nothing to check - they have manually set the key prefix
             return;
@@ -131,11 +119,7 @@ export default {
         }
     },
 
-    /**
-     * @param {RuntimeConfig} runtimeConfig
-     * @returns {string}
-     */
-    calculateDevServerUrl(runtimeConfig) {
+    calculateDevServerUrl(runtimeConfig: RuntimeConfig): string {
         if (runtimeConfig.devServerFinalIsHttps === null) {
             logger.warning(
                 'The final devServerFinalHttpsConfig was never calculated. This may cause some paths to incorrectly use or not use https and could be a bug.'
