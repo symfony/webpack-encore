@@ -21,7 +21,7 @@
         "prepublishOnly": "pnpm type-check",
         "pretest": "pnpm build",
         "test": "vitest run",
-        "lint": "eslint lib test index.js eslint.config.js --report-unused-disable-directives --max-warnings=0",
+        "lint": "eslint lib test index.ts eslint.config.js --report-unused-disable-directives --max-warnings=0",
         "fmt": "oxfmt",
         "fmt:check": "oxfmt --check"
     },

@@ -11,7 +11,7 @@ import path from 'path';
 
 import { vi, describe, it, expect, beforeEach } from 'vitest';
 
-import api from '../index.js';
+import api from '../index.ts';
 
 describe('Public API', function () {
     beforeEach(function () {
