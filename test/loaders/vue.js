@@ -9,9 +9,9 @@
 
 import { describe, it, expect } from 'vitest';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import vueLoader from '../../lib/loaders/vue.js';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
+import vueLoader from '../../lib/loaders/vue.ts';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

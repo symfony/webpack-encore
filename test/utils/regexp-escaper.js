@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import regexpEscaper from '../../lib/utils/regexp-escaper.js';
+import regexpEscaper from '../../lib/utils/regexp-escaper.ts';
 
 describe('regexp-escaper', function () {
     it('escapes things properly', function () {

@@ -9,10 +9,10 @@
 
 import { describe, it, expect } from 'vitest';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import validator from '../../lib/config/validator.js';
-import logger from '../../lib/logger.js';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
+import validator from '../../lib/config/validator.ts';
+import logger from '../../lib/logger.ts';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

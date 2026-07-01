@@ -9,7 +9,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import getFileExtension from '../../lib/utils/get-file-extension.js';
+import getFileExtension from '../../lib/utils/get-file-extension.ts';
 
 describe('get-file-extension', function () {
     it('returns the extension of simple filenames', function () {

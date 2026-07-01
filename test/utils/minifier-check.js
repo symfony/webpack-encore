@@ -14,12 +14,12 @@ const { ensurePackagesExistAndAreCorrectVersion } = vi.hoisted(() => ({
     ensurePackagesExistAndAreCorrectVersion: vi.fn(),
 }));
 
-vi.mock('../../lib/features.js', () => ({
+vi.mock('../../lib/features.ts', () => ({
     default: { ensurePackagesExistAndAreCorrectVersion },
 }));
 
 const { checkJsMinifierPackages, checkCssMinifierPackages } =
-    await import('../../lib/utils/minifier-check.js');
+    await import('../../lib/utils/minifier-check.ts');
 
 describe('utils/minifier-check', function () {
     beforeEach(() => ensurePackagesExistAndAreCorrectVersion.mockReset());

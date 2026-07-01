@@ -9,10 +9,10 @@
 
 import { vi, describe, it, expect } from 'vitest';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import packageHelper from '../../lib/package-helper.js';
-import getVueVersion from '../../lib/utils/get-vue-version.js';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
+import packageHelper from '../../lib/package-helper.ts';
+import getVueVersion from '../../lib/utils/get-vue-version.ts';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 const createWebpackConfig = function () {
     const runtimeConfig = new RuntimeConfig();

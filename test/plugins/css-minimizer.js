@@ -10,19 +10,19 @@
 import MinimizerPlugin from 'minimizer-webpack-plugin';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 const { checkCssMinifierPackages } = vi.hoisted(() => ({
     checkCssMinifierPackages: vi.fn(),
 }));
 
-vi.mock('../../lib/utils/minifier-check.js', () => ({
+vi.mock('../../lib/utils/minifier-check.ts', () => ({
     checkJsMinifierPackages: vi.fn(),
     checkCssMinifierPackages,
 }));
 
-const { default: cssMinimizerPluginUtil } = await import('../../lib/plugins/css-minimizer.js');
+const { default: cssMinimizerPluginUtil } = await import('../../lib/plugins/css-minimizer.ts');
 
 function createConfig(environment = 'production') {
     const runtimeConfig = new RuntimeConfig();

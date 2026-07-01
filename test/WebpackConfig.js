@@ -13,9 +13,9 @@ import path from 'path';
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import webpack from 'webpack';
 
-import RuntimeConfig from '../lib/config/RuntimeConfig.js';
-import logger from '../lib/logger.js';
-import WebpackConfig from '../lib/WebpackConfig.js';
+import RuntimeConfig from '../lib/config/RuntimeConfig.ts';
+import logger from '../lib/logger.ts';
+import WebpackConfig from '../lib/WebpackConfig.ts';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

@@ -14,7 +14,7 @@ import process from 'process';
 import stripAnsi from 'strip-ansi';
 import { describe, it, expect, afterAll } from 'vitest';
 
-import packageHelper from '../lib/package-helper.js';
+import packageHelper from '../lib/package-helper.ts';
 
 describe('package-helper', function () {
     const baseCwd = process.cwd();

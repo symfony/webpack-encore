@@ -9,9 +9,9 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 
-import context from '../lib/context.js';
+import context from '../lib/context.ts';
 context.runtimeConfig = {};
-import logger from '../lib/logger.js';
+import logger from '../lib/logger.ts';
 
 describe('logger', function () {
     beforeEach(function () {

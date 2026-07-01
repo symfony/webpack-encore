@@ -39,7 +39,7 @@ describe.sequential('bin/encore.js', function () {
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -51,7 +51,7 @@ export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
         const { stdout } = await exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir });
 
         expect(stdout).toContain('Compiled successfully');
@@ -67,7 +67,7 @@ export default await Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -79,7 +79,7 @@ export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
         const { stdout } = await exec(`node ${binPath} dev --json --context=${testDir}`, {
             cwd: testDir,
         });
@@ -108,7 +108,7 @@ export default await Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -120,7 +120,7 @@ export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
         const { stdout } = await exec(`node ${binPath} dev --profile --context=${testDir}`, {
             cwd: testDir,
         });
@@ -137,7 +137,7 @@ export default await Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -149,7 +149,7 @@ export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
         const { stdout } = await exec(
             `node ${binPath} dev --keep-public-path --context=${testDir}`,
             { cwd: testDir }
@@ -173,7 +173,7 @@ export default await Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -186,7 +186,7 @@ export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
         try {
             await exec(`node ${binPath} dev --context=${testDir}`, { cwd: testDir });
         } catch (err) {
@@ -216,7 +216,7 @@ export default await Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -228,7 +228,7 @@ export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
         const port = await getPort();
 
         const abortController = new AbortController();
@@ -287,7 +287,7 @@ export default await Encore.getWebpackConfig();
         fs.writeFileSync(
             path.join(testDir, 'webpack.config.js'),
             `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -299,7 +299,7 @@ export default await Encore.getWebpackConfig();
             `
         );
 
-        const binPath = path.resolve(import.meta.dirname, '../', '../', 'bin', 'encore.js');
+        const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
         const port = await getPort();
 
         const abortController = new AbortController();
@@ -375,7 +375,7 @@ export default await Encore.getWebpackConfig();
             fs.writeFileSync(
                 path.join(testDir, 'webpack.config.js'),
                 `
-import Encore from '../../index.js';
+import Encore from '../../dist/index.js';
 Encore
     .enableSingleRuntimeChunk()
     .setOutputPath('build/')
@@ -387,7 +387,7 @@ export default await Encore.getWebpackConfig();
         `
             );
 
-            const binPath = path.resolve(projectDir, 'bin', 'encore.js');
+            const binPath = path.resolve(projectDir, 'dist', 'bin', 'encore.js');
             const port = await getPort();
 
             try {

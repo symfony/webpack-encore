@@ -9,7 +9,7 @@
 
 import { vi, beforeEach, afterEach } from 'vitest';
 
-import logger from '../lib/logger.js';
+import logger from '../lib/logger.ts';
 
 beforeEach(() => {
     logger.reset();

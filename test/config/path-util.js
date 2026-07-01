@@ -11,10 +11,10 @@ import process from 'process';
 
 import { describe, it, expect } from 'vitest';
 
-import configGenerator from '../../lib/config-generator.js';
-import pathUtil from '../../lib/config/path-util.js';
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import configGenerator from '../../lib/config-generator.ts';
+import pathUtil from '../../lib/config/path-util.ts';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

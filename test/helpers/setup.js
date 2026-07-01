@@ -13,10 +13,10 @@ import fs from 'fs-extra';
 import httpServer from 'http-server';
 import webpack from 'webpack';
 
-import configGenerator from '../../lib/config-generator.js';
-import parseRuntime from '../../lib/config/parse-runtime.js';
-import validator from '../../lib/config/validator.js';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import configGenerator from '../../lib/config-generator.ts';
+import parseRuntime from '../../lib/config/parse-runtime.ts';
+import validator from '../../lib/config/validator.ts';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 import { Assert } from './assert.js';
 
 const tmpDir = path.join(import.meta.dirname, '../', '../', 'test_tmp');

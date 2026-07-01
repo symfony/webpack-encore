@@ -10,9 +10,9 @@
 import { describe, it, expect } from 'vitest';
 import WebpackNotifier from 'webpack-notifier';
 
-import RuntimeConfig from '../../lib/config/RuntimeConfig.js';
-import notifierPluginUtil from '../../lib/plugins/notifier.js';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
+import notifierPluginUtil from '../../lib/plugins/notifier.ts';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

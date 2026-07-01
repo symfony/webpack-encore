@@ -11,10 +11,10 @@
 import pc from 'picocolors';
 import yargsParser from 'yargs-parser';
 
-import parseRuntime from '../lib/config/parse-runtime.js';
-import context from '../lib/context.js';
-import featuresHelper from '../lib/features.js';
-import logger from '../lib/logger.js';
+import parseRuntime from '../lib/config/parse-runtime.ts';
+import context from '../lib/context.ts';
+import featuresHelper from '../lib/features.ts';
+import logger from '../lib/logger.ts';
 
 const runtimeConfig = parseRuntime(yargsParser(process.argv.slice(2)), process.cwd());
 context.runtimeConfig = runtimeConfig;
