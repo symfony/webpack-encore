@@ -7,33 +7,29 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import webpack from 'webpack'
- */
-
-/**
- * @import { OptionsCallback } from './lib/utils/apply-options-callback.js'
- */
-
-/**
- * @import { MinimizerOptionsCallback } from './lib/WebpackConfig.js'
- */
-
-/**
- * @typedef {{from: string, pattern?: RegExp|string, to?: string|null, includeSubdirectories?: boolean, context?: string}} CopyFilesOptions
- */
-
+import type webpack from 'webpack';
 import yargsParser from 'yargs-parser';
 
 import configGenerator from './lib/config-generator.ts';
 import parseRuntime from './lib/config/parse-runtime.ts';
+import type RuntimeConfig from './lib/config/RuntimeConfig.js';
 import validator from './lib/config/validator.ts';
 import context from './lib/context.ts';
 import EncoreProxy from './lib/EncoreProxy.ts';
+import type { OptionsCallback } from './lib/utils/apply-options-callback.js';
+import type { MinimizerOptionsCallback } from './lib/WebpackConfig.js';
 import WebpackConfig from './lib/WebpackConfig.ts';
 
-let runtimeConfig = context.runtimeConfig;
-let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig) : null;
+export interface CopyFilesOptions {
+    from: string;
+    pattern?: RegExp | string;
+    to?: string | null;
+    includeSubdirectories?: boolean;
+    context?: string;
+}
+
+let runtimeConfig: RuntimeConfig | null = context.runtimeConfig;
+let webpackConfig: WebpackConfig | null = runtimeConfig ? new WebpackConfig(runtimeConfig) : null;
 
 class Encore {
     /**
@@ -42,11 +38,10 @@ class Encore {
      * If relative (e.g. web/build), it will be set relative
      * to the directory where your package.json lives.
      *
-     * @param {string} outputPath
-     * @returns {Encore}
+     * @param outputPath
      */
-    setOutputPath(outputPath) {
-        webpackConfig.setOutputPath(outputPath);
+    setOutputPath(outputPath: string): this {
+        webpackConfig!.setOutputPath(outputPath);
 
         return this;
     }
@@ -74,11 +69,10 @@ class Encore {
      *     .setManifestKeyPrefix('/build')
      * ```
      *
-     * @param {string} publicPath
-     * @returns {Encore}
+     * @param publicPath
      */
-    setPublicPath(publicPath) {
-        webpackConfig.setPublicPath(publicPath);
+    setPublicPath(publicPath: string): this {
+        webpackConfig!.setPublicPath(publicPath);
 
         return this;
     }
@@ -108,11 +102,10 @@ class Encore {
      * }
      * ```
      *
-     * @param {string} manifestKeyPrefix
-     * @returns {Encore}
+     * @param manifestKeyPrefix
      */
-    setManifestKeyPrefix(manifestKeyPrefix) {
-        webpackConfig.setManifestKeyPrefix(manifestKeyPrefix);
+    setManifestKeyPrefix(manifestKeyPrefix: string): this {
+        webpackConfig!.setManifestKeyPrefix(manifestKeyPrefix);
 
         return this;
     }
@@ -129,11 +122,14 @@ class Encore {
      * })
      * ```
      *
-     * @param {OptionsCallback<ConstructorParameters<typeof webpack.DefinePlugin>[0]>} definePluginOptionsCallback
-     * @returns {Encore}
+     * @param definePluginOptionsCallback
      */
-    configureDefinePlugin(definePluginOptionsCallback = () => {}) {
-        webpackConfig.configureDefinePlugin(definePluginOptionsCallback);
+    configureDefinePlugin(
+        definePluginOptionsCallback: OptionsCallback<
+            ConstructorParameters<typeof webpack.DefinePlugin>[0]
+        > = () => {}
+    ): this {
+        webpackConfig!.configureDefinePlugin(definePluginOptionsCallback);
 
         return this;
     }
@@ -150,11 +146,12 @@ class Encore {
      * })
      * ```
      *
-     * @param {OptionsCallback<object>} friendlyErrorsPluginOptionsCallback
-     * @returns {Encore}
+     * @param friendlyErrorsPluginOptionsCallback
      */
-    configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
-        webpackConfig.configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback);
+    configureFriendlyErrorsPlugin(
+        friendlyErrorsPluginOptionsCallback: OptionsCallback<object> = () => {}
+    ): this {
+        webpackConfig!.configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback);
 
         return this;
     }
@@ -171,11 +168,12 @@ class Encore {
      * })
      * ```
      *
-     * @param {OptionsCallback<object>} manifestPluginOptionsCallback
-     * @returns {Encore}
+     * @param manifestPluginOptionsCallback
      */
-    configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
-        webpackConfig.configureManifestPlugin(manifestPluginOptionsCallback);
+    configureManifestPlugin(
+        manifestPluginOptionsCallback: OptionsCallback<object> = () => {}
+    ): this {
+        webpackConfig!.configureManifestPlugin(manifestPluginOptionsCallback);
 
         return this;
     }
@@ -207,11 +205,10 @@ class Encore {
      * })
      * ```
      *
-     * @param {MinimizerOptionsCallback} jsOptionsCallback
-     * @returns {Encore}
+     * @param jsOptionsCallback
      */
-    configureJsMinimizerPlugin(jsOptionsCallback = () => {}) {
-        webpackConfig.configureJsMinimizerPlugin(jsOptionsCallback);
+    configureJsMinimizerPlugin(jsOptionsCallback: MinimizerOptionsCallback = () => {}): this {
+        webpackConfig!.configureJsMinimizerPlugin(jsOptionsCallback);
 
         return this;
     }
@@ -243,11 +240,12 @@ class Encore {
      * })
      * ```
      *
-     * @param {MinimizerOptionsCallback} cssMinimizerPluginOptionsCallback
-     * @returns {Encore}
+     * @param cssMinimizerPluginOptionsCallback
      */
-    configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback = () => {}) {
-        webpackConfig.configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback);
+    configureCssMinimizerPlugin(
+        cssMinimizerPluginOptionsCallback: MinimizerOptionsCallback = () => {}
+    ): this {
+        webpackConfig!.configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback);
 
         return this;
     }
@@ -263,14 +261,13 @@ class Encore {
      * If the JavaScript file imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
      *
-     * @param {string} name          The name (without extension) that will be used
+     * @param name          The name (without extension) that will be used
      *                               as the output filename (e.g. app will become app.js)
      *                               in the output directory.
-     * @param {string|string[]} src  The path to the source file (or files)
-     * @returns {Encore}
+     * @param src  The path to the source file (or files)
      */
-    addEntry(name, src) {
-        webpackConfig.addEntry(name, src);
+    addEntry(name: string, src: string | string[]): this {
+        webpackConfig!.addEntry(name, src);
 
         return this;
     }
@@ -289,15 +286,14 @@ class Encore {
      * If the JavaScript files imports/requires CSS/Sass/LESS files,
      * then a CSS file (e.g. main.css) will also be output.
      *
-     * @param {Record<string, string|string[]>} entries where the Keys are the
+     * @param entries where the Keys are the
      *                            names (without extension) that will be used
      *                            as the output filename (e.g. app will become app.js)
      *                            in the output directory. The values are the path(s)
      *                            to the source file(s).
-     * @returns {Encore}
      */
-    addEntries(entries) {
-        webpackConfig.addEntries(entries);
+    addEntries(entries: Record<string, string | string[]>): this {
+        webpackConfig!.addEntries(entries);
 
         return this;
     }
@@ -315,14 +311,13 @@ class Encore {
      * is to use addEntry() and then require/import your CSS files from
      * within your JavaScript files.
      *
-     * @param {string} name          The name (without extension) that will be used
+     * @param name          The name (without extension) that will be used
      *                               as the output filename (e.g. app will become app.css)
      *                               in the output directory.
-     * @param {string|string[]} src  The path to the source file (or files)
-     * @returns {Encore}
+     * @param src  The path to the source file (or files)
      */
-    addStyleEntry(name, src) {
-        webpackConfig.addStyleEntry(name, src);
+    addStyleEntry(name: string, src: string | string[]): this {
+        webpackConfig!.addStyleEntry(name, src);
 
         return this;
     }
@@ -363,12 +358,11 @@ class Encore {
      * Encore.addPlugin(new MyWebpackPlugin(), PluginPriorities.DefinePlugin);
      * ```
      *
-     * @param {webpack.WebpackPluginInstance} plugin
-     * @param {number} priority
-     * @returns {Encore}
+     * @param plugin
+     * @param priority
      */
-    addPlugin(plugin, priority = 0) {
-        webpackConfig.addPlugin(plugin, priority);
+    addPlugin(plugin: webpack.WebpackPluginInstance, priority = 0): this {
+        webpackConfig!.addPlugin(plugin, priority);
 
         return this;
     }
@@ -376,11 +370,10 @@ class Encore {
     /**
      * Adds a custom loader config
      *
-     * @param {webpack.RuleSetRule} loader The loader config object
-     * @returns {Encore}
+     * @param loader The loader config object
      */
-    addLoader(loader) {
-        webpackConfig.addLoader(loader);
+    addLoader(loader: webpack.RuleSetRule): this {
+        webpackConfig!.addLoader(loader);
 
         return this;
     }
@@ -388,10 +381,9 @@ class Encore {
     /**
      * Alias to addLoader
      *
-     * @param {webpack.RuleSetRule} rule
-     * @returns {Encore}
+     * @param rule
      */
-    addRule(rule) {
+    addRule(rule: webpack.RuleSetRule): this {
         this.addLoader(rule);
 
         return this;
@@ -412,11 +404,10 @@ class Encore {
      * })
      * ```
      *
-     * @param {Record<string, string>} aliases
-     * @returns {Encore}
+     * @param aliases
      */
-    addAliases(aliases) {
-        webpackConfig.addAliases(aliases);
+    addAliases(aliases: Record<string, string>): this {
+        webpackConfig!.addAliases(aliases);
 
         return this;
     }
@@ -451,11 +442,10 @@ class Encore {
      * ]);
      * ```
      *
-     * @param {webpack.Externals} externals
-     * @returns {Encore}
+     * @param externals
      */
-    addExternals(externals) {
-        webpackConfig.addExternals(externals);
+    addExternals(externals: webpack.ExternalItem | webpack.ExternalItem[]): this {
+        webpackConfig!.addExternals(externals);
 
         return this;
     }
@@ -477,11 +467,10 @@ class Encore {
      * Encore.enableVersioning(Encore.isProduction());
      * ```
      *
-     * @param {boolean} enabled
-     * @returns {Encore}
+     * @param enabled
      */
-    enableVersioning(enabled = true) {
-        webpackConfig.enableVersioning(enabled);
+    enableVersioning(enabled = true): this {
+        webpackConfig!.enableVersioning(enabled);
 
         return this;
     }
@@ -505,11 +494,10 @@ class Encore {
      * Encore.enableSourceMaps(!Encore.isProduction());
      * ```
      *
-     * @param {boolean} enabled
-     * @returns {Encore}
+     * @param enabled
      */
-    enableSourceMaps(enabled = true) {
-        webpackConfig.enableSourceMaps(enabled);
+    enableSourceMaps(enabled = true): this {
+        webpackConfig!.enableSourceMaps(enabled);
 
         return this;
     }
@@ -551,12 +539,14 @@ class Encore {
      * - `enforce` set to `true`
      * - `name` set to the value of the "name" parameter
      *
-     * @param {string} name The chunk name (e.g. vendor to create a vendor.js)
-     * @param {object} options Cache group option
-     * @returns {Encore}
+     * @param name The chunk name (e.g. vendor to create a vendor.js)
+     * @param options Cache group option
      */
-    addCacheGroup(name, options) {
-        webpackConfig.addCacheGroup(name, options);
+    addCacheGroup(
+        name: string,
+        options: { test?: RegExp; node_modules?: string[]; [key: string]: unknown }
+    ): this {
+        webpackConfig!.addCacheGroup(name, options);
 
         return this;
     }
@@ -623,11 +613,10 @@ class Encore {
      *      - {string} context (default: path of the source directory)
      *              The context to use as a root path when copying files.
      *
-     * @param {CopyFilesOptions|CopyFilesOptions[]} configs
-     * @returns {Encore}
+     * @param configs
      */
-    copyFiles(configs) {
-        webpackConfig.copyFiles(configs);
+    copyFiles(configs: CopyFilesOptions | CopyFilesOptions[]): this {
+        webpackConfig!.copyFiles(configs);
 
         return this;
     }
@@ -654,11 +643,9 @@ class Encore {
      *     to be able to "initialize" some jQuery plugins, because the
      *     jQuery required by the other entry will be a different instance,
      *     and so won't have the plugins initialized on it.
-     *
-     * @returns {Encore}
      */
-    enableSingleRuntimeChunk() {
-        webpackConfig.enableSingleRuntimeChunk();
+    enableSingleRuntimeChunk(): this {
+        webpackConfig!.enableSingleRuntimeChunk();
 
         return this;
     }
@@ -667,11 +654,9 @@ class Encore {
      * Tell Webpack to *not* output a separate runtime.js file.
      *
      * See enableSingleRuntimeChunk() for more details.
-     *
-     * @returns {Encore}
      */
-    disableSingleRuntimeChunk() {
-        webpackConfig.disableSingleRuntimeChunk();
+    disableSingleRuntimeChunk(): this {
+        webpackConfig!.disableSingleRuntimeChunk();
 
         return this;
     }
@@ -687,11 +672,9 @@ class Encore {
      *
      * This is a performance optimization, but requires extra
      * work (described above) to support this.
-     *
-     * @returns {Encore}
      */
-    splitEntryChunks() {
-        webpackConfig.splitEntryChunks();
+    splitEntryChunks(): this {
+        webpackConfig!.splitEntryChunks();
 
         return this;
     }
@@ -708,11 +691,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    configureSplitChunks(callback) {
-        webpackConfig.configureSplitChunks(callback);
+    configureSplitChunks(callback: OptionsCallback<object>): this {
+        webpackConfig!.configureSplitChunks(callback);
 
         return this;
     }
@@ -730,11 +712,12 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<Exclude<webpack.Configuration['watchOptions'], undefined>>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    configureWatchOptions(callback) {
-        webpackConfig.configureWatchOptions(callback);
+    configureWatchOptions(
+        callback: OptionsCallback<Exclude<webpack.Configuration['watchOptions'], undefined>>
+    ): this {
+        webpackConfig!.configureWatchOptions(callback);
 
         return this;
     }
@@ -757,11 +740,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    configureDevServerOptions(callback) {
-        webpackConfig.configureDevServerOptions(callback);
+    configureDevServerOptions(callback: OptionsCallback<object>): this {
+        webpackConfig!.configureDevServerOptions(callback);
 
         return this;
     }
@@ -785,11 +767,10 @@ class Encore {
      *  This is useful for older packages, that might
      *  expect jQuery (or something else) to be a global variable.
      *
-     * @param {Record<string, string|string[]>} variables
-     * @returns {Encore}
+     * @param variables
      */
-    autoProvideVariables(variables) {
-        webpackConfig.autoProvideVariables(variables);
+    autoProvideVariables(variables: Record<string, string>): this {
+        webpackConfig!.autoProvideVariables(variables);
 
         return this;
     }
@@ -804,11 +785,9 @@ class Encore {
      *     'window.jQuery': 'jquery'
      * });
      * ```
-     *
-     * @returns {Encore}
      */
-    autoProvidejQuery() {
-        webpackConfig.autoProvidejQuery();
+    autoProvidejQuery(): this {
+        webpackConfig!.autoProvidejQuery();
 
         return this;
     }
@@ -833,11 +812,10 @@ class Encore {
      * })
      * ```
      *
-     * @param {OptionsCallback<object>} postCssLoaderOptionsCallback
-     * @returns {Encore}
+     * @param postCssLoaderOptionsCallback
      */
-    enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
-        webpackConfig.enablePostCssLoader(postCssLoaderOptionsCallback);
+    enablePostCssLoader(postCssLoaderOptionsCallback: OptionsCallback<object> = () => {}): this {
+        webpackConfig!.enablePostCssLoader(postCssLoaderOptionsCallback);
 
         return this;
     }
@@ -873,12 +851,14 @@ class Encore {
      *              Options parameters for resolve-url-loader
      *              // https://www.npmjs.com/package/resolve-url-loader#options
      *
-     * @param {OptionsCallback<object>} sassLoaderOptionsCallback
-     * @param {{resolveUrlLoader?: boolean, resolveUrlLoaderOptions?: object}} encoreOptions
-     * @returns {Encore}
+     * @param sassLoaderOptionsCallback
+     * @param encoreOptions
      */
-    enableSassLoader(sassLoaderOptionsCallback = () => {}, encoreOptions = {}) {
-        webpackConfig.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
+    enableSassLoader(
+        sassLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        encoreOptions: { resolveUrlLoader?: boolean; resolveUrlLoaderOptions?: object } = {}
+    ): this {
+        webpackConfig!.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
 
         return this;
     }
@@ -900,11 +880,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} lessLoaderOptionsCallback
-     * @returns {Encore}
+     * @param lessLoaderOptionsCallback
      */
-    enableLessLoader(lessLoaderOptionsCallback = () => {}) {
-        webpackConfig.enableLessLoader(lessLoaderOptionsCallback);
+    enableLessLoader(lessLoaderOptionsCallback: OptionsCallback<object> = () => {}): this {
+        webpackConfig!.enableLessLoader(lessLoaderOptionsCallback);
 
         return this;
     }
@@ -925,11 +904,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} stylusLoaderOptionsCallback
-     * @returns {Encore}
+     * @param stylusLoaderOptionsCallback
      */
-    enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
-        webpackConfig.enableStylusLoader(stylusLoaderOptionsCallback);
+    enableStylusLoader(stylusLoaderOptionsCallback: OptionsCallback<object> = () => {}): this {
+        webpackConfig!.enableStylusLoader(stylusLoaderOptionsCallback);
 
         return this;
     }
@@ -1005,12 +983,19 @@ class Encore {
      *              It should contain the version of core-js you added to your project
      *              if useBuiltIns isn't set to false.
      *
-     * @param {OptionsCallback<object>|null} callback
-     * @param {{exclude?: webpack.RuleSetCondition, includeNodeModules?: string[], useBuiltIns?: 'usage' | 'entry' | false, corejs?: number|string|{ version: string, proposals: boolean }|null}} encoreOptions
-     * @returns {Encore}
+     * @param callback
+     * @param encoreOptions
      */
-    configureBabel(callback, encoreOptions = {}) {
-        webpackConfig.configureBabel(callback, encoreOptions);
+    configureBabel(
+        callback: OptionsCallback<object> | null,
+        encoreOptions: {
+            exclude?: webpack.RuleSetCondition;
+            includeNodeModules?: string[];
+            useBuiltIns?: 'usage' | 'entry' | false;
+            corejs?: number | string | { version: string; proposals: boolean } | null;
+        } = {}
+    ): this {
+        webpackConfig!.configureBabel(callback, encoreOptions);
 
         return this;
     }
@@ -1031,11 +1016,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    configureBabelPresetEnv(callback) {
-        webpackConfig.configureBabelPresetEnv(callback);
+    configureBabelPresetEnv(callback: OptionsCallback<object>): this {
+        webpackConfig!.configureBabelPresetEnv(callback);
 
         return this;
     }
@@ -1052,11 +1036,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    configureCssLoader(callback) {
-        webpackConfig.configureCssLoader(callback);
+    configureCssLoader(callback: OptionsCallback<object>): this {
+        webpackConfig!.configureCssLoader(callback);
 
         return this;
     }
@@ -1064,11 +1047,10 @@ class Encore {
     /**
      * If enabled, the Stimulus bridge is used to load Stimulus controllers from PHP packages.
      *
-     * @param {string} controllerJsonPath Path to the controllers.json file.
-     * @returns {Encore}
+     * @param controllerJsonPath Path to the controllers.json file.
      */
-    enableStimulusBridge(controllerJsonPath) {
-        webpackConfig.enableStimulusBridge(controllerJsonPath);
+    enableStimulusBridge(controllerJsonPath: string): this {
+        webpackConfig!.enableStimulusBridge(controllerJsonPath);
 
         return this;
     }
@@ -1094,12 +1076,14 @@ class Encore {
      * });
      * ```
      *
-     * @param {Record<string, string[]>} buildDependencies
-     * @param {OptionsCallback<webpack.FileCacheOptions>} cacheCallback
-     * @returns {Encore}
+     * @param buildDependencies
+     * @param cacheCallback
      */
-    enableBuildCache(buildDependencies, cacheCallback = (cache) => {}) {
-        webpackConfig.enableBuildCache(buildDependencies, cacheCallback);
+    enableBuildCache(
+        buildDependencies: Record<string, string[]>,
+        cacheCallback: OptionsCallback<webpack.FileCacheOptions> = (cache) => {}
+    ): this {
+        webpackConfig!.enableBuildCache(buildDependencies, cacheCallback);
 
         return this;
     }
@@ -1122,12 +1106,16 @@ class Encore {
      * );
      * ```
      *
-     * @param {OptionsCallback<import('mini-css-extract-plugin').LoaderOptions>} loaderOptionsCallback
-     * @param {OptionsCallback<import('mini-css-extract-plugin').PluginOptions>} pluginOptionsCallback
-     * @returns {Encore}
+     * @param loaderOptionsCallback
+     * @param pluginOptionsCallback
      */
-    configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback = () => {}) {
-        webpackConfig.configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback);
+    configureMiniCssExtractPlugin(
+        loaderOptionsCallback: OptionsCallback<import('mini-css-extract-plugin').LoaderOptions>,
+        pluginOptionsCallback: OptionsCallback<
+            import('mini-css-extract-plugin').PluginOptions
+        > = () => {}
+    ): this {
+        webpackConfig!.configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback);
 
         return this;
     }
@@ -1145,11 +1133,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    enableReactPreset(callback = () => {}) {
-        webpackConfig.enableReactPreset(callback);
+    enableReactPreset(callback: OptionsCallback<object> = () => {}): this {
+        webpackConfig!.enableReactPreset(callback);
 
         return this;
     }
@@ -1169,11 +1156,10 @@ class Encore {
      * Encore.enablePreactPreset({ preactCompat: true })
      * ```
      *
-     * @param {{preactCompat?: boolean}} options
-     * @returns {Encore}
+     * @param options
      */
-    enablePreactPreset(options = {}) {
-        webpackConfig.enablePreactPreset(options);
+    enablePreactPreset(options: { preactCompat?: boolean } = {}): this {
+        webpackConfig!.enablePreactPreset(options);
 
         return this;
     }
@@ -1197,11 +1183,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    enableTypeScriptLoader(callback = () => {}) {
-        webpackConfig.enableTypeScriptLoader(callback);
+    enableTypeScriptLoader(callback: OptionsCallback<object> = () => {}): this {
+        webpackConfig!.enableTypeScriptLoader(callback);
 
         return this;
     }
@@ -1212,11 +1197,12 @@ class Encore {
      *
      * This is a build optimization API to reduce build times.
      *
-     * @param {OptionsCallback<object>} forkedTypeScriptTypesCheckOptionsCallback
-     * @returns {Encore}
+     * @param forkedTypeScriptTypesCheckOptionsCallback
      */
-    enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
-        webpackConfig.enableForkedTypeScriptTypesChecking(
+    enableForkedTypeScriptTypesChecking(
+        forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<object> = () => {}
+    ): this {
+        webpackConfig!.enableForkedTypeScriptTypesChecking(
             forkedTypeScriptTypesCheckOptionsCallback
         );
 
@@ -1248,11 +1234,10 @@ class Encore {
      * })
      * ```
      *
-     * @param {object} options
-     * @returns {Encore}
+     * @param options
      */
-    enableBabelTypeScriptPreset(options = {}) {
-        webpackConfig.enableBabelTypeScriptPreset(options);
+    enableBabelTypeScriptPreset(options: object = {}): this {
+        webpackConfig!.enableBabelTypeScriptPreset(options);
 
         return this;
     }
@@ -1298,12 +1283,18 @@ class Encore {
      *              Configure Babel to use the preset "@vue/babel-preset-jsx",
      *              in order to enable JSX usage in Vue components.
      *
-     * @param {OptionsCallback<object>} vueLoaderOptionsCallback
-     * @param {{useJsx?: boolean, version?: number, runtimeCompilerBuild?: boolean}} encoreOptions
-     * @returns {Encore}
+     * @param vueLoaderOptionsCallback
+     * @param encoreOptions
      */
-    enableVueLoader(vueLoaderOptionsCallback = () => {}, encoreOptions = {}) {
-        webpackConfig.enableVueLoader(vueLoaderOptionsCallback, encoreOptions);
+    enableVueLoader(
+        vueLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        encoreOptions: {
+            useJsx?: boolean;
+            version?: number | null;
+            runtimeCompilerBuild?: boolean | null;
+        } = {}
+    ): this {
+        webpackConfig!.enableVueLoader(vueLoaderOptionsCallback, encoreOptions);
 
         return this;
     }
@@ -1324,12 +1315,14 @@ class Encore {
      * });
      * ```
      *
-     * @param {boolean} enabled
-     * @param {OptionsCallback<object>} notifierPluginOptionsCallback
-     * @returns {Encore}
+     * @param enabled
+     * @param notifierPluginOptionsCallback
      */
-    enableBuildNotifications(enabled = true, notifierPluginOptionsCallback = () => {}) {
-        webpackConfig.enableBuildNotifications(enabled, notifierPluginOptionsCallback);
+    enableBuildNotifications(
+        enabled = true,
+        notifierPluginOptionsCallback: OptionsCallback<object> = () => {}
+    ): this {
+        webpackConfig!.enableBuildNotifications(enabled, notifierPluginOptionsCallback);
 
         return this;
     }
@@ -1350,11 +1343,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    enableHandlebarsLoader(callback = () => {}) {
-        webpackConfig.enableHandlebarsLoader(callback);
+    enableHandlebarsLoader(callback: OptionsCallback<object> = () => {}): this {
+        webpackConfig!.enableHandlebarsLoader(callback);
 
         return this;
     }
@@ -1375,11 +1367,10 @@ class Encore {
      * Internally, this disables the mini-css-extract-plugin
      * and uses the style-loader instead.
      *
-     * @param {boolean} disabled
-     * @returns {Encore}
+     * @param disabled
      */
-    disableCssExtraction(disabled = true) {
-        webpackConfig.disableCssExtraction(disabled);
+    disableCssExtraction(disabled = true): this {
+        webpackConfig!.disableCssExtraction(disabled);
 
         return this;
     }
@@ -1397,11 +1388,10 @@ class Encore {
      * });
      * ```
      *
-     * @param {OptionsCallback<object>} callback
-     * @returns {Encore}
+     * @param callback
      */
-    configureStyleLoader(callback) {
-        webpackConfig.configureStyleLoader(callback);
+    configureStyleLoader(callback: OptionsCallback<object>): this {
+        webpackConfig!.configureStyleLoader(callback);
 
         return this;
     }
@@ -1429,11 +1419,10 @@ class Encore {
      * which is overridden for both fonts and images. See configureImageRule()
      * and configureFontRule() to control those filenames.
      *
-     * @param {{js?: string, css?: string, images?: string, fonts?: string}} filenames
-     * @returns {Encore}
+     * @param filenames
      */
-    configureFilenames(filenames) {
-        webpackConfig.configureFilenames(filenames);
+    configureFilenames(filenames: { js?: string; css?: string; assets?: string }): this {
+        webpackConfig!.configureFilenames(filenames);
 
         return this;
     }
@@ -1483,12 +1472,19 @@ class Encore {
      * });
      * ```
      *
-     * @param {{filename?: string, maxSize?: number|null, type?: string, enabled?: boolean}} options
-     * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
-     * @returns {Encore}
+     * @param options
+     * @param ruleCallback
      */
-    configureImageRule(options = {}, ruleCallback = (rule) => {}) {
-        webpackConfig.configureImageRule(options, ruleCallback);
+    configureImageRule(
+        options: {
+            filename?: string;
+            maxSize?: number | null;
+            type?: string;
+            enabled?: boolean;
+        } = {},
+        ruleCallback: OptionsCallback<webpack.RuleSetRule> = () => {}
+    ): this {
+        webpackConfig!.configureImageRule(options, ruleCallback);
 
         return this;
     }
@@ -1500,12 +1496,19 @@ class Encore {
      *
      * See configureImageRule() for more details.
      *
-     * @param {{filename?: string, maxSize?: number|null, type?: string, enabled?: boolean}} options
-     * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
-     * @returns {Encore}
+     * @param options
+     * @param ruleCallback
      */
-    configureFontRule(options = {}, ruleCallback = (rule) => {}) {
-        webpackConfig.configureFontRule(options, ruleCallback);
+    configureFontRule(
+        options: {
+            filename?: string;
+            maxSize?: number | null;
+            type?: string;
+            enabled?: boolean;
+        } = {},
+        ruleCallback: OptionsCallback<webpack.RuleSetRule> = () => {}
+    ): this {
+        webpackConfig!.configureFontRule(options, ruleCallback);
 
         return this;
     }
@@ -1524,12 +1527,11 @@ class Encore {
      *     });
      * ```
      *
-     * @param {string} name
-     * @param {OptionsCallback<webpack.RuleSetRule>} callback
-     * @returns {Encore}
+     * @param name
+     * @param callback
      */
-    configureLoaderRule(name, callback) {
-        webpackConfig.configureLoaderRule(name, callback);
+    configureLoaderRule(name: string, callback: OptionsCallback<webpack.RuleSetRule>): this {
+        webpackConfig!.configureLoaderRule(name, callback);
 
         return this;
     }
@@ -1547,11 +1549,14 @@ class Encore {
      * })
      * ```
      *
-     * @param {OptionsCallback<Exclude<ConstructorParameters<typeof webpack.CleanPlugin>[0], undefined>>} cleanOptionsCallback
-     * @returns {Encore}
+     * @param cleanOptionsCallback
      */
-    cleanupOutputBeforeBuild(cleanOptionsCallback = () => {}) {
-        webpackConfig.cleanupOutputBeforeBuild(cleanOptionsCallback);
+    cleanupOutputBeforeBuild(
+        cleanOptionsCallback: OptionsCallback<
+            Exclude<ConstructorParameters<typeof webpack.CleanPlugin>[0], undefined>
+        > = () => {}
+    ): this {
+        webpackConfig!.cleanupOutputBeforeBuild(cleanOptionsCallback);
 
         return this;
     }
@@ -1584,41 +1589,34 @@ class Encore {
      * );
      * ```
      *
-     * @param {boolean} enabled
-     * @param {string|string[]} algorithms
-     * @returns {Encore}
+     * @param enabled
+     * @param algorithms
      */
-    enableIntegrityHashes(enabled = true, algorithms = ['sha384']) {
-        webpackConfig.enableIntegrityHashes(enabled, algorithms);
+    enableIntegrityHashes(enabled = true, algorithms: string | string[] = ['sha384']): this {
+        webpackConfig!.enableIntegrityHashes(enabled, algorithms);
 
         return this;
     }
 
     /**
      * Is this currently a "production" build?
-     *
-     * @returns {boolean}
      */
-    isProduction() {
-        return webpackConfig.isProduction();
+    isProduction(): boolean {
+        return webpackConfig!.isProduction();
     }
 
     /**
      * Is this currently a "dev" build?
-     *
-     * @returns {boolean}
      */
-    isDev() {
-        return webpackConfig.isDev();
+    isDev(): boolean {
+        return webpackConfig!.isDev();
     }
 
     /**
      * Is this currently a "dev-server" build?
-     *
-     * @returns {boolean}
      */
-    isDevServer() {
-        return webpackConfig.isDevServer();
+    isDevServer(): boolean {
+        return webpackConfig!.isDevServer();
     }
 
     /**
@@ -1632,11 +1630,10 @@ class Encore {
      *     .when(process.argv.includes('--analyze'), (Encore) => Encore.addPlugin(new BundleAnalyzerPlugin()))
      * ```
      *
-     * @param {(function(Encore): boolean) | boolean} condition
-     * @param {function(Encore): void} callback
-     * @returns {Encore}
+     * @param condition
+     * @param callback
      */
-    when(condition, callback) {
+    when(condition: ((encore: this) => boolean) | boolean, callback: (encore: this) => void): this {
         if (
             (typeof condition === 'function' && condition(this)) ||
             (typeof condition === 'boolean' && condition)
@@ -1653,13 +1650,11 @@ class Encore {
      * ```
      * export default await Encore.getWebpackConfig();
      * ```
-     *
-     * @returns {Promise<webpack.Configuration>}
      */
-    async getWebpackConfig() {
-        validator(webpackConfig);
+    async getWebpackConfig(): Promise<webpack.Configuration> {
+        validator(webpackConfig!);
 
-        return await configGenerator(webpackConfig);
+        return await configGenerator(webpackConfig!);
     }
 
     /**
@@ -1667,10 +1662,8 @@ class Encore {
      *
      * getWebpackConfig should be used before resetting to build
      * a config for the existing state.
-     *
-     * @returns {void}
      */
-    reset() {
+    reset(): void {
         webpackConfig = new WebpackConfig(runtimeConfig);
     }
 
@@ -1699,11 +1692,10 @@ class Encore {
      * Be aware that using this method will also reset the current
      * webpack configuration.
      *
-     * @param {string} environment
-     * @param {object} options
-     * @returns {Encore}
+     * @param environment
+     * @param options
      */
-    configureRuntimeEnvironment(environment, options = {}) {
+    configureRuntimeEnvironment(environment: string, options: object = {}): this {
         runtimeConfig = parseRuntime(
             Object.assign({}, yargsParser([environment]), options),
             process.cwd()
@@ -1718,10 +1710,8 @@ class Encore {
      * Check if Encore was either called through
      * the CLI utility or after being manually initialized
      * using Encore.configureRuntimeEnvironment.
-     *
-     * @returns {boolean}
      */
-    isRuntimeEnvironmentConfigured() {
+    isRuntimeEnvironmentConfigured(): boolean {
         return runtimeConfig !== null;
     }
 
@@ -1730,10 +1720,8 @@ class Encore {
      *
      * Be aware that using this method will also reset the
      * current webpack configuration.
-     *
-     * @returns {void}
      */
-    clearRuntimeEnvironment() {
+    clearRuntimeEnvironment(): void {
         runtimeConfig = null;
         webpackConfig = null;
     }
@@ -1742,20 +1730,14 @@ class Encore {
      * If enabled, the SvelteJs loader is enabled.
      *
      * https://github.com/sveltejs/svelte-loader
-     *
-     * @returns {Encore}
      */
-    enableSvelte() {
-        webpackConfig.enableSvelte();
+    enableSvelte(): this {
+        webpackConfig!.enableSvelte();
 
         return this;
     }
 }
 
-/**
- * Proxy the API in order to prevent calls to most of its methods
- * if the webpackConfig object hasn't been initialized yet.
- *
- * @type {Encore}
- */
+// Proxy the API in order to prevent calls to most of its methods
+// if the webpackConfig object hasn't been initialized yet.
 export default EncoreProxy.createProxy(new Encore());
