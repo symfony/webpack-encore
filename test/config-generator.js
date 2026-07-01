@@ -15,10 +15,10 @@ import { describe, it, expect, beforeEach, beforeAll, afterAll } from 'vitest';
 import webpack from 'webpack';
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin';
 
-import configGenerator from '../lib/config-generator.js';
+import configGenerator from '../lib/config-generator.ts';
 import RuntimeConfig from '../lib/config/RuntimeConfig.ts';
-import logger from '../lib/logger.js';
-import WebpackConfig from '../lib/WebpackConfig.js';
+import logger from '../lib/logger.ts';
+import WebpackConfig from '../lib/WebpackConfig.ts';
 
 const isWindows = process.platform === 'win32';
 

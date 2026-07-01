@@ -11,7 +11,7 @@ import { describe, it, expect } from 'vitest';
 
 import RuntimeConfig from '../../lib/config/RuntimeConfig.ts';
 import handlebarsLoader from '../../lib/loaders/handlebars.ts';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 
 function createConfig() {
     const runtimeConfig = new RuntimeConfig();

@@ -14,22 +14,24 @@ import prettyError from './utils/pretty-error.ts';
 
 // Public methods that were removed. We show an explicit migration message instead of relying on
 // the generic "did you mean" suggestion below, whose closest Levenshtein match would be misleading.
-const removedMethods = {
+const removedMethods: Record<string, string> = {
     configureTerserPlugin:
         'Encore.configureTerserPlugin() was removed. Use Encore.configureJsMinimizerPlugin() instead (it takes the same callback).',
 };
 
 export default {
-    createProxy: (Encore) => {
+    createProxy: <T extends { isRuntimeEnvironmentConfigured(): boolean }>(Encore: T): T => {
         const EncoreProxy = new Proxy(Encore, {
             get: (target, prop) => {
                 if (typeof prop !== 'string') {
                     // Only care about strings there since prop
                     // could also be a number or a symbol
-                    return target[prop];
+                    return Reflect.get(target, prop);
                 }
 
-                if (typeof target[prop] === 'function') {
+                const targetValue = Reflect.get(target, prop);
+
+                if (typeof targetValue === 'function') {
                     // These methods of the public API can be called even if the
                     // webpackConfig object hasn't been initialized yet.
                     const safeMethods = [
@@ -46,9 +48,12 @@ export default {
 
                     // Either a safe method has been called or the webpackConfig
                     // object is already available. In this case act as a passthrough.
-                    return (...parameters) => {
+                    return (...parameters: unknown[]) => {
                         try {
-                            const res = target[prop](...parameters);
+                            const res = (targetValue as (...args: unknown[]) => unknown).apply(
+                                target,
+                                parameters
+                            );
 
                             // If the method returns a Promise (e.g. getWebpackConfig()),
                             // attach a .catch() so that async rejections are also
@@ -56,10 +61,10 @@ export default {
                             if (
                                 res !== null &&
                                 typeof res === 'object' &&
-                                typeof res.then === 'function' &&
+                                typeof (res as { then?: unknown }).then === 'function' &&
                                 res !== target
                             ) {
-                                return res.catch((error) => {
+                                return (res as Promise<unknown>).catch((error: unknown) => {
                                     prettyError(error);
                                     process.exit(1); // eslint-disable-line
                                 });
@@ -73,7 +78,7 @@ export default {
                     };
                 }
 
-                if (typeof target[prop] === 'undefined') {
+                if (typeof targetValue === 'undefined') {
                     if (Object.hasOwn(removedMethods, prop)) {
                         prettyError(new Error(removedMethods[prop]), {
                             skipTrace: (traceLine, lineNumber) => lineNumber !== 1,
@@ -83,7 +88,7 @@ export default {
                     }
 
                     // Find the property with the closest Levenshtein distance
-                    let similarProperty;
+                    let similarProperty: string | undefined;
                     let minDistance = Number.MAX_VALUE;
 
                     const encorePrototype = Object.getPrototypeOf(Encore);
@@ -116,7 +121,7 @@ export default {
                     process.exit(1); // eslint-disable-line
                 }
 
-                return target[prop];
+                return targetValue;
             },
         });
 

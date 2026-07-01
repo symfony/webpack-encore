@@ -25,12 +25,12 @@
 
 import yargsParser from 'yargs-parser';
 
-import configGenerator from './lib/config-generator.js';
+import configGenerator from './lib/config-generator.ts';
 import parseRuntime from './lib/config/parse-runtime.ts';
 import validator from './lib/config/validator.ts';
-import context from './lib/context.js';
-import EncoreProxy from './lib/EncoreProxy.js';
-import WebpackConfig from './lib/WebpackConfig.js';
+import context from './lib/context.ts';
+import EncoreProxy from './lib/EncoreProxy.ts';
+import WebpackConfig from './lib/WebpackConfig.ts';
 
 let runtimeConfig = context.runtimeConfig;
 let webpackConfig = runtimeConfig ? new WebpackConfig(runtimeConfig) : null;

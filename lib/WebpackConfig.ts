@@ -7,49 +7,59 @@
  * file that was distributed with this source code.
  */
 
-/**
- * @import RuntimeConfig from './config/RuntimeConfig.js'
- */
-
-/**
- * @import webpack from 'webpack'
- */
-
-/**
- * @import { OptionsCallback } from './utils/apply-options-callback.js'
- */
-
-/**
- * @import { CopyFilesOptions } from '../index.js'
- */
-
-/**
- * @typedef {import('minimizer-webpack-plugin').BasePluginOptions & import('minimizer-webpack-plugin').DefinedDefaultMinimizerAndOptions<import('minimizer-webpack-plugin').CustomOptions>} MinimizerPluginOptions
- */
-
-/**
- * Callback used to configure the minimizer-webpack-plugin. It receives the options object
- * (also bound as `this`) and the `MinimizerPlugin` class, so you can select a minifier
- * (e.g. `MinimizerPlugin.lightningCssMinify`) without importing `minimizer-webpack-plugin`
- * yourself (which is a transitive dependency of Encore and may not be resolvable, e.g. under pnpm).
- *
- * @typedef {(this: MinimizerPluginOptions, options: MinimizerPluginOptions, MinimizerPlugin: typeof import('minimizer-webpack-plugin').default) => (MinimizerPluginOptions | void)} MinimizerOptionsCallback
- */
-
 import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 
+import type webpack from 'webpack';
+
+import type { CopyFilesOptions } from '../index.js';
 import pathUtil from './config/path-util.ts';
-import featuresHelper from './features.js';
-import logger from './logger.js';
+import type RuntimeConfig from './config/RuntimeConfig.js';
+import featuresHelper from './features.ts';
+import logger from './logger.ts';
+import type { OptionsCallback } from './utils/apply-options-callback.js';
 import regexpEscaper from './utils/regexp-escaper.ts';
 
-/**
- * @param {RuntimeConfig|null} runtimeConfig
- * @returns {void}
- */
-function validateRuntimeConfig(runtimeConfig) {
+export type MinimizerPluginOptions = import('minimizer-webpack-plugin').BasePluginOptions &
+    import('minimizer-webpack-plugin').DefinedDefaultMinimizerAndOptions<
+        import('minimizer-webpack-plugin').CustomOptions
+    >;
+
+// Callback used to configure the minimizer-webpack-plugin. It receives the options object
+// (also bound as `this`) and the `MinimizerPlugin` class, so you can select a minifier
+// (e.g. `MinimizerPlugin.lightningCssMinify`) without importing `minimizer-webpack-plugin`
+// yourself (which is a transitive dependency of Encore and may not be resolvable, e.g. under pnpm).
+export type MinimizerOptionsCallback = (
+    this: MinimizerPluginOptions,
+    options: MinimizerPluginOptions,
+    MinimizerPlugin: typeof import('minimizer-webpack-plugin')
+) => MinimizerPluginOptions | void;
+
+interface AssetRuleOptions {
+    filename: string;
+    maxSize: number | null;
+    type: string;
+    enabled: boolean;
+}
+
+interface CacheGroupOptions {
+    test?: RegExp;
+    node_modules?: string[];
+    [key: string]: unknown;
+}
+
+interface ResolvedCopyFilesConfig {
+    from: string;
+    pattern: RegExp | string;
+    to: string | null;
+    includeSubdirectories: boolean;
+    context: string | null;
+}
+
+function validateRuntimeConfig(
+    runtimeConfig: RuntimeConfig | null
+): asserts runtimeConfig is RuntimeConfig {
     // if you're using the encore executable, these things should never happen
     if (null === runtimeConfig) {
         throw new Error('RuntimeConfig must be initialized');
@@ -61,7 +71,99 @@ function validateRuntimeConfig(runtimeConfig) {
 }
 
 class WebpackConfig {
-    constructor(runtimeConfig) {
+    runtimeConfig: RuntimeConfig;
+    entries: Map<string, string | string[]>;
+    styleEntries: Map<string, string | string[]>;
+    plugins: Array<{ plugin: webpack.WebpackPluginInstance; priority: number }>;
+    loaders: webpack.RuleSetRule[];
+    outputPath: string | null;
+    publicPath: string | null;
+    manifestKeyPrefix: string | null;
+    cacheGroups: Record<string, CacheGroupOptions>;
+    providedVariables: Record<string, string>;
+    configuredFilenames: { js?: string; css?: string; assets?: string };
+    aliases: Record<string, string>;
+    externals: webpack.ExternalItem[];
+    integrityAlgorithms: string[];
+    shouldUseSingleRuntimeChunk: boolean | null;
+    shouldSplitEntryChunks: boolean;
+    useVersioning: boolean;
+    useSourceMaps: boolean;
+    cleanupOutput: boolean;
+    usePersistentCache: boolean;
+    extractCss: boolean;
+    usePostCssLoader: boolean;
+    useLessLoader: boolean;
+    useStylusLoader: boolean;
+    useSassLoader: boolean;
+    useReact: boolean;
+    usePreact: boolean;
+    useVueLoader: boolean;
+    useTypeScriptLoader: boolean;
+    useForkedTypeScriptTypeChecking: boolean;
+    useBabelTypeScriptPreset: boolean;
+    useWebpackNotifier: boolean;
+    useHandlebarsLoader: boolean;
+    useSvelte: boolean;
+    imageRuleOptions: AssetRuleOptions;
+    fontRuleOptions: AssetRuleOptions;
+    copyFilesConfigs: ResolvedCopyFilesConfig[];
+    sassOptions: { resolveUrlLoader: boolean; resolveUrlLoaderOptions: object };
+    preactOptions: { preactCompat: boolean };
+    babelOptions: {
+        exclude: webpack.RuleSetCondition;
+        useBuiltIns: 'usage' | 'entry' | false;
+        corejs: number | string | { version: string; proposals: boolean } | null;
+    };
+    babelTypeScriptPresetOptions: object;
+    vueOptions: { useJsx: boolean; version: number | null; runtimeCompilerBuild: boolean | null };
+    persistentCacheBuildDependencies: Record<string, string[]>;
+    imageRuleCallback: OptionsCallback<webpack.RuleSetRule>;
+    fontRuleCallback: OptionsCallback<webpack.RuleSetRule>;
+    postCssLoaderOptionsCallback: OptionsCallback<object>;
+    sassLoaderOptionsCallback: OptionsCallback<object>;
+    lessLoaderOptionsCallback: OptionsCallback<object>;
+    stylusLoaderOptionsCallback: OptionsCallback<object>;
+    babelConfigurationCallback: OptionsCallback<object>;
+    babelPresetEnvOptionsCallback: OptionsCallback<object>;
+    babelReactPresetOptionsCallback: OptionsCallback<object>;
+    cssLoaderConfigurationCallback: OptionsCallback<object>;
+    styleLoaderConfigurationCallback: OptionsCallback<object>;
+    splitChunksConfigurationCallback: OptionsCallback<object>;
+    devServerOptionsConfigurationCallback: OptionsCallback<object>;
+    vueLoaderOptionsCallback: OptionsCallback<object>;
+    tsConfigurationCallback: OptionsCallback<object>;
+    handlebarsConfigurationCallback: OptionsCallback<object>;
+    forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<object>;
+    friendlyErrorsPluginOptionsCallback: OptionsCallback<object>;
+    manifestPluginOptionsCallback: OptionsCallback<object>;
+    notifierPluginOptionsCallback: OptionsCallback<object>;
+    watchOptionsConfigurationCallback: OptionsCallback<
+        Exclude<webpack.Configuration['watchOptions'], undefined>
+    >;
+    miniCssExtractLoaderConfigurationCallback: OptionsCallback<
+        import('mini-css-extract-plugin').LoaderOptions
+    >;
+    miniCssExtractPluginConfigurationCallback: OptionsCallback<
+        import('mini-css-extract-plugin').PluginOptions
+    >;
+    loaderConfigurationCallbacks: Record<string, OptionsCallback<webpack.RuleSetRule>>;
+    cleanOptionsCallback: OptionsCallback<
+        Exclude<ConstructorParameters<typeof webpack.CleanPlugin>[0], undefined>
+    >;
+    definePluginOptionsCallback: OptionsCallback<
+        ConstructorParameters<typeof webpack.DefinePlugin>[0]
+    >;
+    minimizerPluginJsOptionsCallback: OptionsCallback<MinimizerPluginOptions>;
+    minimizerPluginCssOptionsCallback: OptionsCallback<MinimizerPluginOptions>;
+    cssMinimizerExplicitlyConfigured: boolean;
+    persistentCacheCallback: OptionsCallback<webpack.FileCacheOptions>;
+    _babelRcFileExists?: boolean;
+    _babelConfigureOptions?: object;
+    _configureBabelCalled: boolean;
+    _configureBabelPresetEnvCalled: boolean;
+
+    constructor(runtimeConfig: RuntimeConfig | null) {
         validateRuntimeConfig(runtimeConfig);
 
         if (runtimeConfig.verbose) {
@@ -93,14 +195,12 @@ class WebpackConfig {
         this.cleanupOutput = false;
         this.usePersistentCache = false;
         this.extractCss = true;
-        /** @type {{filename: string, maxSize: number|null, type: string, enabled: boolean}} */
         this.imageRuleOptions = {
             type: 'asset/resource',
             maxSize: null,
             filename: 'images/[name].[hash:8][ext]',
             enabled: true,
         };
-        /** @type {{filename: string, maxSize: number|null, type: string, enabled: boolean}} */
         this.fontRuleOptions = {
             type: 'asset/resource',
             maxSize: null,
@@ -123,9 +223,6 @@ class WebpackConfig {
 
         // Features/Loaders options
         this.copyFilesConfigs = [];
-        /**
-         * @type {{resolveUrlLoader: boolean, resolveUrlLoaderOptions: object}}
-         */
         this.sassOptions = {
             resolveUrlLoader: true,
             resolveUrlLoaderOptions: {},
@@ -133,7 +230,6 @@ class WebpackConfig {
         this.preactOptions = {
             preactCompat: false,
         };
-        /** @type {{exclude: webpack.RuleSetCondition, useBuiltIns: 'usage'|'entry'|false, corejs: number|string|{ version: string, proposals: boolean }|null}} */
         this.babelOptions = {
             exclude: /(node_modules|bower_components)/,
             useBuiltIns: false,
@@ -145,51 +241,30 @@ class WebpackConfig {
             version: null,
             runtimeCompilerBuild: null,
         };
-        /** @type {Record<string, string[]>} */
         this.persistentCacheBuildDependencies = {};
 
         // Features/Loaders options callbacks
-        /** @type {OptionsCallback<webpack.RuleSetRule>} */
         this.imageRuleCallback = () => {};
-        /** @type {OptionsCallback<webpack.RuleSetRule>} */
         this.fontRuleCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.postCssLoaderOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.sassLoaderOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.lessLoaderOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.stylusLoaderOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.babelConfigurationCallback = () => {};
         this._configureBabelCalled = false;
-        /** @type {OptionsCallback<object>} */
         this.babelPresetEnvOptionsCallback = () => {};
         this._configureBabelPresetEnvCalled = false;
-        /** @type {OptionsCallback<object>} */
         this.babelReactPresetOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.cssLoaderConfigurationCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.styleLoaderConfigurationCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.splitChunksConfigurationCallback = () => {};
-        /** @type {OptionsCallback<Exclude<webpack.Configuration['watchOptions'], undefined>>} */
         this.watchOptionsConfigurationCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.devServerOptionsConfigurationCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.vueLoaderOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.tsConfigurationCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.handlebarsConfigurationCallback = () => {};
-        /** @type {OptionsCallback<import('mini-css-extract-plugin').LoaderOptions>} */
         this.miniCssExtractLoaderConfigurationCallback = () => {};
-        /** @type {OptionsCallback<import('mini-css-extract-plugin').PluginOptions>} */
         this.miniCssExtractPluginConfigurationCallback = () => {};
-        /** @type {Record<string, OptionsCallback<webpack.RuleSetRule>>} */
         this.loaderConfigurationCallbacks = {
             javascript: () => {},
             css: () => {},
@@ -205,30 +280,20 @@ class WebpackConfig {
         };
 
         // Plugins callbacks
-        /** @type {OptionsCallback<Exclude<ConstructorParameters<typeof webpack.CleanPlugin>[0], undefined>>} */
         this.cleanOptionsCallback = () => {};
-        /** @type {OptionsCallback<ConstructorParameters<typeof webpack.DefinePlugin>[0]>} */
         this.definePluginOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.forkedTypeScriptTypesCheckOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.friendlyErrorsPluginOptionsCallback = () => {};
-        /** @type {OptionsCallback<object>} */
         this.manifestPluginOptionsCallback = () => {};
-        /** @type {OptionsCallback<import('minimizer-webpack-plugin').BasePluginOptions & import('minimizer-webpack-plugin').DefinedDefaultMinimizerAndOptions<import('minimizer-webpack-plugin').CustomOptions>>} */
         this.minimizerPluginJsOptionsCallback = () => {};
-        /** @type {OptionsCallback<import('minimizer-webpack-plugin').BasePluginOptions & import('minimizer-webpack-plugin').DefinedDefaultMinimizerAndOptions<import('minimizer-webpack-plugin').CustomOptions>>} */
         this.minimizerPluginCssOptionsCallback = () => {};
-        /** @type {boolean} */
         this.cssMinimizerExplicitlyConfigured = false;
-        /** @type {OptionsCallback<object>} */
         this.notifierPluginOptionsCallback = () => {};
-        /** @type {OptionsCallback<webpack.FileCacheOptions>} */
         this.persistentCacheCallback = () => {};
     }
 
-    getContext() {
-        return this.runtimeConfig.context;
+    getContext(): string {
+        return this.runtimeConfig.context!;
     }
 
     /**
@@ -236,10 +301,8 @@ class WebpackConfig {
      * If runtimeConfig.babelRcFileExists was explicitly set (not null),
      * that value is used directly. Otherwise, uses
      * babel.loadPartialConfigAsync() and caches the result.
-     *
-     * @returns {Promise<boolean>}
      */
-    async doesBabelRcFileExist() {
+    async doesBabelRcFileExist(): Promise<boolean> {
         if (this._babelRcFileExists === undefined) {
             if (this.runtimeConfig.babelRcFileExists !== null) {
                 this._babelRcFileExists = this.runtimeConfig.babelRcFileExists;
@@ -249,13 +312,13 @@ class WebpackConfig {
                     filename: path.resolve(this.getContext(), 'webpack.config.js'),
                     root: this.getContext(),
                 });
-                this._babelRcFileExists = partialConfig.hasFilesystemConfig();
+                this._babelRcFileExists = partialConfig!.hasFilesystemConfig();
             }
         }
-        return this._babelRcFileExists;
+        return this._babelRcFileExists!;
     }
 
-    setOutputPath(outputPath) {
+    setOutputPath(outputPath: string) {
         if (!path.isAbsolute(outputPath)) {
             outputPath = path.resolve(this.getContext(), outputPath);
         }
@@ -288,7 +351,7 @@ class WebpackConfig {
         this.outputPath = outputPath;
     }
 
-    setPublicPath(publicPath) {
+    setPublicPath(publicPath: string) {
         if (publicPath.includes('://') === false && publicPath.indexOf('/') !== 0) {
             // technically, not starting with "/" is legal, but not
             // what you want in most cases. Let's warn the user that
@@ -305,7 +368,7 @@ class WebpackConfig {
         this.publicPath = publicPath;
     }
 
-    setManifestKeyPrefix(manifestKeyPrefix) {
+    setManifestKeyPrefix(manifestKeyPrefix: string) {
         /*
          * Normally, we make sure that the manifest keys don't start
          * with an opening "/" ever... for consistency. If you need
@@ -329,10 +392,11 @@ class WebpackConfig {
         this.manifestKeyPrefix = manifestKeyPrefix;
     }
 
-    /**
-     * @param {OptionsCallback<ConstructorParameters<typeof webpack.DefinePlugin>[0]>} definePluginOptionsCallback
-     */
-    configureDefinePlugin(definePluginOptionsCallback = () => {}) {
+    configureDefinePlugin(
+        definePluginOptionsCallback: OptionsCallback<
+            ConstructorParameters<typeof webpack.DefinePlugin>[0]
+        > = () => {}
+    ) {
         if (typeof definePluginOptionsCallback !== 'function') {
             throw new Error('Argument 1 to configureDefinePlugin() must be a callback function');
         }
@@ -340,10 +404,9 @@ class WebpackConfig {
         this.definePluginOptionsCallback = definePluginOptionsCallback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} friendlyErrorsPluginOptionsCallback
-     */
-    configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback = () => {}) {
+    configureFriendlyErrorsPlugin(
+        friendlyErrorsPluginOptionsCallback: OptionsCallback<object> = () => {}
+    ) {
         if (typeof friendlyErrorsPluginOptionsCallback !== 'function') {
             throw new Error(
                 'Argument 1 to configureFriendlyErrorsPlugin() must be a callback function'
@@ -353,10 +416,7 @@ class WebpackConfig {
         this.friendlyErrorsPluginOptionsCallback = friendlyErrorsPluginOptionsCallback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} manifestPluginOptionsCallback
-     */
-    configureManifestPlugin(manifestPluginOptionsCallback = () => {}) {
+    configureManifestPlugin(manifestPluginOptionsCallback: OptionsCallback<object> = () => {}) {
         if (typeof manifestPluginOptionsCallback !== 'function') {
             throw new Error('Argument 1 to configureManifestPlugin() must be a callback function');
         }
@@ -366,10 +426,8 @@ class WebpackConfig {
 
     /**
      * Configures the options passed to the minimizer-webpack-plugin for JS minimization.
-     *
-     * @param {MinimizerOptionsCallback} jsOptionsCallback
      */
-    configureJsMinimizerPlugin(jsOptionsCallback = () => {}) {
+    configureJsMinimizerPlugin(jsOptionsCallback: MinimizerOptionsCallback = () => {}) {
         if (typeof jsOptionsCallback !== 'function') {
             throw new Error(
                 'Argument 1 to configureJsMinimizerPlugin() must be a callback function.'
@@ -381,10 +439,10 @@ class WebpackConfig {
 
     /**
      * Configures the options passed to the minimizer-webpack-plugin for CSS minimization.
-     *
-     * @param {MinimizerOptionsCallback} cssMinimizerPluginOptionsCallback
      */
-    configureCssMinimizerPlugin(cssMinimizerPluginOptionsCallback = () => {}) {
+    configureCssMinimizerPlugin(
+        cssMinimizerPluginOptionsCallback: MinimizerOptionsCallback = () => {}
+    ) {
         if (typeof cssMinimizerPluginOptionsCallback !== 'function') {
             throw new Error(
                 'Argument 1 to configureCssMinimizerPlugin() must be a callback function'
@@ -398,20 +456,18 @@ class WebpackConfig {
     /**
      * Returns the value that should be used as the publicPath,
      * which can be overridden by enabling the webpackDevServer
-     *
-     * @returns {string}
      */
-    getRealPublicPath() {
+    getRealPublicPath(): string {
         if (!this.useDevServer()) {
-            return this.publicPath;
+            return this.publicPath!;
         }
 
         if (this.runtimeConfig.devServerKeepPublicPath) {
-            return this.publicPath;
+            return this.publicPath!;
         }
 
-        if (this.publicPath.includes('://')) {
-            return this.publicPath;
+        if (this.publicPath!.includes('://')) {
+            return this.publicPath!;
         }
 
         const devServerUrl = pathUtil.calculateDevServerUrl(this.runtimeConfig);
@@ -420,7 +476,7 @@ class WebpackConfig {
         return devServerUrl.replace(/\/$/, '') + this.publicPath;
     }
 
-    addEntry(name, src) {
+    addEntry(name: string, src: string | string[]) {
         this.validateNameIsNewEntry(name);
 
         this.entries.set(name, src);
@@ -428,11 +484,8 @@ class WebpackConfig {
 
     /**
      * Provide a has of entries at once, as an alternative to calling `addEntry` several times.
-     *
-     * @param {Record<string, string|string[]>} entries
-     * @returns {void}
      */
-    addEntries(entries = {}) {
+    addEntries(entries: Record<string, string | string[]> = {}) {
         if (typeof entries !== 'object') {
             throw new Error('Argument 1 to addEntries() must be an object.');
         }
@@ -440,13 +493,13 @@ class WebpackConfig {
         Object.entries(entries).forEach((entry) => this.addEntry(entry[0], entry[1]));
     }
 
-    addStyleEntry(name, src) {
+    addStyleEntry(name: string, src: string | string[]) {
         this.validateNameIsNewEntry(name);
 
         this.styleEntries.set(name, src);
     }
 
-    addPlugin(plugin, priority = 0) {
+    addPlugin(plugin: webpack.WebpackPluginInstance, priority = 0) {
         if (typeof priority !== 'number') {
             throw new Error('Argument 2 to addPlugin() must be a number.');
         }
@@ -457,11 +510,11 @@ class WebpackConfig {
         });
     }
 
-    addLoader(loader) {
+    addLoader(loader: webpack.RuleSetRule) {
         this.loaders.push(loader);
     }
 
-    addAliases(aliases = {}) {
+    addAliases(aliases: Record<string, string> = {}) {
         if (typeof aliases !== 'object') {
             throw new Error('Argument 1 to addAliases() must be an object.');
         }
@@ -469,10 +522,7 @@ class WebpackConfig {
         Object.assign(this.aliases, aliases);
     }
 
-    /**
-     * @param {webpack.Externals} externals
-     */
-    addExternals(externals = []) {
+    addExternals(externals: webpack.ExternalItem | webpack.ExternalItem[] = []) {
         if (!Array.isArray(externals)) {
             externals = [externals];
         }
@@ -488,11 +538,15 @@ class WebpackConfig {
         this.useSourceMaps = enabled;
     }
 
-    /**
-     * @param {OptionsCallback<object>|null} callback
-     * @param {{exclude?: webpack.RuleSetCondition, includeNodeModules?: string[], useBuiltIns?: 'usage' | 'entry' | false, corejs?: number|string|{ version: string, proposals: boolean }|null}} options
-     */
-    configureBabel(callback, options = {}) {
+    configureBabel(
+        callback: OptionsCallback<object> | null,
+        options: {
+            exclude?: webpack.RuleSetCondition;
+            includeNodeModules?: string[];
+            useBuiltIns?: 'usage' | 'entry' | false;
+            corejs?: number | string | { version: string; proposals: boolean } | null;
+        } = {}
+    ) {
         if (callback) {
             if (typeof callback !== 'function') {
                 throw new Error(
@@ -534,22 +588,22 @@ class WebpackConfig {
                     );
                 }
 
-                if (!Array.isArray(options[optionKey])) {
+                if (!Array.isArray((options as Record<string, unknown>)[optionKey])) {
                     throw new Error(
                         'Option "includeNodeModules" passed to configureBabel() must be an Array.'
                     );
                 }
 
-                this.babelOptions['exclude'] = (filePath) => {
+                this.babelOptions['exclude'] = (filePath: string) => {
                     // Don't exclude modules outside of node_modules/bower_components
                     if (!/(node_modules|bower_components)/.test(filePath)) {
                         return false;
                     }
 
                     // Don't exclude whitelisted Node modules
-                    const whitelistedModules = options[optionKey].map(
-                        (module) => path.join('node_modules', module) + path.sep
-                    );
+                    const whitelistedModules = (
+                        (options as Record<string, unknown>)[optionKey] as string[]
+                    ).map((module: string) => path.join('node_modules', module) + path.sep);
 
                     for (const modulePath of whitelistedModules) {
                         if (filePath.includes(modulePath)) {
@@ -576,15 +630,14 @@ class WebpackConfig {
                         `The "${optionKey}" option of configureBabel() will not be used because your app already provides an external Babel configuration (e.g. a ".babelrc" or "babel.config.js" file or "babel" key in "package.json").`
                     );
                 }
-                this.babelOptions[optionKey] = options[optionKey];
+                (this.babelOptions as Record<string, unknown>)[optionKey] = (
+                    options as Record<string, unknown>
+                )[optionKey];
             }
         }
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    configureBabelPresetEnv(callback) {
+    configureBabelPresetEnv(callback: OptionsCallback<object>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureBabelPresetEnv() must be a callback function.');
         }
@@ -603,10 +656,7 @@ class WebpackConfig {
         this._configureBabelPresetEnvCalled = true;
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    configureCssLoader(callback) {
+    configureCssLoader(callback: OptionsCallback<object>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureCssLoader() must be a callback function.');
         }
@@ -614,10 +664,7 @@ class WebpackConfig {
         this.cssLoaderConfigurationCallback = callback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    configureStyleLoader(callback) {
+    configureStyleLoader(callback: OptionsCallback<object>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureStyleLoader() must be a callback function.');
         }
@@ -625,11 +672,12 @@ class WebpackConfig {
         this.styleLoaderConfigurationCallback = callback;
     }
 
-    /**
-     * @param {OptionsCallback<import('mini-css-extract-plugin').LoaderOptions>} loaderOptionsCallback
-     * @param {OptionsCallback<import('mini-css-extract-plugin').PluginOptions>} pluginOptionsCallback
-     */
-    configureMiniCssExtractPlugin(loaderOptionsCallback, pluginOptionsCallback = () => {}) {
+    configureMiniCssExtractPlugin(
+        loaderOptionsCallback: OptionsCallback<import('mini-css-extract-plugin').LoaderOptions>,
+        pluginOptionsCallback: OptionsCallback<
+            import('mini-css-extract-plugin').PluginOptions
+        > = () => {}
+    ) {
         if (typeof loaderOptionsCallback !== 'function') {
             throw new Error(
                 'Argument 1 to configureMiniCssExtractPluginLoader() must be a callback function.'
@@ -658,10 +706,7 @@ class WebpackConfig {
         this.shouldSplitEntryChunks = true;
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    configureSplitChunks(callback) {
+    configureSplitChunks(callback: OptionsCallback<object>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureSplitChunks() must be a callback function.');
         }
@@ -669,10 +714,9 @@ class WebpackConfig {
         this.splitChunksConfigurationCallback = callback;
     }
 
-    /**
-     * @param {OptionsCallback<Exclude<webpack.Configuration['watchOptions'], undefined>>} callback
-     */
-    configureWatchOptions(callback) {
+    configureWatchOptions(
+        callback: OptionsCallback<Exclude<webpack.Configuration['watchOptions'], undefined>>
+    ) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureWatchOptions() must be a callback function.');
         }
@@ -680,10 +724,7 @@ class WebpackConfig {
         this.watchOptionsConfigurationCallback = callback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    configureDevServerOptions(callback) {
+    configureDevServerOptions(callback: OptionsCallback<object>) {
         featuresHelper.ensurePackagesExistAndAreCorrectVersion('webpack-dev-server');
 
         if (typeof callback !== 'function') {
@@ -695,11 +736,7 @@ class WebpackConfig {
         this.devServerOptionsConfigurationCallback = callback;
     }
 
-    /**
-     * @param {string} name
-     * @param {object} options
-     */
-    addCacheGroup(name, options) {
+    addCacheGroup(name: string, options: CacheGroupOptions) {
         if (typeof name !== 'string') {
             throw new Error('Argument 1 to addCacheGroup() must be a string.');
         }
@@ -731,10 +768,7 @@ class WebpackConfig {
         this.cacheGroups[name] = options;
     }
 
-    /**
-     * @param {CopyFilesOptions|CopyFilesOptions[]} configs
-     */
-    copyFiles(configs = []) {
+    copyFiles(configs: CopyFilesOptions | CopyFilesOptions[] = []) {
         if (!Array.isArray(configs)) {
             configs = [configs];
         }
@@ -746,11 +780,11 @@ class WebpackConfig {
         }
 
         const defaultConfig = {
-            from: null,
-            pattern: /.*/,
-            to: null,
+            from: null as string | null,
+            pattern: /.*/ as RegExp | string,
+            to: null as string | null,
             includeSubdirectories: true,
-            context: null,
+            context: null as string | null,
         };
 
         for (const config of configs) {
@@ -784,14 +818,13 @@ class WebpackConfig {
                 }
             }
 
-            this.copyFilesConfigs.push(Object.assign({}, defaultConfig, config));
+            this.copyFilesConfigs.push(
+                Object.assign({}, defaultConfig, config) as ResolvedCopyFilesConfig
+            );
         }
     }
 
-    /**
-     * @param {OptionsCallback<object>} postCssLoaderOptionsCallback
-     */
-    enablePostCssLoader(postCssLoaderOptionsCallback = () => {}) {
+    enablePostCssLoader(postCssLoaderOptionsCallback: OptionsCallback<object> = () => {}) {
         this.usePostCssLoader = true;
 
         if (typeof postCssLoaderOptionsCallback !== 'function') {
@@ -801,11 +834,10 @@ class WebpackConfig {
         this.postCssLoaderOptionsCallback = postCssLoaderOptionsCallback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} sassLoaderOptionsCallback
-     * @param {{resolveUrlLoader?: boolean, resolveUrlLoaderOptions?: object}} options
-     */
-    enableSassLoader(sassLoaderOptionsCallback = () => {}, options = {}) {
+    enableSassLoader(
+        sassLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        options: { resolveUrlLoader?: boolean; resolveUrlLoaderOptions?: object } = {}
+    ) {
         this.useSassLoader = true;
 
         if (typeof sassLoaderOptionsCallback !== 'function') {
@@ -821,14 +853,13 @@ class WebpackConfig {
                 );
             }
 
-            this.sassOptions[optionKey] = options[optionKey];
+            (this.sassOptions as Record<string, unknown>)[optionKey] = (
+                options as Record<string, unknown>
+            )[optionKey];
         }
     }
 
-    /**
-     * @param {OptionsCallback<object>} lessLoaderOptionsCallback
-     */
-    enableLessLoader(lessLoaderOptionsCallback = () => {}) {
+    enableLessLoader(lessLoaderOptionsCallback: OptionsCallback<object> = () => {}) {
         this.useLessLoader = true;
 
         if (typeof lessLoaderOptionsCallback !== 'function') {
@@ -838,10 +869,7 @@ class WebpackConfig {
         this.lessLoaderOptionsCallback = lessLoaderOptionsCallback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} stylusLoaderOptionsCallback
-     */
-    enableStylusLoader(stylusLoaderOptionsCallback = () => {}) {
+    enableStylusLoader(stylusLoaderOptionsCallback: OptionsCallback<object> = () => {}) {
         this.useStylusLoader = true;
 
         if (typeof stylusLoaderOptionsCallback !== 'function') {
@@ -851,17 +879,19 @@ class WebpackConfig {
         this.stylusLoaderOptionsCallback = stylusLoaderOptionsCallback;
     }
 
-    enableStimulusBridge(controllerJsonPath) {
+    enableStimulusBridge(controllerJsonPath: string) {
         if (!fs.existsSync(controllerJsonPath)) {
             throw new Error(`File "${controllerJsonPath}" could not be found.`);
         }
 
         // Add configured entrypoints
-        const controllersData = JSON.parse(fs.readFileSync(controllerJsonPath, 'utf8'));
+        const controllersData = JSON.parse(fs.readFileSync(controllerJsonPath, 'utf8')) as {
+            entrypoints: Record<string, string>;
+        };
         const rootDir = path.dirname(path.resolve(controllerJsonPath));
 
-        for (let name in controllersData.entrypoints) {
-            this.addEntry(name, rootDir + '/' + controllersData.entrypoints[name]);
+        for (const name in controllersData.entrypoints) {
+            this.addEntry(name, rootDir + '/' + controllersData.entrypoints[name]!);
         }
 
         this.addAliases({
@@ -869,11 +899,10 @@ class WebpackConfig {
         });
     }
 
-    /**
-     * @param {Record<string, string[]>} buildDependencies
-     * @param {OptionsCallback<webpack.FileCacheOptions>} callback
-     */
-    enableBuildCache(buildDependencies, callback = (cache) => {}) {
+    enableBuildCache(
+        buildDependencies: Record<string, string[]>,
+        callback: OptionsCallback<webpack.FileCacheOptions> = (cache) => {}
+    ) {
         if (typeof buildDependencies !== 'object') {
             throw new Error('Argument 1 to enableBuildCache() must be an object.');
         }
@@ -894,10 +923,7 @@ class WebpackConfig {
         this.persistentCacheCallback = callback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    enableReactPreset(callback = () => {}) {
+    enableReactPreset(callback: OptionsCallback<object> = () => {}) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to enableReactPreset() must be a callback function.');
         }
@@ -906,7 +932,7 @@ class WebpackConfig {
         this.babelReactPresetOptionsCallback = callback;
     }
 
-    enablePreactPreset(options = {}) {
+    enablePreactPreset(options: { preactCompat?: boolean } = {}) {
         this.usePreact = true;
 
         for (const optionKey of Object.keys(options)) {
@@ -916,7 +942,9 @@ class WebpackConfig {
                 );
             }
 
-            this.preactOptions[optionKey] = options[optionKey];
+            (this.preactOptions as Record<string, unknown>)[optionKey] = (
+                options as Record<string, unknown>
+            )[optionKey];
         }
     }
 
@@ -924,10 +952,7 @@ class WebpackConfig {
         this.useSvelte = true;
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    enableTypeScriptLoader(callback = () => {}) {
+    enableTypeScriptLoader(callback: OptionsCallback<object> = () => {}) {
         if (this.useBabelTypeScriptPreset) {
             throw new Error(
                 'Encore.enableTypeScriptLoader() can not be called when Encore.enableBabelTypeScriptPreset() has been called.'
@@ -943,10 +968,9 @@ class WebpackConfig {
         this.tsConfigurationCallback = callback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} forkedTypeScriptTypesCheckOptionsCallback
-     */
-    enableForkedTypeScriptTypesChecking(forkedTypeScriptTypesCheckOptionsCallback = () => {}) {
+    enableForkedTypeScriptTypesChecking(
+        forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<object> = () => {}
+    ) {
         if (this.useBabelTypeScriptPreset) {
             throw new Error(
                 'Encore.enableForkedTypeScriptTypesChecking() can not be called when Encore.enableBabelTypeScriptPreset() has been called.'
@@ -963,7 +987,7 @@ class WebpackConfig {
         this.forkedTypeScriptTypesCheckOptionsCallback = forkedTypeScriptTypesCheckOptionsCallback;
     }
 
-    enableBabelTypeScriptPreset(options = {}) {
+    enableBabelTypeScriptPreset(options: object = {}) {
         if (this.useTypeScriptLoader) {
             throw new Error(
                 'Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableTypeScriptLoader() has been called.'
@@ -980,11 +1004,14 @@ class WebpackConfig {
         this.babelTypeScriptPresetOptions = options;
     }
 
-    /**
-     * @param {OptionsCallback<object>} vueLoaderOptionsCallback
-     * @param {object} vueOptions
-     */
-    enableVueLoader(vueLoaderOptionsCallback = () => {}, vueOptions = {}) {
+    enableVueLoader(
+        vueLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        vueOptions: {
+            useJsx?: boolean;
+            version?: number | null;
+            runtimeCompilerBuild?: boolean | null;
+        } = {}
+    ) {
         this.useVueLoader = true;
 
         if (typeof vueLoaderOptionsCallback !== 'function') {
@@ -1003,22 +1030,23 @@ class WebpackConfig {
 
             if (key === 'version') {
                 const validVersions = [3];
-                if (!validVersions.includes(vueOptions.version)) {
+                if (!validVersions.includes(vueOptions.version as number)) {
                     throw new Error(
                         `"${vueOptions.version}" is not a valid value for the "version" option passed to enableVueLoader(). Valid versions are: ${validVersions.join(', ')}.`
                     );
                 }
             }
 
-            this.vueOptions[key] = vueOptions[key];
+            (this.vueOptions as Record<string, unknown>)[key] = (
+                vueOptions as Record<string, unknown>
+            )[key];
         }
     }
 
-    /**
-     * @param {boolean} enabled
-     * @param {OptionsCallback<object>} notifierPluginOptionsCallback
-     */
-    enableBuildNotifications(enabled = true, notifierPluginOptionsCallback = () => {}) {
+    enableBuildNotifications(
+        enabled = true,
+        notifierPluginOptionsCallback: OptionsCallback<object> = () => {}
+    ) {
         if (typeof notifierPluginOptionsCallback !== 'function') {
             throw new Error(
                 'Argument 2 to enableBuildNotifications() must be a callback function.'
@@ -1029,10 +1057,7 @@ class WebpackConfig {
         this.notifierPluginOptionsCallback = notifierPluginOptionsCallback;
     }
 
-    /**
-     * @param {OptionsCallback<object>} callback
-     */
-    enableHandlebarsLoader(callback = () => {}) {
+    enableHandlebarsLoader(callback: OptionsCallback<object> = () => {}) {
         this.useHandlebarsLoader = true;
 
         if (typeof callback !== 'function') {
@@ -1046,7 +1071,7 @@ class WebpackConfig {
         this.extractCss = !disabled;
     }
 
-    configureFilenames(configuredFilenames = {}) {
+    configureFilenames(configuredFilenames: { js?: string; css?: string; assets?: string } = {}) {
         if (typeof configuredFilenames !== 'object') {
             throw new Error('Argument 1 to configureFilenames() must be an object.');
         }
@@ -1064,11 +1089,15 @@ class WebpackConfig {
         this.configuredFilenames = configuredFilenames;
     }
 
-    /**
-     * @param {{filename?: string, maxSize?: number|null, type?: string, enabled?: boolean}} options
-     * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
-     */
-    configureImageRule(options = {}, ruleCallback = () => {}) {
+    configureImageRule(
+        options: {
+            filename?: string;
+            maxSize?: number | null;
+            type?: string;
+            enabled?: boolean;
+        } = {},
+        ruleCallback: OptionsCallback<webpack.RuleSetRule> = () => {}
+    ) {
         for (const optionKey of Object.keys(options)) {
             if (!(optionKey in this.imageRuleOptions)) {
                 throw new Error(
@@ -1076,7 +1105,9 @@ class WebpackConfig {
                 );
             }
 
-            this.imageRuleOptions[optionKey] = options[optionKey];
+            (this.imageRuleOptions as unknown as Record<string, unknown>)[optionKey] = (
+                options as Record<string, unknown>
+            )[optionKey];
         }
 
         if (this.imageRuleOptions.maxSize && this.imageRuleOptions.type !== 'asset') {
@@ -1092,11 +1123,15 @@ class WebpackConfig {
         this.imageRuleCallback = ruleCallback;
     }
 
-    /**
-     * @param {{filename?: string, maxSize?: number|null, type?: string, enabled?: boolean}} options
-     * @param {OptionsCallback<webpack.RuleSetRule>} ruleCallback
-     */
-    configureFontRule(options = {}, ruleCallback = () => {}) {
+    configureFontRule(
+        options: {
+            filename?: string;
+            maxSize?: number | null;
+            type?: string;
+            enabled?: boolean;
+        } = {},
+        ruleCallback: OptionsCallback<webpack.RuleSetRule> = () => {}
+    ) {
         for (const optionKey of Object.keys(options)) {
             if (!(optionKey in this.fontRuleOptions)) {
                 throw new Error(
@@ -1104,7 +1139,9 @@ class WebpackConfig {
                 );
             }
 
-            this.fontRuleOptions[optionKey] = options[optionKey];
+            (this.fontRuleOptions as unknown as Record<string, unknown>)[optionKey] = (
+                options as Record<string, unknown>
+            )[optionKey];
         }
 
         if (this.fontRuleOptions.maxSize && this.fontRuleOptions.type !== 'asset') {
@@ -1120,10 +1157,11 @@ class WebpackConfig {
         this.fontRuleCallback = ruleCallback;
     }
 
-    /**
-     * @param {OptionsCallback<Exclude<ConstructorParameters<typeof webpack.CleanPlugin>[0], undefined>>} cleanOptionsCallback
-     */
-    cleanupOutputBeforeBuild(cleanOptionsCallback = () => {}) {
+    cleanupOutputBeforeBuild(
+        cleanOptionsCallback: OptionsCallback<
+            Exclude<ConstructorParameters<typeof webpack.CleanPlugin>[0], undefined>
+        > = () => {}
+    ) {
         if (typeof cleanOptionsCallback !== 'function') {
             throw new Error('Argument 1 to cleanupOutputBeforeBuild() must be a callback function');
         }
@@ -1132,7 +1170,7 @@ class WebpackConfig {
         this.cleanOptionsCallback = cleanOptionsCallback;
     }
 
-    autoProvideVariables(variables) {
+    autoProvideVariables(variables: Record<string, string>) {
         // do a few sanity checks, so we can give better user errors
         if (typeof variables === 'string' || Array.isArray(variables)) {
             throw new Error(
@@ -1152,11 +1190,7 @@ class WebpackConfig {
         });
     }
 
-    /**
-     * @param {string} name
-     * @param {OptionsCallback<webpack.RuleSetRule>} callback
-     */
-    configureLoaderRule(name, callback) {
+    configureLoaderRule(name: string, callback: OptionsCallback<webpack.RuleSetRule>) {
         // Key: alias, Value: existing loader in `this.loaderConfigurationCallbacks`
         const aliases = {
             js: 'javascript',
@@ -1165,7 +1199,7 @@ class WebpackConfig {
         };
 
         if (name in aliases) {
-            name = aliases[name];
+            name = aliases[name as keyof typeof aliases];
         }
 
         if (!(name in this.loaderConfigurationCallbacks)) {
@@ -1181,11 +1215,7 @@ class WebpackConfig {
         this.loaderConfigurationCallbacks[name] = callback;
     }
 
-    /**
-     * @param {boolean} enabled
-     * @param {string|string[]} algorithms
-     */
-    enableIntegrityHashes(enabled = true, algorithms = ['sha384']) {
+    enableIntegrityHashes(enabled = true, algorithms: string | string[] = ['sha384']) {
         if (!Array.isArray(algorithms)) {
             algorithms = [algorithms];
         }
@@ -1208,23 +1238,23 @@ class WebpackConfig {
         this.integrityAlgorithms = enabled ? algorithms : [];
     }
 
-    useDevServer() {
+    useDevServer(): boolean {
         return this.runtimeConfig.useDevServer;
     }
 
-    isProduction() {
+    isProduction(): boolean {
         return this.runtimeConfig.environment === 'production';
     }
 
-    isDev() {
+    isDev(): boolean {
         return this.runtimeConfig.environment === 'dev';
     }
 
-    isDevServer() {
+    isDevServer(): boolean {
         return this.isDev() && this.runtimeConfig.useDevServer;
     }
 
-    validateNameIsNewEntry(name) {
+    validateNameIsNewEntry(name: string): void {
         const entryNamesOverlapMsg =
             'The entry names between addEntry(), addEntries(), and addStyleEntry() must be unique.';
 

@@ -14,7 +14,7 @@ import { describe, it, expect } from 'vitest';
 import yargsParser from 'yargs-parser';
 
 import parseArgv from '../../lib/config/parse-runtime.ts';
-import WebpackConfig from '../../lib/WebpackConfig.js';
+import WebpackConfig from '../../lib/WebpackConfig.ts';
 import * as testSetup from '../helpers/setup.js';
 
 function createArgv(argv) {

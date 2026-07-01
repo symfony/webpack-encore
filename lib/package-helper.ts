@@ -13,11 +13,34 @@ import { createRequire } from 'module';
 import pc from 'picocolors';
 import semver from 'semver';
 
-import logger from './logger.js';
+import packageJson from '../package.json' with { type: 'json' };
+import logger from './logger.ts';
 
+// `createRequire` is still needed for the dynamic `require('<pkg>/package.json')`
+// lookups in getPackageVersion() (arbitrary installed packages, not a static import).
 const require = createRequire(import.meta.url);
 
-function ensurePackagesExist(packagesConfig, requestedFeature) {
+export interface PackageConfig {
+    name: string;
+    version?: string;
+    enforce_version?: boolean;
+}
+
+/**
+ * A list of package configs, where each entry is either a single package or a
+ * group of interchangeable alternatives (e.g. sass / sass-embedded / node-sass).
+ */
+export type PackagesConfig = Array<PackageConfig | PackageConfig[]>;
+
+/** A single package or an arbitrarily-nested list of them (used for recursion). */
+type NestedPackagesConfig = PackageConfig | NestedPackagesConfig[];
+
+export interface PackageRecommendation {
+    message: string;
+    installCommand: string;
+}
+
+function ensurePackagesExist(packagesConfig: PackagesConfig, requestedFeature: string): void {
     const missingPackagesRecommendation = getMissingPackageRecommendations(
         packagesConfig,
         requestedFeature
@@ -37,11 +60,11 @@ ${missingPackagesRecommendation.message}
     }
 }
 
-function getInstallCommand(packageConfigs) {
+function getInstallCommand(packageConfigs: PackageConfig[][]): string {
     const hasPnpmLockfile = fs.existsSync('pnpm-lock.yaml');
     const hasYarnLockfile = fs.existsSync('yarn.lock');
     const packageInstallStrings = packageConfigs.map((packageConfig) => {
-        const firstPackage = packageConfig[0];
+        const firstPackage = packageConfig[0]!;
 
         if (typeof firstPackage.version === 'undefined') {
             return firstPackage.name;
@@ -50,7 +73,7 @@ function getInstallCommand(packageConfigs) {
         // e.g. ^4.0||^5.0: use the latest version
         let recommendedVersion = firstPackage.version;
         if (recommendedVersion.includes('||')) {
-            recommendedVersion = recommendedVersion.split('|').pop().trim();
+            recommendedVersion = recommendedVersion.split('|').pop()!.trim();
         }
 
         // recommend the version included in our package.json file
@@ -68,7 +91,7 @@ function getInstallCommand(packageConfigs) {
     return pc.yellow(`npm install ${packageInstallStrings.join(' ')} --save-dev`);
 }
 
-function isPackageInstalled(packageConfig) {
+function isPackageInstalled(packageConfig: PackageConfig): boolean {
     try {
         import.meta.resolve(packageConfig.name);
         return true;
@@ -77,21 +100,19 @@ function isPackageInstalled(packageConfig) {
     }
 }
 
-/**
- *
- * @param {string} packageName
- * @returns {null|string}
- */
-function getPackageVersion(packageName) {
+function getPackageVersion(packageName: string): string | null {
     try {
-        return require(`${packageName}/package.json`).version;
+        return (require(`${packageName}/package.json`) as { version: string }).version;
     } catch {
         return null;
     }
 }
 
-function getMissingPackageRecommendations(packagesConfig, requestedFeature = null) {
-    let missingPackageConfigs = [];
+function getMissingPackageRecommendations(
+    packagesConfig: PackagesConfig,
+    requestedFeature: string | null = null
+): PackageRecommendation | undefined {
+    const missingPackageConfigs: PackageConfig[][] = [];
 
     for (let packageConfig of packagesConfig) {
         if (!Array.isArray(packageConfig)) {
@@ -134,10 +155,10 @@ function getMissingPackageRecommendations(packagesConfig, requestedFeature = nul
     };
 }
 
-function getInvalidPackageVersionRecommendations(packagesConfig) {
-    const processPackagesConfig = (packageConfig) => {
+function getInvalidPackageVersionRecommendations(packagesConfig: PackagesConfig): string[] {
+    const processPackagesConfig = (packageConfig: NestedPackagesConfig): string[] => {
         if (Array.isArray(packageConfig)) {
-            let messages = [];
+            let messages: string[] = [];
 
             for (const config of packageConfig) {
                 messages = messages.concat(processPackagesConfig(config));
@@ -177,17 +198,15 @@ function getInvalidPackageVersionRecommendations(packagesConfig) {
     return processPackagesConfig(packagesConfig);
 }
 
-function addPackagesVersionConstraint(packages) {
-    const packageJsonData = require('../package.json');
-    const addConstraint = (packageData) => {
-        if (Array.isArray(packageData)) {
-            return packageData.map(addConstraint);
-        }
-
+function addPackagesVersionConstraint(packages: PackagesConfig): PackagesConfig {
+    // packageJson.peerDependencies is inferred with literal keys; widen it to a
+    // string->version map so it can be looked up by an arbitrary package name.
+    const peerDependencies: Record<string, string> = packageJson.peerDependencies;
+    const addConstraint = (packageData: PackageConfig): PackageConfig => {
         const newData = Object.assign({}, packageData);
 
         if (packageData.enforce_version) {
-            if (!packageJsonData.peerDependencies) {
+            if (!peerDependencies) {
                 logger.warning(
                     'Could not find peerDependencies key on @symfony/webpack-encore package'
                 );
@@ -198,19 +217,21 @@ function addPackagesVersionConstraint(packages) {
             // this method only supports peerDependencies due to how it's used:
             // it's mean to inform the user what deps they need to install
             // for optional features
-            if (!packageJsonData.peerDependencies[packageData.name]) {
+            if (!peerDependencies[packageData.name]) {
                 throw new Error(
                     `Could not find package ${packageData.name} in peerDependencies of @symfony/webpack-encore`
                 );
             }
 
-            newData.version = packageJsonData.peerDependencies[packageData.name];
+            newData.version = peerDependencies[packageData.name];
             delete newData['enforce_version'];
         }
 
         return newData;
     };
-    return packages.map(addConstraint);
+    return packages.map((packageData) =>
+        Array.isArray(packageData) ? packageData.map(addConstraint) : addConstraint(packageData)
+    );
 }
 
 export default {

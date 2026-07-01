@@ -14,7 +14,7 @@ const { ensurePackagesExistAndAreCorrectVersion } = vi.hoisted(() => ({
     ensurePackagesExistAndAreCorrectVersion: vi.fn(),
 }));
 
-vi.mock('../../lib/features.js', () => ({
+vi.mock('../../lib/features.ts', () => ({
     default: { ensurePackagesExistAndAreCorrectVersion },
 }));
 

@@ -8,7 +8,7 @@
  */
 
 import type WebpackConfig from '../WebpackConfig.js';
-import logger from './../logger.js';
+import logger from './../logger.ts';
 import pathUtil from './path-util.ts';
 
 class Validator {
@@ -75,7 +75,7 @@ class Validator {
          * There are some valid use-cases for not wanting this behavior
          * (see #59), but we want to warn the user.
          */
-        if (this.webpackConfig.publicPath.includes('://')) {
+        if (this.webpackConfig.publicPath!.includes('://')) {
             logger.warning(
                 `Passing an absolute URL to setPublicPath() *and* using the dev-server can cause issues. Your assets will load from the publicPath (${this.webpackConfig.publicPath}) instead of from the dev server URL.`
             );

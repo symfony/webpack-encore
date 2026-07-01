@@ -20,7 +20,7 @@ export default function (
     plugins.push({
         plugin: new EntryPointsPlugin({
             publicPath: webpackConfig.getRealPublicPath(),
-            outputPath: webpackConfig.outputPath,
+            outputPath: webpackConfig.outputPath!,
             integrityAlgorithms: webpackConfig.integrityAlgorithms,
         }),
         priority: PluginPriorities.EntryPointsPlugin,

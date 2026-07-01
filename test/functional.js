@@ -16,7 +16,7 @@ import puppeteer from 'puppeteer';
 import semver from 'semver';
 import { afterAll, beforeAll, chai, describe, expect, it } from 'vitest';
 
-import packageHelper from '../lib/package-helper.js';
+import packageHelper from '../lib/package-helper.ts';
 import getVueVersion from '../lib/utils/get-vue-version.ts';
 import { assertWarning } from './helpers/logger-assert.js';
 import * as testSetup from './helpers/setup.js';
