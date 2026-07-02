@@ -9,10 +9,10 @@
 
 import { fileURLToPath } from 'url';
 
-import loaderFeatures from '../features.ts';
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import loaderFeatures from '../features.js';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
 import type WebpackConfig from '../WebpackConfig.js';
-import cssLoader from './css.ts';
+import cssLoader from './css.js';
 
 export default {
     getLoaders(webpackConfig: WebpackConfig, useCssModules = false) {

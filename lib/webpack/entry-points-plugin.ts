@@ -13,7 +13,7 @@ import path from 'path';
 
 import type webpack from 'webpack';
 
-import copyEntryTmpName from '../utils/copyEntryTmpName.ts';
+import copyEntryTmpName from '../utils/copyEntryTmpName.js';
 
 interface EntryPointsManifest {
     entrypoints: Record<string, Record<string, string[]>>;

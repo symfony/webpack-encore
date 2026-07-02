@@ -14,12 +14,12 @@ import path from 'path';
 import type webpack from 'webpack';
 
 import type { CopyFilesOptions } from '../index.js';
-import pathUtil from './config/path-util.ts';
+import pathUtil from './config/path-util.js';
 import type RuntimeConfig from './config/RuntimeConfig.js';
-import featuresHelper from './features.ts';
-import logger from './logger.ts';
+import featuresHelper from './features.js';
+import logger from './logger.js';
 import type { OptionsCallback } from './utils/apply-options-callback.js';
-import regexpEscaper from './utils/regexp-escaper.ts';
+import regexpEscaper from './utils/regexp-escaper.js';
 
 export type MinimizerPluginOptions = import('minimizer-webpack-plugin').BasePluginOptions &
     import('minimizer-webpack-plugin').DefinedDefaultMinimizerAndOptions<

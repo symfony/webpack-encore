@@ -9,7 +9,7 @@
 
 import MinimizerPlugin from 'minimizer-webpack-plugin';
 
-import Features from '../features.ts';
+import Features from '../features.js';
 
 const JS_MINIFIER_FEATURES = new Map<Function, string>([
     [MinimizerPlugin.esbuildMinify, 'minify-js-esbuild'],

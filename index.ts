@@ -10,15 +10,15 @@
 import type webpack from 'webpack';
 import yargsParser from 'yargs-parser';
 
-import configGenerator from './lib/config-generator.ts';
-import parseRuntime from './lib/config/parse-runtime.ts';
+import configGenerator from './lib/config-generator.js';
+import parseRuntime from './lib/config/parse-runtime.js';
 import type RuntimeConfig from './lib/config/RuntimeConfig.js';
-import validator from './lib/config/validator.ts';
-import context from './lib/context.ts';
-import EncoreProxy from './lib/EncoreProxy.ts';
+import validator from './lib/config/validator.js';
+import context from './lib/context.js';
+import EncoreProxy from './lib/EncoreProxy.js';
 import type { OptionsCallback } from './lib/utils/apply-options-callback.js';
 import type { MinimizerOptionsCallback } from './lib/WebpackConfig.js';
-import WebpackConfig from './lib/WebpackConfig.ts';
+import WebpackConfig from './lib/WebpackConfig.js';
 
 export interface CopyFilesOptions {
     from: string;

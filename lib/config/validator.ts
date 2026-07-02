@@ -8,8 +8,8 @@
  */
 
 import type WebpackConfig from '../WebpackConfig.js';
-import logger from './../logger.ts';
-import pathUtil from './path-util.ts';
+import logger from './../logger.js';
+import pathUtil from './path-util.js';
 
 class Validator {
     webpackConfig: WebpackConfig;

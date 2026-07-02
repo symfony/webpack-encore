@@ -9,11 +9,8 @@
 
 import path from 'path';
 
-import logger from '../logger.ts';
+import logger from '../logger.js';
 import type WebpackConfig from '../WebpackConfig.js';
-// .js (not .ts): RuntimeConfig is exposed in this module's emitted .d.ts, and
-// rewriteRelativeImportExtensions does NOT rewrite .ts -> .js inside .d.ts files
-// (only in emitted .js). tsc still resolves .js -> the .ts source here.
 import type RuntimeConfig from './RuntimeConfig.js';
 
 export default {

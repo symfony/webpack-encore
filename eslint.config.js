@@ -102,11 +102,6 @@ file that was distributed with this source code.`,
             'jsdoc/require-returns': 'off',
             'jsdoc/require-returns-type': 'off',
             'jsdoc/check-param-names': 'off',
-            // tsc owns module resolution for `.ts` files (strict, build fails on
-            // a missing import). eslint-plugin-n is not TS-aware: from a `.ts`
-            // file it rewrites `.js` -> `.ts` and cannot resolve imports of
-            // not-yet-migrated `.js` modules. `.js` files keep the rule.
-            'n/no-missing-import': 'off',
         },
     },
     {

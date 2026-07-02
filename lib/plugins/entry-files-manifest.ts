@@ -9,9 +9,9 @@
 
 import type { WebpackPluginInstance } from 'webpack';
 
-import { EntryPointsPlugin } from '../webpack/entry-points-plugin.ts';
+import { EntryPointsPlugin } from '../webpack/entry-points-plugin.js';
 import type WebpackConfig from '../WebpackConfig.js';
-import PluginPriorities from './plugin-priorities.ts';
+import PluginPriorities from './plugin-priorities.js';
 
 export default function (
     plugins: Array<{ plugin: WebpackPluginInstance; priority: number }>,

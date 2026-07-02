@@ -9,9 +9,9 @@
 
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
 import type WebpackConfig from '../WebpackConfig.js';
-import PluginPriorities from './plugin-priorities.ts';
+import PluginPriorities from './plugin-priorities.js';
 
 export default function (webpackConfig: WebpackConfig): void {
     const config = {};

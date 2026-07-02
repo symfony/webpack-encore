@@ -9,8 +9,8 @@
 
 import semver from 'semver';
 
-import logger from '../logger.ts';
-import packageHelper from '../package-helper.ts';
+import logger from '../logger.js';
+import packageHelper from '../package-helper.js';
 import type WebpackConfig from '../WebpackConfig.js';
 
 export default function (webpackConfig: WebpackConfig): number | string | null {

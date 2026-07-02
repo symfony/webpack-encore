@@ -11,10 +11,7 @@ import path from 'path';
 
 import type { Arguments } from 'yargs-parser';
 
-import packageUp from '../utils/package-up.ts';
-// .js (not .ts): RuntimeConfig is exposed in this module's emitted .d.ts, and
-// rewriteRelativeImportExtensions does NOT rewrite .ts -> .js inside .d.ts files
-// (only in emitted .js). tsc still resolves .js -> the .ts source here.
+import packageUp from '../utils/package-up.js';
 import RuntimeConfig from './RuntimeConfig.js';
 
 export default function (argv: Arguments, cwd: string): RuntimeConfig {

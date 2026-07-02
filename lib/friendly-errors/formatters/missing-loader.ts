@@ -10,7 +10,7 @@
 import type { FriendlyError } from '@kocal/friendly-errors-webpack-plugin';
 import pc from 'picocolors';
 
-import loaderFeatures from '../../features.ts';
+import loaderFeatures from '../../features.js';
 
 interface MissingLoaderError extends FriendlyError {
     loaderName?: string;

@@ -14,7 +14,7 @@ import pc from 'picocolors';
 import semver from 'semver';
 
 import packageJson from '../package.json' with { type: 'json' };
-import logger from './logger.ts';
+import logger from './logger.js';
 
 // `createRequire` is still needed for the dynamic `require('<pkg>/package.json')`
 // lookups in getPackageVersion() (arbitrary installed packages, not a static import).

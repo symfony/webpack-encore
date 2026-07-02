@@ -9,10 +9,10 @@
 
 import type { WebpackPluginInstance } from 'webpack';
 
-import pluginFeatures from '../features.ts';
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import pluginFeatures from '../features.js';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
 import type WebpackConfig from '../WebpackConfig.js';
-import PluginPriorities from './plugin-priorities.ts';
+import PluginPriorities from './plugin-priorities.js';
 
 export default async function (
     plugins: Array<{ plugin: WebpackPluginInstance; priority: number }>,

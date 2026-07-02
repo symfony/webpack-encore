@@ -9,9 +9,9 @@
 
 import webpack from 'webpack';
 
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
 import type WebpackConfig from '../WebpackConfig.js';
-import PluginPriorities from './plugin-priorities.ts';
+import PluginPriorities from './plugin-priorities.js';
 
 export default function (
     plugins: Array<{ plugin: webpack.WebpackPluginInstance; priority: number }>,

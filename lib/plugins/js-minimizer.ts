@@ -9,8 +9,8 @@
 
 import MinimizerPlugin from 'minimizer-webpack-plugin';
 
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
-import { checkJsMinifierPackages } from '../utils/minifier-check.ts';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
+import { checkJsMinifierPackages } from '../utils/minifier-check.js';
 import type WebpackConfig from '../WebpackConfig.js';
 
 export default function (webpackConfig: WebpackConfig) {

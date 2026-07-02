@@ -9,7 +9,7 @@
 
 import type { FriendlyError, Transformer } from '@kocal/friendly-errors-webpack-plugin';
 
-import getVueVersion from '../../utils/get-vue-version.ts';
+import getVueVersion from '../../utils/get-vue-version.js';
 import type WebpackConfig from '../../WebpackConfig.js';
 
 const TYPE = 'loader-not-enabled';

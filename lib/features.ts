@@ -8,7 +8,7 @@
  */
 
 import type { PackagesConfig } from './package-helper.js';
-import packageHelper from './package-helper.ts';
+import packageHelper from './package-helper.js';
 
 interface Feature {
     method: string;

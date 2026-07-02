@@ -12,7 +12,7 @@ import { fileURLToPath } from 'url';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import type { RuleSetUseItem } from 'webpack';
 
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
 import type WebpackConfig from '../WebpackConfig.js';
 
 export default {

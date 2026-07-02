@@ -9,9 +9,9 @@
 
 import { fileURLToPath } from 'url';
 
-import loaderFeatures from '../features.ts';
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
-import getVueVersion from '../utils/get-vue-version.ts';
+import loaderFeatures from '../features.js';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
+import getVueVersion from '../utils/get-vue-version.js';
 import type WebpackConfig from '../WebpackConfig.js';
 
 export default {

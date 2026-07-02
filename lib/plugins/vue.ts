@@ -10,7 +10,7 @@
 import type { WebpackPluginInstance } from 'webpack';
 
 import type WebpackConfig from '../WebpackConfig.js';
-import PluginPriorities from './plugin-priorities.ts';
+import PluginPriorities from './plugin-priorities.js';
 
 export default async function (
     plugins: Array<{ plugin: WebpackPluginInstance; priority: number }>,

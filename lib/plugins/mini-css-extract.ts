@@ -10,9 +10,9 @@
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import type { WebpackPluginInstance } from 'webpack';
 
-import applyOptionsCallback from '../utils/apply-options-callback.ts';
+import applyOptionsCallback from '../utils/apply-options-callback.js';
 import type WebpackConfig from '../WebpackConfig.js';
-import PluginPriorities from './plugin-priorities.ts';
+import PluginPriorities from './plugin-priorities.js';
 
 export default function (
     plugins: Array<{ plugin: WebpackPluginInstance; priority: number }>,
