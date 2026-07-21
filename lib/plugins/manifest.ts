@@ -42,7 +42,7 @@ export default function (
         },
     };
 
-    manifestPluginOptions = applyOptionsCallback<object>(
+    manifestPluginOptions = applyOptionsCallback(
         webpackConfig.manifestPluginOptionsCallback,
         manifestPluginOptions
     ) as ManifestPluginOptions;

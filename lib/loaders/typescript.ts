@@ -24,10 +24,10 @@ export default {
         };
 
         // allow for ts-loader config to be controlled
-        config = applyOptionsCallback<object>(
-            webpackConfig.tsConfigurationCallback,
-            config
-        ) as Record<string, any>;
+        config = applyOptionsCallback(webpackConfig.tsConfigurationCallback, config) as Record<
+            string,
+            any
+        >;
 
         // fork-ts-checker-webpack-plugin integration
         if (webpackConfig.useForkedTypeScriptTypeChecking) {

@@ -3,6 +3,7 @@
 ## 7.2.0
 
 - Migrate internal code to TypeScript, ship package with type definitions (better DX and IDE support!)
+- Improve the typing of the configuration methods (`enableSassLoader()`, `configureDevServerOptions()`, `enableVueLoader()`, `configureBabelPresetEnv()`, etc.): options now resolve to the real loader/plugin types, giving full autocompletion and validation in your `webpack.config`
 
 ## 7.1.0
 

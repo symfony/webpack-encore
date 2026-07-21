@@ -42,7 +42,7 @@ export default {
                 corejs: webpackConfig.babelOptions.corejs,
             };
 
-            presetEnvOptions = applyOptionsCallback<object>(
+            presetEnvOptions = applyOptionsCallback(
                 webpackConfig.babelPresetEnvOptionsCallback,
                 presetEnvOptions
             ) as Record<string, any>;
@@ -110,7 +110,7 @@ export default {
                 );
             }
 
-            babelConfig = applyOptionsCallback<object>(
+            babelConfig = applyOptionsCallback(
                 webpackConfig.babelConfigurationCallback,
                 babelConfig
             ) as Record<string, any>;

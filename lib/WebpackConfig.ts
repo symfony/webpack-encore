@@ -36,6 +36,169 @@ export type MinimizerOptionsCallback = (
     MinimizerPlugin: typeof import('minimizer-webpack-plugin')
 ) => MinimizerPluginOptions | void;
 
+// Option types reused from third-party packages. These inline `import()` types
+// resolve to the real package types when the package is installed, giving users
+// full autocompletion and validation in their webpack.config. Many of these
+// packages are optional peer dependencies: when one is missing, the type
+// degrades to `any` as long as `skipLibCheck` is enabled (the default in most
+// setups, including the base tsconfig presets). Consumers who set
+// `skipLibCheck: false` must have the relevant package installed.
+export type FriendlyErrorsPluginOptions =
+    import('@kocal/friendly-errors-webpack-plugin').FriendlyErrorsWebpackPluginOptions;
+export type ManifestPluginOptions = import('webpack-manifest-plugin').ManifestPluginOptions;
+export type SplitChunksOptions = Exclude<
+    NonNullable<import('webpack').Configuration['optimization']>['splitChunks'],
+    false | undefined
+>;
+export type DevServerOptions = import('webpack-dev-server').Configuration;
+export type BabelOptions = import('@babel/core').InputOptions;
+export type BabelPresetEnvOptions = import('@babel/preset-env').Options;
+export type BabelPresetReactOptions = import('@babel/preset-react').Options;
+export type BabelPresetTypeScriptOptions = Parameters<
+    typeof import('@babel/preset-typescript').default
+>[1];
+export type ForkedTypeScriptTypesCheckOptions = Exclude<
+    ConstructorParameters<typeof import('fork-ts-checker-webpack-plugin')>[0],
+    undefined
+>;
+export type VueLoaderOptions = import('vue-loader').VueLoaderOptions;
+export type WebpackNotifierOptions = import('webpack-notifier').Options;
+// `Partial<>` because ts-loader types its own options as all-required, whereas
+// Encore only ever passes a partial config for the user callback to extend.
+export type TsLoaderOptions = Partial<import('ts-loader').Options>;
+
+// Option types hand-written for loaders that ship no usable TypeScript types.
+// Each interface mirrors the options of the loader version range Encore supports
+// in its package.json (see `@see` links below). All keys are optional with an
+// index signature, so a valid config is never rejected: options added by newer
+// (compatible) loader releases are still accepted, they just aren't autocompleted
+// until listed here. Keep these in sync with the supported version ranges.
+
+/**
+ * Options for the css-loader (Encore dependency: `css-loader ^7.1.0`).
+ *
+ * @see https://github.com/webpack-contrib/css-loader#options
+ */
+export interface CssLoaderOptions {
+    url?: boolean | object;
+    import?: boolean | object;
+    modules?: boolean | 'local' | 'global' | 'pure' | 'icss' | object;
+    sourceMap?: boolean;
+    importLoaders?: number;
+    esModule?: boolean;
+    exportType?: 'array' | 'string' | 'css-style-sheet';
+    [key: string]: unknown;
+}
+
+/**
+ * Options for the style-loader (Encore dependency: `style-loader ^4.0.0`).
+ *
+ * @see https://github.com/webpack-contrib/style-loader#options
+ */
+export interface StyleLoaderOptions {
+    injectType?:
+        | 'styleTag'
+        | 'singletonStyleTag'
+        | 'autoStyleTag'
+        | 'lazyStyleTag'
+        | 'lazySingletonStyleTag'
+        | 'lazyAutoStyleTag'
+        | 'linkTag';
+    attributes?: Record<string, string>;
+    insert?: string | ((...args: any[]) => void);
+    styleTagTransform?: string | ((...args: any[]) => void);
+    base?: number;
+    esModule?: boolean;
+    [key: string]: unknown;
+}
+
+/**
+ * Options for the sass-loader (Encore optional peer: `sass-loader ^16.0.1 || ^17.0.0`).
+ *
+ * @see https://github.com/webpack-contrib/sass-loader#options
+ */
+export interface SassLoaderOptions {
+    implementation?: unknown;
+    /**
+     * Options passed to the sass implementation. Loosely typed because sass-loader
+     * accepts both the modern and the legacy sass API shapes depending on `api`.
+     *
+     * @see https://github.com/webpack-contrib/sass-loader#sassoptions
+     */
+    sassOptions?: Record<string, unknown>;
+    sourceMap?: boolean;
+    additionalData?: string | ((...args: any[]) => string);
+    webpackImporter?: boolean;
+    warnRuleAsWarning?: boolean;
+    api?: 'legacy' | 'modern' | 'modern-compiler';
+    [key: string]: unknown;
+}
+
+/**
+ * Options for the less-loader (Encore optional peer: `less-loader ^12.2.0`).
+ *
+ * @see https://github.com/webpack-contrib/less-loader#options
+ */
+export interface LessLoaderOptions {
+    lessOptions?: Record<string, unknown>;
+    additionalData?: string | ((...args: any[]) => string);
+    sourceMap?: boolean;
+    webpackImporter?: boolean;
+    implementation?: unknown;
+    lessLogAsWarnOrErr?: boolean;
+    [key: string]: unknown;
+}
+
+/**
+ * Options for the stylus-loader (Encore optional peer: `stylus-loader ^8.1.0`).
+ *
+ * @see https://github.com/webpack-contrib/stylus-loader#options
+ */
+export interface StylusLoaderOptions {
+    stylusOptions?: Record<string, unknown>;
+    sourceMap?: boolean;
+    webpackImporter?: boolean;
+    additionalData?: string | ((...args: any[]) => string);
+    implementation?: unknown;
+    [key: string]: unknown;
+}
+
+/**
+ * Options for the postcss-loader (Encore optional peer: `postcss-loader ^8.1.1`).
+ *
+ * @see https://github.com/webpack-contrib/postcss-loader#options
+ */
+export interface PostCssLoaderOptions {
+    execute?: boolean;
+    postcssOptions?: Record<string, unknown> | ((...args: any[]) => Record<string, unknown>);
+    sourceMap?: boolean;
+    implementation?: unknown;
+    [key: string]: unknown;
+}
+
+/**
+ * Options for the handlebars-loader (Encore optional peer: `handlebars-loader ^1.7.0`).
+ *
+ * @see https://github.com/pcardune/handlebars-loader
+ */
+export interface HandlebarsLoaderOptions {
+    helperDirs?: string[];
+    partialDirs?: string[];
+    knownHelpers?: string[];
+    inlineRequires?: RegExp;
+    exclude?: RegExp;
+    debug?: boolean;
+    extensions?: string[];
+    rootRelative?: string;
+    runtime?: string;
+    ignorePartials?: boolean;
+    ignoreHelpers?: boolean;
+    preventIndent?: boolean;
+    compat?: boolean;
+    precompileOptions?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
 interface AssetRuleOptions {
     filename: string;
     maxSize: number | null;
@@ -115,29 +278,29 @@ class WebpackConfig {
         useBuiltIns: 'usage' | 'entry' | false;
         corejs: number | string | { version: string; proposals: boolean } | null;
     };
-    babelTypeScriptPresetOptions: object;
+    babelTypeScriptPresetOptions: BabelPresetTypeScriptOptions;
     vueOptions: { useJsx: boolean; version: number | null; runtimeCompilerBuild: boolean | null };
     persistentCacheBuildDependencies: Record<string, string[]>;
     imageRuleCallback: OptionsCallback<webpack.RuleSetRule>;
     fontRuleCallback: OptionsCallback<webpack.RuleSetRule>;
-    postCssLoaderOptionsCallback: OptionsCallback<object>;
-    sassLoaderOptionsCallback: OptionsCallback<object>;
-    lessLoaderOptionsCallback: OptionsCallback<object>;
-    stylusLoaderOptionsCallback: OptionsCallback<object>;
-    babelConfigurationCallback: OptionsCallback<object>;
-    babelPresetEnvOptionsCallback: OptionsCallback<object>;
-    babelReactPresetOptionsCallback: OptionsCallback<object>;
-    cssLoaderConfigurationCallback: OptionsCallback<object>;
-    styleLoaderConfigurationCallback: OptionsCallback<object>;
-    splitChunksConfigurationCallback: OptionsCallback<object>;
-    devServerOptionsConfigurationCallback: OptionsCallback<object>;
-    vueLoaderOptionsCallback: OptionsCallback<object>;
-    tsConfigurationCallback: OptionsCallback<object>;
-    handlebarsConfigurationCallback: OptionsCallback<object>;
-    forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<object>;
-    friendlyErrorsPluginOptionsCallback: OptionsCallback<object>;
-    manifestPluginOptionsCallback: OptionsCallback<object>;
-    notifierPluginOptionsCallback: OptionsCallback<object>;
+    postCssLoaderOptionsCallback: OptionsCallback<PostCssLoaderOptions>;
+    sassLoaderOptionsCallback: OptionsCallback<SassLoaderOptions>;
+    lessLoaderOptionsCallback: OptionsCallback<LessLoaderOptions>;
+    stylusLoaderOptionsCallback: OptionsCallback<StylusLoaderOptions>;
+    babelConfigurationCallback: OptionsCallback<BabelOptions>;
+    babelPresetEnvOptionsCallback: OptionsCallback<BabelPresetEnvOptions>;
+    babelReactPresetOptionsCallback: OptionsCallback<BabelPresetReactOptions>;
+    cssLoaderConfigurationCallback: OptionsCallback<CssLoaderOptions>;
+    styleLoaderConfigurationCallback: OptionsCallback<StyleLoaderOptions>;
+    splitChunksConfigurationCallback: OptionsCallback<SplitChunksOptions>;
+    devServerOptionsConfigurationCallback: OptionsCallback<DevServerOptions>;
+    vueLoaderOptionsCallback: OptionsCallback<VueLoaderOptions>;
+    tsConfigurationCallback: OptionsCallback<TsLoaderOptions>;
+    handlebarsConfigurationCallback: OptionsCallback<HandlebarsLoaderOptions>;
+    forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<ForkedTypeScriptTypesCheckOptions>;
+    friendlyErrorsPluginOptionsCallback: OptionsCallback<FriendlyErrorsPluginOptions>;
+    manifestPluginOptionsCallback: OptionsCallback<ManifestPluginOptions>;
+    notifierPluginOptionsCallback: OptionsCallback<WebpackNotifierOptions>;
     watchOptionsConfigurationCallback: OptionsCallback<
         Exclude<webpack.Configuration['watchOptions'], undefined>
     >;
@@ -405,7 +568,7 @@ class WebpackConfig {
     }
 
     configureFriendlyErrorsPlugin(
-        friendlyErrorsPluginOptionsCallback: OptionsCallback<object> = () => {}
+        friendlyErrorsPluginOptionsCallback: OptionsCallback<FriendlyErrorsPluginOptions> = () => {}
     ) {
         if (typeof friendlyErrorsPluginOptionsCallback !== 'function') {
             throw new Error(
@@ -416,7 +579,9 @@ class WebpackConfig {
         this.friendlyErrorsPluginOptionsCallback = friendlyErrorsPluginOptionsCallback;
     }
 
-    configureManifestPlugin(manifestPluginOptionsCallback: OptionsCallback<object> = () => {}) {
+    configureManifestPlugin(
+        manifestPluginOptionsCallback: OptionsCallback<ManifestPluginOptions> = () => {}
+    ) {
         if (typeof manifestPluginOptionsCallback !== 'function') {
             throw new Error('Argument 1 to configureManifestPlugin() must be a callback function');
         }
@@ -539,7 +704,7 @@ class WebpackConfig {
     }
 
     configureBabel(
-        callback: OptionsCallback<object> | null,
+        callback: OptionsCallback<BabelOptions> | null,
         options: {
             exclude?: webpack.RuleSetCondition;
             includeNodeModules?: string[];
@@ -637,7 +802,7 @@ class WebpackConfig {
         }
     }
 
-    configureBabelPresetEnv(callback: OptionsCallback<object>) {
+    configureBabelPresetEnv(callback: OptionsCallback<BabelPresetEnvOptions>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureBabelPresetEnv() must be a callback function.');
         }
@@ -656,7 +821,7 @@ class WebpackConfig {
         this._configureBabelPresetEnvCalled = true;
     }
 
-    configureCssLoader(callback: OptionsCallback<object>) {
+    configureCssLoader(callback: OptionsCallback<CssLoaderOptions>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureCssLoader() must be a callback function.');
         }
@@ -664,7 +829,7 @@ class WebpackConfig {
         this.cssLoaderConfigurationCallback = callback;
     }
 
-    configureStyleLoader(callback: OptionsCallback<object>) {
+    configureStyleLoader(callback: OptionsCallback<StyleLoaderOptions>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureStyleLoader() must be a callback function.');
         }
@@ -706,7 +871,7 @@ class WebpackConfig {
         this.shouldSplitEntryChunks = true;
     }
 
-    configureSplitChunks(callback: OptionsCallback<object>) {
+    configureSplitChunks(callback: OptionsCallback<SplitChunksOptions>) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to configureSplitChunks() must be a callback function.');
         }
@@ -724,7 +889,7 @@ class WebpackConfig {
         this.watchOptionsConfigurationCallback = callback;
     }
 
-    configureDevServerOptions(callback: OptionsCallback<object>) {
+    configureDevServerOptions(callback: OptionsCallback<DevServerOptions>) {
         featuresHelper.ensurePackagesExistAndAreCorrectVersion('webpack-dev-server');
 
         if (typeof callback !== 'function') {
@@ -824,7 +989,9 @@ class WebpackConfig {
         }
     }
 
-    enablePostCssLoader(postCssLoaderOptionsCallback: OptionsCallback<object> = () => {}) {
+    enablePostCssLoader(
+        postCssLoaderOptionsCallback: OptionsCallback<PostCssLoaderOptions> = () => {}
+    ) {
         this.usePostCssLoader = true;
 
         if (typeof postCssLoaderOptionsCallback !== 'function') {
@@ -835,7 +1002,7 @@ class WebpackConfig {
     }
 
     enableSassLoader(
-        sassLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        sassLoaderOptionsCallback: OptionsCallback<SassLoaderOptions> = () => {},
         options: { resolveUrlLoader?: boolean; resolveUrlLoaderOptions?: object } = {}
     ) {
         this.useSassLoader = true;
@@ -859,7 +1026,7 @@ class WebpackConfig {
         }
     }
 
-    enableLessLoader(lessLoaderOptionsCallback: OptionsCallback<object> = () => {}) {
+    enableLessLoader(lessLoaderOptionsCallback: OptionsCallback<LessLoaderOptions> = () => {}) {
         this.useLessLoader = true;
 
         if (typeof lessLoaderOptionsCallback !== 'function') {
@@ -869,7 +1036,9 @@ class WebpackConfig {
         this.lessLoaderOptionsCallback = lessLoaderOptionsCallback;
     }
 
-    enableStylusLoader(stylusLoaderOptionsCallback: OptionsCallback<object> = () => {}) {
+    enableStylusLoader(
+        stylusLoaderOptionsCallback: OptionsCallback<StylusLoaderOptions> = () => {}
+    ) {
         this.useStylusLoader = true;
 
         if (typeof stylusLoaderOptionsCallback !== 'function') {
@@ -923,7 +1092,7 @@ class WebpackConfig {
         this.persistentCacheCallback = callback;
     }
 
-    enableReactPreset(callback: OptionsCallback<object> = () => {}) {
+    enableReactPreset(callback: OptionsCallback<BabelPresetReactOptions> = () => {}) {
         if (typeof callback !== 'function') {
             throw new Error('Argument 1 to enableReactPreset() must be a callback function.');
         }
@@ -952,7 +1121,7 @@ class WebpackConfig {
         this.useSvelte = true;
     }
 
-    enableTypeScriptLoader(callback: OptionsCallback<object> = () => {}) {
+    enableTypeScriptLoader(callback: OptionsCallback<TsLoaderOptions> = () => {}) {
         if (this.useBabelTypeScriptPreset) {
             throw new Error(
                 'Encore.enableTypeScriptLoader() can not be called when Encore.enableBabelTypeScriptPreset() has been called.'
@@ -969,7 +1138,7 @@ class WebpackConfig {
     }
 
     enableForkedTypeScriptTypesChecking(
-        forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<object> = () => {}
+        forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<ForkedTypeScriptTypesCheckOptions> = () => {}
     ) {
         if (this.useBabelTypeScriptPreset) {
             throw new Error(
@@ -987,7 +1156,7 @@ class WebpackConfig {
         this.forkedTypeScriptTypesCheckOptionsCallback = forkedTypeScriptTypesCheckOptionsCallback;
     }
 
-    enableBabelTypeScriptPreset(options: object = {}) {
+    enableBabelTypeScriptPreset(options: BabelPresetTypeScriptOptions = {}) {
         if (this.useTypeScriptLoader) {
             throw new Error(
                 'Encore.enableBabelTypeScriptPreset() can not be called when Encore.enableTypeScriptLoader() has been called.'
@@ -1005,7 +1174,7 @@ class WebpackConfig {
     }
 
     enableVueLoader(
-        vueLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        vueLoaderOptionsCallback: OptionsCallback<VueLoaderOptions> = () => {},
         vueOptions: {
             useJsx?: boolean;
             version?: number | null;
@@ -1045,7 +1214,7 @@ class WebpackConfig {
 
     enableBuildNotifications(
         enabled = true,
-        notifierPluginOptionsCallback: OptionsCallback<object> = () => {}
+        notifierPluginOptionsCallback: OptionsCallback<WebpackNotifierOptions> = () => {}
     ) {
         if (typeof notifierPluginOptionsCallback !== 'function') {
             throw new Error(
@@ -1057,7 +1226,7 @@ class WebpackConfig {
         this.notifierPluginOptionsCallback = notifierPluginOptionsCallback;
     }
 
-    enableHandlebarsLoader(callback: OptionsCallback<object> = () => {}) {
+    enableHandlebarsLoader(callback: OptionsCallback<HandlebarsLoaderOptions> = () => {}) {
         this.useHandlebarsLoader = true;
 
         if (typeof callback !== 'function') {

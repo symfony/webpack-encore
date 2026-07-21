@@ -17,7 +17,28 @@ import validator from './lib/config/validator.js';
 import context from './lib/context.js';
 import EncoreProxy from './lib/EncoreProxy.js';
 import type { OptionsCallback } from './lib/utils/apply-options-callback.js';
-import type { MinimizerOptionsCallback } from './lib/WebpackConfig.js';
+import type {
+    BabelOptions,
+    BabelPresetEnvOptions,
+    BabelPresetReactOptions,
+    BabelPresetTypeScriptOptions,
+    CssLoaderOptions,
+    DevServerOptions,
+    ForkedTypeScriptTypesCheckOptions,
+    FriendlyErrorsPluginOptions,
+    HandlebarsLoaderOptions,
+    LessLoaderOptions,
+    ManifestPluginOptions,
+    MinimizerOptionsCallback,
+    PostCssLoaderOptions,
+    SassLoaderOptions,
+    SplitChunksOptions,
+    StyleLoaderOptions,
+    StylusLoaderOptions,
+    TsLoaderOptions,
+    VueLoaderOptions,
+    WebpackNotifierOptions,
+} from './lib/WebpackConfig.js';
 import WebpackConfig from './lib/WebpackConfig.js';
 
 export interface CopyFilesOptions {
@@ -149,7 +170,7 @@ class Encore {
      * @param friendlyErrorsPluginOptionsCallback
      */
     configureFriendlyErrorsPlugin(
-        friendlyErrorsPluginOptionsCallback: OptionsCallback<object> = () => {}
+        friendlyErrorsPluginOptionsCallback: OptionsCallback<FriendlyErrorsPluginOptions> = () => {}
     ): this {
         webpackConfig!.configureFriendlyErrorsPlugin(friendlyErrorsPluginOptionsCallback);
 
@@ -171,7 +192,7 @@ class Encore {
      * @param manifestPluginOptionsCallback
      */
     configureManifestPlugin(
-        manifestPluginOptionsCallback: OptionsCallback<object> = () => {}
+        manifestPluginOptionsCallback: OptionsCallback<ManifestPluginOptions> = () => {}
     ): this {
         webpackConfig!.configureManifestPlugin(manifestPluginOptionsCallback);
 
@@ -693,7 +714,7 @@ class Encore {
      *
      * @param callback
      */
-    configureSplitChunks(callback: OptionsCallback<object>): this {
+    configureSplitChunks(callback: OptionsCallback<SplitChunksOptions>): this {
         webpackConfig!.configureSplitChunks(callback);
 
         return this;
@@ -742,7 +763,7 @@ class Encore {
      *
      * @param callback
      */
-    configureDevServerOptions(callback: OptionsCallback<object>): this {
+    configureDevServerOptions(callback: OptionsCallback<DevServerOptions>): this {
         webpackConfig!.configureDevServerOptions(callback);
 
         return this;
@@ -814,7 +835,9 @@ class Encore {
      *
      * @param postCssLoaderOptionsCallback
      */
-    enablePostCssLoader(postCssLoaderOptionsCallback: OptionsCallback<object> = () => {}): this {
+    enablePostCssLoader(
+        postCssLoaderOptionsCallback: OptionsCallback<PostCssLoaderOptions> = () => {}
+    ): this {
         webpackConfig!.enablePostCssLoader(postCssLoaderOptionsCallback);
 
         return this;
@@ -855,7 +878,7 @@ class Encore {
      * @param encoreOptions
      */
     enableSassLoader(
-        sassLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        sassLoaderOptionsCallback: OptionsCallback<SassLoaderOptions> = () => {},
         encoreOptions: { resolveUrlLoader?: boolean; resolveUrlLoaderOptions?: object } = {}
     ): this {
         webpackConfig!.enableSassLoader(sassLoaderOptionsCallback, encoreOptions);
@@ -882,7 +905,9 @@ class Encore {
      *
      * @param lessLoaderOptionsCallback
      */
-    enableLessLoader(lessLoaderOptionsCallback: OptionsCallback<object> = () => {}): this {
+    enableLessLoader(
+        lessLoaderOptionsCallback: OptionsCallback<LessLoaderOptions> = () => {}
+    ): this {
         webpackConfig!.enableLessLoader(lessLoaderOptionsCallback);
 
         return this;
@@ -906,7 +931,9 @@ class Encore {
      *
      * @param stylusLoaderOptionsCallback
      */
-    enableStylusLoader(stylusLoaderOptionsCallback: OptionsCallback<object> = () => {}): this {
+    enableStylusLoader(
+        stylusLoaderOptionsCallback: OptionsCallback<StylusLoaderOptions> = () => {}
+    ): this {
         webpackConfig!.enableStylusLoader(stylusLoaderOptionsCallback);
 
         return this;
@@ -987,7 +1014,7 @@ class Encore {
      * @param encoreOptions
      */
     configureBabel(
-        callback: OptionsCallback<object> | null,
+        callback: OptionsCallback<BabelOptions> | null,
         encoreOptions: {
             exclude?: webpack.RuleSetCondition;
             includeNodeModules?: string[];
@@ -1018,7 +1045,7 @@ class Encore {
      *
      * @param callback
      */
-    configureBabelPresetEnv(callback: OptionsCallback<object>): this {
+    configureBabelPresetEnv(callback: OptionsCallback<BabelPresetEnvOptions>): this {
         webpackConfig!.configureBabelPresetEnv(callback);
 
         return this;
@@ -1038,7 +1065,7 @@ class Encore {
      *
      * @param callback
      */
-    configureCssLoader(callback: OptionsCallback<object>): this {
+    configureCssLoader(callback: OptionsCallback<CssLoaderOptions>): this {
         webpackConfig!.configureCssLoader(callback);
 
         return this;
@@ -1135,7 +1162,7 @@ class Encore {
      *
      * @param callback
      */
-    enableReactPreset(callback: OptionsCallback<object> = () => {}): this {
+    enableReactPreset(callback: OptionsCallback<BabelPresetReactOptions> = () => {}): this {
         webpackConfig!.enableReactPreset(callback);
 
         return this;
@@ -1185,7 +1212,7 @@ class Encore {
      *
      * @param callback
      */
-    enableTypeScriptLoader(callback: OptionsCallback<object> = () => {}): this {
+    enableTypeScriptLoader(callback: OptionsCallback<TsLoaderOptions> = () => {}): this {
         webpackConfig!.enableTypeScriptLoader(callback);
 
         return this;
@@ -1200,7 +1227,7 @@ class Encore {
      * @param forkedTypeScriptTypesCheckOptionsCallback
      */
     enableForkedTypeScriptTypesChecking(
-        forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<object> = () => {}
+        forkedTypeScriptTypesCheckOptionsCallback: OptionsCallback<ForkedTypeScriptTypesCheckOptions> = () => {}
     ): this {
         webpackConfig!.enableForkedTypeScriptTypesChecking(
             forkedTypeScriptTypesCheckOptionsCallback
@@ -1236,7 +1263,7 @@ class Encore {
      *
      * @param options
      */
-    enableBabelTypeScriptPreset(options: object = {}): this {
+    enableBabelTypeScriptPreset(options: BabelPresetTypeScriptOptions = {}): this {
         webpackConfig!.enableBabelTypeScriptPreset(options);
 
         return this;
@@ -1287,7 +1314,7 @@ class Encore {
      * @param encoreOptions
      */
     enableVueLoader(
-        vueLoaderOptionsCallback: OptionsCallback<object> = () => {},
+        vueLoaderOptionsCallback: OptionsCallback<VueLoaderOptions> = () => {},
         encoreOptions: {
             useJsx?: boolean;
             version?: number | null;
@@ -1320,7 +1347,7 @@ class Encore {
      */
     enableBuildNotifications(
         enabled = true,
-        notifierPluginOptionsCallback: OptionsCallback<object> = () => {}
+        notifierPluginOptionsCallback: OptionsCallback<WebpackNotifierOptions> = () => {}
     ): this {
         webpackConfig!.enableBuildNotifications(enabled, notifierPluginOptionsCallback);
 
@@ -1345,7 +1372,7 @@ class Encore {
      *
      * @param callback
      */
-    enableHandlebarsLoader(callback: OptionsCallback<object> = () => {}): this {
+    enableHandlebarsLoader(callback: OptionsCallback<HandlebarsLoaderOptions> = () => {}): this {
         webpackConfig!.enableHandlebarsLoader(callback);
 
         return this;
@@ -1390,7 +1417,7 @@ class Encore {
      *
      * @param callback
      */
-    configureStyleLoader(callback: OptionsCallback<object>): this {
+    configureStyleLoader(callback: OptionsCallback<StyleLoaderOptions>): this {
         webpackConfig!.configureStyleLoader(callback);
 
         return this;

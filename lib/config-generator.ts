@@ -45,6 +45,7 @@ import copyEntryTmpName from './utils/copyEntryTmpName.js';
 import getVueVersion from './utils/get-vue-version.js';
 import stringEscaper from './utils/string-escaper.js';
 import type WebpackConfig from './WebpackConfig.js';
+import type { SplitChunksOptions } from './WebpackConfig.js';
 
 class ConfigGenerator {
     webpackConfig: WebpackConfig;
@@ -648,7 +649,7 @@ class ConfigGenerator {
 
         optimization.splitChunks = applyOptionsCallback(
             this.webpackConfig.splitChunksConfigurationCallback,
-            splitChunks
+            splitChunks as unknown as SplitChunksOptions
         ) as NonNullable<webpack.Configuration['optimization']>['splitChunks'];
 
         return optimization;
