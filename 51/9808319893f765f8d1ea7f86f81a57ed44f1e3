@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-06T10:31:13Z
+
+**TIL:** packing Encore with `pnpm` and installing it in another project with `pnpm add -D ../path/to/encore.tgz` breaks the auto-completion in `webpack.config.mjs` in PHPStorm (still works in VSCode), when it works with `webpack.config.mts` in PHPStorm (and VSCode too).
+But, installing Encore in a test project with `pnpm add -D github:symfony/webpack-encore#typescript-migration` works! Surely `pnpm` is doing something weird that PHPStorm can't resolve, but at least we know.
