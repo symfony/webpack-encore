@@ -1,0 +1,59 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-24T05:46:59Z
+
+`webpack-dev-server@^6.0.0` requires `webpack@^5.102.0 webpack-cli@^7.0.2` to run correctly, but since we are in a minor release and we still support `webpack-dev-server@^5.0.0`, we can't upgrade peerDeps `webpack` and `webpack-cli`...  I think..?
+
+Trying to find a way for a runtime check
+
+**EDIT:** ok I got something working. On my app when running `pnpm encore dev-server`:
+- with webpack-dev-server@5:
+```shell
+Running webpack-dev-server ...
+
+Browserslist: browsers data (caniuse-lite) is 18 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+<i> [webpack-dev-server] Project is running at:
+<i> [webpack-dev-server] Loopback: http://localhost:8080/, http://[::1]:8080/
+<i> [webpack-dev-server] Content not from webpack is served from '/Users/kocal/workspace/kocal/sf-webpack-encore-lab/public' directory
+<i> [webpack-dev-server] 404s will fallback to '/index.html'
+ DONE  Compiled successfully in 481ms                                                                                                     08:14:17
+
+Entrypoint app [big] 703 KiB = runtime.js 118 KiB vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_mini-css-extract-plug-7f09f6.js 575 KiB app.css 805 bytes app.js 9.58 KiB
+webpack compiled successfully
+^C<i> [webpack-dev-server] Gracefully shutting down. To force exit, press ^C again. Please wait...
+```
+- with `webpack-dev-server@6`:
+```shell
+webpack-dev-server 6.0.0 requires webpack ^5.102.0 and webpack-cli ^7.0.2.
+  - webpack: installed 5.97.1, required ^5.102.0
+  - webpack-cli: installed 6.0.1, required ^7.0.2
+Please upgrade:
+  pnpm add webpack@^5.102.0 webpack-cli@^7.0.2 --save-dev
+```
+- with `webpack-dev-server@6 webpack@^5.102.0 webpack-cli@^7.0.2`
+```shell
+Running webpack-dev-server ...
+
+node:internal/modules/esm/resolve:313
+  return new ERR_PACKAGE_PATH_NOT_EXPORTED(
+         ^
+
+Error [ERR_PACKAGE_PATH_NOT_EXPORTED]: Package subpath './bin/webpack-dev-server.js' is not defined by "exports" in /Users/kocal/workspace/kocal/sf-webpack-encore-lab/node_modules/webpack-dev-server/package.json imported from /Users/kocal/workspace/kocal/sf-webpack-encore-lab/node_modules/@symfony/webpack-encore/dist/bin/encore.js
+    at exportsNotFound (node:internal/modules/esm/resolve:313:10)
+    at packageExportsResolve (node:internal/modules/esm/resolve:660:9)
+    at packageResolve (node:internal/modules/esm/resolve:773:12)
+    at moduleResolve (node:internal/modules/esm/resolve:853:18)
+    at defaultResolve (node:internal/modules/esm/resolve:983:11)
+    at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:783:12)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:707:25)
+    at ModuleLoader.resolve (node:internal/modules/esm/loader:690:38)
+    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:307:38)
+    at onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:646:36) {
+  code: 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+}
+```
+
+I will open an issue on webpack-dev-server repo
+**EDIT:** https://github.com/webpack/webpack-dev-server/issues/5714
