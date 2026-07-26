@@ -1,6 +1,6 @@
 {
     "name": "@symfony/webpack-encore",
-    "version": "7.1.0",
+    "version": "7.2.0",
     "description": "Webpack Encore is a simpler way to integrate Webpack into your application",
     "type": "module",
     "types": "./dist/index.d.ts",
