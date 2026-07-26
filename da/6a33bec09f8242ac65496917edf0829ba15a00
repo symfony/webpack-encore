@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-23T19:00:42Z
+
+That seems to be a nice addition, good!
+
+Can you rebase your PR and migrate it to TypeScript please? I just merged https://github.com/symfony/webpack-encore/pull/1503 and it made conflicts on your branch.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-07-24T05:55:56Z
+
+Thanks for the kind words! Rebased on `main` and migrated to TypeScript (the new formatter/transformer now speak fluent `FriendlyError`). All green locally: tsc, eslint, oxfmt and the unit suite. 😄
