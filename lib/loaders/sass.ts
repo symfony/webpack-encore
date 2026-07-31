@@ -42,8 +42,8 @@ export default {
                     true === webpackConfig.sassOptions.resolveUrlLoader ||
                     webpackConfig.useSourceMaps,
                 sassOptions: {
-                    // CSS minification is handled with mini-css-extract-plugin
-                    outputStyle: 'expanded',
+                    // CSS minification is handled by the CSS minimizer, not by Sass.
+                    style: 'expanded',
                 },
             }
         );
