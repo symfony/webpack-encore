@@ -37,6 +37,8 @@ describe('loaders/sass', function () {
 
         expect(actualLoaders[1].loader).toContain('sass-loader');
         expect(actualLoaders[1].options.sourceMap).toBe(true);
+        // the modern Sass API option name, the legacy `outputStyle` would be ignored
+        expect(actualLoaders[1].options.sassOptions).toEqual({ style: 'expanded' });
         expect(cssLoaderStub.mock.calls[0][1]).toBe(false);
     });
 
@@ -106,7 +108,7 @@ describe('loaders/sass', function () {
         expect(actualLoaders[1].options).toEqual({
             sourceMap: true,
             sassOptions: {
-                outputStyle: 'expanded',
+                style: 'expanded',
                 custom_option: 'baz',
                 other_option: true,
             },

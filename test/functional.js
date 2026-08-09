@@ -663,6 +663,19 @@ describe('Functional tests using webpack', function () {
         );
     });
 
+    it('Sass does not minify the CSS itself in production', async function () {
+        const config = createWebpackConfig('www/build', 'production');
+        config.setPublicPath('/build');
+        config.addStyleEntry('bg', './css/background_image.scss');
+        config.enableSassLoader();
+
+        const { webpackAssert } = await testSetup.runWebpack(config);
+        // sass-loader compiles with `style: compressed` in production unless it
+        // receives the modern `style` option, which would minify the CSS behind
+        // the back of the (opt-in) CSS minimizer
+        webpackAssert.assertOutputFileContains('bg.css', 'h2 {');
+    });
+
     describe('addCacheGroup()', function () {
         it('addCacheGroup() to extract a vendor into its own chunk', async function () {
             const config = createWebpackConfig('www/build', 'dev');
