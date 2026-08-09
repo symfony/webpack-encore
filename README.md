@@ -10,6 +10,9 @@ for bundling JavaScript modules, pre-processing CSS & JS and compiling
 and minifying assets. Encore gives you a professional asset system
 that's a _delight_ to use.
 
+> [!IMPORTANT]
+> Webpack Encore is now in low-maintenance mode (bug fixes, security patches, and `peerDependencies` updates only). If your project needs a bundler, we recommend migrating to [Symfony Reprise](https://github.com/symfony/reprise).
+
 > [!TIP]
 > Symfony released an [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html) component, a production-ready simpler alternative to Webpack Encore
 > that runs entirely in PHP.
