@@ -173,10 +173,10 @@ importers:
         version: 8.2.1(postcss@8.5.14)(typescript@6.0.3)(webpack@5.106.2)
       preact:
         specifier: ^10.5.0
-        version: 10.29.1
+        version: 10.29.8
       preact-compat:
         specifier: ^3.17.0
-        version: 3.19.0(preact@10.29.1)
+        version: 3.19.0(preact@10.29.8)
       puppeteer:
         specifier: ^25.0.2
         version: 25.0.2(typescript@6.0.3)
@@ -4065,6 +4065,10 @@ packages:
     resolution: {integrity: sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==}
     engines: {node: ^10 || ^12 || >=14}
 
+  postcss@8.5.26:
+    resolution: {integrity: sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==}
+    engines: {node: ^10 || ^12 || >=14}
+
   preact-compat@3.19.0:
     resolution: {integrity: sha512-f83A4hIhH8Uzhb9GbIcGk8SM19ffWlwP9mDaYwQdRnMdekZwcCA7eIAbeV4EMQaV9C0Yuy8iKgBAtyTKPZQt/Q==}
     peerDependencies:
@@ -4085,8 +4089,13 @@ packages:
     peerDependencies:
       preact: '*'
 
-  preact@10.29.1:
-    resolution: {integrity: sha512-gQCLc/vWroE8lIpleXtdJhTFDogTdZG9AjMUpVkDf2iTCNwYNWA+u16dL41TqUDJO4gm2IgrcMv3uTpjd4Pwmg==}
+  preact@10.29.8:
+    resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
+    peerDependencies:
+      preact-render-to-string: '>=5'
+    peerDependenciesMeta:
+      preact-render-to-string:
+        optional: true
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -9076,30 +9085,36 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  preact-compat@3.19.0(preact@10.29.1):
+  postcss@8.5.26:
+    dependencies:
+      nanoid: 3.3.18
+      picocolors: 1.1.1
+      source-map-js: 1.2.1
+
+  preact-compat@3.19.0(preact@10.29.8):
     dependencies:
       immutability-helper: 2.9.1
-      preact: 10.29.1
-      preact-context: 1.1.4(preact@10.29.1)
-      preact-render-to-string: 3.8.2(preact@10.29.1)
-      preact-transition-group: 1.1.1(preact@10.29.1)
+      preact: 10.29.8
+      preact-context: 1.1.4(preact@10.29.8)
+      preact-render-to-string: 3.8.2(preact@10.29.8)
+      preact-transition-group: 1.1.1(preact@10.29.8)
       prop-types: 15.8.1
       standalone-react-addons-pure-render-mixin: 0.1.1
 
-  preact-context@1.1.4(preact@10.29.1):
+  preact-context@1.1.4(preact@10.29.8):
     dependencies:
-      preact: 10.29.1
+      preact: 10.29.8
 
-  preact-render-to-string@3.8.2(preact@10.29.1):
+  preact-render-to-string@3.8.2(preact@10.29.8):
     dependencies:
-      preact: 10.29.1
+      preact: 10.29.8
       pretty-format: 3.8.0
 
-  preact-transition-group@1.1.1(preact@10.29.1):
+  preact-transition-group@1.1.1(preact@10.29.8):
     dependencies:
-      preact: 10.29.1
+      preact: 10.29.8
 
-  preact@10.29.1: {}
+  preact@10.29.8: {}
 
   prelude-ls@1.2.1: {}
 
