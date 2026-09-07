@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Throw a helpful error when a callback is passed as the first argument of `configureImageRule()` or `configureFontRule()` instead of being silently ignored
+
 ## 7.2.0
 
 - Migrate internal code to TypeScript, ship package with type definitions (better DX and IDE support!)

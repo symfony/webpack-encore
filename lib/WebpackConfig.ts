@@ -1267,6 +1267,12 @@ class WebpackConfig {
         } = {},
         ruleCallback: OptionsCallback<webpack.RuleSetRule> = () => {}
     ) {
+        if (typeof options === 'function') {
+            throw new Error(
+                'configureImageRule() expects an options object as its first argument. To pass only a callback, use configureImageRule({}, callback).'
+            );
+        }
+
         for (const optionKey of Object.keys(options)) {
             if (!(optionKey in this.imageRuleOptions)) {
                 throw new Error(
@@ -1301,6 +1307,12 @@ class WebpackConfig {
         } = {},
         ruleCallback: OptionsCallback<webpack.RuleSetRule> = () => {}
     ) {
+        if (typeof options === 'function') {
+            throw new Error(
+                'configureFontRule() expects an options object as its first argument. To pass only a callback, use configureFontRule({}, callback).'
+            );
+        }
+
         for (const optionKey of Object.keys(options)) {
             if (!(optionKey in this.fontRuleOptions)) {
                 throw new Error(

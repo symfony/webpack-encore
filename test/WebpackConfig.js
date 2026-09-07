@@ -1446,6 +1446,14 @@ describe('WebpackConfig object', function () {
                 config.configureImageRule({}, {});
             }).toThrow('Argument 2 to configureImageRule() must be a callback');
         });
+
+        it('Passing a callback as the 1st arg throws a helpful error', function () {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureImageRule(() => {});
+            }).toThrow('configureImageRule() expects an options object as its first argument');
+        });
     });
 
     describe('configureFontRule', function () {
@@ -1486,6 +1494,14 @@ describe('WebpackConfig object', function () {
             expect(() => {
                 config.configureFontRule({}, {});
             }).toThrow('Argument 2 to configureFontRule() must be a callback');
+        });
+
+        it('Passing a callback as the 1st arg throws a helpful error', function () {
+            const config = createConfig();
+
+            expect(() => {
+                config.configureFontRule(() => {});
+            }).toThrow('configureFontRule() expects an options object as its first argument');
         });
     });
 
