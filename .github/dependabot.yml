@@ -78,33 +78,3 @@ updates:
               update-types: ['minor', 'patch']
       cooldown:
           default-days: 7
-
-    # Test apps exercising lowest peer-dependency bounds — bump transitives only,
-    # never the explicitly pinned peer deps under test.
-    - package-ecosystem: 'npm'
-      directories:
-          - '/test_apps/lowest-peers-*'
-      schedule:
-          interval: 'weekly'
-      ignore:
-          - dependency-name: '@babel/*'
-          - dependency-name: '@hotwired/stimulus'
-          - dependency-name: '@symfony/stimulus-bridge'
-          - dependency-name: '@vue/*'
-          - dependency-name: 'fork-ts-checker-webpack-plugin'
-          - dependency-name: 'less'
-          - dependency-name: 'less-loader'
-          - dependency-name: 'postcss'
-          - dependency-name: 'postcss-loader'
-          - dependency-name: 'sass'
-          - dependency-name: 'sass-loader'
-          - dependency-name: 'svelte'
-          - dependency-name: 'svelte-loader'
-          - dependency-name: 'ts-loader'
-          - dependency-name: 'typescript'
-          - dependency-name: 'vue'
-          - dependency-name: 'vue-loader'
-          - dependency-name: 'webpack'
-          - dependency-name: 'webpack-cli'
-      cooldown:
-          default-days: 7
