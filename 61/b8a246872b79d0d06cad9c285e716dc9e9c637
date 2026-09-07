@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2026-07-23T18:59:37Z
+
+Hi, and thanks for opening this PR!
+
+I just merged https://github.com/symfony/webpack-encore/pull/1521, and with TypeScript types definitions, I'm not sure this kind of PR are still needed (same for existing type validation at runtime).
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Amoifr at 2026-07-27T07:11:32Z
+
+Thanks! I'd say this one is still useful: types only help people whose editor type-checks their `webpack.config.js`, but the recipe generates a plain JS file with no `@ts-check` and no compile step, so for most users nothing flags the mistake and the callback is still silently dropped at runtime. Since the failure mode is a silent no-op rather than an error, I think the runtime guard keeps its value as a safety net under the types. That said, you know the roadmap best, so if you'd rather rely on types going forward I won't fight for it. 😄
