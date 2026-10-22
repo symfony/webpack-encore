@@ -38,7 +38,7 @@ export default {
             // add forked ts types plugin to the stack
             const { default: forkedTypesPluginUtil } =
                 await import('../plugins/forked-ts-types.js');
-            forkedTypesPluginUtil(webpackConfig);
+            await forkedTypesPluginUtil(webpackConfig);
         }
 
         // allow to import .vue files
