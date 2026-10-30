@@ -691,8 +691,8 @@ packages:
     peerDependencies:
       '@babel/core': ^7.4.0 || ^8.0.0
 
-  baseline-browser-mapping@2.10.29:
-    resolution: {integrity: sha512-Asa2krT+XTPZINCS+2QcyS8WTkObE77RwkydwF7h6DmnKqbvlalz93m/dnphUyCa6SWSP51VgtEUf2FN+gelFQ==}
+  baseline-browser-mapping@2.11.34:
+    resolution: {integrity: sha512-Aqr8mA1kIvyJ3UY5YAY7ib8LSo1DmDMbMnVqGPtsKW1LxaFQFwn9Eb3yvq2fUKJsRvaXjnAV7R5osqETapzNiA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
 
@@ -1973,13 +1973,13 @@ snapshots:
       '@babel/helper-define-polyfill-provider': 1.0.0(@babel/core@8.0.0)
       core-js-compat: 3.49.0
 
-  baseline-browser-mapping@2.10.29: {}
+  baseline-browser-mapping@2.11.34: {}
 
   big.js@5.2.2: {}
 
   browserslist@4.28.2:
     dependencies:
-      baseline-browser-mapping: 2.10.29
+      baseline-browser-mapping: 2.11.34
       caniuse-lite: 1.0.30001792
       electron-to-chromium: 1.5.354
       node-releases: 2.0.44
