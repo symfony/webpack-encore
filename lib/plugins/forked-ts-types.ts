@@ -7,14 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
-
 import applyOptionsCallback from '../utils/apply-options-callback.js';
 import type WebpackConfig from '../WebpackConfig.js';
 import PluginPriorities from './plugin-priorities.js';
 
-export default function (webpackConfig: WebpackConfig): void {
+export default async function (webpackConfig: WebpackConfig): Promise<void> {
     const config = {};
+
+    const { default: ForkTsCheckerWebpackPlugin } = await import('fork-ts-checker-webpack-plugin');
 
     webpackConfig.addPlugin(
         new ForkTsCheckerWebpackPlugin(
