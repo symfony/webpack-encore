@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## Unreleased
+## 7.2.1
 
+- Pass the modern Sass `style` option instead of the ignored legacy `outputStyle`, so Sass no longer minifies CSS in production, configure a CSS minifier with `configureCssMinimizerPlugin()` if you need minified CSS
 - Throw a helpful error when a callback is passed as the first argument of `configureImageRule()` or `configureFontRule()` instead of being silently ignored
 - Fix the persistent cache of `enableBuildCache()` not being written when `fork-ts-checker-webpack-plugin` is not installed
 
