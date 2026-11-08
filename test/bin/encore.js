@@ -21,7 +21,7 @@ const exec = promisify(child_process.exec);
 
 const projectDir = path.resolve(import.meta.dirname, '../', '../');
 
-describe.sequential('bin/encore.js', function () {
+describe('bin/encore.js', { concurrent: false }, function () {
     // being functional tests, these can take quite long
 
     it('Basic smoke test', async function () {
